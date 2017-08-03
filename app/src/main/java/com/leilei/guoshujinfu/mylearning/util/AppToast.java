@@ -16,7 +16,6 @@ public final class AppToast extends Toast {
         Toast toast = Toast.makeText(context,content, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
-
     }
 
 }

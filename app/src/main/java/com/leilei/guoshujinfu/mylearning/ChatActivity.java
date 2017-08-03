@@ -41,13 +41,10 @@ public class ChatActivity extends BaseActivity {
     private static ChatRecyclerViewAdapter mAdapter;
 
 
-
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_chat;
     }
-
-
 
     @Override
     protected void initComponents(Bundle savedInstanceState) {
@@ -117,11 +114,6 @@ public class ChatActivity extends BaseActivity {
         mAdapter.notifyDataSetChanged();
 
 
-    }
-    public void widthdrawMessage(int position){
-
-        mChatMessageList.remove(position);
-        mAdapter.notifyDataSetChanged();
     }
 
 
