@@ -21,13 +21,16 @@ import java.util.List;
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
     private static List<ChatMessage> mMessageListm;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout leftlayout;
         LinearLayout rightLayout;
         TextView leftMessage;
         TextView rightMessage;
+
+
 
         public ViewHolder(View itemView) {
 
@@ -35,26 +38,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             leftlayout = itemView.findViewById(R.id.ly_mesaage_left);
             rightLayout = itemView.findViewById(R.id.ly_mesaage_right);
             leftMessage = itemView.findViewById(R.id.tv_message_left);
-            leftMessage.setOnClickListener(this);
+
             rightMessage = itemView.findViewById(R.id.tv_message_right);
-            rightMessage.setOnClickListener(this);
+
 
         }
 
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if(mMessageListm != null && !mMessageListm.isEmpty()){
-
-            }
-            return false;
-        }
     }
 
     public ChatRecyclerViewAdapter(List<ChatMessage> msg) {
@@ -70,7 +59,18 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     }
 
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+
+        if(mOnItemLongClickListener != null) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    int position = holder.getLayoutPosition();
+                    mOnItemLongClickListener.onItemLongClickListener(holder.itemView, position);
+                    return  true;
+                }
+            });
+        }
 
         ChatMessage msg = mMessageListm.get(position);
         Drawable drawable = msg.getAvatar();
@@ -100,4 +100,10 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     public int getItemCount() {
         return mMessageListm.size();
     }
+   public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
+       this.mOnItemLongClickListener = onItemLongClickListener;
+   }
+   public interface OnItemLongClickListener{
+       void onItemLongClickListener(View view, int position);
+   }
 }

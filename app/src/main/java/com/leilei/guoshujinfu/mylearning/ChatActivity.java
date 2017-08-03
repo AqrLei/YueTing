@@ -1,5 +1,7 @@
 package com.leilei.guoshujinfu.mylearning;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,8 +37,8 @@ public class ChatActivity extends BaseActivity {
     @BindView(R.id.iv_message_clear)
     ImageView mMessageClear;
 
-    private List<ChatMessage> mChatMessageList;
-    private ChatRecyclerViewAdapter mAdapter;
+    private static  List<ChatMessage> mChatMessageList;
+    private static ChatRecyclerViewAdapter mAdapter;
 
 
 
@@ -54,7 +56,33 @@ public class ChatActivity extends BaseActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mMessageContent.setLayoutManager(layoutManager);
         mAdapter = new ChatRecyclerViewAdapter(mChatMessageList);
+        mAdapter.setOnItemLongClickListener(new ChatRecyclerViewAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClickListener(View view, final int position) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this)
+                        .setTitle("撤回消息？")
+                        .setCancelable(false)
+                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mChatMessageList.remove(position);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                builder.show();
+                    AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
+
+            }
+        });
         mMessageContent.setAdapter(mAdapter);
+
 
 
 
@@ -77,17 +105,23 @@ public class ChatActivity extends BaseActivity {
                 chatMessage.setContent(chatContent);
                 chatMessage.setAvatar(AppCache.getAvatar(ChatActivity.this));
                 mChatMessageList.add(chatMessage);
-
-                mAdapter.notifyDataSetChanged();
                 mEditMessage.setText("");
                 break;
             case R.id.iv_message_clear:
                 mChatMessageList.clear();
+                break;
+            default:
+
+                break;
         }
+        mAdapter.notifyDataSetChanged();
 
 
+    }
+    public void widthdrawMessage(int position){
 
-
+        mChatMessageList.remove(position);
+        mAdapter.notifyDataSetChanged();
     }
 
 
