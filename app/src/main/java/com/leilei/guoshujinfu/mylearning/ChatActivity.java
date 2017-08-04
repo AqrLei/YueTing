@@ -68,7 +68,6 @@ public class ChatActivity extends BaseActivity {
                             }
                         })
                         .setNegativeButton("否", null);
-
                 builder.show();
                     AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
 
