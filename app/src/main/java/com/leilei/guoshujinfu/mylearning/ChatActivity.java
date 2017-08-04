@@ -67,12 +67,8 @@ public class ChatActivity extends BaseActivity {
                                 mAdapter.notifyDataSetChanged();
                             }
                         })
-                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                        .setNegativeButton("否", null);
 
-                            }
-                        });
                 builder.show();
                     AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
 
