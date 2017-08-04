@@ -53,7 +53,7 @@ public class PictureActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             if(msg.what == 1) {
                 currentitem = (currentitem + 1) % mPictureRespBeanList.size();
-                mVPImg.setCurrentItem(currentitem);
+                mVPImg.setCurrentItem(mVPImg.getCurrentItem()+1);
                 mHandler.sendEmptyMessageDelayed(1,1000);
             }
         }

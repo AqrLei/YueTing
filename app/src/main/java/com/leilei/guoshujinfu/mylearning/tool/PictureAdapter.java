@@ -3,6 +3,7 @@ package com.leilei.guoshujinfu.mylearning.tool;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 
@@ -26,7 +27,7 @@ public class PictureAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         AppLog.logDebug(AppLog.LOG_TAG_TEST,"getCount");
-        return view == null? 0:view.size();
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -38,7 +39,18 @@ public class PictureAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         AppLog.logDebug(AppLog.LOG_TAG_TEST,"instantiateItem");
+        position %= view.size();
+        if(position < 0) {
+            position = view.size()+position;
+        }
+
+
         View v = view.get(position);
+        ViewParent vp = v.getParent();
+        if(vp != null) {
+            ViewGroup parent = (ViewGroup) vp;
+            parent.removeView(v);
+        }
         container.addView(v);
         return v;
     }
@@ -47,6 +59,10 @@ public class PictureAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         AppLog.logDebug(AppLog.LOG_TAG_TEST,"destroyItem");
+        position %= view.size();
+        if(position < 0) {
+            position = view.size()+position;
+        }
         container.removeView(view.get(position));
     }
 
