@@ -90,6 +90,7 @@ public class PictureActivity extends BaseActivity {
         });
         mHandler.sendEmptyMessageDelayed(1,1000);
 
+
 /*      mVPImg.post(new Runnable() {
             @Override
             public void run() {
