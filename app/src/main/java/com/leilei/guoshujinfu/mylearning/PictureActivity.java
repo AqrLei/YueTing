@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.leilei.guoshujinfu.mylearning.model.req.PictureReqBean;
 import com.leilei.guoshujinfu.mylearning.model.resp.BannerBean;
@@ -17,7 +20,7 @@ import com.leilei.guoshujinfu.mylearning.model.resp.BaseRespBean;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
 import com.leilei.guoshujinfu.mylearning.net.HttpReqHelper;
 import com.leilei.guoshujinfu.mylearning.net.service.PictureInfoService;
-import com.leilei.guoshujinfu.mylearning.tool.PictureAdapter;
+import com.leilei.guoshujinfu.mylearning.tool.viewpager.NormalAdapter;
 import com.leilei.guoshujinfu.mylearning.util.BaseActivity;
 
 import java.util.ArrayList;
@@ -44,15 +47,19 @@ public class PictureActivity extends BaseActivity {
     @BindView(R.id.bt_post)
     Button mPost;
 
+    private Subscription subscription;
     private List<PictureRespBean> mPictureRespBeanList = new ArrayList<>();
-    private PictureAdapter mPictureAdapter;
+    private NormalAdapter mNormalAdapter;
     private List<View> mViews;
     private int currentitem = 0;
+    /*每隔1秒轮播图片*/
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == 1) {
-                currentitem = (currentitem + 1) % mPictureRespBeanList.size();
+            if(msg.what == 1 ) {
+                /*做好除数为零的预防*/
+                currentitem = (currentitem + 1) % (mPictureRespBeanList.size() == 0 ?
+                        (currentitem+1):mPictureRespBeanList.size());
                 mVPImg.setCurrentItem(mVPImg.getCurrentItem()+1);
                 mHandler.sendEmptyMessageDelayed(1,1000);
             }
@@ -113,45 +120,83 @@ public class PictureActivity extends BaseActivity {
 
     }
     private void initViews() {
+        ViewPager viewPager = new ViewPager(this,null);
         mViews = new ArrayList<>();
         for(int i = 0; i<mPictureRespBeanList.size(); i++) {
             addImgs(i);
 
         }
-        mPictureAdapter = new PictureAdapter(mViews);
-        mVPImg.setAdapter(mPictureAdapter);
+        /*创建Adapter,向Adapter中传入List<T>*/
+        mNormalAdapter = new NormalAdapter(mViews);
+        /*ViewPager设置Adapter*/
+        mVPImg.setAdapter(mNormalAdapter);
     }
     private void addImgs(int pos){
+        /*获取View*/
         View view = LayoutInflater.from(this).inflate(R.layout.picture_from_url,null);
+        /*fresco 中SimpleDraweeView 的简单使用,获取SimpleDrweeView*/
         SimpleDraweeView simpleDraweeView =  view.findViewById(R.id.sdv_picture);
+        /*通过
+        * GenericDraweeHierarchyBuilder
+        * GenericDraweeHierarchy
+        * 自定义SimpleDraweeView的效果
+        * */
+        GenericDraweeHierarchyBuilder builder =new GenericDraweeHierarchyBuilder(getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                /*
+                * 1. 设置占位图片
+                * 2. 设置加载时图片
+                * 3. 设置加载失败时图片
+                * 4. 设置重试图片
+                * */
+                .setPlaceholderImage(getResources().getDrawable(R.mipmap.img_placeholder, null),
+                        ScalingUtils.ScaleType.FOCUS_CROP)
+                .setProgressBarImage(getResources().getDrawable(R.mipmap.img_progress_bar, null),
+                        ScalingUtils.ScaleType.CENTER_INSIDE)
+                .setFailureImage(getResources().getDrawable(R.mipmap.img_load_failure, null),
+                        ScalingUtils.ScaleType.CENTER_INSIDE)
+                .setRetryImage(getResources().getDrawable(R.mipmap.img_retry, null),
+                        ScalingUtils.ScaleType.CENTER_INSIDE)
+                .build();
+        /*设置效果*/
+        simpleDraweeView.setHierarchy(hierarchy);
+        /*设置图片*/
         simpleDraweeView.setImageURI(Uri.parse(mPictureRespBeanList.get(pos).getPictureUrl()));
+
         mViews.add(view);
     }
 
-    @OnClick(R.id.bt_post)
+   /* @OnClick(R.id.bt_post)
     public void onClick(){
         getImg();
 
-    }
+    }*/
+    /*网络请求获取图片的URI*/
+
     public void getImg(){
+        /*创建请求参数*/
         PictureReqBean pictureReqBean = new PictureReqBean("2");
-        Subscription subscription = HttpReqHelper.getHttpHelper()
+        /*Subscription subscription(RxJava, RxAndroid)*/
+        subscription = HttpReqHelper.getHttpHelper()
+                /*根据service接口*/
                 .creatService(PictureInfoService.class)
+                /*执行的方法*/
                 .getPicture(pictureReqBean)
+                /*调用之后回到Android的UI线程（RxAndroid)*/
                 .observeOn(AndroidSchedulers.mainThread())
+                /*调用之前启动新线程*/
                 .subscribeOn(Schedulers.io())
+                /*订阅（执行回调方法）*/
                 .subscribe(new Observer<Response<BaseRespBean<BannerBean>>>() {
                     @Override
                     public void onCompleted() {
                         Log.d("Amoryan", "onCompleted");
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         Log.d("Amoryan", "onError");
                         e.printStackTrace();
                     }
-
                     @Override
                     public void onNext(Response<BaseRespBean<BannerBean>> baseRespBeanResponse) {
                         Log.d("Amoryan", "onNext");
@@ -162,17 +207,17 @@ public class PictureActivity extends BaseActivity {
                                 mPictureRespBeanList.addAll(data);
                                 initViews();
                             }
-
-
                         }
-
                     }
-
                 });
-        if(mPictureRespBeanList.size() > 0) {
-           /* mPicture.setImageURI(Uri.parse(mPictureRespBeanList.get(1).getPictureUrl()));*/
-        }
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /*取消订阅*/
+        if(!subscription.isUnsubscribed()){
+            subscription.unsubscribe();
+        }
+    }
 }

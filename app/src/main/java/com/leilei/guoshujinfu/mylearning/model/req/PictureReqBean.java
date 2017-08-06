@@ -7,11 +7,9 @@ package com.leilei.guoshujinfu.mylearning.model.req;
  * @Date: 2017/8/4
  */
 
+/*request bean*/
 public final class PictureReqBean {
     private String type;
-
-
-
     public PictureReqBean() {
 
     }

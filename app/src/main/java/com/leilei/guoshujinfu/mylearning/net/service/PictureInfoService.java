@@ -21,11 +21,11 @@ import rx.Observable;
  */
 
 public interface PictureInfoService {
+    /*"Content-Type: application/json"*/
     @Headers(HttpReqConfig.CONTENT_TYPE_JSON)
+    /*"v4/client/config"*/
     @POST(HttpReqConstants.PICTURE_LIST_INFO)
     Observable<Response<BaseRespBean<BannerBean>>> getPicture(@Body PictureReqBean pictureReqBean);
 
-    @Headers(HttpReqConfig.CONTENT_TYPE_JSON)
-    @POST(HttpReqConstants.PICTURE_LIST_INFO)
-    Call<BaseRespBean<BannerBean>> getBanner(@Body PictureReqBean reqBean);
+
 }

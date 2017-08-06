@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 
 /**
- * {"name":"leilei"}
+ * {"bannerImg":url}
  */
 public class PictureRespBean implements Serializable {
     @SerializedName("bannerImg")

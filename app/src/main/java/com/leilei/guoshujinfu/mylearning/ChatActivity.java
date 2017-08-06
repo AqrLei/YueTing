@@ -3,6 +3,8 @@ package com.leilei.guoshujinfu.mylearning;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.leilei.guoshujinfu.mylearning.model.ChatMessage;
-import com.leilei.guoshujinfu.mylearning.tool.ChatRecyclerViewAdapter;
+import com.leilei.guoshujinfu.mylearning.tool.recyclerview.ChatRecyclerViewAdapter;
 import com.leilei.guoshujinfu.mylearning.util.AppCache;
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 import com.leilei.guoshujinfu.mylearning.util.AppToast;
@@ -49,10 +51,34 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void initComponents(Bundle savedInstanceState) {
         super.initComponents(savedInstanceState);
+
         mChatMessageList = new ArrayList<>();
+        /*
+        * 获取RecyclerView.LayoutManager,有三个实现类
+        * LinearLayoutManager: 线性，支持横向、纵向
+        * GridLayoutManager: 网格
+        * StaggeredGridLayoutManager: 瀑布流式
+        * */
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mMessageContent.setLayoutManager(layoutManager);
+        /*
+        * 动画
+        * RecyclerView.ItemAnimator
+        * DefaultItemAnimator extends SimpleItemAnimator
+        * */
+        mMessageContent.setItemAnimator(new DefaultItemAnimator());
+        /*
+        * 分割线
+        * RecyclerView.ItemDecoration
+        * DividerItemDecoration
+        * ...
+        * */
+        mMessageContent.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL),1);
+        /*传入数据，创建Adapter实例*/
         mAdapter = new ChatRecyclerViewAdapter(mChatMessageList);
+        /*点击事件在adapter中用回调接口实现
+        * 匿名内部类的实现长按监听
+        * */
         mAdapter.setOnItemLongClickListener(new ChatRecyclerViewAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClickListener(View view, final int position) {
@@ -63,16 +89,18 @@ public class ChatActivity extends BaseActivity {
                         .setPositiveButton("是", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                /*更新RecyclerView*/
                                 mChatMessageList.remove(position);
                                 mAdapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton("否", null);
                 builder.show();
-                    AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
+                AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
 
             }
         });
+        /*RecyclerView设置Adapter*/
         mMessageContent.setAdapter(mAdapter);
 
 

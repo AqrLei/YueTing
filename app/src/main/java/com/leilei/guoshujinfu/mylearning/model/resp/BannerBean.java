@@ -8,7 +8,7 @@ import java.util.List;
  * @Description:
  * @Date: 2017/8/4
  */
-
+/*Response Bean*/
 public class BannerBean {
     private List<PictureRespBean> bannerConfig;
 
