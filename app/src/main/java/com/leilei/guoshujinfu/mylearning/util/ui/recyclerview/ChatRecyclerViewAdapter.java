@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.tool.recyclerview;
+package com.leilei.guoshujinfu.mylearning.util.ui.recyclerview;
 
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;

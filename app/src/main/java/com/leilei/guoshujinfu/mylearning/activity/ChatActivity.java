@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning;
+package com.leilei.guoshujinfu.mylearning.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.model.ChatMessage;
-import com.leilei.guoshujinfu.mylearning.tool.recyclerview.ChatRecyclerViewAdapter;
+import com.leilei.guoshujinfu.mylearning.tool.presenter.ChatPresenter;
 import com.leilei.guoshujinfu.mylearning.util.AppCache;
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 import com.leilei.guoshujinfu.mylearning.util.AppToast;
-import com.leilei.guoshujinfu.mylearning.util.BaseActivity;
+import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
+import com.leilei.guoshujinfu.mylearning.util.ui.recyclerview.ChatRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2017/8/3.
  */
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends MvpActivity {
     @BindView(R.id.rlv_message_content)
     RecyclerView mMessageContent;
     @BindView(R.id.et_message)
@@ -107,6 +109,12 @@ public class ChatActivity extends BaseActivity {
 
 
     }
+
+    @Override
+    protected ChatPresenter createPresenter() {
+        return new ChatPresenter(this);
+    }
+
     @OnClick({R.id.iv_message_send, R.id.iv_message_clear})
     public void onCick(View v){
         AppLog.logDebug(AppLog.LOG_TAG_TEST,"onClick");

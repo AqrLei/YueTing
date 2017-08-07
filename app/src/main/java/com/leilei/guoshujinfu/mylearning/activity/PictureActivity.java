@@ -1,11 +1,10 @@
-package com.leilei.guoshujinfu.mylearning;
+package com.leilei.guoshujinfu.mylearning.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,25 +13,16 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.leilei.guoshujinfu.mylearning.model.req.PictureReqBean;
-import com.leilei.guoshujinfu.mylearning.model.resp.BannerBean;
-import com.leilei.guoshujinfu.mylearning.model.resp.BaseRespBean;
+import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
-import com.leilei.guoshujinfu.mylearning.net.HttpReqHelper;
-import com.leilei.guoshujinfu.mylearning.net.service.PictureInfoService;
-import com.leilei.guoshujinfu.mylearning.tool.viewpager.NormalAdapter;
-import com.leilei.guoshujinfu.mylearning.util.BaseActivity;
+import com.leilei.guoshujinfu.mylearning.tool.presenter.PicturePresenter;
+import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
+import com.leilei.guoshujinfu.mylearning.util.ui.viewpager.NormalAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import retrofit2.Response;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * @Author: AqrLei
@@ -41,14 +31,14 @@ import rx.schedulers.Schedulers;
  * @Date: 2017/8/4
  */
 
-public class PictureActivity extends BaseActivity {
+public class PictureActivity extends MvpActivity<PicturePresenter> {
     @BindView(R.id.vp_impage)
     ViewPager mVPImg;
     @BindView(R.id.bt_post)
     Button mPost;
 
-    private Subscription subscription;
-    private List<PictureRespBean> mPictureRespBeanList = new ArrayList<>();
+
+    private List<PictureRespBean> mPictureRespBeanList;
     private NormalAdapter mNormalAdapter;
     private List<View> mViews;
     private int currentitem = 0;
@@ -76,9 +66,10 @@ public class PictureActivity extends BaseActivity {
     protected void initComponents(Bundle savedInstanceState) {
 
         super.initComponents(savedInstanceState);
-        getImg();
-        /*initViews();*/
-        mVPImg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mPresenter.getImg("2");
+
+        /*initViews();
+          mVPImg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -94,7 +85,7 @@ public class PictureActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        });*/
         mHandler.sendEmptyMessageDelayed(1,1000);
 
 
@@ -119,18 +110,30 @@ public class PictureActivity extends BaseActivity {
         //mPicture.setImageURI(Uri.parse("http://daily.file.guoshujinfu.com/guoshu-ump//banner/3759e253-dc77-47dc-8bb1-add63e6d5208.png"));
 
     }
-    private void initViews() {
+
+    @Override
+    protected PicturePresenter createPresenter() {
+        return new PicturePresenter(this);
+    }
+    /*初始化图片轮播视图*/
+    public void initViews(List<PictureRespBean> data ) {
+        mPictureRespBeanList = new ArrayList<>();
+        mPictureRespBeanList.addAll(data);
         ViewPager viewPager = new ViewPager(this,null);
         mViews = new ArrayList<>();
         for(int i = 0; i<mPictureRespBeanList.size(); i++) {
             addImgs(i);
-
         }
         /*创建Adapter,向Adapter中传入List<T>*/
         mNormalAdapter = new NormalAdapter(mViews);
         /*ViewPager设置Adapter*/
         mVPImg.setAdapter(mNormalAdapter);
     }
+
+    /*
+    * 为每个SimpleDraweeView设置ImageURI
+    * @param pos
+    * */
     private void addImgs(int pos){
         /*获取View*/
         View view = LayoutInflater.from(this).inflate(R.layout.picture_from_url,null);
@@ -156,37 +159,42 @@ public class PictureActivity extends BaseActivity {
                 .setFailureImage(getResources().getDrawable(R.mipmap.img_load_failure, null),
                         ScalingUtils.ScaleType.CENTER_INSIDE)
                 .setRetryImage(getResources().getDrawable(R.mipmap.img_retry, null),
-                        ScalingUtils.ScaleType.CENTER_INSIDE)
+                        ScalingUtils.ScaleType.FOCUS_CROP)
+                /*
+                * 在代码中设置了翻页效果会覆盖掉xml文件中的所有效果（即使代码中没有设置，xml中的也会失效）设置，
+                * 需要在代码中显式设置
+                * */
+                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER)
                 .build();
         /*设置效果*/
         simpleDraweeView.setHierarchy(hierarchy);
         /*设置图片*/
+
         simpleDraweeView.setImageURI(Uri.parse(mPictureRespBeanList.get(pos).getPictureUrl()));
 
         mViews.add(view);
     }
 
-   /* @OnClick(R.id.bt_post)
-    public void onClick(){
-        getImg();
 
-    }*/
-    /*网络请求获取图片的URI*/
+    /*
+    * 网络请求获取图片的URl
+    * 转移到Presenter中处理
+    * */
 
-    public void getImg(){
-        /*创建请求参数*/
+   /* public void getImg(){
+        *//*创建请求参数*//*
         PictureReqBean pictureReqBean = new PictureReqBean("2");
-        /*Subscription subscription(RxJava, RxAndroid)*/
+        *//*Subscription subscription(RxJava, RxAndroid)*//*
         subscription = HttpReqHelper.getHttpHelper()
-                /*根据service接口*/
+                *//*根据service接口*//*
                 .creatService(PictureInfoService.class)
-                /*执行的方法*/
+                *//*执行的方法*//*
                 .getPicture(pictureReqBean)
-                /*调用之后回到Android的UI线程（RxAndroid)*/
+                *//*调用之后回到Android的UI线程（RxAndroid)*//*
                 .observeOn(AndroidSchedulers.mainThread())
-                /*调用之前启动新线程*/
+                *//*调用之前启动新线程*//*
                 .subscribeOn(Schedulers.io())
-                /*订阅（执行回调方法）*/
+                *//*订阅（执行回调方法）*//*
                 .subscribe(new Observer<Response<BaseRespBean<BannerBean>>>() {
                     @Override
                     public void onCompleted() {
@@ -210,14 +218,5 @@ public class PictureActivity extends BaseActivity {
                         }
                     }
                 });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        /*取消订阅*/
-        if(!subscription.isUnsubscribed()){
-            subscription.unsubscribe();
-        }
-    }
+    }*/
 }

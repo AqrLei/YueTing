@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning;
+package com.leilei.guoshujinfu.mylearning.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -6,9 +6,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.model.req.PictureReqBean;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
-import com.leilei.guoshujinfu.mylearning.util.BaseActivity;
+import com.leilei.guoshujinfu.mylearning.tool.presenter.MainPresenter;
+import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +26,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends MvpActivity {
     @BindView(R.id.knife_test1)
     Button test1;
     @BindView(R.id.knife_test2)
@@ -52,6 +54,11 @@ public class MainActivity extends BaseActivity {
         mTabLayoutm.addTab(mMTab);
         mTabLayoutm.addTab(mATab);
         initOkHttp();
+    }
+
+    @Override
+    protected MainPresenter createPresenter() {
+        return new MainPresenter(this);
     }
 
     @OnClick({R.id.knife_test2, R.id.knife_test3, R.id.knife_test1})

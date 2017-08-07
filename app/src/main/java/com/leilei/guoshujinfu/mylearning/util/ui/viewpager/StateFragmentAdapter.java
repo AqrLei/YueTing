@@ -1,8 +1,8 @@
-package com.leilei.guoshujinfu.mylearning.tool.viewpager;
+package com.leilei.guoshujinfu.mylearning.util.ui.viewpager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
@@ -13,9 +13,10 @@ import java.util.List;
  * Date : 2017/8/5.
  */
 
-public class FragmentAdapter<T extends Fragment> extends FragmentPagerAdapter {
+public class StateFragmentAdapter<T extends Fragment> extends FragmentStatePagerAdapter {
     private List<T> mFragments;
-    public FragmentAdapter(FragmentManager fm, List<T> mFragments) {
+
+    public StateFragmentAdapter(FragmentManager fm, List<T> mFragments) {
         super(fm);
         this.mFragments = mFragments;
     }
@@ -28,10 +29,5 @@ public class FragmentAdapter<T extends Fragment> extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragments.get(position).getClass().getSimpleName();
     }
 }

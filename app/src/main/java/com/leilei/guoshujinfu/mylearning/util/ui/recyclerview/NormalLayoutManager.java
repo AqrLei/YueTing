@@ -1,7 +1,6 @@
-package com.leilei.guoshujinfu.mylearning.tool.recyclerview;
+package com.leilei.guoshujinfu.mylearning.util.ui.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 /**
  * Author : AqrLei
