@@ -1,48 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.leilei.guoshujinfu.mylearning.activity.MainActivity">
-
-    <Button
-        android:layout_below="@+id/tab_home"
-        android:id="@+id/knife_test1"
-        android:text="Post"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/tv_resp"
-        android:layout_below="@+id/knife_test1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:visibility="gone"
-        android:layout_below="@+id/knife_test1"
-        android:id="@+id/knife_test2"
-        android:text="Test1"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:visibility="gone"
-        android:layout_below="@+id/knife_test2"
-        android:id="@+id/knife_test3"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:text="Test3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
 
+        <RadioGroup
+            android:id="@+id/rg_main_tab"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#FFFFFFFF"
+            android:orientation="horizontal">
 
-</RelativeLayout>
+            <RadioButton
+                android:id="@+id/rbtn_tab_home"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:checked="true"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/main_selector_tab_home_img"
+                android:gravity="center_horizontal"
+                android:paddingTop="5dp"
+                android:text="首页"
+                android:textColor="@color/main_selector_tab_text"
+                android:textSize="12dp"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_tab_credit_card"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/main_selector_tab_creditcard_img"
+                android:gravity="center_horizontal"
+                android:paddingTop="5dp"
+                android:text="聊天"
+                android:textColor="@color/main_selector_tab_text"
+                android:textSize="12dp"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_tab_profile"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/main_selector_tab_profile_img"
+                android:gravity="center_horizontal"
+                android:paddingTop="5dp"
+                android:text="图片"
+                android:textColor="@color/main_selector_tab_text"
+                android:textSize="12dp"/>
+        </RadioGroup>
+
+        <view
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#FFE5E5E5"/>
+
+    </LinearLayout>
+
+</FrameLayout>

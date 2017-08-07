@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.tool.presenter;
+package com.leilei.guoshujinfu.mylearning.presenter;
 
 import com.leilei.guoshujinfu.mylearning.activity.ChatActivity;
 import com.leilei.guoshujinfu.mylearning.util.BaseActivityPresenter;

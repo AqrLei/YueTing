@@ -14,6 +14,9 @@ import com.leilei.guoshujinfu.mylearning.util.AppLog;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by AqrLei on 2017/8/3.
  */
@@ -25,18 +28,18 @@ public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerV
     private OnItemLongClickListener mOnItemLongClickListener;
     /*静态内部类 继承RecyclerView.ViewHolder*/
     static class ViewHolder extends RecyclerView.ViewHolder {
-
+        @BindView(R.id.ly_message_left)
         LinearLayout leftlayout;
+        @BindView(R.id.ly_message_right)
         LinearLayout rightLayout;
+        @BindView(R.id.tv_message_left)
         TextView leftMessage;
+        @BindView(R.id.tv_message_right)
         TextView rightMessage;
         /*对view进行初始化*/
         public ViewHolder(View itemView) {
             super(itemView);
-            leftlayout = itemView.findViewById(R.id.ly_mesaage_left);
-            rightLayout = itemView.findViewById(R.id.ly_mesaage_right);
-            leftMessage = itemView.findViewById(R.id.tv_message_left);
-            rightMessage = itemView.findViewById(R.id.tv_message_right);
+            ButterKnife.bind(this,itemView);
         }
     }
     /*构造方法，获取数据*/

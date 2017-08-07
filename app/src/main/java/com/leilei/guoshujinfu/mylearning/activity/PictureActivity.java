@@ -15,7 +15,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
-import com.leilei.guoshujinfu.mylearning.tool.presenter.PicturePresenter;
+import com.leilei.guoshujinfu.mylearning.presenter.PicturePresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
 import com.leilei.guoshujinfu.mylearning.util.ui.viewpager.NormalAdapter;
 
@@ -153,7 +153,7 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
                 * 4. 设置重试图片
                 * */
                 .setPlaceholderImage(getResources().getDrawable(R.mipmap.img_placeholder, null),
-                        ScalingUtils.ScaleType.FOCUS_CROP)
+                        ScalingUtils.ScaleType.CENTER_INSIDE)
                 .setProgressBarImage(getResources().getDrawable(R.mipmap.img_progress_bar, null),
                         ScalingUtils.ScaleType.CENTER_INSIDE)
                 .setFailureImage(getResources().getDrawable(R.mipmap.img_load_failure, null),

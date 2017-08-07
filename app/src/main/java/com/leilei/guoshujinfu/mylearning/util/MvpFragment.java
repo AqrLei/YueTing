@@ -1,7 +1,5 @@
 package com.leilei.guoshujinfu.mylearning.util;
 
-import android.os.Bundle;
-
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -9,14 +7,14 @@ import android.os.Bundle;
  * @Date: 2017/8/7
  */
 
-public abstract class MvpActivity <T extends BaseActivityPresenter> extends BaseActivity {
+public abstract class MvpFragment <T extends BaseFragmentPresenter,
+        V extends BaseActivity> extends BaseFragment<V> {
     protected T mPresenter;
 
     @Override
-    protected void initComponents(Bundle savedInstanceState) {
-        super.initComponents(savedInstanceState);
+    protected void initComponents() {
+        super.initComponents();
         mPresenter = createPresenter();
-
     }
     protected abstract T createPresenter();
     /*public void addSubscription(Subscription subscription) {
@@ -25,7 +23,16 @@ public abstract class MvpActivity <T extends BaseActivityPresenter> extends Base
     }*/
 
     @Override
-    protected void onDestroy() {
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(mPresenter != null) {
+            mPresenter.cancle();
+            mPresenter = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         if(mPresenter != null) {
             mPresenter.cancle();

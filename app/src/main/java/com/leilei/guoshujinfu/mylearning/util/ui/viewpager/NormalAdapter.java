@@ -3,7 +3,6 @@ package com.leilei.guoshujinfu.mylearning.util.ui.viewpager;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 
@@ -22,6 +21,8 @@ public class NormalAdapter<T extends View> extends PagerAdapter {
 
     public NormalAdapter(List<T> view) {
         AppLog.logDebug(AppLog.LOG_TAG_TEST,"NormalAdapter");
+       /* this.view =  new ArrayList<>();
+        this.view.add(view.get(0));*/
         this.view = view;
     }
 
@@ -57,12 +58,25 @@ public class NormalAdapter<T extends View> extends PagerAdapter {
         }
 
         View v = view.get(position);
-        ViewParent vp = v.getParent();
-        /*如果v已经被添加过既第二次到达这个view，要先将之从父容器中remove*/
+
+
+        /*
+        * 如果v已经被添加过既这个view已经有了parent，要先将之从父容器中remove
+        * 否则在addView()的时候会
+        * if (child.getParent() != null) {
+        *   throw new IllegalStateException("The specified child already has a parent. " +
+        *           "You must call removeView() on the child's parent first.");
+        * }
+        * 在destroyItem中已经调用了removeView的方法
+        * 且在之前的初始化操作完成之后
+        * 的每一次调用instantiateItem都在destroyItem之后，
+        * 此处就不必重复调用removeView方法
+        * */
+       /* ViewParent vp = v.getParent();
         if(vp != null) {
             ViewGroup parent = (ViewGroup) vp;
             parent.removeView(v);
-        }
+        }*/
         container.addView(v);
         return v;
     }

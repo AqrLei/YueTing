@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.leilei.guoshujinfu.mylearning.util.AppCache;
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 
 /**
@@ -20,6 +21,8 @@ public class BaseApplication extends Application implements Application.Activity
         super.onCreate();
         registerActivityLifecycleCallbacks(this);
         Fresco.initialize(this);
+        AppCache.init(this);
+        AppCache.setFileName("MyLearning");
     }
 
     @Override

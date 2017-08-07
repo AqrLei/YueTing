@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.tool.presenter;
+package com.leilei.guoshujinfu.mylearning.presenter;
 
 import android.util.Log;
 
@@ -63,9 +63,17 @@ public class PicturePresenter extends BaseActivityPresenter<PictureActivity> {
                             List<PictureRespBean> data = new ArrayList<PictureRespBean>();
                             data.addAll(baseRespBeanResponse.body().getData().getBannerConfig());
                             if(data.size() > 0) {
+
                               /*  mPictureRespBeanList.addAll(data);
                                 initViews();*/
-                              mMvpActivity.initViews(data);
+                                /*
+                                * 将获取到的数据用键值对的形式存入cache
+                                * AppCache.getAppCache().putString(key,defaultvalue).commit();
+                                * 之后需要数据亦可以从cache中取
+                                *
+                                * */
+
+                                mMvpActivity.initViews(data);
                             }
                         }
                     }

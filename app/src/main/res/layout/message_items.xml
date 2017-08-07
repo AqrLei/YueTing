@@ -10,7 +10,7 @@
         android:layout_height="10dp"/>
 
     <LinearLayout
-        android:id="@+id/ly_mesaage_left"
+        android:id="@+id/ly_message_left"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ly_mesaage_right"
+        android:id="@+id/ly_message_right"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

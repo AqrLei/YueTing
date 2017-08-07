@@ -2,32 +2,18 @@ package com.leilei.guoshujinfu.mylearning.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.leilei.guoshujinfu.mylearning.R;
-import com.leilei.guoshujinfu.mylearning.model.req.PictureReqBean;
-import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
-import com.leilei.guoshujinfu.mylearning.tool.presenter.MainPresenter;
+import com.leilei.guoshujinfu.mylearning.presenter.MainPresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
 public class MainActivity extends MvpActivity {
-    @BindView(R.id.knife_test1)
+/*    @BindView(R.id.knife_test1)
     Button test1;
     @BindView(R.id.knife_test2)
     Button test2;
@@ -36,7 +22,7 @@ public class MainActivity extends MvpActivity {
     @BindView(R.id.tab_home)
     TabLayout mTabLayoutm;
     @BindView(R.id.tv_resp)
-    TextView respContents;
+    TextView respContents;*/
 
     private TabLayout.Tab mNTab;
     private TabLayout.Tab mMTab;
@@ -47,12 +33,12 @@ public class MainActivity extends MvpActivity {
     @Override
     protected void initComponents(Bundle savedInstanceState) {
         super.initComponents(savedInstanceState);
-        mNTab = mTabLayoutm.newTab().setText("test1");
+       /* mNTab = mTabLayoutm.newTab().setText("test1");
         mMTab = mTabLayoutm.newTab().setText("test2");
         mATab = mTabLayoutm.newTab().setText("test3");
         mTabLayoutm.addTab(mNTab);
         mTabLayoutm.addTab(mMTab);
-        mTabLayoutm.addTab(mATab);
+        mTabLayoutm.addTab(mATab);*/
         initOkHttp();
     }
 
@@ -61,7 +47,7 @@ public class MainActivity extends MvpActivity {
         return new MainPresenter(this);
     }
 
-    @OnClick({R.id.knife_test2, R.id.knife_test3, R.id.knife_test1})
+  /*  @OnClick({R.id.knife_test2, R.id.knife_test3, R.id.knife_test1})
     public void sayHi(Button button) {
         if(button.getId() == R.id.knife_test1) {
 
@@ -95,7 +81,7 @@ public class MainActivity extends MvpActivity {
         }
 
         //button.setText("Hello, 你好");
-    }
+    }*/
     private void initOkHttp() {
         client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)

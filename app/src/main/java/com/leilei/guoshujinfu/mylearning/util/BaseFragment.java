@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -18,24 +21,53 @@ import android.view.ViewGroup;
 public abstract class BaseFragment<T extends BaseActivity> extends Fragment {
     protected  T mContainerActivity;
     protected View mView;
+    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if(context instanceof BaseActivity) {
-            mContainerActivity = (T)context;
+            mContainerActivity = ((T)context);
         }
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
+        mView = inflater.inflate(getLayoutRes(), container, false);
+        ButterKnife.bind(this, mView);
+        initComponents();
+        return mView;
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(mContainerActivity != null) {
+            mContainerActivity = null;
+        }
+    }
+    protected T getContainerActivity() {
+        return mContainerActivity;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     protected abstract int getLayoutRes();
-
     protected void initComponents() {
+
     }
+    public void finish () {
+        mContainerActivity.finish();
+    }
+
+
 
 }

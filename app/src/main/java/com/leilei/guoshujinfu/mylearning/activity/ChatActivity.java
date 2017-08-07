@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.model.ChatMessage;
-import com.leilei.guoshujinfu.mylearning.tool.presenter.ChatPresenter;
+import com.leilei.guoshujinfu.mylearning.presenter.ChatPresenter;
 import com.leilei.guoshujinfu.mylearning.util.AppCache;
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 import com.leilei.guoshujinfu.mylearning.util.AppToast;
