@@ -15,6 +15,10 @@
         android:enabled="true"
         android:background="@drawable/tv_shape"
         android:layout_width="wrap_content"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:layout_height="wrap_content"/>
 
 </FrameLayout>
