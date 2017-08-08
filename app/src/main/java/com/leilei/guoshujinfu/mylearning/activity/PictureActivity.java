@@ -14,6 +14,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.leilei.guoshujinfu.mylearning.R;
+import com.leilei.guoshujinfu.mylearning.config.HttpReqConfig;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
 import com.leilei.guoshujinfu.mylearning.presenter.PicturePresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
@@ -66,7 +67,7 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
     protected void initComponents(Bundle savedInstanceState) {
 
         super.initComponents(savedInstanceState);
-        mPresenter.getImg("2");
+        mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE);
 
         /*initViews();
           mVPImg.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -138,7 +139,7 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
         /*获取View*/
         View view = LayoutInflater.from(this).inflate(R.layout.picture_from_url,null);
         /*fresco 中SimpleDraweeView 的简单使用,获取SimpleDrweeView*/
-        SimpleDraweeView simpleDraweeView =  view.findViewById(R.id.sdv_picture);
+        SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.sdv_picture);
         /*通过
         * GenericDraweeHierarchyBuilder
         * GenericDraweeHierarchy

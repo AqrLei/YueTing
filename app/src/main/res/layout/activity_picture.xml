@@ -21,6 +21,7 @@
         />-->
     <Button
         android:id="@+id/bt_post"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:text="post"

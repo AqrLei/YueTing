@@ -1,7 +1,7 @@
 package com.leilei.guoshujinfu.mylearning.presenter;
 
+import com.leilei.guoshujinfu.mylearning.fragment.TabChatFragment;
 import com.leilei.guoshujinfu.mylearning.util.BaseFragmentPresenter;
-import com.leilei.guoshujinfu.mylearning.util.MvpFragment;
 
 /**
  * @Author: AqrLei
@@ -10,8 +10,9 @@ import com.leilei.guoshujinfu.mylearning.util.MvpFragment;
  * @Date: 2017/8/7
  */
 
-public class TabChatPresenter extends BaseFragmentPresenter {
-    public TabChatPresenter(MvpFragment mvpView) {
+public class TabChatPresenter extends BaseFragmentPresenter<TabChatFragment> {
+    public TabChatPresenter(TabChatFragment mvpView) {
         super(mvpView);
     }
+
 }

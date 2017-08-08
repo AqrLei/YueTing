@@ -1,7 +1,7 @@
 package com.leilei.guoshujinfu.mylearning.net;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.leilei.guoshujinfu.mylearning.net.config.HttpReqConfig;
+import com.leilei.guoshujinfu.mylearning.config.HttpReqConfig;
 
 import java.util.concurrent.TimeUnit;
 

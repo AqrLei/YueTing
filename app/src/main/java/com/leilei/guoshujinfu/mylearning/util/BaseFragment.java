@@ -50,7 +50,7 @@ public abstract class BaseFragment<T extends BaseActivity> extends Fragment {
             mContainerActivity = null;
         }
     }
-    protected T getContainerActivity() {
+    public T getContainerActivity() {
         return mContainerActivity;
     }
 

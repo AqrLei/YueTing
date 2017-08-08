@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.net.config;
+package com.leilei.guoshujinfu.mylearning.config;
 
 /**
  * @Author: AqrLei
@@ -15,4 +15,5 @@ public class HttpReqConfig {
     public static final String CONTENT_TYPE_JSON = "Content-Type: application/json";
     public static final String USER_AGENT = "User-Agent";
     public static final String CHANNEL_ID = "channelId";
+    public static final String RQ_IMG_TYPE = "2";
 }

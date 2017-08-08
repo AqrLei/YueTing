@@ -1,6 +1,5 @@
 package com.leilei.guoshujinfu.mylearning.fragment;
 
-import com.leilei.guoshujinfu.mylearning.R;
 import com.leilei.guoshujinfu.mylearning.activity.MainActivity;
 import com.leilei.guoshujinfu.mylearning.presenter.TabPicturePresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpFragment;
@@ -13,13 +12,15 @@ import com.leilei.guoshujinfu.mylearning.util.MvpFragment;
  */
 
 public class TabPictureFragment extends MvpFragment <TabPicturePresenter, MainActivity> {
+
+
     @Override
     protected TabPicturePresenter createPresenter() {
-        return new TabPicturePresenter(this);
+        return null;
     }
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_picture;
+        return 0;
     }
 }

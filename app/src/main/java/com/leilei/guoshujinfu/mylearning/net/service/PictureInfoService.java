@@ -4,9 +4,8 @@ import com.leilei.guoshujinfu.mylearning.model.req.PictureReqBean;
 import com.leilei.guoshujinfu.mylearning.model.resp.BannerBean;
 import com.leilei.guoshujinfu.mylearning.model.resp.BaseRespBean;
 import com.leilei.guoshujinfu.mylearning.net.HttpReqConstants;
-import com.leilei.guoshujinfu.mylearning.net.config.HttpReqConfig;
+import com.leilei.guoshujinfu.mylearning.config.HttpReqConfig;
 
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

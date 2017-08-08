@@ -14,15 +14,21 @@
         <activity android:name=".activity.MainActivity">
 
 
+
         </activity>
         <activity android:name=".activity.ChatActivity">
 
         </activity>
         <activity android:name=".activity.PictureActivity">
+
+
+        </activity>
+        <activity android:name=".activity.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
     </application>
 

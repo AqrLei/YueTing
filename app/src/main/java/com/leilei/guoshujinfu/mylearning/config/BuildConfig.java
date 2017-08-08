@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.net.config;
+package com.leilei.guoshujinfu.mylearning.config;
 
 /**
  * @Author: AqrLei
