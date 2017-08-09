@@ -1,9 +1,11 @@
 package com.leilei.guoshujinfu.mylearning.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioGroup;
 
 import com.leilei.guoshujinfu.mylearning.R;
@@ -14,6 +16,7 @@ import com.leilei.guoshujinfu.mylearning.fragment.TabPictureFragment;
 import com.leilei.guoshujinfu.mylearning.presenter.MainPresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -22,7 +25,11 @@ import butterknife.BindView;
 public class MainActivity extends MvpActivity<MainPresenter> implements RadioGroup.OnCheckedChangeListener{
     @BindView(R.id.rg_main_tab)
     RadioGroup mTabRG;
-
+    /*android.app下的fragment会有各种问题
+    * 用android.support.v4.app包下
+    * 与此相同的还有toolbar
+    *
+    * */
     private List<Fragment> mFragments;
     private FragmentManager mFragmentManager;
     private TabHomeFragment mTabHomeFragment;
@@ -34,7 +41,7 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
     protected void initComponents(Bundle savedInstanceState) {
         super.initComponents(savedInstanceState);
         mTabRG.setOnCheckedChangeListener(this);
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
         initFragments(savedInstanceState);
         changeFragment(MainConfig.TAB_HOME_POSITION);
        /* mNTab = mTabLayoutm.newTab().setText("test1");
@@ -108,7 +115,7 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
                 .build();
     }*/
     private void initFragments(Bundle savedInstanceState) {
-      /*  mFragments = new ArrayList<>();
+       mFragments = new ArrayList<>();
         if( savedInstanceState != null) {
             mTabHomeFragment = (TabHomeFragment) mFragmentManager.findFragmentByTag(
                     MainConfig.TAB_HOME_TAGS[MainConfig.TAB_HOME_POSITION]);
@@ -131,11 +138,11 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
         }
         mFragments.add(mTabHomeFragment);
         mFragments.add(mTabChatFragment);
-        mFragments.add(mTabPictureFragment);*/
+        mFragments.add(mTabPictureFragment);
 
     }
     private void changeFragment(int position) {
-       /* currentTab = position;
+        currentTab = position;
         for(int i = 0; i < mFragments.size(); i++) {
             Fragment currentFragment = mFragments.get(i);
             FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -149,7 +156,7 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
                 ft.hide(currentFragment);
             }
             ft.commit();
-        }*/
+        }
 
 
     }

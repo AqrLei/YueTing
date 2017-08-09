@@ -1,9 +1,9 @@
 package com.leilei.guoshujinfu.mylearning.util;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +28,9 @@ public abstract class BaseFragment<T extends BaseActivity> extends Fragment {
         super.onAttach(context);
         if(context instanceof BaseActivity) {
             mContainerActivity = ((T)context);
+            AppLog.logDebug("context", ""+ mContainerActivity.getClass().getSimpleName());
+           if (mContainerActivity == null)
+            AppLog.logDebug("context", "context is null");
         }
     }
 

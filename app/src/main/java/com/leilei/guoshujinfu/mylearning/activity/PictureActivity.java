@@ -120,7 +120,7 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
     public void initViews(List<PictureRespBean> data ) {
         mPictureRespBeanList = new ArrayList<>();
         mPictureRespBeanList.addAll(data);
-        ViewPager viewPager = new ViewPager(this,null);
+        /*ViewPager viewPager = new ViewPager(this,null);*/
         mViews = new ArrayList<>();
         for(int i = 0; i<mPictureRespBeanList.size(); i++) {
             addImgs(i);
