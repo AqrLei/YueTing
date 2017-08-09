@@ -23,11 +23,11 @@ public class StateFragmentAdapter<T extends Fragment> extends FragmentStatePager
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        return mFragments == null ? null: mFragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return mFragments == null ? 0:mFragments.size();
     }
 }

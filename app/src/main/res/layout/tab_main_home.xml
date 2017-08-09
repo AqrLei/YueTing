@@ -4,15 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e1c7c7"
+    android:background="#b5cec0"
     >
-    <TextView
-        android:text="HOME"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/main_selector_tab_text"
+    <ImageView
+        android:id="@+id/iv_tab_home"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:src="@mipmap/tab_home_img_message"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
 
 </FrameLayout>

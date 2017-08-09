@@ -106,4 +106,10 @@ public class TabPictureFragment extends MvpFragment <TabPicturePresenter, MainAc
     protected int getLayoutRes() {
         return R.layout.activity_picture;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

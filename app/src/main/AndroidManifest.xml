@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -19,14 +22,30 @@
 
 
         </activity>
-        <activity android:name=".activity.ChatActivity">
+        <activity
+            android:name=".activity.ChatActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
 
         </activity>
-        <activity android:name=".activity.PictureActivity">
+        <activity
+            android:name=".activity.PictureActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
 
 
         </activity>
-        <activity android:name=".activity.TestActivity">
+        <activity
+            android:name=".activity.TestActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
+
+
+        </activity>
+        <activity
+            android:name=".activity.MessageCenterActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
 
 
         </activity>
