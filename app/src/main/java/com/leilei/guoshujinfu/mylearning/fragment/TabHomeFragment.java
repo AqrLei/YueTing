@@ -13,7 +13,7 @@ import butterknife.OnClick;
 /**
  * @Author: AqrLei
  * @Name MyLearning
- * @Description:
+ * @Description: 主页，只有一个用于跳转的ImageView
  * @Date: 2017/8/7
  */
 
