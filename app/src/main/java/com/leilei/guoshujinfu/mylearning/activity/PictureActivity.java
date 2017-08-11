@@ -18,7 +18,7 @@ import com.leilei.guoshujinfu.mylearning.config.HttpReqConfig;
 import com.leilei.guoshujinfu.mylearning.model.resp.PictureRespBean;
 import com.leilei.guoshujinfu.mylearning.presenter.PicturePresenter;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
-import com.leilei.guoshujinfu.mylearning.util.ui.viewpager.NormalAdapter;
+import com.leilei.guoshujinfu.mylearning.util.view.viewpager.NormalAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

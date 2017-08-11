@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.util.ui.viewpager;
+package com.leilei.guoshujinfu.mylearning.util.view.viewpager;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.View;

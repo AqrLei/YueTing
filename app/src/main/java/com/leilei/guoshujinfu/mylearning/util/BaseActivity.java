@@ -15,11 +15,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         super();
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        beforeSetCOntentView();
         setContentView(getLayoutRes());
         initComponents(savedInstanceState);
+    }
+    protected void beforeSetCOntentView() {
+
     }
 
     @Override

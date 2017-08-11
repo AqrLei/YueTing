@@ -16,7 +16,7 @@ import com.leilei.guoshujinfu.mylearning.presenter.TabChatPresenter;
 import com.leilei.guoshujinfu.mylearning.util.AppCache;
 import com.leilei.guoshujinfu.mylearning.util.AppToast;
 import com.leilei.guoshujinfu.mylearning.util.MvpFragment;
-import com.leilei.guoshujinfu.mylearning.util.ui.recyclerview.ChatRecyclerViewAdapter;
+import com.leilei.guoshujinfu.mylearning.util.view.recyclerview.ChatRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.leilei.guoshujinfu.mylearning.util.ui.viewpager;
+package com.leilei.guoshujinfu.mylearning.util.view.viewpager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

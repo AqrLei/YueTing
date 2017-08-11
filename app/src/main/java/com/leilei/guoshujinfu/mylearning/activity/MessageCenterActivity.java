@@ -16,7 +16,7 @@ import com.leilei.guoshujinfu.mylearning.fragment.TabPictureFragment;
 import com.leilei.guoshujinfu.mylearning.presenter.MessageCenterPresenter;
 import com.leilei.guoshujinfu.mylearning.util.AppToast;
 import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
-import com.leilei.guoshujinfu.mylearning.util.ui.viewpager.StateFragmentAdapter;
+import com.leilei.guoshujinfu.mylearning.util.view.viewpager.StateFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

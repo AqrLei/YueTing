@@ -1,0 +1,270 @@
+package com.guoshujinfu.mobile.xinbei.ui.task;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.guoshujinfu.mobile.xinbei.R;
+import com.guoshujinfu.mobile.xinbei.consts.order_task.TaskConstants;
+import com.guoshujinfu.mobile.xinbei.mvp.model.req.order_task.task.TaskQuesImgBean;
+import com.guoshujinfu.mobile.pslib.ui.BaseActivity;
+import com.guoshujinfu.mobile.pslib.utils.DensityUtil;
+import com.guoshujinfu.mobile.xinbei.utils.ImageUtils;
+import com.guoshujinfu.mobile.xinbei.utils.IntentUtils;
+import com.guoshujinfu.mobile.xinbei.views.camera.CustomCameraView;
+import com.guoshujinfu.mobile.pslib.views.dialog.IphoneStyleAlertDialog;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * @author: Domino
+ * @className: TaskQuesImgCaptureActivity
+ * @description: 任务单图片拍摄界面
+ * @createTime: 2017/4/6 18:36
+ */
+public class TaskQuesImgCaptureActivity extends BaseActivity implements
+        CustomCameraView.OnFlashModeChangeListener, CustomCameraView.OnTakePictureListener {
+    @Bind(R.id.task_camera)
+    CustomCameraView mTaskCamera;
+    @Bind(R.id.tv_flash_auto)
+    TextView mFlashAutoTv;
+    @Bind(R.id.tv_flash_open)
+    TextView mFlashOpenTv;
+    @Bind(R.id.tv_flash_close)
+    TextView mFlashCloseTv;
+    @Bind(R.id.ll_module_flash)
+    LinearLayout mModuleFlashLl;
+    @Bind(R.id.iv_flash_mode)
+    ImageView mFlashModeIv;
+    @Bind(R.id.iv_capture)
+    ImageView mCaptureIv;
+    @Bind(R.id.iv_review_img)
+    ImageView mReviewImgIv;
+    @Bind(R.id.tv_capture_total)
+    TextView mCaptureTotalTv;
+    @Bind(R.id.tv_capture_finish)
+    TextView mCaptureFinishTv;
+
+    private IphoneStyleAlertDialog mReturnDialog;
+
+    private int mLimitSize;
+    private ArrayList<TaskQuesImgBean> mLocalImgs = new ArrayList<>();
+    private Bitmap mBitmap;
+
+    @Override
+    protected void beforeSetContentView() {
+        super.beforeSetContentView();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_task_ques_img_capture;
+    }
+
+    @Override
+    protected void initComponents(Bundle savedInstanceState) {
+        super.initComponents(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        mLimitSize = bundle.getInt(TaskConstants.EXTRA_KEY_IMG_LIMIT_SIZE);
+        mCaptureTotalTv.setText(mLocalImgs.size() + "/" + mLimitSize);
+        mTaskCamera.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mTaskCamera.autoFocus(((int) event.getX()), (int) event.getY());
+                return true;
+            }
+        });
+        mReturnDialog = new IphoneStyleAlertDialog(this)
+                .setMsg("您正在返回，是否使用当前已拍照片?")
+                .setCancelable(false)
+                .setPositiveButton("否", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TaskQuesImgCaptureActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("是", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toPreviewActivity();
+                    }
+                });
+    }
+
+    private void releaseBitmap() {
+        if (mBitmap != null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        releaseBitmap();
+        super.onDestroy();
+    }
+
+    @OnClick({R.id.iv_back, R.id.tv_flash_auto, R.id.tv_flash_open, R.id.tv_flash_close,
+            R.id.iv_flash_mode, R.id.iv_camera_switch, R.id.iv_capture, R.id.iv_review_img,
+            R.id.tv_capture_finish})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                if (!mLocalImgs.isEmpty()) {
+                    mReturnDialog.show();
+                } else {
+                    this.finish();
+                }
+                break;
+            case R.id.tv_flash_auto:
+                mTaskCamera.changeFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                break;
+            case R.id.tv_flash_open:
+                mTaskCamera.changeFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                break;
+            case R.id.tv_flash_close:
+                mTaskCamera.changeFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                break;
+            case R.id.iv_flash_mode:
+                mModuleFlashLl.setVisibility(View.VISIBLE);
+                mFlashModeIv.setVisibility(View.GONE);
+                break;
+            case R.id.iv_camera_switch:
+                mTaskCamera.switchCameraFacing();
+                break;
+            case R.id.iv_capture:
+                mCaptureIv.setClickable(false);
+                if (mLocalImgs.size() >= mLimitSize) {
+                    showToast("已达到最大拍摄数量！");
+                    mCaptureIv.setClickable(true);
+                    return;
+                }
+                mTaskCamera.takePicture();
+                break;
+            case R.id.iv_review_img:
+                if (mLocalImgs.isEmpty()) {
+                    showToast("请先拍摄图片后进行查看！");
+                } else {
+                    TaskImgPreviewActivity.jumpToTaskImgReviewActivity(this, null,
+                            TaskConstants.REQCODE_TASK_PREVIEW_IMGS, false, -1, mLocalImgs, 0);
+                }
+                break;
+            case R.id.tv_capture_finish:
+                toPreviewActivity();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!mLocalImgs.isEmpty()) {
+                mReturnDialog.show();
+            } else {
+                this.finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void toPreviewActivity() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TaskConstants.EXTRA_KEY_LOCAL_IMG_LIST, mLocalImgs);
+        intent.putExtras(bundle);
+        setResult(TaskConstants.RESPCODE_CAPTURE_IMG, intent);
+        this.finish();
+    }
+
+    @Override
+    public void onFlashModeChange(String flashMode) {
+        mModuleFlashLl.setVisibility(View.GONE);
+        mFlashModeIv.setVisibility(View.VISIBLE);
+        switch (flashMode) {
+            case Camera.Parameters.FLASH_MODE_AUTO:
+                mFlashAutoTv.setTextColor(Color.parseColor("#ff1b8fe6"));
+                mFlashOpenTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashCloseTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashModeIv.getDrawable().setLevel(0);
+                break;
+            case Camera.Parameters.FLASH_MODE_OFF:
+                mFlashAutoTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashOpenTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashCloseTv.setTextColor(Color.parseColor("#ff1b8fe6"));
+                mFlashModeIv.getDrawable().setLevel(1);
+                break;
+            case Camera.Parameters.FLASH_MODE_ON:
+                mFlashAutoTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashOpenTv.setTextColor(Color.parseColor("#ff1b8fe6"));
+                mFlashCloseTv.setTextColor(Color.parseColor("#ffffffff"));
+                mFlashModeIv.getDrawable().setLevel(2);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TaskConstants.REQCODE_TASK_PREVIEW_IMGS &&
+                resultCode == TaskConstants.RESPCODE_TASK_REVIEW_IMGS) {
+            Bundle bundle = data.getExtras();
+            mLocalImgs.clear();
+            mLocalImgs.addAll((ArrayList<TaskQuesImgBean>) bundle.getSerializable(TaskConstants.EXTRA_KEY_LOCAL_IMG_LIST));
+            mCaptureTotalTv.setText(mLocalImgs.size() + "/" + mLimitSize);
+            releaseBitmap();
+            if (mLocalImgs.isEmpty()) {
+                mReviewImgIv.setVisibility(View.INVISIBLE);
+            } else {
+                mBitmap = ImageUtils.compressBitmapInSize(mLocalImgs.get(mLocalImgs.size() - 1).getImgFile(),
+                        DensityUtil.dip2px(this, 60), DensityUtil.dip2px(this, 60));
+                mReviewImgIv.setImageBitmap(mBitmap);
+            }
+            mCaptureTotalTv.setText(mLocalImgs.size() + "/" + mLimitSize);
+            mCaptureFinishTv.setVisibility(mLocalImgs.isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        }
+    }
+
+    /**
+     * @param context
+     * @param reqCode
+     * @param limitSize 最大拍摄数量
+     */
+    public static void jumpToTaskQuesImgCaptureActivity(Activity context, int reqCode, int limitSize) {
+        Intent intent = new Intent(context, TaskQuesImgCaptureActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(TaskConstants.EXTRA_KEY_IMG_LIMIT_SIZE, limitSize);
+        intent.putExtras(bundle);
+        if (IntentUtils.queryIntentActivities(context, intent)) {
+            context.startActivityForResult(intent, reqCode);
+        }
+    }
+
+    @Override
+    public void onTakePicture(boolean isSuccess, String filePath) {
+        if (isSuccess) {
+            mLocalImgs.add(new TaskQuesImgBean(filePath, TaskQuesImgBean.TaskLocalImgStatus.LOCAL_IMG_STATUS_NORMAL));
+            releaseBitmap();
+            mBitmap = ImageUtils.compressBitmapInSize(filePath, DensityUtil.dip2px(this, 60), DensityUtil
+                    .dip2px(this, 60));
+            mReviewImgIv.setVisibility(View.VISIBLE);
+            mReviewImgIv.setImageBitmap(mBitmap);
+            mCaptureTotalTv.setText(mLocalImgs.size() + "/" + mLimitSize);
+            mCaptureFinishTv.setVisibility(View.VISIBLE);
+        }
+        mCaptureIv.setClickable(true);
+    }
+}
