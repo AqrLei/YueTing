@@ -1,0 +1,26 @@
+package com.leilei.guoshujinfu.mylearning.activity;
+
+import com.leilei.guoshujinfu.mylearning.R;
+import com.leilei.guoshujinfu.mylearning.presenter.TestPresenter;
+import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
+
+/**
+ * @Author: AqrLei
+ * @Name MyLearning
+ * @Description:
+ * @Date: 2017/8/8
+ */
+
+public class TestActivity extends MvpActivity <TestPresenter> {
+
+    @Override
+    protected TestPresenter createPresenter() {
+        return new TestPresenter(this);
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_drawer_test;
+    }
+
+}
