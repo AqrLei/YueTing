@@ -56,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutRes();
 
 
+
     protected void initComponents(Bundle savedInstanceState){
         ButterKnife.bind(this);
         ActivityCollector.add(this);

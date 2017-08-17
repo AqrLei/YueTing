@@ -31,7 +31,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2017/8/3.
  */
 
-public class ChatActivity extends MvpActivity {
+public class ChatActivity extends MvpActivity<ChatPresenter> {
     @BindView(R.id.rlv_message_content)
     RecyclerView mMessageContent;
     @BindView(R.id.et_message)
@@ -41,7 +41,7 @@ public class ChatActivity extends MvpActivity {
     @BindView(R.id.iv_message_clear)
     ImageView mMessageClear;
 
-    private static  List<ChatMessage> mChatMessageList;
+    private static List<ChatMessage> mChatMessageList;
     private static ChatRecyclerViewAdapter mAdapter;
 
 
@@ -75,7 +75,7 @@ public class ChatActivity extends MvpActivity {
         * DividerItemDecoration
         * ...
         * */
-        mMessageContent.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL),1);
+        mMessageContent.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL), 1);
         /*传入数据，创建Adapter实例*/
         mAdapter = new ChatRecyclerViewAdapter(mChatMessageList);
         /*点击事件在adapter中用回调接口实现
@@ -98,14 +98,12 @@ public class ChatActivity extends MvpActivity {
                         })
                         .setNegativeButton("否", null);
                 builder.show();
-                AppLog.logDebug(AppLog.LOG_TAG_TEST,"withdrawMessage");
+                AppLog.logDebug(AppLog.LOG_TAG_TEST, "withdrawMessage");
 
             }
         });
         /*RecyclerView设置Adapter*/
         mMessageContent.setAdapter(mAdapter);
-
-
 
 
     }
@@ -116,8 +114,8 @@ public class ChatActivity extends MvpActivity {
     }
 
     @OnClick({R.id.iv_message_send, R.id.iv_message_clear})
-    public void onCick(View v){
-        AppLog.logDebug(AppLog.LOG_TAG_TEST,"onClick");
+    public void onCick(View v) {
+        AppLog.logDebug(AppLog.LOG_TAG_TEST, "onClick");
         switch (v.getId()) {
             case R.id.iv_message_send:
                 String chatContent = mEditMessage.getText().toString();
