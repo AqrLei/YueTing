@@ -42,6 +42,7 @@ public class TestActivity extends MvpActivity <TestPresenter> implements View.On
         mViewAnimIv.setOnClickListener(this);
         mProAnimIV.setOnClickListener(this);
 
+
     }
 
     @Override

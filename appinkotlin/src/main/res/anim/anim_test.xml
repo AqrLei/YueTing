@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+interpolator设置动画速度的变化效果
+linear_interpolator 匀速变化
+accelerate_interpolator 加速变化
+accelerate_decelerate_interpolator 中间加速变化
+decelerate_interpolator 减速变化
+cycle_interpolator 循环播放一定次数，速度正弦变化
+
+startOffset 延迟 毫秒(ms) default 0
+
+一下两个一般是animator中使用
+此处使用要在每个动画效果标签下都设置才有效
+repeatCount 重复多少次(-1为无限)
+repeatMode 结束后模式(rervese/restart:回退/重新开始)
+
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:shareInterpolator="true"
+    android:startOffset="0">
+    <alpha
+        android:duration="3000"
+        android:fromAlpha="1.0"
+        android:repeatCount="-1"
+        android:repeatMode="reverse"
+        android:toAlpha="0.0" />
+    <scale
+        android:duration="3000"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="-1"
+        android:repeatMode="reverse"
+        android:toXScale="0.0"
+        android:toYScale="0.0" />
+    <rotate
+        android:duration="3000"
+        android:fromDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="-1"
+        android:repeatMode="reverse"
+        android:toDegrees="1800" />
+    <translate
+        android:duration="3000"
+        android:fromXDelta="0.0"
+        android:fromYDelta="0.0"
+        android:repeatCount="-1"
+        android:repeatMode="reverse"
+        android:toXDelta="500"
+        android:toYDelta="500" />
+</set>

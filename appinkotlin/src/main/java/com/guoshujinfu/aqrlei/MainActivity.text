@@ -199,4 +199,69 @@ class `MainActivity.text` : AppCompatActivity(), View.OnClickListener {
         }
         return super.onKeyDown(keyCode, event)
     }
+
 }
+
+<set
+  android:ordering=["together" | "sequentially"]>
+
+    <objectAnimator
+        android:propertyName="string"
+        android:duration="int"
+        android:valueFrom="float | int | color"
+        android:valueTo="float | int | color"
+        android:startOffset="int"
+        android:repeatCount="int"
+        android:repeatMode=["repeat" | "reverse"]
+        android:valueType=["intType" | "floatType"]/>
+
+    <animator
+        android:duration="int"
+        android:valueFrom="float | int | color"
+        android:valueTo="float | int | color"
+        android:startOffset="int"
+        android:repeatCount="int"
+        android:repeatMode=["repeat" | "reverse"]
+        android:valueType=["intType" | "floatType"]/>
+
+    <set>
+        ...
+    </set>
+</set>
+
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot=["true" | "false"] >
+    <item
+        android:drawable="@[package:]drawable/drawable_resource_name"
+        android:duration="integer" />
+</animation-list>
+
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@[package:]anim/interpolator_resource"
+    android:shareInterpolator=["true" | "false"] >
+    <alpha
+        android:fromAlpha="float"
+        android:toAlpha="float" />
+    <scale
+        android:fromXScale="float"
+        android:toXScale="float"
+        android:fromYScale="float"
+        android:toYScale="float"
+        android:pivotX="float"
+        android:pivotY="float" />
+    <translate
+        android:fromXDelta="float"
+        android:toXDelta="float"
+        android:fromYDelta="float"
+        android:toYDelta="float" />
+    <rotate
+        android:fromDegrees="float"
+        android:toDegrees="float"
+        android:pivotX="float"
+        android:pivotY="float" />
+    <set>
+        ...
+    </set>
+</set>
