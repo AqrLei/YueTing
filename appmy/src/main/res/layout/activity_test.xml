@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_test"
+        android:text="果树金福"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_test_select"
+        android:enabled="true"
+        android:background="@drawable/tv_shape"
+        android:layout_width="wrap_content"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/iv_view_anim"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#8561a18c"/>
+    <ImageView
+        android:id="@+id/iv_pro_anim"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#4195a6"/>
+
+</LinearLayout>
