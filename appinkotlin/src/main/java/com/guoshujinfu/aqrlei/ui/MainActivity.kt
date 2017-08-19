@@ -1,7 +1,10 @@
 package com.guoshujinfu.aqrlei.ui
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -9,6 +12,9 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.guoshujinfu.aqrlei.R
 import com.guoshujinfu.aqrlei.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +27,15 @@ import kotlinx.android.synthetic.main.activity_main.*
  *@Date: 2017/8/17
  */
 class MainActivity : BaseActivity() {
+    /*
+    * @param anim Tween Animation
+    * @param animator Property Animation
+    * @param animDrawable Frame Animation(Drawable Animation)
+    * */
+    private lateinit var anim: Animation
+    private lateinit var animator: Animator
+    private lateinit var animDrawable: AnimationDrawable
+
     override val layoutRes: Int
         get() = R.layout.activity_main
 
@@ -43,6 +58,24 @@ class MainActivity : BaseActivity() {
         spannableString1.setSpan(styleSpan3, 0, spannableString1.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         wordBuilder.append(spannableString1).append(spannableString)
         tv_spannable_test.text = wordBuilder
+        //tv_spannable_test.compoundDrawables[1].level = 14
+
+        /*Property Animation*/
+        animator = AnimatorInflater.loadAnimator(this, R.animator.animator_test)
+        animator.setTarget(tv_spannable_test)
+        /*Frame Animation (Drawable Animation)*/
+        animDrawable = iv_anim_test.background as AnimationDrawable
+        /*Tween Animation*/
+        anim = AnimationUtils.loadAnimation(this, R.anim.anim_test)
+        tv_spannable_test.setOnClickListener({
+
+
+            animator.start()
+            tv_spannable_test.startAnimation(anim)
+            animDrawable.start()//(iv_anim_test.background as AnimationDrawable).start()
+
+        })
+
     }
 
     override fun beforeSetContentView() {
