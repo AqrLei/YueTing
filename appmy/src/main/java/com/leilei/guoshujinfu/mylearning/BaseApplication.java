@@ -15,6 +15,9 @@ import com.leilei.guoshujinfu.mylearning.util.AppLog;
  * @Date: 2017/8/7
  */
 
+
+
+
 public class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onCreate() {
