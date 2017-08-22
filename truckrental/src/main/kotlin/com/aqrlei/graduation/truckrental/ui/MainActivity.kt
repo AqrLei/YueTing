@@ -1,7 +1,8 @@
 package com.aqrlei.graduation.truckrental.ui
 
-import com.aqrlei.graduation.truckrental.baselib.mvp.MvpActivity
-import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainPresenter
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.support.v7.app.AppCompatActivity
 
 /**
  * @Author: AqrLei
@@ -10,8 +11,8 @@ import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainPresent
  *@Date: 2017/8/22
  */
 
-class MainActivity(override val layoutRes: Int) : MvpActivity<MainPresenter>() {
-    override fun createPresenter(): MainPresenter {
-        return MainPresenter(this)
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
     }
 }
