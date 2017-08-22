@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/appdrawer" />
             <option value="$PROJECT_DIR$/appinkotlin" />
             <option value="$PROJECT_DIR$/appmy" />
+            <option value="$PROJECT_DIR$/truckrental" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
