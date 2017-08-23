@@ -12,7 +12,7 @@ import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
 import com.aqrlei.graduation.truckrental.baselib.util.adapter.ViewPagerAdapter
 import com.aqrlei.graduation.truckrental.baselib.util.net.config.HttpReqConfig
 import com.aqrlei.graduation.truckrental.model.resp.PictureRespBean
-import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainPresenter
+import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainActivityPresenter
 import kotlinx.android.synthetic.main.activity_picture.*
 import kotlinx.android.synthetic.main.picture_from_url.view.*
 
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
  * @Date: 2017/8/22
  */
 
-class MainActivity : MvpContract.MvpActivity<MainPresenter>() {
+class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
 
     private var mPictureRespBeans: MutableList<PictureRespBean>? = null
     private var mViewpagerAdapter: ViewPagerAdapter<*>? = null
@@ -40,8 +40,8 @@ class MainActivity : MvpContract.MvpActivity<MainPresenter>() {
 
     override val layoutRes: Int
         get() = R.layout.activity_picture
-    override val mPresenter: MainPresenter
-        get() = MainPresenter(this)
+    override val mPresenter: MainActivityPresenter
+        get() = MainActivityPresenter(this)
 
 
     override fun initComponents(savedInstanceState: Bundle?) {

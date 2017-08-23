@@ -24,8 +24,8 @@ import com.aqrlei.graduation.truckrental.ui.AnimationActivity
  * @Description:
  * @Date: 2017/8/23
  */
-class AnimationPresenter(mMvpActivity: AnimationActivity) :
-        MvpContract.Presenter<AnimationActivity>(mMvpActivity) {
+class AnimationActivityPresenter(mMvpActivity: AnimationActivity) :
+        MvpContract.ActivityPresenter<AnimationActivity>(mMvpActivity) {
     fun getTweenAnimation(): Animation {
         return AnimationUtils.loadAnimation(mMvpActivity, R.anim.anim_test)
     }
