@@ -51,12 +51,12 @@ class MainActivityPresenter(mMvpActivity: MainActivity) : MvpContract.ActivityPr
                         }
                     }
                 })
-        //subscriptions.add(subscription)
+        subscriptions.add(subscription)
 
     }
 }
 
-private fun <T> Observable<T>.subscribe(observer: Observer<Response<BaseRespBean<BannerBean>>>) {}
+//private fun <T> Observable<T>.subscribe(observer: Observer<Response<BaseRespBean<BannerBean>>>) {}
 
 
 
