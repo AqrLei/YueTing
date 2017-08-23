@@ -15,28 +15,36 @@ import kotlinx.android.synthetic.main.activity_main.*
  * @Date: 2017/8/23
  */
 class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() {
-    private var mFragmentManager: FragmentManager? = null
-    private var mTabHomeFragment: TabHomeFragment? = null
+    private lateinit var mFragmentManager: FragmentManager
+    private  var mTabHomeFragment: TabHomeFragment? = null
+    private val TAB_HOME_TAG: String = "tab_home"
 
     override val mPresenter: AnimationActivityPresenter
         get() = AnimationActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_main
+        get() = R.layout.activity_fragment
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mFragmentManager = supportFragmentManager
+        initFragments(savedInstanceState)
 
-        iv_anim_test.setOnClickListener({
-            tv_spannable_test.text = mPresenter.getSpannableString()
-            tv_spannable_test.startAnimation(mPresenter.getTweenAnimation())
-            mPresenter.getAnimator(tv_spannable_test).start()
-            mPresenter.getFrameAnimation(iv_anim_test).start()
-        })
     }
+
     private fun initFragments(savedInstanceState: Bundle?) {
-        if(savedInstanceState != null) {
-            mTabHomeFragment = mTabHomeFragment
+        if (savedInstanceState != null) {
+            mTabHomeFragment = mFragmentManager.findFragmentByTag(TAB_HOME_TAG) as TabHomeFragment
+            mTabHomeFragment = if (mTabHomeFragment == null)
+                TabHomeFragment.newInstance()
+            else
+                mTabHomeFragment
+        }else {
+            mTabHomeFragment = TabHomeFragment.newInstance()
         }
+        val ft = mFragmentManager.beginTransaction()
+        ft.add(R.id.fl_fragment, mTabHomeFragment, TAB_HOME_TAG)
+        ft.show(mTabHomeFragment)
+        ft.commit()
+
     }
 }
