@@ -7,11 +7,11 @@ import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @Author: AqrLei
- *@Name MyLearning
- *@Description:
- *@Date: 2017/8/17
+ * @Name MyLearning
+ * @Description:
+ * @Date: 2017/8/17
  */
-class BaseApplication: Application(), Application.ActivityLifecycleCallbacks {
+class BaseApplication : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivityPaused(p0: Activity?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

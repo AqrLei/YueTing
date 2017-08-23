@@ -8,8 +8,13 @@ import rx.Subscription
  *@Description:
  *@Date: 2017/8/22
  */
-open class BasePresenter {
-    protected lateinit var subscriptions: ArrayList<Subscription>
+abstract class BasePresenter {
+    protected var subscriptions: MutableList<Subscription>
+
+    init {
+        subscriptions = ArrayList()
+    }
+
     fun cancle() {
         for (subscription in subscriptions) {
             if (!subscription.isUnsubscribed)
