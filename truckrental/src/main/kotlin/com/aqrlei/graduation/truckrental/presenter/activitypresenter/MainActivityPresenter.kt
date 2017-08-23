@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers
  *@Description:
  *@Date: 2017/8/22
  */
-class MainPresenter(mMvpActivity: MainActivity) : MvpContract.Presenter<MainActivity>(mMvpActivity) {
+class MainActivityPresenter(mMvpActivity: MainActivity) : MvpContract.ActivityPresenter<MainActivity>(mMvpActivity) {
 
     fun getImg(type: String) {
         Log.d("Leilei", "getImg")
