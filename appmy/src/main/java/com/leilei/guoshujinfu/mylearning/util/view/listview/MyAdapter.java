@@ -1,6 +1,9 @@
 package com.leilei.guoshujinfu.mylearning.util.view.listview;
 
 import android.content.Context;
+import android.widget.TextView;
+
+import com.leilei.guoshujinfu.mylearning.R;
 
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class MyAdapter extends NormalListAdapter {
     * */
     @Override
     protected void bindData(NormalViewHolder holder, Object o) {
+        TextView tv = holder.get(R.id.tv_list_item);
+        tv.setText(o.toString());
 
 
     }

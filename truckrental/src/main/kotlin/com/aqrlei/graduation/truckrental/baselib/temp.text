@@ -1,0 +1,320 @@
+apply plugin: 'com.android.application'
+
+def packageTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.guoshujinfu.mobile.xinbei"
+        minSdkVersion 16
+        targetSdkVersion 22
+        versionCode 160
+        versionName "4.8.0"
+
+        // dex突破65535的限制Step1
+        multiDexEnabled true
+        // 默认是umeng的渠道
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "guoshu"]
+    }
+
+    //jenkins集成lint错误编译忽略
+    lintOptions {
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+
+    //  dexOptions {
+    //    javaMaxHeapSize "4g"
+    //  }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+    //签名
+    signingConfigs {
+        debug {
+        }
+        release {
+            storeFile file("../pushu.jks")
+            storePassword "902902()@"
+            keyAlias "pushu"
+            keyPassword "902902()@"
+        }
+    }
+
+    productFlavors {
+        guoshu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "guoshu",
+                                    APP_NAME           : "信呗"]
+        }
+        xinbei {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xinbei",
+                                    APP_NAME           : "信呗"]
+        }
+        qihu360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "qihu360",
+                                    APP_NAME           : "信呗借款"]
+        }
+        miui {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "miui",
+                                    APP_NAME           : "信呗"]
+        }
+        huawei {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "huawei",
+                                    APP_NAME           : "信呗借款"]
+        }
+        baidu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu",
+                                    APP_NAME           : "信呗-分期借贷款"]
+        }
+        bd91 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "bd91",
+                                    APP_NAME           : "信呗-分期借贷款"]
+        }
+        bdandroid {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "bdandroid",
+                                    APP_NAME           : "信呗-分期借贷款"]
+        }
+        tencent {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "tencent",
+                                    APP_NAME           : "信呗借款"]
+        }
+        meizu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "meizu",
+                                    APP_NAME           : "信呗"]
+        }
+        yingyonghui {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yingyonghui",
+                                    APP_NAME           : "信呗"]
+        }
+        oppo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "oppo",
+                                    APP_NAME           : "信呗-分期借贷款"]
+        }
+        vivo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "vivo",
+                                    APP_NAME           : "信呗"]
+        }
+        Smartisan {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Smartisan",
+                                    APP_NAME           : "信呗借款"]
+        }
+        Anzhishang_Market {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Anzhishang_Market",
+                                    APP_NAME           : "信呗借款"]
+        }
+        Jifeng_Market {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Jifeng_Market",
+                                    APP_NAME           : "信呗借款"]
+        }
+        Gionee {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Gionee",
+                                    APP_NAME           : "信呗-个人借款贷款"]
+        }
+        Letv {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Letv",
+                                    APP_NAME           : "信呗-个人贷款"]
+        }
+        Samsung {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Samsung",
+                                    APP_NAME           : "信呗"]
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                File outputDirectory = new File(outputFile.parent);
+                def fileName
+                if (variant.buildType.name == "release") {
+                    fileName =
+                            "xinbei_v${defaultConfig.versionName}_${packageTime()}_${variant.productFlavors[0].name}.apk"
+                } else {
+                    //                    fileName = "xinbei_v${defaultConfig.versionName}_${packageTime()}_beta.apk"
+                    fileName = "xinbei_beta.apk"
+                }
+                output.outputFile = new File(outputDirectory, fileName)
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
+
+    buildTypes {
+        public_debug {
+            buildConfigField "boolean", "SHOW_LOG", "true"
+            buildConfigField "String", "SERVICE_ADDRESS", "\"http://115.236.10.236:6767/\""
+            buildConfigField "String", "WAP_ADDRESS", "\"http://115.236.10.236:6868/\""
+            buildConfigField "boolean", "IS_ONLINE_ENV", "false"
+            debuggable true
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "SHOW_LOG", "true"
+            //测试环境服务器地址配置
+            //    buildConfigField "String", "SERVICE_ADDRESS", "\"http://192.168.0.122:8080/\""
+            buildConfigField "String", "SERVICE_ADDRESS", "\"http://daily.api.guoshujinfu.com/\""
+            //测试环境wap界面地址配置
+            buildConfigField "String", "WAP_ADDRESS", "\"http://daily.wap.guoshujinfu.com/\""
+            //测试环境判断
+            buildConfigField "boolean", "IS_ONLINE_ENV", "false"
+            //应用名
+            //      resValue "string", "display_name", "信呗测试包"
+            //      applicationIdSuffix '.debug'
+            //      debuggable true
+            versionNameSuffix "_debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "SHOW_LOG", "false"
+            //正式环境服务器地址配置
+            buildConfigField "String", "SERVICE_ADDRESS", "\"https://api.guoshujinfu.com/\""
+            //测试环境wap界面地址配置
+            buildConfigField "String", "WAP_ADDRESS", "\"http://wap.guoshujinfu.com/\""
+            //测试环境判断
+            buildConfigField "boolean", "IS_ONLINE_ENV", "true"
+            minifyEnabled true //混淆编译
+            zipAlignEnabled true
+            //移除无用的资源文件
+            shrinkResources true
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            res.srcDirs = [
+                    'src/main/res/xinbei/common',
+                    'src/main/res/xinbei/creditcard',
+                    'src/main/res/xinbei/coupon',
+                    'src/main/res/xinbei/login',
+                    'src/main/res/xinbei/investment/_loan/_apply/_form',
+                    'src/main/res/xinbei/investment/_loan/_apply',
+                    'src/main/res/xinbei/investment/_loan/_cash/_form',
+                    'src/main/res/xinbei/investment/_loan/_cash',
+                    'src/main/res/xinbei/investment/_loan',
+                    'src/main/res/xinbei/investment/_order/_detail',
+                    'src/main/res/xinbei/investment/_order/_lksign',
+                    'src/main/res/xinbei/investment/_order/_repay/_detail',
+                    'src/main/res/xinbei/investment/_order/_repay/_record',
+                    'src/main/res/xinbei/investment/_order/_repay',
+                    'src/main/res/xinbei/investment/_order',
+                    'src/main/res/xinbei/investment',
+                    'src/main/res/xinbei/main',
+                    'src/main/res/xinbei/msg',
+                    'src/main/res/xinbei/profile_bankcard',
+                    'src/main/res/xinbei/profile_follow',
+                    'src/main/res/xinbei/profile_feedback',
+                    'src/main/res/xinbei/profile_invitation',
+                    'src/main/res/xinbei/profile_relevant',
+                    'src/main/res/xinbei/tab_automatch',
+                    'src/main/res/xinbei/tab_home/_location',
+                    'src/main/res/xinbei/tab_home',
+                    'src/main/res/xinbei/tab_loan',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_accufund',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_alipay',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_contacts',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_credit',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_jd',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_mail',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_operator',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_studinfo',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_auth_sesame',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify_car',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify_house',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify_identity',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify_org',
+                    'src/main/res/xinbei/tab_profile/_auth_verify/_verify_shop',
+                    'src/main/res/xinbei/tab_profile/_auth_verify',
+                    'src/main/res/xinbei/tab_profile/_help',
+                    'src/main/res/xinbei/tab_profile/_user/_address',
+                    'src/main/res/xinbei/tab_profile/_user/_email',
+                    'src/main/res/xinbei/tab_profile/_user/_nick',
+                    'src/main/res/xinbei/tab_profile/_user/_sex',
+                    'src/main/res/xinbei/tab_profile/_user',
+                    'src/main/res/xinbei/tab_profile/_setting/_aboutus',
+                    'src/main/res/xinbei/tab_profile/_setting',
+                    'src/main/res/xinbei/tab_profile',
+                    'src/main/res/xinbei/task',
+                    'src/main/res/xinbei/umeng',
+                    'src/main/res/xinbei/verify',
+                    'src/main/res/xinbei/verify_car',
+                    'src/main/res/xinbei/verify_identity',
+                    'src/main/res/xinbei/verify_org',
+                    'src/main/res/xinbei/verify_shop',
+                    'src/main/res/xinbei/view',
+                    'src/main/res/xinbei',
+                    'src/main/res'
+            ]
+        }
+    }
+
+    task assembleProduct << {
+        println 'Assemble has finished successfully.'
+    }
+
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release" && variant.productFlavors[0].name != "guoshu") {
+            def name = variant.productFlavors[0].name;
+            def first = name.substring(0, 1);
+            def other = name.substring(1, name.length());
+            name = first.toUpperCase() + other;
+            println(name)
+            assembleProduct.dependsOn "assemble${name}Release"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //友盟数据统计和百度定位
+    compile project(':PushSDK')
+    //友盟数据统计
+    // dex突破65535的限制Step2  Step3 AppApplication继承一下MultiDexApplication.
+    //Butter Knife的依赖 https://github.com/JakeWharton/butterknife
+    //retrofit2和okhttp3的集成依赖
+    //stetho集成
+    //引入Fresco
+    //引入LeakCanary检查
+    //  debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1' // or 1.4-beta2
+    //  releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1' // or 1.4-beta2
+    //  testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1' // or 1.4-beta2
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.facebook.fresco:fresco:0.10.0'
+    compile 'com.facebook.fresco:imagepipeline-okhttp:0.10.0'
+    compile 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0+'
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+    compile project(':pulltorefresh')
+    testCompile 'junit:junit:4.12'
+    compile project(':pslib')
+
+    debugCompile project(path: ':pslib', configuration: 'allDebug')
+    releaseCompile project(path: ':pslib', configuration: 'allRelease')
+
+}
+repositories {
+    mavenCentral()
+}
+
+//myTask1.dependsOn "assembleGuoshuRelease", "assembleBaiduRelease", "assembleMiuiRelease"
