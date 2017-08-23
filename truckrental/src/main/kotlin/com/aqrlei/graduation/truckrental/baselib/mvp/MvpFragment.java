@@ -1,8 +1,5 @@
 package com.aqrlei.graduation.truckrental.baselib.mvp;
 
-import com.aqrlei.graduation.truckrental.baselib.base.BaseActivity;
-import com.aqrlei.graduation.truckrental.baselib.base.BaseFragment;
-
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -10,6 +7,7 @@ import com.aqrlei.graduation.truckrental.baselib.base.BaseFragment;
  * @Date: 2017/8/7
  */
 
+/*
 public abstract class MvpFragment<T extends MvpFragmentPresenter,
         V extends BaseActivity> extends BaseFragment<V> {
     protected T mPresenter;
@@ -42,3 +40,4 @@ public abstract class MvpFragment<T extends MvpFragmentPresenter,
 
 
 }
+*/

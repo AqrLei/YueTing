@@ -1,7 +1,5 @@
 package com.aqrlei.graduation.truckrental.baselib.mvp;
 
-import com.aqrlei.graduation.truckrental.baselib.base.BasePresenter;
-
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -9,6 +7,7 @@ import com.aqrlei.graduation.truckrental.baselib.base.BasePresenter;
  * @Date: 2017/8/7
  */
 
+/*
 public class MvpActivityPresenter<T extends MvpActivity> extends BasePresenter {
     protected T mMvpActivity;
 
@@ -16,4 +15,5 @@ public class MvpActivityPresenter<T extends MvpActivity> extends BasePresenter {
         super();
         this.mMvpActivity = mvpActivity;
     }
-}
+
+}*/

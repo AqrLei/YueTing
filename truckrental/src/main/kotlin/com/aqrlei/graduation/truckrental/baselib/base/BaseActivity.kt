@@ -5,16 +5,19 @@ import android.support.v7.app.AppCompatActivity
 import com.aqrlei.graduation.truckrental.baselib.util.ActivityCollector
 import com.aqrlei.graduation.truckrental.baselib.util.AppLog
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        beforeSetContentView()
         setContentView(layoutRes)
+        initComponents(savedInstanceState)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         ActivityCollector.remove(this)
     }
+    /*abstract fun createPresenter(presenter: T)*/
 
     protected abstract val layoutRes: Int
     protected open fun beforeSetContentView() {
