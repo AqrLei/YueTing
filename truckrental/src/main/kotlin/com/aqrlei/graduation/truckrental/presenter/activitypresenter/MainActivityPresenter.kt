@@ -10,7 +10,6 @@ import com.aqrlei.graduation.truckrental.model.resp.BaseRespBean
 import com.aqrlei.graduation.truckrental.model.resp.PictureRespBean
 import com.aqrlei.graduation.truckrental.ui.MainActivity
 import retrofit2.Response
-import rx.Observable
 import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -27,7 +26,7 @@ class MainActivityPresenter(mMvpActivity: MainActivity) : MvpContract.ActivityPr
         Log.d("Leilei", "getImg")
         val pictureReqBean = PictureReqBean()
         pictureReqBean.type = type
-        val subscription = HttpReqHelper.getHttpHelper()
+        val subscription = HttpReqHelper.httpHelper
                 .creatService(PictureInfoService::class.java)
                 .getPicture(pictureReqBean)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -43,7 +42,7 @@ class MainActivityPresenter(mMvpActivity: MainActivity) : MvpContract.ActivityPr
                     override fun onNext(t: Response<BaseRespBean<BannerBean>>?) {
                         if (t != null) {
                             val data = ArrayList<PictureRespBean>()
-                            data.addAll(t.body().data!!.bannerConfig!!)
+                            data.addAll(t.body().data.bannerConfig)
                             if (data.size > 0) {
 
                                 mMvpActivity.initViews(data)

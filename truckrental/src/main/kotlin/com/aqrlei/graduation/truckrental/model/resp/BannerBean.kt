@@ -1,5 +1,7 @@
 package com.aqrlei.graduation.truckrental.model.resp
 
+import java.io.Serializable
+
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -7,6 +9,5 @@ package com.aqrlei.graduation.truckrental.model.resp
  * @Date: 2017/8/4
  */
 /*Response Bean*/
-class BannerBean {
-    var bannerConfig: List<PictureRespBean>? = null
-}
+data class BannerBean(var bannerConfig: List<PictureRespBean>) : Serializable
+

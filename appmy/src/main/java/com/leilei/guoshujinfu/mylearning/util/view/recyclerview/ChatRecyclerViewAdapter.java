@@ -42,6 +42,7 @@ public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerV
             ButterKnife.bind(this,itemView);
         }
     }
+
     /*构造方法，获取数据*/
     public ChatRecyclerViewAdapter(List<ChatMessage> msg) {
         mMessageListm = msg;

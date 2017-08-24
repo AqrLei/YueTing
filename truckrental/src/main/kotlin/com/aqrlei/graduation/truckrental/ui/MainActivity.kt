@@ -1,5 +1,7 @@
 package com.aqrlei.graduation.truckrental.ui
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
-import com.aqrlei.graduation.truckrental.baselib.util.adapter.ViewPagerAdapter
+import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
+import com.aqrlei.graduation.truckrental.baselib.util.adapter.CommonPagerAdapter
 import com.aqrlei.graduation.truckrental.baselib.util.net.config.HttpReqConfig
 import com.aqrlei.graduation.truckrental.model.resp.PictureRespBean
 import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainActivityPresenter
@@ -26,13 +29,13 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
 
     private var mPictureRespBeans: MutableList<PictureRespBean>? = null
-    private var mViewpagerAdapter: ViewPagerAdapter<*>? = null
-    private var mViews: MutableList<View>? = null
+    private var mViewpagerAdapterm: CommonPagerAdapter<*>? = null
+    private var mViews: ArrayList<View>? = null
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             if (msg.what == 1) {
                 vp_impage.currentItem = vp_impage.currentItem + 1
-                this.sendEmptyMessageDelayed(1, 1000)
+                this.sendEmptyMessageDelayed(1, 3000)
             }
         }
     }
@@ -47,26 +50,39 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
-        //mHandler.sendEmptyMessageDelayed(1, 1000)
+        mHandler.sendEmptyMessageDelayed(1, 3000)
+        bt_post.setOnClickListener({
+            AnimationActivity.jumpToAnimationActivity(this, 0)
+        })
 
     }
 
     fun initViews(data: List<PictureRespBean>) {
-        Log.d("Lei","initViews")
+        Log.d("Lei", "initViews")
         mPictureRespBeans = ArrayList()
         mPictureRespBeans!!.addAll(data)
         mViews = ArrayList()
         for (i in mPictureRespBeans!!.indices) {
             addImgs(i)
         }
-        mViewpagerAdapter = ViewPagerAdapter(mViews)
-        vp_impage!!.adapter = mViewpagerAdapter
+        mViewpagerAdapterm = CommonPagerAdapter(mViews as ArrayList<View>)
+        vp_impage!!.adapter = mViewpagerAdapterm
     }
 
     private fun addImgs(pos: Int) {
         val view = LayoutInflater.from(this).inflate(R.layout.picture_from_url, null)
-        view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl))
+        view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl), null)
         /* view.sdv_picture.setImageURI()*/
         mViews!!.add(view)
+    }
+
+    companion object {
+        fun jumpToMainActivity(context: Context, data: Int) {
+            val intent = Intent(context, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putInt("code", data)
+            intent.putExtras(bundle)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
     }
 }

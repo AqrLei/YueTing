@@ -9,28 +9,5 @@ import java.io.Serializable
  * @Date: 2017/8/4
  */
 
-class BaseRespBean<T> : Serializable {
-    var success: Boolean? = null
-    var errorCode: String? = null
-    var errorMsg: String? = null
-    var data: T? = null
-
-    constructor() {}
-
-    constructor(success: Boolean?, errorCode: String, errorMsg: String, data: T) {
-        this.success = success
-        this.errorCode = errorCode
-        this.errorMsg = errorMsg
-        this.data = data
-    }
-
-    override fun toString(): String {
-        return "BaseRespBean{" +
-                "success=" + success +
-                ", errorCode='" + errorCode + '\'' +
-                ", errorMsg='" + errorMsg + '\'' +
-                ", data=" + data +
-                '}'
-    }
-
-}
+data class BaseRespBean<T>(var success: Boolean, var errorCode: String, var errorMsg: String,
+                           var data: T) : Serializable

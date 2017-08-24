@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.truckrental.model.resp
+package com.leilei.guoshujinfu.mylearning.model.resp
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,4 +14,5 @@ import java.io.Serializable
 /**
  * {"bannerImg":url}
  */
-data class PictureRespBean(@SerializedName("bannerImg") var pictureUrl: String) : Serializable
+data class PictureRespBean(@SerializedName("bannerImg") var pictureUrl: String): Serializable
+
