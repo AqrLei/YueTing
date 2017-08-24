@@ -1,12 +1,14 @@
 package com.aqrlei.graduation.truckrental.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
+import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
 import com.aqrlei.graduation.truckrental.presenter.activitypresenter.AnimationActivityPresenter
 import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @Author: AqrLei
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() {
     private lateinit var mFragmentManager: FragmentManager
-    private  var mTabHomeFragment: TabHomeFragment? = null
+    private var mTabHomeFragment: TabHomeFragment? = null
     private val TAB_HOME_TAG: String = "tab_home"
 
     override val mPresenter: AnimationActivityPresenter
@@ -38,7 +40,7 @@ class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() 
                 TabHomeFragment.newInstance()
             else
                 mTabHomeFragment
-        }else {
+        } else {
             mTabHomeFragment = TabHomeFragment.newInstance()
         }
         val ft = mFragmentManager.beginTransaction()
@@ -46,5 +48,14 @@ class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() 
         ft.show(mTabHomeFragment)
         ft.commit()
 
+    }
+
+    companion object {
+        fun jumpToAnimationActivity(context: Context, data: Int) {
+            val intent = Intent(context, AnimationActivity::class.java)
+            val bundle = Bundle()
+            bundle.putInt("code", data)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.aqrlei.graduation.truckrental.ui
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
+import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
 import com.aqrlei.graduation.truckrental.baselib.util.adapter.ViewPagerAdapter
 import com.aqrlei.graduation.truckrental.baselib.util.net.config.HttpReqConfig
 import com.aqrlei.graduation.truckrental.model.resp.PictureRespBean
@@ -48,11 +51,14 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
         super.initComponents(savedInstanceState)
         mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
         mHandler.sendEmptyMessageDelayed(1, 3000)
+        bt_post.setOnClickListener({
+            AnimationActivity.jumpToAnimationActivity(this, 0)
+        })
 
     }
 
     fun initViews(data: List<PictureRespBean>) {
-        Log.d("Lei","initViews")
+        Log.d("Lei", "initViews")
         mPictureRespBeans = ArrayList()
         mPictureRespBeans!!.addAll(data)
         mViews = ArrayList()
@@ -68,5 +74,15 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
         view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl), null)
         /* view.sdv_picture.setImageURI()*/
         mViews!!.add(view)
+    }
+
+    companion object {
+        fun jumpToMainActivity(context: Context, data: Int) {
+            val intent = Intent(context, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putInt("code", data)
+            intent.putExtras(bundle)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
     }
 }

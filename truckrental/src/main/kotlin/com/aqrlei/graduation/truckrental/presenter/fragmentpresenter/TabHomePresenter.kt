@@ -2,6 +2,7 @@ package com.aqrlei.graduation.truckrental.presenter.fragmentpresenter
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
@@ -26,16 +27,16 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
  */
 class TabHomePresenter(mMvpView : TabHomeFragment): MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
 
-    fun getTweenAnimation(): Animation {
-        return AnimationUtils.loadAnimation(mMvpView.context, R.anim.anim_test)
+    fun getTweenAnimation(context: Context): Animation {
+        return AnimationUtils.loadAnimation(context, R.anim.anim_test)
     }
 
     fun getFrameAnimation(v: View): AnimationDrawable {
         return v.background as AnimationDrawable
     }
 
-    fun getAnimator(v: View): Animator {
-        val animator = AnimatorInflater.loadAnimator(mMvpView.context, R.animator.animator_test)
+    fun getAnimator(context: Context,v: View): Animator {
+        val animator = AnimatorInflater.loadAnimator(context, R.animator.animator_test)
         animator.setTarget(v)
         return animator
     }
