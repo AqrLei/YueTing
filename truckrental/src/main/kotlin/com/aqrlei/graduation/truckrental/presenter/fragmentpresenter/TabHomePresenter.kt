@@ -25,7 +25,8 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
  * @Description:
  * @Date: 2017/8/23
  */
-class TabHomePresenter(mMvpView : TabHomeFragment): MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
+class TabHomePresenter(mMvpView : TabHomeFragment):
+        MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
 
     fun getTweenAnimation(context: Context): Animation {
         return AnimationUtils.loadAnimation(context, R.anim.anim_test)

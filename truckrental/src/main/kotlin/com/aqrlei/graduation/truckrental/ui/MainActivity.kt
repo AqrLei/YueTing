@@ -12,7 +12,7 @@ import android.view.View
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
 import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
-import com.aqrlei.graduation.truckrental.baselib.util.adapter.ViewPagerAdapter
+import com.aqrlei.graduation.truckrental.baselib.util.adapter.CommonPagerAdapter
 import com.aqrlei.graduation.truckrental.baselib.util.net.config.HttpReqConfig
 import com.aqrlei.graduation.truckrental.model.resp.PictureRespBean
 import com.aqrlei.graduation.truckrental.presenter.activitypresenter.MainActivityPresenter
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
 
     private var mPictureRespBeans: MutableList<PictureRespBean>? = null
-    private var mViewpagerAdapter: ViewPagerAdapter<*>? = null
+    private var mViewpagerAdapterm: CommonPagerAdapter<*>? = null
     private var mViews: ArrayList<View>? = null
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -65,8 +65,8 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
         for (i in mPictureRespBeans!!.indices) {
             addImgs(i)
         }
-        mViewpagerAdapter = ViewPagerAdapter(mViews as ArrayList<View>)
-        vp_impage!!.adapter = mViewpagerAdapter
+        mViewpagerAdapterm = CommonPagerAdapter(mViews as ArrayList<View>)
+        vp_impage!!.adapter = mViewpagerAdapterm
     }
 
     private fun addImgs(pos: Int) {

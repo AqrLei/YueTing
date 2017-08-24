@@ -11,7 +11,7 @@ import android.view.ViewGroup
  * @Date: 2017/8/4
  */
 
-class ViewPagerAdapter<T : View>(private val view: List<T>)
+class CommonPagerAdapter<T : View>(private val view: List<T>)
     : PagerAdapter() {
     override fun getCount(): Int {
         /*int型所能表达的最大值，用于实现图片的无限轮播*/
@@ -22,10 +22,7 @@ class ViewPagerAdapter<T : View>(private val view: List<T>)
     * 必须实现的方法
     * 返回view与object是否是同一类型
     * */
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-
-        return view === `object`
-    }
+    override fun isViewFromObject(view: View, any: Any) = view === any
 
     /*在指定的位置创建页面，并将之添加到要显示的容器中*/
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -36,10 +33,7 @@ class ViewPagerAdapter<T : View>(private val view: List<T>)
         if (position < 0) {
             position = view.size + position
         }
-
         val v = view[position]
-
-
         /*
         * 如果v已经被添加过既这个view已经有了parent，要先将之从父容器中remove
         * 否则在addView()的时候会
@@ -61,9 +55,8 @@ class ViewPagerAdapter<T : View>(private val view: List<T>)
         return v
     }
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+    override fun destroyItem(container: ViewGroup, position: Int, any: Any) {
         var position = position
-
         /*同理，销毁view的时候也要对position进行处理*/
         position %= view.size
         if (position < 0) {
