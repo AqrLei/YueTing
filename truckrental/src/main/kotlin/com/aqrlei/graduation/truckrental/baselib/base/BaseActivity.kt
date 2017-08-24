@@ -17,7 +17,6 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onDestroy()
         ActivityCollector.remove(this)
     }
-    /*abstract fun createPresenter(presenter: T)*/
 
     protected abstract val layoutRes: Int
     protected open fun beforeSetContentView() {

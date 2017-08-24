@@ -27,12 +27,12 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
 
     private var mPictureRespBeans: MutableList<PictureRespBean>? = null
     private var mViewpagerAdapter: ViewPagerAdapter<*>? = null
-    private var mViews: MutableList<View>? = null
+    private var mViews: ArrayList<View>? = null
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             if (msg.what == 1) {
                 vp_impage.currentItem = vp_impage.currentItem + 1
-                this.sendEmptyMessageDelayed(1, 1000)
+                this.sendEmptyMessageDelayed(1, 3000)
             }
         }
     }
@@ -47,7 +47,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
-        //mHandler.sendEmptyMessageDelayed(1, 1000)
+        mHandler.sendEmptyMessageDelayed(1, 3000)
 
     }
 
@@ -59,13 +59,13 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>() {
         for (i in mPictureRespBeans!!.indices) {
             addImgs(i)
         }
-        mViewpagerAdapter = ViewPagerAdapter(mViews)
+        mViewpagerAdapter = ViewPagerAdapter(mViews as ArrayList<View>)
         vp_impage!!.adapter = mViewpagerAdapter
     }
 
     private fun addImgs(pos: Int) {
         val view = LayoutInflater.from(this).inflate(R.layout.picture_from_url, null)
-        view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl))
+        view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl), null)
         /* view.sdv_picture.setImageURI()*/
         mViews!!.add(view)
     }

@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.truckrental.model.req
+package com.leilei.guoshujinfu.mylearning.model.req
 
 /**
  * @Author: AqrLei
@@ -8,4 +8,4 @@ package com.aqrlei.graduation.truckrental.model.req
  */
 
 /*request bean*/
-data class PictureReqBean(var type: String = "")
+data class PictureReqBean (var type: String="")
