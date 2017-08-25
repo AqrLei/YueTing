@@ -25,7 +25,7 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
  * @Description:
  * @Date: 2017/8/23
  */
-class TabHomePresenter(mMvpView : TabHomeFragment):
+class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
 
     fun getTweenAnimation(context: Context): Animation {
@@ -36,7 +36,7 @@ class TabHomePresenter(mMvpView : TabHomeFragment):
         return v.background as AnimationDrawable
     }
 
-    fun getAnimator(context: Context,v: View): Animator {
+    fun getAnimator(context: Context, v: View): Animator {
         val animator = AnimatorInflater.loadAnimator(context, R.animator.animator_test)
         animator.setTarget(v)
         return animator

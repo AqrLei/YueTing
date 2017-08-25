@@ -12,19 +12,20 @@ import android.widget.BaseAdapter
  * @Date: 2017/8/24
  */
 abstract class CommonListAdapter<T>(protected var mData: List<T>, protected var mContext: Context,
-                                    protected var mResId: Int): BaseAdapter(){
-    override fun getCount()= mData.size
+                                    protected var mGroupResId: Int) : BaseAdapter() {
+    override fun getCount() = mData.size
 
-    override fun getItemId(position: Int)=position.toLong()
-    override fun getItem(position: Int)=mData[position]
+    override fun getItemId(position: Int) = position.toLong()
+    override fun getItem(position: Int) = mData[position]
 
 
     override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        val holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
+        val holder = CommonListViewHolder.getCommonViewHolder(mContext, mGroupResId, position,
                 convertView, parent)
         bindData(holder, mData[position])
         return holder.convertView
 
     }
+
     protected abstract fun bindData(holderList: CommonListViewHolder, t: T)
 }

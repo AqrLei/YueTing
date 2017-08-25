@@ -5,12 +5,11 @@
     android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
+        android:visibility="gone"
         android:id="@+id/vp_impage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never" />
-    />
-
     <!--<com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_picture"
         android:layout_above="@+id/bt_post"
@@ -19,6 +18,18 @@
         fresco:actualImageScaleType="fitXY"
         fresco:placeholderImageScaleType="fitXY"
         />-->
+    <ListView
+        android:id="@+id/lv_test"
+        android:layout_above="@+id/bt_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+    <ExpandableListView
+        android:id="@+id/elv_test"
+        android:groupIndicator="@null"
+        android:layout_above="@+id/bt_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <Button
         android:id="@+id/bt_post"
         android:layout_width="wrap_content"

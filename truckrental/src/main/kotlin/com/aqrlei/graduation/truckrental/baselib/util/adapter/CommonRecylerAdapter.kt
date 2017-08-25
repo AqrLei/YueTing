@@ -34,13 +34,13 @@ abstract class CommonRecylerAdapter<T>(protected var mData: List<T>, protected v
                 mListener!!.onItemClickListener(holder.itemView, position)
             })
         }
-        bindData(holder, mData)
+        bindData(holder, mData, position)
 
     }
 
     override fun getItemCount() = mData.size
 
-    protected abstract fun bindData(holder: CommonRecyclerViewHolder, data: List<T>)
+    protected abstract fun bindData(holder: CommonRecyclerViewHolder, data: List<T>, position: Int)
     fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
         mLongListener = listener
     }
