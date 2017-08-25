@@ -11,6 +11,7 @@ public class ChatMessage {
     private Drawable avatar;
     private String Content;
     private int type;
+
     public void setType(int type) {
         this.type = type;
     }

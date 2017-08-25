@@ -16,22 +16,22 @@ class CommonListViewHolder constructor(context: Context, resId: Int, position: I
     private val mViews: SparseArray<View> = SparseArray()
     private val mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
     var convertView: View
+    var childPosition: Int = 0
     var position: Int = 0
         private set
-
     init {
         convertView = mLayoutInflater.inflate(resId, parent, false)
         convertView.tag = this
         this.position = position
     }
 
-    fun <T : View> get(viewId: Int): T {
+    fun  get(viewId: Int): View {
         var v: View? = mViews.get(viewId)
         if (v == null) {
             v = convertView.findViewById(viewId)
             mViews.put(viewId, v)
         }
-        return v as T
+        return v!!
     }
 
     companion object {

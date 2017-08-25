@@ -1,0 +1,159 @@
+package com.guoshujinfu.mobile.xinbei.adapter.investment.order.lksign;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.widget.Space;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.guoshujinfu.mobile.xinbei.R;
+import com.guoshujinfu.mobile.pslib.expand.investment.order.lksign.LKSignContractStatus;
+import com.guoshujinfu.mobile.pslib.model.resp.order.lksign.LKSignContractBean;
+import com.guoshujinfu.mobile.pslib.model.resp.order.lksign.LKSignListRespBean;
+
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+/**
+ * @author: Domino
+ * @className: LKSignContractListAdapter
+ * @description: 领签合同列表
+ * @createTime: 2017/4/22 14:26
+ */
+public class LKSignContractListAdapter extends BaseExpandableListAdapter {
+
+    private Context mContext;
+    private List<LKSignListRespBean> mData;
+
+    public LKSignContractListAdapter(Context context, List<LKSignListRespBean> data) {
+        this.mContext = context;
+        this.mData = data;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return mData.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return mData.get(groupPosition).getContract() == null ? 0
+                : mData.get(groupPosition).getContract().size();
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return TextUtils.isEmpty(mData.get(groupPosition).getName()) ? "--"
+                : mData.get(groupPosition).getName();
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        if (mData.get(groupPosition).getContract() == null) {
+            return null;
+        }
+        return mData.get(groupPosition).getContract().get(childPosition);
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        GroupViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.listitem_type_lksign_obj, parent, false);
+            holder = new GroupViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (GroupViewHolder) convertView.getTag();
+        }
+        holder.objNameTv.setText(getGroup(groupPosition) + "需签署");
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
+                             ViewGroup parent) {
+        /*isLastChild为true表示是这一组的最后一个元素*/
+        ChildViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.listitem_type_lksign_contract, parent, false);
+            holder = new ChildViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ChildViewHolder) convertView.getTag();
+        }
+        Object obj = getChild(groupPosition, childPosition);
+
+        if (obj != null && obj instanceof LKSignContractBean) {
+            LKSignContractBean bean = (LKSignContractBean) getChild(groupPosition, childPosition);
+            holder.titleTv.setText(bean.getContractName());
+
+            holder.statusTv.setText(bean.getStatusText());
+            holder.statusTv.setTextColor(Color.parseColor(bean.getStatusColor()));
+
+            holder.arrowIv.setVisibility(bean.getSignStatus() == LKSignContractStatus.CANCEL
+                    ? View.INVISIBLE : View.VISIBLE);
+
+            if (groupPosition == mData.size() - 1 && childPosition == mData.get(groupPosition)
+                    .getContract().size() - 1) {
+                holder.bottomSpace.setVisibility(View.VISIBLE);
+            } else {
+                holder.bottomSpace.setVisibility(View.GONE);
+            }
+        }
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    static class GroupViewHolder {
+
+        @Bind(R.id.tv_obj_name)
+        TextView objNameTv;
+
+        public GroupViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    static class ChildViewHolder {
+
+        @Bind(R.id.tv_contract_title)
+        TextView titleTv;
+        @Bind(R.id.tv_contract_status)
+        TextView statusTv;
+        @Bind(R.id.iv_arrow)
+        ImageView arrowIv;
+        @Bind(R.id.divider_bottom_space)
+        Space bottomSpace;
+
+        public ChildViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
+}
