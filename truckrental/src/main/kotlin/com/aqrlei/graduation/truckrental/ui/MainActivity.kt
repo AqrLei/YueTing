@@ -79,7 +79,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     }
 
-    fun initData() {
+    private fun initData() {
         mChild.add(ChildMessage("child1", getDrawable(R.mipmap.ic_launcher_round)))
         mChild.add(ChildMessage("child2", getDrawable(R.mipmap.ic_launcher_round)))
         mChild.add(ChildMessage("child3", getDrawable(R.mipmap.ic_launcher_round)))
