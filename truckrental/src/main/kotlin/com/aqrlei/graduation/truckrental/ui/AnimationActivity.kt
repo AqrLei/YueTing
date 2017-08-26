@@ -27,7 +27,7 @@ class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() 
     override val mPresenter: AnimationActivityPresenter
         get() = AnimationActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_fragment
+        get() = R.layout.activity_animation
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
