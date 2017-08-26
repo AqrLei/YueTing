@@ -11,6 +11,13 @@ import android.view.ViewGroup
  * @Description:
  * @Date: 2017/8/24
  */
+
+/*
+* @param mData  传入的数据
+* @param resId  布局的Id
+* @param mLongListener  自定义的长按点击事件
+* @param mListener  自定义的点击事件
+* */
 abstract class CommonRecylerAdapter<T>(protected var mData: List<T>, protected var resId: Int) :
         RecyclerView.Adapter<CommonRecyclerViewHolder>() {
     protected var mLongListener: OnItemLongClickListener? = null
@@ -35,12 +42,13 @@ abstract class CommonRecylerAdapter<T>(protected var mData: List<T>, protected v
             })
         }
         bindData(holder, mData, position)
-
     }
 
     override fun getItemCount() = mData.size
-
+    /*具体实现类实现这个方法，将数据绑定到相应的布局上*/
     protected abstract fun bindData(holder: CommonRecyclerViewHolder, data: List<T>, position: Int)
+
+    /*自定义的点击事件实现*/
     fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
         mLongListener = listener
     }
@@ -56,5 +64,4 @@ abstract class CommonRecylerAdapter<T>(protected var mData: List<T>, protected v
     interface OnItemClickListener {
         fun onItemClickListener(view: View, position: Int)
     }
-
 }

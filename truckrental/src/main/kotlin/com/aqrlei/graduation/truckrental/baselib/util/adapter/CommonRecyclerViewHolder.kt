@@ -10,9 +10,12 @@ import android.view.View
  * @Description:
  * @Date: 2017/8/24
  */
+/*
+* @param itemView 创建ViewHolder时传入的View
+* @param mViews 保存布局View中的组件
+* */
 class CommonRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val mViews: SparseArray<View> = SparseArray()
-
     fun <T : View> get(viewId: Int): T {
         var v: View? = mViews.get(viewId)
         if (v == null) {
@@ -21,5 +24,4 @@ class CommonRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
         }
         return v as T
     }
-
 }

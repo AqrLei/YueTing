@@ -67,9 +67,15 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
         //mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
         //mHandler.sendEmptyMessageDelayed(1, 3000)
+
+        /*通过布局的id获取ExpandableListView实例，设置adapter*/
         elv_test.setAdapter(TestExpandableListAdapter(this, mData, R.layout.listitem_content,
                 R.layout.listitem_title))
+        /*遍历group，默认展开*/
+        for (i in mData.indices) elv_test.expandGroup(i)
+        /*设置子项的点击事件*/
         elv_test.setOnChildClickListener(this)
+
         lv_test.adapter = TestListViewTypeAdapter(this, R.layout.listitem_title,
                 R.layout.listitem_content, mData)
         bt_post.setOnClickListener({
@@ -102,7 +108,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     }
 
     fun defaultExpandGroup() {
-        for (i in mData.indices) elv_test.expandGroup(i)
+
     }
 
     fun initViews(data: List<PictureRespBean>) {

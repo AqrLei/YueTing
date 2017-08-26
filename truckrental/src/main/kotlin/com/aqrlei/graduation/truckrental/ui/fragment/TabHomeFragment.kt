@@ -13,6 +13,11 @@ import kotlinx.android.synthetic.main.activity_main.view.*
  * @Description:
  * @Date: 2017/8/23
  */
+/*
+* @param mPresenter 访问Presenter
+* @param mView 访问对应的布局
+* @param mContainerActivity 访问对应的Activity
+* */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, AnimationActivity>() {
 
     override val mPresenter: TabHomePresenter
@@ -31,14 +36,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, AnimationActiv
 
     override fun initComponents() {
         super.initComponents()
-
-      mView.iv_anim_test.setOnClickListener({
+        mView.iv_anim_test.setOnClickListener({
             mView.tv_spannable_test.text = mPresenter.getSpannableString()
             mView.tv_spannable_test.startAnimation(mPresenter.getTweenAnimation(mContainerActivity))
             mPresenter.getAnimator(mContainerActivity, mView.tv_spannable_test).start()
             mPresenter.getFrameAnimation(mView.iv_anim_test).start()
         })
     }
-
-
 }
