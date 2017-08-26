@@ -16,6 +16,9 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
  * @Description:
  * @Date: 2017/8/23
  */
+/*
+* @param mPresenter 访问对应的Presenter
+* */
 class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() {
     private lateinit var mFragmentManager: FragmentManager
     private var mTabHomeFragment: TabHomeFragment? = null

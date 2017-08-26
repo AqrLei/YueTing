@@ -11,6 +11,12 @@ import android.widget.BaseExpandableListAdapter
  * @Description:
  * @Date: 2017/8/25
  */
+/*
+* @param mContext 上下文
+* @param mData 传入的数据
+* @param childResId 子布局Id
+* @param groupResId 组布局Id
+* */
 abstract class CommonExpandListAdapter<T>(protected var mContext: Context,
                                           protected var mData: List<T>,
                                           protected var childResId: Int,
@@ -20,8 +26,13 @@ abstract class CommonExpandListAdapter<T>(protected var mContext: Context,
         private val TYPE_GROUP: Boolean = true
         private val TYPE_CHILD: Boolean = false
     }
-    override fun isChildSelectable(p0: Int, p1: Int) = true
+
+    /*设置是否可以选中*/
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int) = true
+
+    /*返回未为false时，在调用notifyDataSetChanged时只会调用那些getItem变化的getView方法*/
     override fun hasStableIds() = false
+
     override fun getGroupCount() = mData.size
     override fun getGroupId(groupPosition: Int) = groupPosition.toLong()
     override fun getChildId(groupPosition: Int, childPosition: Int) = childPosition.toLong()
@@ -29,7 +40,7 @@ abstract class CommonExpandListAdapter<T>(protected var mContext: Context,
                               convertView: View?, parent: ViewGroup): View {
         val childViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, childResId,
                 childPosition, convertView, parent)
-        bindData(childViewHolder, mData, TYPE_CHILD)
+        bindData(childViewHolder, mData, groupPosition, TYPE_CHILD)
         return childViewHolder.convertView
     }
 
@@ -37,13 +48,12 @@ abstract class CommonExpandListAdapter<T>(protected var mContext: Context,
                               parent: ViewGroup): View {
         val groupViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, groupResId,
                 groupPosition, convertView, parent)
-        /*设置groupView不可点击*/
-        bindData(groupViewHolder, mData, TYPE_GROUP)
+        bindData(groupViewHolder, mData, groupPosition, TYPE_GROUP)
+        /*为true时设置groupView不可点击*/
         groupViewHolder.convertView.isClickable = true
         return groupViewHolder.convertView
     }
 
-    protected abstract fun bindData(holder: CommonListViewHolder, data: List<T>, isGroup: Boolean)
-
-
+    protected abstract fun bindData(holder: CommonListViewHolder, data: List<T>, groupPosition: Int,
+                                    isGroup: Boolean)
 }

@@ -25,6 +25,9 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
  * @Description:
  * @Date: 2017/8/23
  */
+/*
+* @#param mMvpView 访问对应的Fragment
+* */
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
 
