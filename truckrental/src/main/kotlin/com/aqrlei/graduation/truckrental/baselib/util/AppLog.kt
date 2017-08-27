@@ -11,6 +11,7 @@ import android.util.Log
 object AppLog {
     val LOG_TAG_ACTIVITY: String = "activity"
     val LOG_TAG_FRAGMENT: String = "fragment"
+    val LOG_TAG_PRESENTER: String = "presenter"
     fun logDebug(tag: String, msg: String) {
         Log.d(tag, msg)
     }

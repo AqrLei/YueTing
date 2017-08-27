@@ -25,6 +25,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"/>
     <ExpandableListView
+        android:visibility="gone"
         android:id="@+id/elv_test"
         android:groupIndicator="@null"
         android:layout_above="@+id/bt_post"
@@ -37,7 +38,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:text="post"
-        android:visibility="visible" />
+        android:visibility="gone" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Hello World"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>
