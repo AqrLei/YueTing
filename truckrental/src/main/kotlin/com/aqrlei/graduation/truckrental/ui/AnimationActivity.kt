@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
+import android.widget.RadioGroup
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
+import com.aqrlei.graduation.truckrental.baselib.util.AppConstant
 import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
 import com.aqrlei.graduation.truckrental.presenter.activitypresenter.AnimationActivityPresenter
 import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
+import kotlinx.android.synthetic.main.activity_animation.*
 
 /**
  * @Author: AqrLei
@@ -19,38 +22,29 @@ import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
 /*
 * @param mPresenter 访问对应的Presenter
 * */
-class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>() {
-    private lateinit var mFragmentManager: FragmentManager
-    private var mTabHomeFragment: TabHomeFragment? = null
-    private val TAB_HOME_TAG: String = "tab_home"
+class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>()
+        , RadioGroup.OnCheckedChangeListener {
+    override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
+        (0 until radioGroup!!.childCount)
+                .filter { radioGroup.getChildAt(it).id == checkedId }
+                .forEach { mPresenter.changeFragment(it) }
+    }
 
     override val mPresenter: AnimationActivityPresenter
         get() = AnimationActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_fragment
+        get() = R.layout.activity_animation
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        mFragmentManager = supportFragmentManager
-        initFragments(savedInstanceState)
-
+        mPresenter.initFragments(savedInstanceState, supportFragmentManager)
+        mPresenter.changeFragment(AppConstant.TAG_FRAGMENT_HOME)
+        rg_anim_tab.setOnCheckedChangeListener(this)
     }
 
-    private fun initFragments(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            mTabHomeFragment = mFragmentManager.findFragmentByTag(TAB_HOME_TAG) as TabHomeFragment
-            mTabHomeFragment = if (mTabHomeFragment == null)
-                TabHomeFragment.newInstance()
-            else
-                mTabHomeFragment
-        } else {
-            mTabHomeFragment = TabHomeFragment.newInstance()
-        }
-        val ft = mFragmentManager.beginTransaction()
-        ft.add(R.id.fl_fragment, mTabHomeFragment, TAB_HOME_TAG)
-        ft.show(mTabHomeFragment)
-        ft.commit()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.finish()
     }
 
     companion object {

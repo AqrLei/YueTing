@@ -1,22 +1,18 @@
 package com.aqrlei.graduation.truckrental.presenter.activitypresenter
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.AnimationDrawable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
-import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+
 import com.aqrlei.graduation.truckrental.R
 import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
+import com.aqrlei.graduation.truckrental.baselib.util.AppConstant
+import com.aqrlei.graduation.truckrental.baselib.util.AppLog
 import com.aqrlei.graduation.truckrental.ui.AnimationActivity
+import com.aqrlei.graduation.truckrental.ui.fragment.TabAnimFragment
+import com.aqrlei.graduation.truckrental.ui.fragment.TabChatFragment
+import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
 
 /**
  * @Author: AqrLei
@@ -29,36 +25,62 @@ import com.aqrlei.graduation.truckrental.ui.AnimationActivity
 * */
 class AnimationActivityPresenter(mMvpActivity: AnimationActivity) :
         MvpContract.ActivityPresenter<AnimationActivity>(mMvpActivity) {
-    fun getTweenAnimation(): Animation {
-        return AnimationUtils.loadAnimation(mMvpActivity, R.anim.anim_test)
+
+    private var currentTab: Int = 0
+
+    companion object {
+        private lateinit var mFragmentManager: FragmentManager
+        private lateinit var mTabHomeFragment: TabHomeFragment
+        private lateinit var mTabChatFragment: TabChatFragment
+        private lateinit var mTabAnimFragment: TabAnimFragment
+        private var mFragments = ArrayList<Fragment>()
     }
 
-    fun getFrameAnimation(v: View): AnimationDrawable {
-        return v.background as AnimationDrawable
+    fun initFragments(savedInstanceState: Bundle?, fragmentManager: FragmentManager) {
+        AppLog.logDebug(AppLog.LOG_TAG_PRESENTER, "initFragments")
+        mFragments = ArrayList()
+        mFragmentManager = fragmentManager
+        if (savedInstanceState != null) {
+            mTabHomeFragment = (mFragmentManager
+                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_HOME])
+                    ?: TabHomeFragment.newInstance()) as TabHomeFragment
+
+            mTabAnimFragment = (mFragmentManager
+                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_ANIM])
+                    ?: TabHomeFragment.newInstance()) as TabAnimFragment
+            mTabChatFragment = (mFragmentManager
+                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_CHAT])
+                    ?: TabHomeFragment.newInstance()) as TabChatFragment
+        } else {
+            AppLog.logDebug(AppLog.LOG_TAG_PRESENTER, "initFragments-null")
+            mTabHomeFragment = TabHomeFragment.newInstance()
+            mTabAnimFragment = TabAnimFragment.newInstance()
+            mTabChatFragment = TabChatFragment.newInstance()
+        }
+        mFragments.add(mTabHomeFragment)
+        mFragments.add(mTabAnimFragment)
+        mFragments.add(mTabChatFragment)
     }
 
-    fun getAnimator(v: View): Animator {
-        val animator = AnimatorInflater.loadAnimator(mMvpActivity, R.animator.animator_test)
-        animator.setTarget(v)
-        return animator
+    fun changeFragment(position: Int) {
+        currentTab = position
+        for (i in mFragments.indices) {
+
+            val currentFragment = mFragments[i]
+            val ft = mFragmentManager.beginTransaction()
+            if (i == currentTab) {
+                if (!currentFragment.isAdded) {
+                    ft.add(R.id.fl_fragment, currentFragment, AppConstant.TAB_FRAGMENT_TAGS[i])
+                }
+                ft.show(currentFragment)
+            } else {
+                ft.hide(currentFragment)
+            }
+            ft.commit()
+        }
     }
 
-    fun getSpannableString(): SpannableStringBuilder {
-        var wordBuilder = SpannableStringBuilder("")
-        var spannableString1 = SpannableString("Hello World!\n")
-        var spannableString = SpannableString("你好 世界！")
-        var sizSpan = RelativeSizeSpan(0.75f)
-        var colorSpan1 = ForegroundColorSpan(Color.parseColor("#FF7C943E"))
-        var colorSpan2 = ForegroundColorSpan(Color.parseColor("#989223"))
-        var styleSpan1 = StyleSpan(Typeface.BOLD)
-        //var styleSpan2 = StyleSpan(Typeface.BOLD_ITALIC)
-        var styleSpan3 = StyleSpan(Typeface.ITALIC)
-        spannableString1.setSpan(colorSpan1, 0, spannableString1.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(sizSpan, 0, spannableString.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(colorSpan2, 0, spannableString.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString.setSpan(styleSpan1, 0, spannableString.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        spannableString1.setSpan(styleSpan3, 0, spannableString1.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        wordBuilder.append(spannableString1).append(spannableString)
-        return wordBuilder
+    fun finish() {
+        mFragments.clear()
     }
 }
