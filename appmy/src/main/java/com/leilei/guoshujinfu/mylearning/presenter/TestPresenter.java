@@ -1,6 +1,6 @@
 package com.leilei.guoshujinfu.mylearning.presenter;
 
-import com.leilei.guoshujinfu.mylearning.activity.TestActivity;
+import com.leilei.guoshujinfu.mylearning.activity.SuspensionActivity;
 import com.leilei.guoshujinfu.mylearning.util.BaseActivityPresenter;
 
 /**
@@ -10,8 +10,8 @@ import com.leilei.guoshujinfu.mylearning.util.BaseActivityPresenter;
  * @Date: 2017/8/8
  */
 
-public class TestPresenter extends BaseActivityPresenter<TestActivity> {
-    public TestPresenter(TestActivity mvpActivity) {
+public class TestPresenter extends BaseActivityPresenter<SuspensionActivity> {
+    public TestPresenter(SuspensionActivity mvpActivity) {
         super(mvpActivity);
     }
 }
