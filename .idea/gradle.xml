@@ -10,8 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/appdrawer" />
             <option value="$PROJECT_DIR$/appinkotlin" />
-            <option value="$PROJECT_DIR$/appmvpkotlin" />
             <option value="$PROJECT_DIR$/appmy" />
+            <option value="$PROJECT_DIR$/yueting" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
