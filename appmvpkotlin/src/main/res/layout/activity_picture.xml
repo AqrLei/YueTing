@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
-        android:visibility="gone"
         android:id="@+id/vp_impage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:visibility="gone"/>
     <!--<com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_picture"
         android:layout_above="@+id/bt_post"
@@ -20,16 +20,19 @@
         />-->
     <ListView
         android:id="@+id/lv_test"
-        android:layout_above="@+id/bt_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_above="@+id/bt_post"
+        android:visibility="visible"/>
+
     <ExpandableListView
         android:id="@+id/elv_test"
-        android:groupIndicator="@null"
-        android:layout_above="@+id/bt_post"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bt_post"
+        android:groupIndicator="@null"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/bt_post"
         android:layout_width="wrap_content"
@@ -37,7 +40,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:text="post"
-        android:visibility="visible" />
+        android:visibility="visible"/>
 
 
 </RelativeLayout>

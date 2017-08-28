@@ -3,6 +3,7 @@ package com.aqrlei.graduation.truckrental.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.RadioGroup
 import com.aqrlei.graduation.truckrental.R
@@ -10,7 +11,6 @@ import com.aqrlei.graduation.truckrental.baselib.mvp.MvpContract
 import com.aqrlei.graduation.truckrental.baselib.util.AppConstant
 import com.aqrlei.graduation.truckrental.baselib.util.IntentUtil
 import com.aqrlei.graduation.truckrental.presenter.activitypresenter.AnimationActivityPresenter
-import com.aqrlei.graduation.truckrental.ui.fragment.TabHomeFragment
 import kotlinx.android.synthetic.main.activity_animation.*
 
 /**
@@ -24,10 +24,12 @@ import kotlinx.android.synthetic.main.activity_animation.*
 * */
 class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>()
         , RadioGroup.OnCheckedChangeListener {
+    private var mFragments = ArrayList<Fragment>()
+    private lateinit var mFragmentManager: FragmentManager
     override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
         (0 until radioGroup!!.childCount)
                 .filter { radioGroup.getChildAt(it).id == checkedId }
-                .forEach { mPresenter.changeFragment(it) }
+                .forEach { mPresenter.changeFragment(it, mFragmentManager, mFragments) }
     }
 
     override val mPresenter: AnimationActivityPresenter
@@ -37,14 +39,10 @@ class AnimationActivity : MvpContract.MvpActivity<AnimationActivityPresenter>()
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        mPresenter.initFragments(savedInstanceState, supportFragmentManager)
-        mPresenter.changeFragment(AppConstant.TAG_FRAGMENT_HOME)
+        mFragmentManager = supportFragmentManager
+        mFragments = mPresenter.initFragments(savedInstanceState, mFragmentManager)
+        mPresenter.changeFragment(AppConstant.TAG_FRAGMENT_HOME, mFragmentManager, mFragments)
         rg_anim_tab.setOnCheckedChangeListener(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mPresenter.finish()
     }
 
     companion object {

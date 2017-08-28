@@ -48,7 +48,6 @@ public class MessageCenterActivity extends MvpActivity <MessageCenterPresenter> 
                 PackageManager.MATCH_DEFAULT_ONLY);
         if(list != null && list.size() > 0) {
             context.startActivity(intent);
-
         }
         else {
             AppToast.toastShow(context,"MessageCenterActivity未注册");
@@ -61,6 +60,7 @@ public class MessageCenterActivity extends MvpActivity <MessageCenterPresenter> 
         mHomeTab = mMessageTab.newTab().setText("主页");
         mChatTab = mMessageTab.newTab().setText("去聊");
         mPictureTab = mMessageTab.newTab().setText("图片");
+        mMessageTab.addTab(mMessageTab.newTab().setText("测试"));
         mMessageTab.addTab(mHomeTab);
         mMessageTab.addTab(mChatTab);
         mMessageTab.addTab(mPictureTab);

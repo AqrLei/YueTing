@@ -27,7 +27,7 @@ import butterknife.BindView;
  * @Date: 2017/8/8
  */
 
-public class TestActivity extends MvpActivity<TestPresenter> implements View.OnClickListener {
+public class SuspensionActivity extends MvpActivity<TestPresenter> implements View.OnClickListener {
     @BindView(R.id.iv_view_anim)
     ImageView mViewAnimIv;
     @BindView(R.id.iv_pro_anim)

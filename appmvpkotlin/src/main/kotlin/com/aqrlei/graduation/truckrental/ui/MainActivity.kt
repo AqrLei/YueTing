@@ -81,6 +81,8 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         bt_post.setOnClickListener({
             AnimationActivity.jumpToAnimationActivity(this, 0)
         })
+        lv_test.visibility = View.GONE
+        elv_test.visibility = View.VISIBLE
         defaultExpandGroup()
 
     }

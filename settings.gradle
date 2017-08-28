@@ -1,1 +1,1 @@
-include ':appmy',':appinkotlin', ':appdrawer', ':truckrental'
+include ':appmy',':appinkotlin', ':appdrawer', ':appmvpkotlin'
