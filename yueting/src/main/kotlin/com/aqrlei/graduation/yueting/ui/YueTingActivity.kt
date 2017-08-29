@@ -11,7 +11,8 @@ import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
 import com.aqrlei.graduation.yueting.baselib.util.AppConstant
 import com.aqrlei.graduation.yueting.baselib.util.IntentUtil
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
-import kotlinx.android.synthetic.main.activity_animation.*
+import kotlinx.android.synthetic.main.activity_yueting.*
+
 
 /**
  * @Author: AqrLei
@@ -35,7 +36,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_animation
+        get() = R.layout.activity_yueting
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)

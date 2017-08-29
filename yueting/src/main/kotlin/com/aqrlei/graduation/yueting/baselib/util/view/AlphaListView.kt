@@ -39,27 +39,29 @@ class AlphaListView : ListView {
         if (childCount == 0) {
             return
         }
-        var first = getChildAt(0)
-        var height = if (first is ViewGroup) {
+        val first = getChildAt(0)
+        val height = if (first is ViewGroup) {
             first.getChildAt(0).height
         } else {
             first.height
         }
-        AppLog.logDebug("view", " Front Height: \t"+height)
-       // height -= DensityUtil.dipToPx(mContext, 20F)
+        AppLog.logDebug("view", " Front Height: \t" + height)
+        // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp*/
         if (height <= DensityUtil.dipToPx(mContext, 40F)) return
-        var top = Math.abs(first.top)
-        AppLog.logDebug("view", "Height: \t"+height+"Top: \t"+top)
-        var alpha: Float = top * 1.0f / height
-        if(mListener != null) {
+        val top = Math.abs(first.top)
+        AppLog.logDebug("view", "Height: \t" + height + "Top: \t" + top)
+        val alpha: Float = top * 1.0f / height
+        if (mListener != null) {
             mListener!!.onAlphaChanged(if (alpha >= 1) 1F else alpha)
         }
     }
+
     fun setAlphaChangeListener(listener: OnAlphaChangeListener) {
         mListener = listener
     }
-     interface  OnAlphaChangeListener{
-        fun onAlphaChanged(percent : Float)
+
+    interface OnAlphaChangeListener {
+        fun onAlphaChanged(percent: Float)
     }
 }

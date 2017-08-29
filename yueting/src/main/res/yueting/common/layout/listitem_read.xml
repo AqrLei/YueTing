@@ -11,5 +11,6 @@
         android:drawableLeft="@mipmap/ic_launcher"
         android:drawablePadding="15dp"
         android:gravity="center_vertical"
+        android:textSize="20dp"
         android:text="这是一个书的名字"/>
 </LinearLayout>

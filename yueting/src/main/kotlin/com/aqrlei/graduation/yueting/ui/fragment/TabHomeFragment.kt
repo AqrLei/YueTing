@@ -15,7 +15,7 @@ import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
-import kotlinx.android.synthetic.main.activity_animation.*
+import kotlinx.android.synthetic.main.activity_yueting.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
@@ -34,7 +34,9 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         TabLayout.OnTabSelectedListener, AlphaListView.OnAlphaChangeListener {
     override fun onAlphaChanged(percent: Float) {
-        mContainerActivity.rg_anim_tab.setBackgroundColor(Color.argb((175 * percent).toInt(), 113, 204, 180))
+        mContainerActivity.rg_anim_tab.setBackgroundColor(
+                Color.argb((175 * percent).toInt(), 113, 204, 180)
+        )
     }
 
     private var mReadData = ArrayList<ReadMessage>()
@@ -57,7 +59,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.yueting_fragment_home //activity_animation
+        get() = R.layout.yueting_fragment_home //activity_yueting
 
     companion object {
         fun newInstance(): TabHomeFragment {
@@ -85,7 +87,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mReadData.add(ReadMessage("这是书名吧2", null))
         mReadData.add(ReadMessage("这是书名吧3", null))
         mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
-                inflate(R.layout.yueting_listheader_home, null))
+                inflate(R.layout.listheader_home, null))
         mRecommendLv.adapter = YueTingHomeListAdapter(mContainerActivity,
                 R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
                 mReadData, mMusicData)

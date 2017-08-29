@@ -7,7 +7,7 @@ android {
     sourceSets {
         main {
             java.srcDirs += 'src/main/kotlin'
-            res.srcDirs = ['src/main/res/yueting/reading',
+            res.srcDirs = ['src/main/res/yueting/read',
                            'src/main/res/yueting/music',
                            'src/main/res/yueting/common',
                            'src/main/res/yueting',
