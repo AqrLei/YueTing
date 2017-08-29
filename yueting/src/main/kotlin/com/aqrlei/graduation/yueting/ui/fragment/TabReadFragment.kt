@@ -15,6 +15,7 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingReadListAdapter
 import kotlinx.android.synthetic.main.activity_yueting.*
 import kotlinx.android.synthetic.main.listheader_read.view.*
+import kotlinx.android.synthetic.main.listheader_read_tab.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_read.view.*
 
 /**
@@ -51,7 +52,7 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-        AppToast.toastShow(mContainerActivity,tab?.text.toString(), 1000)
+        AppToast.toastShow(mContainerActivity, tab?.text.toString(), 1000)
     }
 
 
@@ -72,13 +73,16 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
 
     private fun initView() {
         var mReadLv = mView.lv_fragment_read
-        mHeaderView = LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_read, null)
+        mHeaderView = LayoutInflater.from(mContainerActivity)
+                .inflate(R.layout.listheader_read_tab, null)
         val mTabLayout = mHeaderView.tl_tab_read
         mTabLayout.addTab(mTabLayout.newTab().setText("全部"), true)
         mTabLayout.addTab(mTabLayout.newTab().setText("技术"))
         mTabLayout.addTab(mTabLayout.newTab().setText("文学"))
         mTabLayout.addTab(mTabLayout.newTab().setText("其它"))
         mTabLayout.addOnTabSelectedListener(this)
+        mReadLv.addHeaderView(LayoutInflater.from(mContainerActivity)
+                .inflate(R.layout.listheader_read, null))
         mReadLv.addHeaderView(mHeaderView)
         mReadData.add(ReadMessage("这是书名吧1", null))
         mReadData.add(ReadMessage("这是书名吧2", null))
@@ -86,6 +90,11 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         mReadData.add(ReadMessage("这是书名吧4", null))
         mReadData.add(ReadMessage("这是书名吧5", null))
         mReadData.add(ReadMessage("这是书名吧6", null))
+        mReadData.add(ReadMessage("这是书名吧7", null))
+        mReadData.add(ReadMessage("这是书名吧7", null))
+        mReadData.add(ReadMessage("这是书名吧7", null))
+        mReadData.add(ReadMessage("这是书名吧7", null))
+        mReadData.add(ReadMessage("这是书名吧7", null))
         mReadData.add(ReadMessage("这是书名吧7", null))
         mReadLv.adapter = YueTingReadListAdapter(mReadData, mContainerActivity,
                 R.layout.listitem_read)

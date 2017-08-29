@@ -16,14 +16,15 @@ import android.widget.BaseAdapter
 * @param mContext 上下文关系
 * @param mResId 布局的Id
 * */
-abstract class CommonListAdapter<T>(protected var mData: List<T>, protected var mContext: Context,
+abstract class CommonListAdapter<T>(protected var mData: List<T>,
+                                    protected var mContext: Context,
                                     protected var mResId: Int) : BaseAdapter() {
     override fun getCount() = mData.size
     override fun getItemId(position: Int) = position.toLong()
     /*将具体数据绑定到对应的位置上，一般在点击事件中保证对应的位置返回的是正确的数据*/
     override fun getItem(position: Int) = mData[position]
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
                 convertView, parent)
         bindData(holder, mData[position])
