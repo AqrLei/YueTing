@@ -31,6 +31,7 @@ class AlphaListView : ListView {
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
+        AppLog.logDebug("alpha","currentVOrigin:\t$t previousVOrigin\t$oldt")
 
         getScrollHeight()
     }
@@ -40,18 +41,22 @@ class AlphaListView : ListView {
             return
         }
         val first = getChildAt(0)
-        val height = if (first is ViewGroup) {
+        var height = if (first is ViewGroup) {
             first.getChildAt(0).height
         } else {
             first.height
         }
-        AppLog.logDebug("view", " Front Height: \t" + height)
         // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp*/
+        val top = first.top
+        AppLog.logDebug("alpha","Height:\t$height")
+        AppLog.logDebug("alpha","Top:\t$top")
+        height -= DensityUtil.dipToPx(mContext, 10F)
         if (height <= DensityUtil.dipToPx(mContext, 40F)) return
-        val top = Math.abs(first.top)
-        AppLog.logDebug("view", "Height: \t" + height + "Top: \t" + top)
-        val alpha: Float = top * 1.0f / height
+
+        val absTop = Math.abs(top)
+        AppLog.logDebug("view", "Height: \t" + height + "Top: \t" + absTop)
+        val alpha: Float = absTop * 1.0f / height
         if (mListener != null) {
             mListener!!.onAlphaChanged(if (alpha >= 1) 1F else alpha)
         }
