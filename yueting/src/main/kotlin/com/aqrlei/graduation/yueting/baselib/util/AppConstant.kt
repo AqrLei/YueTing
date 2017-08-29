@@ -12,10 +12,10 @@ object AppConstant {
     /*fragment tag*/
     val TAB_FRAGMENT_TAGS = arrayOf(
             "tag_fragment_home"
-            , "tag_fragment_anim"
-            , "tag_fragment_anim")
+            , "tag_fragment_read"
+            , "tag_fragment_music")
     val TAG_FRAGMENT_HOME: Int = 0
-    val TAG_FRAGMENT_ANIM: Int = 1
-    val TAG_FRAGMENT_CHAT: Int = 2
+    val TAG_FRAGMENT_READ: Int = 1
+    val TAG_FRAGMENT_MUSIC: Int = 2
     /*viewType*/
 }

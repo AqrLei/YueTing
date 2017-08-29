@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/appinkotlin/appinkotlin.iml" filepath="$PROJECT_DIR$/appinkotlin/appinkotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/appmy/appmy.iml" filepath="$PROJECT_DIR$/appmy/appmy.iml" />
       <module fileurl="file://$PROJECT_DIR$/yueting/yueting.iml" filepath="$PROJECT_DIR$/yueting/yueting.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yueting/yueting.iml" filepath="$PROJECT_DIR$/yueting/yueting.iml" />
     </modules>
   </component>
 </project>

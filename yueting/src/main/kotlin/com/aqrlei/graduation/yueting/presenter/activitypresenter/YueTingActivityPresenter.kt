@@ -8,9 +8,9 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
 import com.aqrlei.graduation.yueting.baselib.util.AppConstant
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
-import com.aqrlei.graduation.yueting.ui.fragment.TabReadFragment
-import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
+import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
+import com.aqrlei.graduation.yueting.ui.fragment.TabReadFragment
 
 /**
  * @Author: AqrLei
@@ -35,10 +35,10 @@ class YueTingActivityPresenter(mMvpActivity: YueTingActivity) :
                     ?: TabHomeFragment.newInstance()) as TabHomeFragment
 
             mTabReadFragment = (fragmentManager
-                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_ANIM])
+                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_READ])
                     ?: TabHomeFragment.newInstance()) as TabReadFragment
             mTabMusicFragment = (fragmentManager
-                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_CHAT])
+                    .findFragmentByTag(AppConstant.TAB_FRAGMENT_TAGS[AppConstant.TAG_FRAGMENT_MUSIC])
                     ?: TabHomeFragment.newInstance()) as TabMusicFragment
         } else {
             mTabHomeFragment = TabHomeFragment.newInstance()
