@@ -3,7 +3,7 @@ package com.aqrlei.graduation.yueting.baselib.util.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.ExpandableListView
 import com.aqrlei.graduation.yueting.baselib.util.AppLog
 import com.aqrlei.graduation.yueting.baselib.util.DensityUtil
 
@@ -11,9 +11,9 @@ import com.aqrlei.graduation.yueting.baselib.util.DensityUtil
  * @Author: AqrLei
  * @Name MyLearning
  * @Description:
- * @Date: 2017/8/28
+ * @Date: 2017/8/30
  */
-class AlphaListView : ListView {
+class AlphaExpandListView : ExpandableListView {
     private lateinit var mContext: Context
     private var mListener: OnAlphaChangeListener? = null
 
@@ -26,14 +26,13 @@ class AlphaListView : ListView {
     }
 
     private fun init(context: Context) {
-        mContext = context
+        this.mContext = context
     }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        //AppLog.logDebug("alpha","currentVOrigin:\t$t previousVOrigin\t$oldt")
-
         getScrollHeight()
+
     }
 
     private fun getScrollHeight() {
@@ -49,8 +48,8 @@ class AlphaListView : ListView {
         // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp*/
         val top = first.top
-        AppLog.logDebug("alpha","Height:\t$height")
-        AppLog.logDebug("alpha","Top:\t$top")
+        AppLog.logDebug("alpha", "Height:\t$height")
+        AppLog.logDebug("alpha", "Top:\t$top")
         height -= DensityUtil.dipToPx(mContext, 10F)
         if (height <= DensityUtil.dipToPx(mContext, 40F)) return
 

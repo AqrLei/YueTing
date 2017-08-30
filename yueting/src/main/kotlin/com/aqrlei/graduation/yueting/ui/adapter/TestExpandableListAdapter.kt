@@ -20,6 +20,7 @@ class TestExpandableListAdapter(mContext: Context,
                                 groupResId: Int) :
         CommonExpandListAdapter<ChatMessage>(mContext, mData, childResId, groupResId) {
 
+
     override fun getChildrenCount(groupPosition: Int) = mData[groupPosition].child?.size ?: 0
     override fun bindData(holder: CommonListViewHolder, data: List<ChatMessage>, groupPosition: Int,
                           isGroup: Boolean) {
@@ -32,6 +33,10 @@ class TestExpandableListAdapter(mContext: Context,
             drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
             contentView.setCompoundDrawablesRelative(drawable, null, null, null)
         }
+    }
+
+    override fun setInternalClick(holder: CommonListViewHolder, type: Boolean) {
+
     }
 
     override fun getGroup(groupPosition: Int) = mData[groupPosition].content ?: "--"
