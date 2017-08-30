@@ -14,38 +14,21 @@ import android.widget.BaseExpandableListAdapter
 /*
 * @param mContext 上下文
 * @param mData 传入的数据
-* @param childResId 子布局Id
-* @param groupResId 组布局Id
+* @param mChildResId 子布局Id
+* @param mGroupResId 组布局Id
 * */
-abstract class CommonExpandListAdapter<T>() :
+abstract class CommonExpandListAdapter<T> @JvmOverloads constructor(
+        context: Context,
+        data: List<T>,
+        childResId: Int = 0,
+        groupResId: Int = 0,
+        listener: OnInternalClick? = null) :
         BaseExpandableListAdapter(), View.OnClickListener {
-    protected lateinit var mContext: Context
-    protected lateinit var mData: List<T>
-    protected var childResId: Int = 0
-    protected var groupResId: Int = 0
-    protected var mListener: OnInternalClick? = null
-
-    internal constructor(mContext: Context,
-                         mData: List<T>,
-                         childResId: Int,
-                         groupResId: Int) : this() {
-        this.mContext = mContext
-        this.mData = mData
-        this.childResId = childResId
-        this.groupResId = groupResId
-    }
-
-    internal constructor(mContext: Context,
-                         mData: List<T>,
-                         childResId: Int,
-                         groupResId: Int,
-                         listener: OnInternalClick) : this() {
-        this.mContext = mContext
-        this.mData = mData
-        this.childResId = childResId
-        this.groupResId = groupResId
-        this.mListener = listener
-    }
+    protected var mContext: Context = context
+    protected var mData: List<T> = data
+    protected var mChildResId: Int = childResId
+    protected var mGroupResId: Int = groupResId
+    protected var mListener: OnInternalClick? = listener
 
     companion object {
         private val TYPE_GROUP: Boolean = true
@@ -63,7 +46,7 @@ abstract class CommonExpandListAdapter<T>() :
     override fun getChildId(groupPosition: Int, childPosition: Int) = childPosition.toLong()
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean,
                               convertView: View?, parent: ViewGroup): View {
-        val childViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, childResId,
+        val childViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, mChildResId,
                 childPosition, convertView, parent)
         bindData(childViewHolder, mData, groupPosition, TYPE_CHILD)
         if (mListener != null) {
@@ -74,7 +57,7 @@ abstract class CommonExpandListAdapter<T>() :
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?,
                               parent: ViewGroup): View {
-        val groupViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, groupResId,
+        val groupViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, mGroupResId,
                 groupPosition, convertView, parent)
         bindData(groupViewHolder, mData, groupPosition, TYPE_GROUP)
         /*为true时设置groupView不可点击*/

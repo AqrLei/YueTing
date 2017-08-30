@@ -30,10 +30,7 @@
             android:name=".activity.PictureActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
 
         </activity>
         <activity
@@ -56,6 +53,12 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
 
+        </activity>
+        <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 
