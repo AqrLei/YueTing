@@ -3,7 +3,10 @@ package com.leilei.guoshujinfu.mylearning.util.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
@@ -30,6 +33,8 @@ public class SemiRoundBar extends View {
     private boolean mIsOpenAnimation;
     private int mStartDegree;
     private int mSweepDegree;
+    private int[] colors = new int[4];
+    private float[] position = new float[4];
 
 
     private int mProgressDegree;
@@ -89,6 +94,18 @@ public class SemiRoundBar extends View {
                 mPaint.setStrokeCap(Paint.Cap.SQUARE);
                 break;
         }
+
+        position[0] = 0f;
+        position[1] = 0.3f;
+        position[2] = 0.75f;
+        position[3] = 1.0f;
+        colors[0] = 0XFF98050A;
+        colors[1] = 0XFF985B00;
+        colors[2] = 0XFF929807;
+        colors[3] = 0XFF19982E;
+
+        mPaint.setAntiAlias(true);
+
         setProgress(mCurrentProgress);
     }
 
@@ -122,17 +139,8 @@ public class SemiRoundBar extends View {
         super.onDraw(canvas);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        int[] colors = new int[4];
-        float[] position = new float[4];
 
-        position[0] = 0f;
-        position[1] = 0.3f;
-        position[2] = 0.75f;
-        position[3] = 1.0f;
-        colors[0] = 0XFF98050A;
-        colors[1] = 0XFF985B00;
-        colors[2] = 0XFF929807;
-        colors[3] = 0XFF19982E;
+
 
         float centerX = width / 2;
         float centerY = height / 2;
@@ -140,11 +148,13 @@ public class SemiRoundBar extends View {
         float top = centerY - mRadius;
         float right = centerX + mRadius;
         float bottom = centerY + mRadius;
-
-        mPaint.setColor(mBackgroundColor);
+        Shader shader = new SweepGradient(centerX,centerY, colors, null);
+        mPaint.setShader(shader);
+        //mPaint.setColor(mBackgroundColor);
+        mPaint.setColor(0XFFFFFFFF);
         canvas.drawArc(left, top, right, bottom, mStartDegree, mSweepDegree, false, mPaint);
 
-        mPaint.setColor(mProgressColor);
+        //mPaint.setColor(mProgressColor);
         if (mIsOpenAnimation) {
             canvas.drawArc(left, top, right, bottom, mStartDegree, mDrawDegree, false, mPaint);
             if (++mDrawDegree <= mProgressDegree) {

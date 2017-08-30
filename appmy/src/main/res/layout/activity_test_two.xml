@@ -10,7 +10,7 @@
         android:id="@+id/srb_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        appmy:sweepDegree="240"
+        appmy:sweepDegree="360"
         appmy:startDegree="150"
         appmy:radius="100dp"
         appmy:progress="100"
