@@ -13,25 +13,17 @@ import com.aqrlei.graduation.yueting.baselib.util.DensityUtil
  * @Description:
  * @Date: 2017/8/28
  */
-class AlphaListView : ListView {
-    private lateinit var mContext: Context
+class AlphaListView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+        defStyleRes: Int = 0) :
+        ListView(context, attrs, defStyleAttr, defStyleRes) {
+    private var mContext: Context = context
     private var mListener: OnAlphaChangeListener? = null
-
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context)
-    }
-
-    private fun init(context: Context) {
-        mContext = context
-    }
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-        //AppLog.logDebug("alpha","currentVOrigin:\t$t previousVOrigin\t$oldt")
 
         getScrollHeight()
     }
@@ -49,8 +41,8 @@ class AlphaListView : ListView {
         // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp*/
         val top = first.top
-        AppLog.logDebug("alpha","Height:\t$height")
-        AppLog.logDebug("alpha","Top:\t$top")
+        AppLog.logDebug("alpha", "Height:\t$height")
+        AppLog.logDebug("alpha", "Top:\t$top")
         height -= DensityUtil.dipToPx(mContext, 10F)
         if (height <= DensityUtil.dipToPx(mContext, 40F)) return
 

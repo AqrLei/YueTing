@@ -1,1 +1,1 @@
-include ':appmy',':appinkotlin', ':appdrawer', ':yueting'
+include ':appmy', ':yueting'

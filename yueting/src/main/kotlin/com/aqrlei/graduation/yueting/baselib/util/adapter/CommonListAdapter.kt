@@ -16,31 +16,16 @@ import android.widget.BaseAdapter
 * @param mContext 上下文关系
 * @param mResId 布局的Id
 * */
-abstract class CommonListAdapter<T>() : BaseAdapter(), View.OnClickListener {
-    protected lateinit var mData: List<T>
-    protected lateinit var mContext: Context
-    protected var mResId: Int = 0
-    protected var mListener: OnInternalClick? = null
-
-    internal constructor(mData: List<T>,
-                         mContext: Context,
-                         mResId: Int) : this() {
-        this.mData = mData
-        this.mContext = mContext
-        this.mResId = mResId
-    }
-
-    internal constructor(mData: List<T>,
-                         mContext: Context,
-                         mResId: Int,
-                         listener: OnInternalClick) : this() {
-        this.mData = mData
-        this.mContext = mContext
-        this.mResId = mResId
-        this.mListener = listener
-
-    }
-
+abstract class CommonListAdapter<T> @JvmOverloads constructor(
+        data: List<T>,
+        context: Context,
+        resId: Int = 0,
+        listener: OnInternalClick? = null) :
+        BaseAdapter(), View.OnClickListener {
+    protected var mData: List<T> = data
+    protected var mContext: Context = context
+    protected var mResId: Int = resId
+    protected var mListener: OnInternalClick? = listener
 
     override fun getCount() = mData.size
     override fun getItemId(position: Int) = position.toLong()
