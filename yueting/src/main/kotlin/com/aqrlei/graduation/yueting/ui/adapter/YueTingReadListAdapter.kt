@@ -18,4 +18,8 @@ class YueTingReadListAdapter(mData: List<ReadMessage>, mContext: Context, mResId
     override fun bindData(holderList: CommonListViewHolder, data: ReadMessage) {
         (holderList.get(R.id.tv_book_name) as TextView).text = data.bookName
     }
+
+    override fun setInternalClick(holder: CommonListViewHolder) {
+
+    }
 }
