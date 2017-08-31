@@ -66,41 +66,35 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
         return new MainPresenter(this);
     }
 
-  /*  @OnClick({R.id.knife_test2, R.id.knife_test3, R.id.knife_test1})
-    public void sayHi(Button button) {
-        if(button.getId() == R.id.knife_test1) {
-
-            String json = new Gson().toJson(new PictureReqBean("2"));
-            String json1 = "{\"name\":\"leilei\"}";
-            PictureRespBean bean = new Gson().fromJson(json1, PictureRespBean.class);
-            RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
-            Request request = new Request.Builder()
-                    .url("http://daily.api.guoshujinfu.com/v4/client/config/")
-                    .post(body)
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    final String string = response.body().string();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            respContents.setText(string);
-                        }
-                    });
-
-                }
-            });
-
-        }
-
-        //button.setText("Hello, 你好");
-    }*/
+    /*  @OnClick({R.id.knife_test2, R.id.knife_test3, R.id.knife_test1})
+      public void sayHi(Button button) {
+          if(button.getId() == R.id.knife_test1) {
+              String json = new Gson().toJson(new PictureReqBean("2"));
+              String json1 = "{\"name\":\"leilei\"}";
+              PictureRespBean bean = new Gson().fromJson(json1, PictureRespBean.class);
+              RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
+              Request request = new Request.Builder()
+                      .url("http://daily.api.guoshujinfu.com/v4/client/config/")
+                      .post(body)
+                      .build();
+              client.newCall(request).enqueue(new Callback() {
+                  @Override
+                  public void onFailure(Call call, IOException e) {
+                  }
+                  @Override
+                  public void onResponse(Call call, Response response) throws IOException {
+                      final String string = response.body().string();
+                      runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              respContents.setText(string);
+                          }
+                      });
+                  }
+              });
+          }
+          //button.setText("Hello, 你好");
+      }*/
     /*private void initOkHttp() {
         client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -117,7 +111,7 @@ public class MainActivity extends MvpActivity<MainPresenter> implements RadioGro
                 .build();
     }*/
     private void initFragments(Bundle savedInstanceState) {
-       mFragments = new ArrayList<>();
+        mFragments = new ArrayList<>();
         if( savedInstanceState != null) {
             mTabHomeFragment = (TabHomeFragment) mFragmentManager.findFragmentByTag(
                     MainConfig.TAB_HOME_TAGS[MainConfig.TAB_HOME_POSITION]);

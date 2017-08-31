@@ -1,67 +1,29 @@
 package com.leilei.guoshujinfu.mylearning.activity;
 
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
 import com.leilei.guoshujinfu.mylearning.R;
-import com.leilei.guoshujinfu.mylearning.presenter.TestPresenter;
-import com.leilei.guoshujinfu.mylearning.util.MvpActivity;
-
-import butterknife.BindView;
+import com.leilei.guoshujinfu.mylearning.util.view.SemiRoundBar;
 
 /**
  * @Author: AqrLei
  * @Name MyLearning
  * @Description:
- * @Date: 2017/8/8
+ * @Date: 2017/8/30
  */
 
-public class TestActivity extends MvpActivity <TestPresenter> implements View.OnClickListener{
-    @BindView(R.id.iv_view_anim)
-    ImageView mViewAnimIv;
-    @BindView(R.id.iv_pro_anim)
-    ImageView mProAnimIV;
-
-    private Animation anim;
-    private ObjectAnimator animator;
+public class TestActivity extends AppCompatActivity {
+    SemiRoundBar mSemiRoundBar;
 
     @Override
-    protected TestPresenter createPresenter() {
-        return new TestPresenter(this);
-    }
-
-    @Override
-    protected void initComponents(Bundle savedInstanceState) {
-        super.initComponents(savedInstanceState);
-        anim = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
-        anim.setFillAfter(true);
-        mViewAnimIv.setOnClickListener(this);
-        mProAnimIV.setOnClickListener(this);
-
-    }
-
-    @Override
-    protected int getLayoutRes() {
-        return R.layout.activity_test;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_view_anim:
-                mViewAnimIv.startAnimation(anim);
-                break;
-            case R.id.iv_pro_anim:
-                animator = ObjectAnimator.ofFloat(mProAnimIV, "translationX",0, 200, 200, 200);
-                animator.setDuration(1000);
-                animator.start();
-
-                break;
-        }
-
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_two);
+        mSemiRoundBar = (SemiRoundBar) findViewById(R.id.srb_test);
+        mSemiRoundBar.setProgress(100F);
+        mSemiRoundBar.setMaxProgress(500F);
+        mSemiRoundBar.setOpenAnimation(true);
     }
 }

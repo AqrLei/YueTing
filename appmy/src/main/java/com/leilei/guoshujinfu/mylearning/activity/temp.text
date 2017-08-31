@@ -35,7 +35,7 @@ public class MainActivity_copy extends MvpActivity<MainPresenter> implements
     private List<Fragment> mFragments;
     private FragmentManager mFragmentManager;
     private TabHomeFragment mTabHomeFragment;
-    private TabChatFragment mTabChatFragment;
+    private TabChatFragment mTabMusicFragment;
     private TabPictureFragment mTabPictureFragment;
     private int currentTab;
 
@@ -123,10 +123,10 @@ public class MainActivity_copy extends MvpActivity<MainPresenter> implements
                     MainConfig.TAB_HOME_TAGS[MainConfig.TAB_HOME_POSITION]);
             mTabHomeFragment = mTabHomeFragment == null? TabHomeFragment.newInstance():
                     mTabHomeFragment;
-            mTabChatFragment = (TabChatFragment) mFragmentManager.findFragmentByTag(
+            mTabMusicFragment = (TabChatFragment) mFragmentManager.findFragmentByTag(
                     MainConfig.TAB_HOME_TAGS[MainConfig.TAB_CHAT_POSITION]);
-            mTabChatFragment = mTabChatFragment == null? TabChatFragment.newInstance():
-                    mTabChatFragment;
+            mTabMusicFragment = mTabMusicFragment == null? TabChatFragment.newInstance():
+                    mTabMusicFragment;
             mTabPictureFragment = (TabPictureFragment) mFragmentManager.findFragmentByTag(
                     MainConfig.TAB_HOME_TAGS[MainConfig.TAB_PICTURE_POSITION]);
             mTabPictureFragment = mTabPictureFragment == null? TabPictureFragment.newInstance():
@@ -135,11 +135,11 @@ public class MainActivity_copy extends MvpActivity<MainPresenter> implements
         }
         else {
             mTabHomeFragment = TabHomeFragment.newInstance();
-            mTabChatFragment = TabChatFragment.newInstance();
+            mTabMusicFragment = TabChatFragment.newInstance();
             mTabPictureFragment = TabPictureFragment.newInstance();
         }
         mFragments.add(mTabHomeFragment);
-        mFragments.add(mTabChatFragment);
+        mFragments.add(mTabMusicFragment);
         mFragments.add(mTabPictureFragment);
 
     }

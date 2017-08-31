@@ -3,6 +3,7 @@ package com.leilei.guoshujinfu.mylearning.util.view.viewpager;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.leilei.guoshujinfu.mylearning.util.AppLog;
 
@@ -72,11 +73,11 @@ public class NormalAdapter<T extends View> extends PagerAdapter {
         * 的每一次调用instantiateItem都在destroyItem之后，
         * 此处就不必重复调用removeView方法
         * */
-       /* ViewParent vp = v.getParent();
+        ViewParent vp = v.getParent();
         if(vp != null) {
             ViewGroup parent = (ViewGroup) vp;
             parent.removeView(v);
-        }*/
+        }
         container.addView(v);
         return v;
     }

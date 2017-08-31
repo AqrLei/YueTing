@@ -1,35 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical">
+
     <TextView
-        android:visibility="gone"
         android:id="@+id/tv_test"
-        android:text="果树金福"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_test_select"
-        android:enabled="true"
-        android:background="@drawable/tv_shape"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/tv_shape"
+        android:enabled="true"
+        android:gravity="center"
+        android:paddingBottom="20dp"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:layout_height="wrap_content"/>
+        android:text="果树金福"
+        android:textColor="@color/text_test_select"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/iv_view_anim"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="#8561a18c"/>
+        android:background="#8561a18c"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/iv_pro_anim"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:background="#4195a6"/>
+        android:background="#4195a6"
+        android:visibility="gone"/>
+    <!--可在布局文件里设置
+    1.是否显示滚动条
+    2.通过addHeaderView()或addFootView()添加的item是否显示divider
+    3.overScrollMode下拉顶/底部部阴影效果
+    4.简单的顶部悬浮实现，需要FrameLayou中实现，因为里面的视图组件实际上位置是叠加的
+      用像LinearLayou之类的布局视图位置是不会叠加的，这样在“gone"和”visible"之间就会
+      有一种卡顿的效果。
+     -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ListView
+            android:id="@+id/lv_list_test"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"/>
+        <!--可以，不会卡一下-->
+        <ImageView
+            android:id="@+id/iv_suspension_temp"
+            android:background="#ff65ecc1"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="50dp"
+            tools:visibility="visible"/>
+<!--可以，不会卡一下-->
+        <LinearLayout
+            android:id="@+id/ll_suspension"
+            android:layout_width="match_parent"
+            android:background="#FF65ecc1"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/iv_suspension"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
 
 </LinearLayout>

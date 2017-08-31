@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:appmy="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+
+    <com.leilei.guoshujinfu.mylearning.util.view.SemiRoundBar
+        android:id="@+id/srb_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        appmy:sweepDegree="360"
+        appmy:startDegree="150"
+        appmy:radius="100dp"
+        appmy:progress="100"
+        appmy:max="250"
+        appmy:capStyle="0"
+      />
+
+</LinearLayout>

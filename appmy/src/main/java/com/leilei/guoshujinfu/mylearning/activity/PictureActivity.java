@@ -49,10 +49,10 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
         public void handleMessage(Message msg) {
             if(msg.what == 1 ) {
                 /*做好除数为零的预防*/
-                currentitem = (currentitem + 1) % (mPictureRespBeanList.size() == 0 ?
-                        (currentitem+1):mPictureRespBeanList.size());
+               /* currentitem = (currentitem + 1) % (mPictureRespBeanList.size() == 0 ?
+                        (currentitem+1):mPictureRespBeanList.size());*/
                 mVPImg.setCurrentItem(mVPImg.getCurrentItem()+1);
-                mHandler.sendEmptyMessageDelayed(1,1000);
+                mHandler.sendEmptyMessageDelayed(1,3000);
             }
         }
     };
@@ -87,7 +87,7 @@ public class PictureActivity extends MvpActivity<PicturePresenter> {
 
             }
         });*/
-        mHandler.sendEmptyMessageDelayed(1,1000);
+        mHandler.sendEmptyMessageDelayed(1,3000);
 
 
 /*      mVPImg.post(new Runnable() {

@@ -21,11 +21,12 @@ import butterknife.ButterKnife;
  * Created by AqrLei on 2017/8/3.
  */
 
-public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
+public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
     /*要处理的数据*/
     private List<ChatMessage> mMessageListm;
     /*自定义的点击接口*/
     private OnItemLongClickListener mOnItemLongClickListener;
+
     /*静态内部类 继承RecyclerView.ViewHolder*/
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ly_message_left)
@@ -36,12 +37,14 @@ public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerV
         TextView leftMessage;
         @BindView(R.id.tv_message_right)
         TextView rightMessage;
+
         /*对view进行初始化*/
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
+
     /*构造方法，获取数据*/
     public ChatRecyclerViewAdapter(List<ChatMessage> msg) {
         mMessageListm = msg;
@@ -55,16 +58,17 @@ public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerV
         return new ViewHolder(v);
 
     }
+
     /*在onBindViewHolder中进行逻辑处理*/
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        if(mOnItemLongClickListener != null) {
+        if (mOnItemLongClickListener != null) {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     int position = holder.getLayoutPosition();
                     mOnItemLongClickListener.onItemLongClickListener(holder.itemView, position);
-                    return  true;
+                    return true;
                 }
             });
         }
@@ -92,18 +96,21 @@ public class ChatRecyclerViewAdapter  extends RecyclerView.Adapter<ChatRecyclerV
         }
 
     }
+
     /*返回Item的数量*/
     @Override
     public int getItemCount() {
         return mMessageListm.size();
     }
-   /*设置监听*/
-   public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
-       this.mOnItemLongClickListener = onItemLongClickListener;
-   }
-   /*监听接口*/
-   public interface OnItemLongClickListener{
-       /*自定义点击监听回掉方法*/
-       void onItemLongClickListener(View view, int position);
-   }
+
+    /*设置监听*/
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.mOnItemLongClickListener = onItemLongClickListener;
+    }
+
+    /*监听接口*/
+    public interface OnItemLongClickListener {
+        /*自定义点击监听回掉方法*/
+        void onItemLongClickListener(View view, int position);
+    }
 }
