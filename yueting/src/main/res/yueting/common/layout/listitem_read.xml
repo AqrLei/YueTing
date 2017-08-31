@@ -12,5 +12,7 @@
         android:drawablePadding="15dp"
         android:gravity="center_vertical"
         android:textSize="20dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="这是一个书的名字"/>
 </LinearLayout>

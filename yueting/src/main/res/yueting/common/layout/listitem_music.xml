@@ -23,6 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             tools:text="这是一首歌的名字"/>
         <FrameLayout
             android:layout_width="match_parent"
@@ -32,6 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:text="歌手名"/>
             <TextView
                 android:id="@+id/tv_play_time"
@@ -40,6 +44,8 @@
                 android:gravity="right"
                 android:layout_gravity="right"
                 android:textSize="12dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="播放000次"/>
         </FrameLayout>
     </LinearLayout>

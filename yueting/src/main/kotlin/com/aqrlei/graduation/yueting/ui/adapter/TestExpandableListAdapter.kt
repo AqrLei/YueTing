@@ -23,8 +23,8 @@ class TestExpandableListAdapter(mContext: Context,
 
     override fun getChildrenCount(groupPosition: Int) = mData[groupPosition].child?.size ?: 0
     override fun bindData(holder: CommonListViewHolder, data: List<ChatMessage>, groupPosition: Int,
-                          isGroup: Boolean) {
-        if (isGroup) (holder.get(R.id.tv_list_title) as TextView).text = data[groupPosition].content
+                          childPosition: Int, type: Int) {
+        if (type == 1) (holder.get(R.id.tv_list_title) as TextView).text = data[groupPosition].content
         else {
             val contentView = (holder.get(R.id.tv_list_content) as TextView)
             contentView.text = data[groupPosition].child?.get(holder.position)?.name ?: "--"
@@ -35,7 +35,7 @@ class TestExpandableListAdapter(mContext: Context,
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder, type: Boolean) {
+    override fun setExpandListInternalClick(holder: CommonListViewHolder, type: Int) {
 
     }
 
