@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SemiRoundBar">
+    <declare-styleable name="RoundBar">
         <attr name="backgroundColor" format="color"/>
         <attr name="progressColor" format="color"/>
         <attr name="startDegree" format="integer"/>

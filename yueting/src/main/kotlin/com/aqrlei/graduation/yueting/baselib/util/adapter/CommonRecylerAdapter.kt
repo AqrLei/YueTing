@@ -16,7 +16,7 @@ import android.view.ViewGroup
 * @param mData  传入的数据
 * @param resId  布局的Id
 * @param mLongListener  自定义的长按点击事件
-* @param mListener  自定义的点击事件
+* @param mListenerm  自定义的点击事件
 * */
 abstract class CommonRecylerAdapter<T>(protected var mData: List<T>, protected var resId: Int) :
         RecyclerView.Adapter<CommonRecyclerViewHolder>() {

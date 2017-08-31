@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_margin="12dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_marginRight="15dp"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_music_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="这是歌单的名字"/>
+            <TextView
+                android:id="@+id/tv_music_manager"
+                android:layout_gravity="right|center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="..."/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_singer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:maxLines="1"
+                tools:text="2017-08-01"/>
+            <TextView
+                android:id="@+id/tv_play_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:maxLines="1"
+                android:textSize="12dp"
+                tools:text="播放000次"/>
+        </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -22,17 +22,18 @@ abstract class CommonExpandListAdapter<T> @JvmOverloads constructor(
         data: List<T>,
         childResId: Int = 0,
         groupResId: Int = 0,
-        listener: OnInternalClick? = null) :
+        listener: OnExpandListInternalClick? = null) :
         BaseExpandableListAdapter(), View.OnClickListener {
     protected var mContext: Context = context
     protected var mData: List<T> = data
     protected var mChildResId: Int = childResId
     protected var mGroupResId: Int = groupResId
-    protected var mListener: OnInternalClick? = listener
+    protected var mListenerm: OnExpandListInternalClick? = listener
+
 
     companion object {
-        private val TYPE_GROUP: Boolean = true
-        private val TYPE_CHILD: Boolean = false
+        @JvmStatic protected val TYPE_GROUP: Int = 1
+        @JvmStatic protected val TYPE_CHILD: Int = 0
     }
 
     /*设置是否可以选中*/
@@ -48,9 +49,9 @@ abstract class CommonExpandListAdapter<T> @JvmOverloads constructor(
                               convertView: View?, parent: ViewGroup): View {
         val childViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, mChildResId,
                 childPosition, convertView, parent)
-        bindData(childViewHolder, mData, groupPosition, TYPE_CHILD)
-        if (mListener != null) {
-            setInternalClick(childViewHolder, TYPE_CHILD)
+        bindData(childViewHolder, mData, groupPosition, childPosition,TYPE_CHILD)
+        if (mListenerm != null) {
+            setExpandListInternalClick(childViewHolder, TYPE_CHILD)
         }
         return childViewHolder.convertView
     }
@@ -59,25 +60,25 @@ abstract class CommonExpandListAdapter<T> @JvmOverloads constructor(
                               parent: ViewGroup): View {
         val groupViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, mGroupResId,
                 groupPosition, convertView, parent)
-        bindData(groupViewHolder, mData, groupPosition, TYPE_GROUP)
+        bindData(groupViewHolder, mData, groupPosition,0 , TYPE_GROUP)
         /*为true时设置groupView不可点击*/
-        groupViewHolder.convertView.isClickable = true
-        if (mListener != null) {
-            setInternalClick(groupViewHolder, TYPE_GROUP)
+       // groupViewHolder.convertView.isClickable = true
+        if (mListenerm != null) {
+            setExpandListInternalClick(groupViewHolder, TYPE_GROUP)
         }
         return groupViewHolder.convertView
     }
 
     protected abstract fun bindData(holder: CommonListViewHolder, data: List<T>, groupPosition: Int,
-                                    isGroup: Boolean)
+                                    childPosition: Int, type: Int)
 
-    protected abstract fun setInternalClick(holder: CommonListViewHolder, type: Boolean)
+    protected abstract fun setExpandListInternalClick(holder: CommonListViewHolder, type: Int)
 
     override fun onClick(v: View) {
-        mListener?.onInternalClick(v)
+        mListenerm?.onExpandListInternalClick(v)
     }
 
-    interface OnInternalClick {
-        fun onInternalClick(v: View)
+    interface OnExpandListInternalClick {
+        fun onExpandListInternalClick(v: View)
     }
 }
