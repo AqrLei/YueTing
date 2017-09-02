@@ -6,12 +6,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.leilei.guoshujinfu.mylearning.R;
+
+import java.util.ArrayList;
 
 /**
  * @Author: AqrLei
@@ -32,12 +36,24 @@ public class SemiRoundBar extends View {
     private boolean mIsOpenAnimation;
     private int mStartDegree;
     private int mSweepDegree;
-    private int[] colors = new int[4];
-    private float[] position = new float[4];
-
-
     private int mProgressDegree;
     private int mDrawDegree;
+    private int[] colors = new int[4];
+    private float[] position = new float[4];
+    private static final String
+            INSTANCE,
+            INSTANCE_ANIMATION,
+            INSTANCE_DEGREE;
+
+    static {
+        INSTANCE = "instance";
+        INSTANCE_ANIMATION = "animation";
+        INSTANCE_DEGREE = "degree";
+
+    }
+
+
+
 
     public SemiRoundBar(Context context) {
         this(context, null);
@@ -109,7 +125,6 @@ public class SemiRoundBar extends View {
     }
 
 
-
     public void setOpenAnimation(boolean openAnimation) {
         mIsOpenAnimation = openAnimation;
     }
@@ -118,27 +133,31 @@ public class SemiRoundBar extends View {
         mMaxProgress = maxProgress;
         setProgress(mCurrentProgress);
     }
+
     public synchronized void setProgress(float progress) {
         mProgressDegree = (int) (mSweepDegree * (progress / mMaxProgress));
-        mProgressDegree = mProgressDegree > mSweepDegree? mSweepDegree:mProgressDegree;
+        mProgressDegree = mProgressDegree > mSweepDegree ? mSweepDegree : mProgressDegree;
         mDrawDegree = 0;
         postInvalidate();
     }
+
     public synchronized float getProgress() {
         return mCurrentProgress;
     }
+
     public synchronized float getMaxProgress() {
         return mMaxProgress;
     }
+
     public void setProgressColor(int color) {
 
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-
 
 
         float centerX = width / 2;
@@ -147,7 +166,7 @@ public class SemiRoundBar extends View {
         float top = centerY - mRadius;
         float right = centerX + mRadius;
         float bottom = centerY + mRadius;
-        Shader shader = new SweepGradient(centerX,centerY, colors, null);
+        Shader shader = new SweepGradient(centerX, centerY, colors, null);
         mPaint.setShader(shader);
         //mPaint.setColor(mBackgroundColor);
         mPaint.setColor(0XFFFFFFFF);
@@ -162,5 +181,33 @@ public class SemiRoundBar extends View {
         } else {
             canvas.drawArc(left, top, right, bottom, mStartDegree, mProgressDegree, false, mPaint);
         }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE, super.onSaveInstanceState());
+        bundle.putBoolean(INSTANCE_ANIMATION, mIsOpenAnimation);
+        ArrayList<Integer> degree = new ArrayList<>();
+        degree.add(mStartDegree);
+        degree.add(mSweepDegree);
+        degree.add(mProgressDegree);
+        bundle.putIntegerArrayList(INSTANCE_DEGREE, degree);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            mIsOpenAnimation = bundle.getBoolean(INSTANCE_ANIMATION);
+            ArrayList<Integer> degree = bundle.getIntegerArrayList(INSTANCE_DEGREE);
+            mStartDegree = degree.get(0);
+            mSweepDegree = degree.get(1);
+            mProgressDegree = degree.get(2);
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE));
+            return;
+        }
+        super.onRestoreInstanceState(state);
     }
 }
