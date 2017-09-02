@@ -10,12 +10,10 @@ import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.Scroller;
+
 
 /**
  * Author : AqrLei
@@ -61,8 +59,70 @@ public class SwipeMenuLayout extends FrameLayout {
         mMenuView.setLayout(this);
         init();
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void computeScroll() {
+        if(state == STATE_OPEN) {
+            if(mOpenScroller.computeScrollOffset()) {
+                swipe(mOpenScroller.getCurrX()*mSwipeDirection);
+                postInvalidate();
+            }
+        } else {
+            if(mCloseScroller.computeScrollOffset()) {
+                swipe((mBaseX - mCloseScroller.getCurrX() * mSwipeDirection));
+                postInvalidate();
+            }
+        }
+        super.computeScroll();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mMenuView.measure(MeasureSpec.makeMeasureSpec(0,
+                MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        mContentView.layout(0, 0, getMeasuredWidth(),
+                mContentView.getMeasuredHeight());
+        if (mSwipeDirection == SwipeMenuListView.DIRECTION_LEFT) {
+            mMenuView.layout(getMeasuredWidth(), 0,
+                    getMeasuredWidth() + mMenuView.getMeasuredWidth(),
+                    mContentView.getMeasuredHeight());
+        } else {
+            mMenuView.layout(-mMenuView.getMeasuredWidth(), 0,
+                    0, mContentView.getMeasuredHeight());
+        }
+    }
+
+    private SwipeMenuLayout(@NonNull Context context) {
+        super(context);
+    }
+
+    private SwipeMenuLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     private void init() {
-        setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT));
         mGestureListener = new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -91,47 +151,157 @@ public class SwipeMenuLayout extends FrameLayout {
         } else {
             mOpenScroller = ScrollerCompat.create(getContext());
         }
+        LayoutParams contentParams = new LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT
+        );
+        mContentView.setLayoutParams(contentParams);
+        if(mContentView.getId() < 1) {
+            mContentView.setId(CONTENT_VIEW_ID);
+        }
+        mMenuView.setId(MENU_VIEW_ID);
+        mMenuView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT));
+        addView(mContentView);
+        addView(mMenuView);
+
     }
 
-    private SwipeMenuLayout(@NonNull Context context) {
-        super(context);
+
+    public int getPosition() {
+        return position;
+    }
+    public void setPosition(int position) {
+        this.position = position;
+        mMenuView.setPosition(position);
+    }
+    public void setSwipeDirection(int direction) {
+        mSwipeDirection = direction;
     }
 
-    private SwipeMenuLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    public boolean onSwipe(MotionEvent ev) {
+        mGestureDetector.onTouchEvent(ev);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownX = (int) ev.getX();
+                isFling = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int dis = (int) (mDownX - ev.getX());
+                if(state == STATE_OPEN) {
+                    dis += mMenuView.getWidth()*mSwipeDirection;
+                }
+                swipe(dis);
+                break;
+            case MotionEvent.ACTION_UP:
+                if(isFling || Math.abs(mDownX - ev.getX()) > (mMenuView.getWidth()/2)&&
+                        Math.signum(mDownX - ev.getX()) == mSwipeDirection) {
+                    smoothOpenMenu();
+                } else {
+                    smoothCloseMenu();
+                    return false;
+                }
+                break;
+        }
+        return true;
+
     }
+    private void swipe(int dis) {
+        if(!mSwipeEnable) {
+            return;
+        }
+        if(Math.signum(dis) != mSwipeDirection) {
+            dis = 0;
+        } else if(Math.abs(dis) > mMenuView.getWidth()) {
+            dis = mMenuView.getWidth()*mSwipeDirection;
+        }
+        mContentView.layout(-dis, mContentView.getTop(),
+                mContentView.getWidth()-dis, getMeasuredHeight());
+        if(mSwipeDirection == SwipeMenuListView.DIRECTION_LEFT) {
+            mMenuView.layout(mContentView.getWidth() - dis, mMenuView.getTop(),
+                    mContentView.getWidth()+ mMenuView.getWidth()-dis,
+                    mMenuView.getBottom());
+        }else {
+            mMenuView.layout(-mMenuView.getWidth() - dis, mMenuView.getTop(),
+                    - dis, mMenuView.getBottom());
+        }
+    }
+
 
     public boolean isOpen() {
-        return false;
+        return state == STATE_OPEN;
     }
 
+
     public void smoothCloseMenu() {
+        state = STATE_CLOSE;
+        if(mSwipeDirection == SwipeMenuListView.DIRECTION_LEFT) {
+            mBaseX = - mContentView.getLeft();
+            mCloseScroller.startScroll(0, 0 , mMenuView.getWidth(), 0 ,350);
+        } else {
+            mBaseX = mMenuView.getRight();
+            mCloseScroller.startScroll(0,0,mMenuView.getWidth(), 0, 350);
+        }
+        postInvalidate();
 
     }
 
     public void smoothOpenMenu() {
+        if(!mSwipeEnable) {
+            return;
+        }
+        state = STATE_OPEN;
+        if(mSwipeDirection == SwipeMenuListView.DIRECTION_LEFT) {
+            mOpenScroller.startScroll(-mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 350);
+        } else {
+            mOpenScroller.startScroll(mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 350);
+        }
+        postInvalidate();
 
     }
-
-    public void setSwipeDirection(int direction) {
+    public void closeMenu() {
+        if(mCloseScroller.computeScrollOffset()) {
+            mCloseScroller.abortAnimation();
+        }
+        if(state == STATE_OPEN) {
+            state = STATE_CLOSE;
+            swipe(0);
+        }
+    }
+    public void openMenu() {
+       if(!mSwipeEnable) {
+           return;
+       }
+       if(state == STATE_CLOSE) {
+           state = STATE_OPEN;
+           swipe(mMenuView.getWidth() * mSwipeDirection);
+       }
+    }
+    public View getContentView() {
+        return mContentView;
     }
 
-    public View getMenuView() {
-        View v;
-        return new v();
+
+
+    public SwipeMenuView getMenuView() {
+       return mMenuView;
     }
 
-    public void onSwipe(MotionEvent ev) {
-
-    }
 
     public boolean getSwipeEnable() {
-        return false;
+        return mSwipeEnable;
+    }
+    public void setSwipeEnable(boolean swipEnable) {
+        mSwipeEnable = swipEnable;
+    }
+    public void setMenuHeight(int measureHeight) {
+        LayoutParams params = (LayoutParams) mMenuView.getLayoutParams();
+        if(params.height != measureHeight) {
+            params.height =measureHeight;
+            mMenuView.setLayoutParams(mMenuView.getLayoutParams());
+        }
     }
 
-    public int getPosition() {
-        return 0;
-    }
+
 
     private int dpTopx(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,

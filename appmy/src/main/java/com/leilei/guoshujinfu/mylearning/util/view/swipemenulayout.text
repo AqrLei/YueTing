@@ -288,6 +288,8 @@ public class SwipeMenuLayout extends FrameLayout {
 				getContext().getResources().getDisplayMetrics());
 	}
 
+
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);

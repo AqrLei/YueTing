@@ -23,7 +23,7 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
     private SwipeMenuLayout mLayout;
     private SwipeMenu mMenu;
     private OnSwipeItemClickListener mListener;
-    private  int position;
+    private int position;
 
     public SwipeMenuListView getListView() {
         return mListView;
@@ -68,15 +68,16 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
     public SwipeMenuView(SwipeMenu menu, SwipeMenuListView listView) {
         super(menu.getContext());
         mListView = listView;
-        mMenu =  menu;
+        mMenu = menu;
         List<SwipeMenuItem> items = menu.getMenuItems();
         int id = 0;
-        for(SwipeMenuItem item: items) {
+        for (SwipeMenuItem item : items) {
 
             addItem(item, id++);
         }
 
     }
+
     private void addItem(SwipeMenuItem item, int id) {
         LayoutParams params = new LayoutParams(item.getWidth(),
                 LayoutParams.MATCH_PARENT);
@@ -88,18 +89,20 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
         parent.setBackground(item.getBackground());
         parent.setOnClickListener(this);
         addView(parent);
-        if(item.getIcon() != null) {
+        if (item.getIcon() != null) {
             parent.addView(createIcon(item));
         }
-        if(!TextUtils.isEmpty(item.getTitle())) {
+        if (!TextUtils.isEmpty(item.getTitle())) {
             parent.addView(createTitle(item));
         }
     }
+
     private ImageView createIcon(SwipeMenuItem item) {
         ImageView iv = new ImageView(getContext());
         iv.setImageDrawable(item.getIcon());
         return iv;
     }
+
     private TextView createTitle(SwipeMenuItem item) {
         TextView tv = new TextView(getContext());
         tv.setText(item.getTitle());
@@ -111,12 +114,13 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if(mListener != null && mLayout.isOpaque()) {
-            mListener.onTtemClick(this, mMenu, v.getId());
+        if (mListener != null && mLayout.isOpaque()) {
+            mListener.onItemClick(this, mMenu, v.getId());
         }
 
     }
-    public static interface OnSwipeItemClickListener{
-        void onTtemClick(SwipeMenuView view, SwipeMenu menu, int index);
+
+    public static interface OnSwipeItemClickListener {
+        void onItemClick(SwipeMenuView view, SwipeMenu menu, int index);
     }
 }
