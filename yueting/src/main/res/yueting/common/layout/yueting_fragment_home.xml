@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-    <com.aqrlei.graduation.yueting.baselib.util.view.AlphaListView
+
+    <com.aqrairsigns.aqrleilib.view.AlphaListView
         android:id="@+id/lv_fragment_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

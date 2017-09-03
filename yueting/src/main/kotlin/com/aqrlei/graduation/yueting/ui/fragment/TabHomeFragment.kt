@@ -6,10 +6,6 @@ import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.widget.AdapterView
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppLog
-import com.aqrlei.graduation.yueting.baselib.util.AppToast
-import com.aqrlei.graduation.yueting.baselib.util.view.AlphaListView
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
@@ -19,6 +15,11 @@ import kotlinx.android.synthetic.main.activity_yueting.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.view.AlphaExpandListView
+import com.aqrairsigns.aqrleilib.view.AlphaListView
 
 /**
  * @Author: AqrLei
@@ -78,7 +79,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initView() {
-        var mRecommendLv = mView.lv_fragment_home
+        var mRecommendLv = mView.lv_fragment_home as AlphaListView
         mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 100))
         mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 200))
         mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 300))

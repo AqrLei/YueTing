@@ -2,9 +2,9 @@ package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
 import android.widget.TextView
+import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
+import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonListAdapter
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 
 /**

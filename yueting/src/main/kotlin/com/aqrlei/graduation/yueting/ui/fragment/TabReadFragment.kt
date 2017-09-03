@@ -3,18 +3,18 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+
 import android.view.LayoutInflater
 import android.view.View
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppToast
-import com.aqrlei.graduation.yueting.baselib.util.view.AlphaListView
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingReadListAdapter
 import kotlinx.android.synthetic.main.activity_yueting.*
-import kotlinx.android.synthetic.main.listheader_read.view.*
 import kotlinx.android.synthetic.main.listheader_read_tab.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_read.view.*
 
@@ -72,7 +72,7 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
     }
 
     private fun initView() {
-        var mReadLv = mView.lv_fragment_read
+        var mReadLv = mView.lv_fragment_read as AlphaListView
         mHeaderView = LayoutInflater.from(mContainerActivity)
                 .inflate(R.layout.listheader_read_tab, null)
         val mTabLayout = mHeaderView.tl_tab_read

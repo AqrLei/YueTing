@@ -23,23 +23,28 @@ import java.util.ArrayList;
  * @Description:
  * @Date: 2017/8/30
  */
-
+/*
+* @param context 上下文关系
+* @param attrs 属性
+* @param defStyleAttr 默认属性
+* @param defStyleRes 默认资源ID
+* @description: 画一个圆形或半圆的简单进度条
+* */
 public class SemiRoundBar extends View {
 
-    private Paint mPaint;
-    private Context mContext;
-    private int mBackgroundColor;
-    private int mProgressColor;
-    private float mRadius;
-    private float mMaxProgress;
-    private float mCurrentProgress;
-    private boolean mIsOpenAnimation;
-    private int mStartDegree;
-    private int mSweepDegree;
-    private int mProgressDegree;
-    private int mDrawDegree;
-    private int[] colors = new int[4];
-    private float[] position = new float[4];
+    private Paint mPaint;//画笔
+    private Context mContext;//上下文
+    private int mBackgroundColor;//背景色
+    private int mProgressColor;//进度色
+    private float mRadius;//圆半径
+    private float mMaxProgress;//最大进度
+    private float mCurrentProgress;//当前的进度
+    private boolean mIsOpenAnimation;//是否开启动画
+    private int mStartDegree;//画圆开始的角度
+    private int mSweepDegree;//画圆扫过的角度
+    private int mProgressDegree;// 进度该画的角度
+    private int mDrawDegree;//画进度的起始角度
+    /*用于存储相关数据用于恢复图形*/
     private static final String
             INSTANCE,
             INSTANCE_ANIMATION,
@@ -51,8 +56,6 @@ public class SemiRoundBar extends View {
         INSTANCE_DEGREE = "degree";
 
     }
-
-
 
 
     public SemiRoundBar(Context context) {
@@ -76,6 +79,7 @@ public class SemiRoundBar extends View {
     private void init(Context context, AttributeSet attributeSet) {
         mContext = context;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        /*与values文件夹下的属性文件相关联*/
         TintTypedArray typedArray = TintTypedArray.obtainStyledAttributes(
                 mContext,
                 attributeSet,
@@ -110,14 +114,6 @@ public class SemiRoundBar extends View {
                 break;
         }
 
-        position[0] = 0f;
-        position[1] = 0.3f;
-        position[2] = 0.75f;
-        position[3] = 1.0f;
-        colors[0] = 0XFF98050A;
-        colors[1] = 0XFF985B00;
-        colors[2] = 0XFF929807;
-        colors[3] = 0XFF19982E;
 
         mPaint.setAntiAlias(true);
 
@@ -128,6 +124,7 @@ public class SemiRoundBar extends View {
     public void setOpenAnimation(boolean openAnimation) {
         mIsOpenAnimation = openAnimation;
     }
+    /*synchronized 同步关键字，多个对象访问同一个方法时保持同步*/
 
     public synchronized void setMaxProgress(float maxProgress) {
         mMaxProgress = maxProgress;
@@ -138,7 +135,7 @@ public class SemiRoundBar extends View {
         mProgressDegree = (int) (mSweepDegree * (progress / mMaxProgress));
         mProgressDegree = mProgressDegree > mSweepDegree ? mSweepDegree : mProgressDegree;
         mDrawDegree = 0;
-        postInvalidate();
+        postInvalidate();//可在子线程中更新
     }
 
     public synchronized float getProgress() {
@@ -153,6 +150,7 @@ public class SemiRoundBar extends View {
 
     }
 
+    /*画图*/
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -166,13 +164,13 @@ public class SemiRoundBar extends View {
         float top = centerY - mRadius;
         float right = centerX + mRadius;
         float bottom = centerY + mRadius;
-        Shader shader = new SweepGradient(centerX, centerY, colors, null);
-        mPaint.setShader(shader);
-        //mPaint.setColor(mBackgroundColor);
+        //Shader shader = new SweepGradient(centerX, centerY, colors, null);
+        //mPaint.setShader(shader);
+        mPaint.setColor(mBackgroundColor);
         mPaint.setColor(0XFFFFFFFF);
         canvas.drawArc(left, top, right, bottom, mStartDegree, mSweepDegree, false, mPaint);
 
-        //mPaint.setColor(mProgressColor);
+        mPaint.setColor(mProgressColor);
         if (mIsOpenAnimation) {
             canvas.drawArc(left, top, right, bottom, mStartDegree, mDrawDegree, false, mPaint);
             if (++mDrawDegree <= mProgressDegree) {
@@ -183,6 +181,7 @@ public class SemiRoundBar extends View {
         }
     }
 
+    /*异常销毁时保存数据*/
     @Override
     protected Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
@@ -196,6 +195,7 @@ public class SemiRoundBar extends View {
         return bundle;
     }
 
+    /*通过数据恢复图形*/
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
