@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 
@@ -37,32 +37,32 @@ class YueTingHomeListAdapter(private var mContext: Context,
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var mConvertView = convertView
         var titleViewHolder: CommonListViewHolder
         var readViewHolder: CommonListViewHolder
         var musicViewHolder: CommonListViewHolder
         when (getItemViewType(position)) {
             TYPE_TITLE -> {
                 titleViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, titleResId,
-                        position, convertView, parent)
+                        position, mConvertView, parent)
                 bindData(titleViewHolder, getItem(position), TYPE_TITLE)
-                convertView = titleViewHolder.convertView
-                convertView.isClickable = true
+                mConvertView = titleViewHolder.convertView
+                mConvertView.isClickable = true
             }
             TYPE_READ -> {
                 readViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, readResId,
-                        position, convertView, parent)
+                        position, mConvertView, parent)
                 bindData(readViewHolder, getItem(position), TYPE_READ)
-                convertView = readViewHolder.convertView
+                mConvertView = readViewHolder.convertView
             }
             TYPE_MUSIC -> {
                 musicViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, musicResId,
-                        position, convertView, parent)
+                        position, mConvertView, parent)
                 bindData(musicViewHolder, getItem(position), TYPE_MUSIC)
-                convertView = musicViewHolder.convertView
+                mConvertView = musicViewHolder.convertView
             }
         }
-        return convertView!!
+        return mConvertView!!
     }
 
     override fun getItem(position: Int) =

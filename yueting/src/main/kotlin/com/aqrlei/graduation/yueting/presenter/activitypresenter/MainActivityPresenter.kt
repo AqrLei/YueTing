@@ -1,9 +1,9 @@
 package com.aqrlei.graduation.yueting.presenter.activitypresenter
 
 import android.util.Log
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.net.HttpReqHelper
-import com.aqrlei.graduation.yueting.baselib.util.net.service.PictureInfoService
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.net.HttpReqHelper
+import com.aqrlei.graduation.yueting.net.service.PictureInfoService
 import com.aqrlei.graduation.yueting.model.req.PictureReqBean
 import com.aqrlei.graduation.yueting.model.resp.BannerBean
 import com.aqrlei.graduation.yueting.model.resp.BaseRespBean

@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.RadioGroup
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppConstant
-import com.aqrlei.graduation.yueting.baselib.util.IntentUtil
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppConstant
+import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import kotlinx.android.synthetic.main.activity_yueting.*
 

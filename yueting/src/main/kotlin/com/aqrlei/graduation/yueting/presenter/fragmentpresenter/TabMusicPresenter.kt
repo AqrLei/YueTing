@@ -1,6 +1,6 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
 
 /**

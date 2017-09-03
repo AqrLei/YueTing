@@ -4,11 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import com.aqrairsigns.aqrleilib.adapter.CommonExpandListAdapter
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppToast
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonExpandListAdapter
-import com.aqrlei.graduation.yueting.baselib.util.view.AlphaExpandListView
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.view.AlphaExpandListView
 import com.aqrlei.graduation.yueting.model.local.ExpandMusicMessage
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabMusicPresenter
@@ -52,7 +52,7 @@ class TabMusicFragment : MvpContract.MvpFragment<TabMusicPresenter, YueTingActiv
     }
 
     private fun initView() {
-        val mMusicElv = mView.elv_fragment_music
+        val mMusicElv = mView.elv_fragment_music as AlphaExpandListView
         mChildMusic.add(MusicMessage("", "这是歌单吧", "2017-08-31", 100))
         mChildMusic.add(MusicMessage("", "这是歌单吧", "2017-08-31", 200))
         mChildMusic.add(MusicMessage("", "这是歌单吧", "2017-08-31", 300))

@@ -1,7 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.adapter
 
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonRecyclerViewHolder
-import com.aqrlei.graduation.yueting.baselib.util.adapter.CommonRecylerAdapter
+import com.aqrairsigns.aqrleilib.adapter.CommonRecyclerViewHolder
+import com.aqrairsigns.aqrleilib.adapter.CommonRecylerAdapter
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
 
 /**

@@ -4,9 +4,9 @@ package com.aqrlei.graduation.yueting.presenter.activitypresenter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppConstant
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppConstant
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
