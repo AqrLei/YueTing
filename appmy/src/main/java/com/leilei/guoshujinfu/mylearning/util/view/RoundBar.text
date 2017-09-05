@@ -1,0 +1,256 @@
+package com.guoshujinfu.mobile.pslib.views;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.SweepGradient;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
+
+import com.guoshujinfu.mobile.pslib.R;
+
+import java.util.ArrayList;
+
+
+/**
+ * @Author: AqrLei
+ * @Name MyLearning
+ * @Description:
+ * @Date: 2017/8/30
+ */
+
+public class RoundBar extends View {
+
+    private Paint mPaint;
+    private Context mContext;
+
+    private int mBackgroundColor;
+    private int mProgressColor;
+    private ArrayList<Integer> mGradientColor;
+
+    private float mRadius;
+    private float mMaxProgress;
+    private float mCurrentProgress;
+
+    private boolean mIsOpenAnimation;
+    private boolean mIsUseGradientColor;
+
+    private int mStartDegree;
+    private int mSweepDegree;
+    private int mRotateDegree;
+    private int mProgressDegree;
+    private int mDrawDegree;
+
+    private static final String INSTANCE = "instance";
+    private static final String INSTANCE_ANIMATION = "animation";
+    private static final String INSTANCE_DEGREE = "degree";
+
+    private static final int BUTT = 0;
+    private static final int ROUND = 1;
+    private static final int SQUARE = 2;
+
+
+    public RoundBar(Context context) {
+        this(context, null);
+    }
+
+    public RoundBar(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RoundBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attributeSet) {
+        mContext = context;
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        final TypedArray typedArray = mContext.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.RoundBar);
+        mBackgroundColor = typedArray.
+                getColor(R.styleable.RoundBar_backgroundColor, Color.parseColor("#bbbbbb"));
+        mProgressColor = typedArray.
+                getColor(R.styleable.RoundBar_progressColor, Color.parseColor("#41a9f8"));
+        mRadius = typedArray.getDimension(R.styleable.RoundBar_radius, 150);
+        mMaxProgress = typedArray.getFloat(R.styleable.RoundBar_max, 10);
+        mCurrentProgress = typedArray.getFloat(R.styleable.RoundBar_progress, 6);
+        mIsOpenAnimation = typedArray.getBoolean(R.styleable.RoundBar_openAnimation, true);
+        mIsUseGradientColor = typedArray.getBoolean(R.styleable.RoundBar_useGradientColor, true);
+        float mRoundWidth = typedArray.getDimension(R.styleable.RoundBar_roundWidth, 10);
+        int capStyle = typedArray.getInteger(R.styleable.RoundBar_capStyle, ROUND);
+        mStartDegree = typedArray.getInteger(R.styleable.RoundBar_startDegree, 135);
+        mSweepDegree = typedArray.getInteger(R.styleable.RoundBar_sweepDegree, 270);
+        mRotateDegree = typedArray.getInteger(R.styleable.RoundBar_rotateDegree, 120);
+
+        mDrawDegree = 0;
+        mGradientColor = new ArrayList<>();
+        mGradientColor.add(Color.parseColor("#21ADF1"));
+        mGradientColor.add(Color.parseColor("#2287EE"));
+        mPaint.setStrokeWidth(mRoundWidth);
+        mPaint.setStyle(Paint.Style.STROKE);
+        switch (capStyle) {
+            case BUTT:
+                mPaint.setStrokeCap(Paint.Cap.BUTT);
+                break;
+            case ROUND:
+                mPaint.setStrokeCap(Paint.Cap.ROUND);
+                break;
+            case SQUARE:
+                mPaint.setStrokeCap(Paint.Cap.SQUARE);
+                break;
+        }
+        mPaint.setAntiAlias(true);
+        typedArray.recycle();
+
+        setProgress(mCurrentProgress);
+    }
+
+
+    public void setGradientColor(ArrayList<Integer> gradientColor) {
+        if (mGradientColor != null && !mGradientColor.isEmpty()) {
+            mGradientColor.clear();
+        }
+        mGradientColor = gradientColor;
+    }
+
+    public void setUseGradientColor(boolean useGradientColor) {
+        mIsUseGradientColor = useGradientColor;
+    }
+
+    public ArrayList<Integer> getGradientColor() {
+        return mGradientColor;
+    }
+
+    public void setOpenAnimation(boolean openAnimation) {
+        mIsOpenAnimation = openAnimation;
+    }
+
+    public synchronized void setMaxProgress(float maxProgress) {
+        mMaxProgress = maxProgress;
+        setProgress(mCurrentProgress);
+    }
+
+    public synchronized void setProgress(float progress) {
+        mCurrentProgress = progress;
+        mProgressDegree = (int) (mSweepDegree * (mCurrentProgress / mMaxProgress));
+        mProgressDegree = mProgressDegree > mSweepDegree ? mSweepDegree : mProgressDegree;
+        mDrawDegree = 0;
+        postInvalidate();
+    }
+
+    public synchronized float getProgress() {
+        return mCurrentProgress;
+    }
+
+    public synchronized float getMaxProgress() {
+        return mMaxProgress;
+    }
+
+    public void setProgressColor(int color) {
+        mProgressColor = color;
+    }
+
+    public void setBackgroundColor(int color) {
+        mBackgroundColor = color;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+
+        float centerX = width / 2;
+        float centerY = height / 2;
+        int rStartDegree = mStartDegree - mRotateDegree;
+
+        canvas.save();
+        canvas.rotate(120, centerX, centerY);
+        mPaint.setShader(null);
+        mPaint.setColor(mBackgroundColor);
+        RectF oval = new RectF(
+                centerX - mRadius,
+                centerY - mRadius,
+                centerX + mRadius,
+                centerY + mRadius
+        );
+        canvas.drawArc(oval, rStartDegree, mSweepDegree, false, mPaint);
+        if (mIsUseGradientColor) {
+            mPaint.setShader(new SweepGradient(centerX, centerY,
+                    mGradientColor.get(0), mGradientColor.get(1)));
+        }
+        mPaint.setColor(mProgressColor);
+        if (mIsOpenAnimation) {
+            canvas.drawArc(oval, rStartDegree, mDrawDegree, false, mPaint);
+            if (++mDrawDegree <= mProgressDegree) {
+                invalidate();
+            }
+        } else {
+            canvas.drawArc(oval, rStartDegree, mProgressDegree, false, mPaint);
+        }
+        canvas.restore();
+    }
+
+    /*异常销毁时保存数据*/
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE, super.onSaveInstanceState());
+        bundle.putBoolean(INSTANCE_ANIMATION, mIsOpenAnimation);
+        ArrayList<Integer> degree = new ArrayList<>();
+        degree.add(mStartDegree);
+        degree.add(mSweepDegree);
+        degree.add(mProgressDegree);
+        bundle.putIntegerArrayList(INSTANCE_DEGREE, degree);
+        return bundle;
+    }
+
+    /*通过数据恢复图形*/
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            mIsOpenAnimation = bundle.getBoolean(INSTANCE_ANIMATION);
+            ArrayList<Integer> degree = bundle.getIntegerArrayList(INSTANCE_DEGREE);
+            mStartDegree = degree.get(0);
+            mSweepDegree = degree.get(1);
+            mProgressDegree = degree.get(2);
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE));
+            return;
+        }
+        super.onRestoreInstanceState(state);
+    }
+}
+
+    <declare-styleable name="RoundBar">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="startDegree" format="integer"/>
+        <attr name="rotateDegree" format="integer"/>
+        <attr name="sweepDegree" format="integer"/>
+        <attr name="radius" format="dimension"/>
+        <attr name="roundWidth" format="dimension"/>
+        <attr name="max" format="float"/>
+        <attr name="progress" format="float"/>
+        <attr name="capStyle">
+            <enum name="butt" value="0"/>
+            <enum name="round" value="1"/>
+            <enum name="square" value="2"/>
+            </attr>
+        <attr name="openAnimation" format="boolean"/>
+        <attr name="useGradientColor" format="boolean"/>
+    </declare-styleable>

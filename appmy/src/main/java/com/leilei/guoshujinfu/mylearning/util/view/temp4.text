@@ -1,0 +1,49 @@
+    override fun onDraw(canvas: Canvas?) {
+        if (canvas == null) {
+            return
+        }
+        var rectF = RectF(200f, 200f, 600f, 600f)
+        canvas.save()
+        for (i in 0..3) {
+            canvas.drawArc(rectF, 0f, 90f, false, mPaint)
+            canvas.drawLine(550f, 400f, 600f, 400f, mPaint)
+            for (i in 0..2) {
+                for (i in 0..3) {
+                    canvas.rotate(6f, 400f, 400f)
+                    canvas.drawLine(580f, 400f, 600f, 400f, mPaint)
+                }
+                canvas.rotate(6f, 400f, 400f)
+                if (i < 2)
+                    canvas.drawLine(565f, 400f, 600f, 400f, mPaint)
+            }
+        }
+        canvas.restore()
+    }
+     fun drawTranslate(canvas: Canvas) {
+            var path = Path()
+            path.rMoveTo(10f, 50f)
+            path.rLineTo(0f, -50f)
+            path.rMoveTo(0f, 50f)
+            path.rLineTo(10f, 0f)
+            for (i in 0..5) {
+                for (i in 0..1) {
+                    for (i in 0..3) {
+                        path.rLineTo(0f, -10f)
+                        path.rLineTo(0f, 10f)
+                        path.rLineTo(10f, 0f)
+                    }
+                    if (i < 1) {
+                        path.rLineTo(0f, -30f)
+                        path.rLineTo(0f, 30f)
+                        path.rLineTo(10f, 0f)
+                    }
+                }
+                path.rLineTo(0f, -50f)
+                path.rLineTo(0f, 50f)
+                if (i < 5) {
+                    path.rLineTo(10f, 0f)
+                }
+            }
+
+            canvas.drawPath(path, mPaint)
+        }

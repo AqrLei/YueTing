@@ -12,4 +12,19 @@
         <attr name="capStyle" format="integer"/>
         <attr name="openAnimation" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="LearnView">
+        <attr name="learnType" format="integer"/>
+        <attr name="learnTimes" format="integer"/>
+        <attr name="learnWidth" format="integer"/>
+        <attr name="learnHeight" format="integer"/>
+        <attr name="learnScale" format="float"/>
+        <attr name="learnMinScale" format="float"/>
+        <attr name="learnMaxScale" format="float"/>
+        <attr name="learnRadius" format="float"/>
+        <attr name="learnStartX" format="float"/>
+        <attr name="learnStartY" format="float"/>
+        <attr name="learnLength" format="float"/>
+
+
+    </declare-styleable>
 </resources>
