@@ -30,15 +30,25 @@ class RoundBar @JvmOverloads constructor(
         View(context, attrs, defStyleAttr, defStyleRes) {
     private lateinit var mPaint: Paint//画笔
     private lateinit var mContext: Context//上下文
+
     private var mBackgroundColor: Int = 0//背景颜色
     private var mProgressColor: Int = 0//进度颜色
+    private var mGradientListColor: ArrayList<Int>? = null
+
     private var mRadius: Float = 0F//圆半径
     private var mMaxProgress: Float = 0F//最大的进度
+    private var mCurrentProgress: Float = 0f//当前进度
+
     private var mIsOpenAnimation: Boolean = false//是否开启动画
+    private var mIsUseGradientColor: Boolean = false//是否使用渐变
+
     private var mStartDegree: Int = 0// 画圆开始的角度
     private var mSweepDegree: Int = 0//画圆扫过的角度
+    private var mRotateDegree: Int = 0// 画布旋转的角度
     private var mProgressDegree: Int = 0//当前进度该画的角度
     private var mDrawDegree: Int = 0//画的起始角度
+
+    private var mAnimationV: Int = 0//画的速度
 
     /*标明画的时候是当前进度开始还是从头开始*/
     companion object {
@@ -46,6 +56,10 @@ class RoundBar @JvmOverloads constructor(
         val TYPE_CONTINUE: Int = 1
         @JvmStatic
         val TYPE_RESTART: Int = 0
+        private val BUTT: Int = 0
+        private val ROUND: Int = 0
+        private val SQUARE: Int = 0
+        //private val INSTANCE：
     }
 
     init {
