@@ -15,12 +15,12 @@
         appmy:progress="100"
         appmy:max="250"
         appmy:capStyle="0"
-        android:visibility="gone"
       />
     <com.leilei.guoshujinfu.mylearning.util.view.LearnView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        appmy:learnType="2"
+        appmy:learnType="1"
         appmy:learnHeight="480"
         appmy:learnWidth="320"
         appmy:learnTimes="10"/>

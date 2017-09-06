@@ -1,30 +1,3 @@
-package com.guoshujinfu.mobile.pslib.views;
-
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.SweepGradient;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
-import android.view.View;
-
-import com.guoshujinfu.mobile.pslib.R;
-
-import java.util.ArrayList;
-
-
-/**
- * @Author: AqrLei
- * @Name MyLearning
- * @Description:
- * @Date: 2017/8/30
- */
-
 public class RoundBar extends View {
 
     private Paint mPaint;
@@ -46,6 +19,8 @@ public class RoundBar extends View {
     private int mRotateDegree;
     private int mProgressDegree;
     private int mDrawDegree;
+
+    private int mAnimationV;
 
     private static final String INSTANCE = "instance";
     private static final String INSTANCE_ANIMATION = "animation";
@@ -90,7 +65,7 @@ public class RoundBar extends View {
         mStartDegree = typedArray.getInteger(R.styleable.RoundBar_startDegree, 135);
         mSweepDegree = typedArray.getInteger(R.styleable.RoundBar_sweepDegree, 270);
         mRotateDegree = typedArray.getInteger(R.styleable.RoundBar_rotateDegree, 120);
-
+        mAnimationV = typedArray.getInteger(R.styleable.RoundBar_animationVelocity, 1);
         mDrawDegree = 0;
         mGradientColor = new ArrayList<>();
         mGradientColor.add(Color.parseColor("#21ADF1"));
@@ -179,7 +154,7 @@ public class RoundBar extends View {
         int rStartDegree = mStartDegree - mRotateDegree;
 
         canvas.save();
-        canvas.rotate(120, centerX, centerY);
+        canvas.rotate(mRotateDegree, centerX, centerY);
         mPaint.setShader(null);
         mPaint.setColor(mBackgroundColor);
         RectF oval = new RectF(
@@ -196,7 +171,8 @@ public class RoundBar extends View {
         mPaint.setColor(mProgressColor);
         if (mIsOpenAnimation) {
             canvas.drawArc(oval, rStartDegree, mDrawDegree, false, mPaint);
-            if (++mDrawDegree <= mProgressDegree) {
+            if ((mDrawDegree += mAnimationV) <= mProgressDegree) {
+                mDrawDegree = Math.min(mDrawDegree, mProgressDegree);
                 invalidate();
             }
         } else {
@@ -236,21 +212,26 @@ public class RoundBar extends View {
     }
 }
 
-    <declare-styleable name="RoundBar">
-        <attr name="backgroundColor" format="color"/>
-        <attr name="progressColor" format="color"/>
-        <attr name="startDegree" format="integer"/>
-        <attr name="rotateDegree" format="integer"/>
-        <attr name="sweepDegree" format="integer"/>
-        <attr name="radius" format="dimension"/>
-        <attr name="roundWidth" format="dimension"/>
-        <attr name="max" format="float"/>
-        <attr name="progress" format="float"/>
-        <attr name="capStyle">
-            <enum name="butt" value="0"/>
-            <enum name="round" value="1"/>
-            <enum name="square" value="2"/>
-            </attr>
-        <attr name="openAnimation" format="boolean"/>
-        <attr name="useGradientColor" format="boolean"/>
-    </declare-styleable>
+     <declare-styleable name="RoundBar">
+            <attr name="backgroundColor" format="color"/>
+            <attr name="progressColor" format="color"/>
+
+            <attr name="startDegree" format="integer"/>
+            <attr name="rotateDegree" format="integer"/>
+            <attr name="sweepDegree" format="integer"/>
+
+            <attr name="radius" format="dimension"/>
+            <attr name="roundWidth" format="dimension"/>
+            <attr name="max" format="float"/>
+            <attr name="progress" format="float"/>
+
+            <attr name="animationVelocity" format="integer"/>
+            <attr name="capStyle">
+                <enum name="butt" value="0"/>
+                <enum name="round" value="1"/>
+                <enum name="square" value="2"/>
+                </attr>
+
+            <attr name="openAnimation" format="boolean"/>
+            <attr name="useGradientColor" format="boolean"/>
+        </declare-styleable>

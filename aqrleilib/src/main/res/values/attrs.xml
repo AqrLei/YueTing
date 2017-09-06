@@ -5,11 +5,18 @@
         <attr name="progressColor" format="color"/>
         <attr name="startDegree" format="integer"/>
         <attr name="sweepDegree" format="integer"/>
+        <attr name="rotateDegree" format="integer"/>
+
         <attr name="radius" format="dimension"/>
         <attr name="roundWidth" format="dimension"/>
-        <attr name="max" format="float"/>
+        <attr name="maxProgress" format="float"/>
         <attr name="progress" format="float"/>
-        <attr name="capStyle" format="integer"/>
+        <attr name="capStyle">
+            <enum name="butt" value="0"/>
+            <enum name="round" value="1"/>
+            <enum name="square" value="2"/>
+        </attr>
+        <attr name="useGradientGolor" format="boolean"/>
         <attr name="openAnimation" format="boolean"/>
     </declare-styleable>
 </resources>

@@ -99,13 +99,13 @@ public class LearnView extends View {
     private void drawScale(Canvas canvas, float centerX, float centerY) {
 
         canvas.drawRect(centerX - mWidth / 2, centerY - mHeight / 2, centerX + mWidth / 2,
-                centerY + mHeight, mPaint);
+                centerY + mHeight/2, mPaint);
         for (; mDrawTimes > 0; mDrawTimes--) {
             sx = sx - mScaleRatio > mMinScale ? (sx - mScaleRatio) : sx;
             sy = sy - mScaleRatio > mMinScale ? (sy - mScaleRatio) : sy;
             canvas.scale(sx, sy, centerX, centerY);
             canvas.drawRect(centerX - mWidth / 2, centerY - mHeight / 2, centerX + mWidth / 2,
-                    centerY + mHeight, mPaint);
+                    centerY + mHeight/2, mPaint);
         }
         canvas.restore();
     }
@@ -131,29 +131,33 @@ public class LearnView extends View {
         Path path = new Path();
 
         int i = 10;
-        path.rMoveTo(mStartX, mStartY);
+        //path.rMoveTo(mStartX, mStartY);
+        //path.moveTo(mStartX, mStartY);
         for (; i > 0; i--) {
-            path.rLineTo(0f, -50f);
-            path.rMoveTo(0f, 50f);
-            path.rLineTo(10f, 0f);
+           // path.rLineTo(0f, -50f);
+            //path.rMoveTo(0f, 50f);
+            //path.rLineTo(10f, 0f);
+            path.lineTo(mStartX+0f, -50f);
+            path.moveTo(0f, 50f);
+            path.lineTo(10f, 0f);
             canvas.drawPath(path, mPaint);
             for (int j = 0; j < 9; j++) {
-                //canvas.translate(10f, 0f);
-                path.rLineTo(0f, -20f);
-                path.rLineTo(0f, 20f);
-                path.rLineTo(10f, 0f);
+                canvas.translate(10f, 0f);
+                path.lineTo(0f, -20f);
+                path.lineTo(0f, 20f);
+                path.lineTo(10f, 0f);
                 if (j == 4) {
-                    path.rLineTo(0f, -35f);
-                    path.rLineTo(0f, 35f);
-                    path.rLineTo(10f, 0f);
+                    path.lineTo(0f, -35f);
+                    path.lineTo(0f, 35f);
+                    path.lineTo(10f, 0f);
                 }
                 canvas.drawPath(path, mPaint);
             }
-            //canvas.translate(10f, 0f);
+            canvas.translate(10f, 0f);
         }
-        path.rLineTo(0f, -50f);
-        path.rMoveTo(0f, 50f);
-        path.rLineTo(10f, 0f);
+        path.lineTo(0f, -50f);
+        path.moveTo(0f, 50f);
+        path.lineTo(10f, 0f);
         canvas.drawPath(path, mPaint);
         canvas.restore();
 
