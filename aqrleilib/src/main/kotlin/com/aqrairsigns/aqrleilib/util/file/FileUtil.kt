@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.aqrairsigns.aqrleilib.constant.AppConstant
+import com.aqrairsigns.aqrleilib.info.Info
 import java.io.File
 
 /**
@@ -13,37 +14,38 @@ import java.io.File
  * @CreateTime: Date: 2017/9/8 Time: 14:30
  */
 object FileUtil {
-    private val filePath = ArrayList<String>()
-    private val fileName = ArrayList<String>()
-    fun selectFileDir(path: String = AppConstant.ROOT_PATH) {
-        fileName.clear()
-        filePath.clear()
-        var file = File(path)
-        var files = file.listFiles()
+    private val fileInfoList = ArrayList<Info.FileInfo>()
+    fun createFileTree(path: String = AppConstant.ROOT_PATH): ArrayList<Info.FileInfo> {
+        fileInfoList.clear()
+        val fileInfo = Info.FileInfo()
+        val file = File(path)
+        val files = file.listFiles()
+        fileInfo.path = path
+        fileInfo.isDir = file.isDirectory
         if (!AppConstant.ROOT_PATH.equals(path)) {
-            fileName.add("@1")
-            filePath.add(AppConstant.ROOT_PATH)
-
-            fileName.add("@2")
-            filePath.add(file.parent)
+            fileInfo.name = "@1"
+            fileInfo.path = AppConstant.ROOT_PATH
+            fileInfoList.add(fileInfo)
+            fileInfo.name = "@2"
+            fileInfo.parentPath = file.parent.toString()
+            fileInfoList.add(fileInfo)
         }
-        for (f in files) {
-            fileName.add(f.name)
-            filePath.add(f.path)
+        files.forEach { f ->
+            fileInfo.name = f.name
+            fileInfo.path = f.path
+            fileInfo.isDir = f.isDirectory
+            fileInfo.parentPath = f.parent
+            fileInfoList.add(fileInfo)
         }
+        return fileInfoList
     }
 
-    fun getFileName() = fileName
-    fun getFilePath() = filePath
+    fun getfileInfoList() = fileInfoList
 
-    fun deleteFile(file: File) {
-
-        //context.startActivity()
-
-    }
+    fun deleteFile(file: File) = file.delete()
 
     fun openFile(file: File, context: Context) {
-        if(file.isDirectory) {
+        if (file.isDirectory) {
             return
         }
         val intent = Intent()

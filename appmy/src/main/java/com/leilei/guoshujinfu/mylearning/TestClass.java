@@ -1,5 +1,7 @@
 package com.leilei.guoshujinfu.mylearning;
 
+import java.io.File;
+
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -8,16 +10,23 @@ package com.leilei.guoshujinfu.mylearning;
  */
 
 public class TestClass {
-    String [][] test = new String[][] {{"m4a","audio"},{"mp3","audio"}};
+    private String name;
+    private File[] file;
 
-    public String getTest() {
-        String type = " ";
-        for(int i= 0;i < test.length;i++) {
-            if(type.equals(test[i][0])) {
-                type = test[i][1];
-            }
+    public TestClass() {
+    }
 
-        }
-        return "";
+    public TestClass(String name) {
+
+        this.name = name;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
