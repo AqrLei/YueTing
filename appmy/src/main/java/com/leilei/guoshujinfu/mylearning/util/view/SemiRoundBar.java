@@ -200,6 +200,8 @@ public class SemiRoundBar extends View {
     protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
+            boolean[] bool = new boolean[]{true, false};
+            bundle.putBooleanArray("key", bool);
             mIsOpenAnimation = bundle.getBoolean(INSTANCE_ANIMATION);
             ArrayList<Integer> degree = bundle.getIntegerArrayList(INSTANCE_DEGREE);
             mStartDegree = degree.get(0);

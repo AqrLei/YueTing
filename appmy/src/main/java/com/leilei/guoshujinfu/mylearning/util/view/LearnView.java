@@ -20,7 +20,10 @@ import com.leilei.guoshujinfu.mylearning.R;
  * @Description:
  * @Date: 2017/9/5
  */
-
+/*
+* (left, top, right, bottom) 圈定一个矩形区域
+* RectF接受float类型 Rect接受integer类型
+* */
 public class LearnView extends View {
     private Paint mPaint;
     private Context mContext;
@@ -31,6 +34,8 @@ public class LearnView extends View {
     private float mScaleRatio;
     private float mMinScale;
     private float mMaxScale;
+    private float mSkewRatio;
+    private int mSkewType;
     private float mRadius;
     private float mStartX;
     private float mStartY;
@@ -65,10 +70,12 @@ public class LearnView extends View {
         mStartX = typedArray.getFloat(R.styleable.LearnView_learnStartX, 100f);
         mStartY = typedArray.getFloat(R.styleable.LearnView_learnStartY, 100f);
         mLength = typedArray.getFloat(R.styleable.LearnView_learnLength, 200f);
-        mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(2.0f);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(Color.parseColor("#21ADF1"));
+        mSkewRatio = typedArray.getFloat(R.styleable.LearnView_learnSkewRatio, 1);
+        mSkewType = typedArray.getInteger(R.styleable.LearnView_learnSkewType, 1);
+        mPaint.setAntiAlias(true);//抗锯齿
+        mPaint.setStrokeWidth(2.0f);//画笔宽度
+        mPaint.setStyle(Paint.Style.STROKE);//填充类型：留空、充满、阴影
+        mPaint.setColor(Color.parseColor("#21ADF1"));//画笔颜色
 
     }
 
@@ -81,7 +88,6 @@ public class LearnView extends View {
         float centerY = height / 2;
 
 
-        canvas.save();
         switch (mType) {
             case 0:
                 drawScale(canvas, centerX, centerY);
@@ -92,25 +98,31 @@ public class LearnView extends View {
             case 2:
                 drawTranslate(canvas);
                 break;
+            case 3:
+                drawSkew(canvas, centerX, centerY);
+
+                break;
         }
 
     }
 
     private void drawScale(Canvas canvas, float centerX, float centerY) {
+        canvas.save();
 
         canvas.drawRect(centerX - mWidth / 2, centerY - mHeight / 2, centerX + mWidth / 2,
-                centerY + mHeight/2, mPaint);
+                centerY + mHeight / 2, mPaint);
         for (; mDrawTimes > 0; mDrawTimes--) {
             sx = sx - mScaleRatio > mMinScale ? (sx - mScaleRatio) : sx;
             sy = sy - mScaleRatio > mMinScale ? (sy - mScaleRatio) : sy;
             canvas.scale(sx, sy, centerX, centerY);
             canvas.drawRect(centerX - mWidth / 2, centerY - mHeight / 2, centerX + mWidth / 2,
-                    centerY + mHeight/2, mPaint);
+                    centerY + mHeight / 2, mPaint);
         }
         canvas.restore();
     }
 
     private void drawRotate(Canvas canvas, float centerX, float centerY) {
+        canvas.save();
         RectF rectF = new RectF(centerX - mRadius, centerY - mRadius,
                 centerX + mRadius, centerY + mRadius);
         canvas.drawArc(rectF, 0f, 360f, false, mPaint);
@@ -128,38 +140,56 @@ public class LearnView extends View {
     }
 
     private void drawTranslate(Canvas canvas) {
+        canvas.save();
         Path path = new Path();
 
+        float startX = mStartX;
+        float startY = mStartY;
         int i = 10;
-        //path.rMoveTo(mStartX, mStartY);
-        //path.moveTo(mStartX, mStartY);
         for (; i > 0; i--) {
-           // path.rLineTo(0f, -50f);
-            //path.rMoveTo(0f, 50f);
-            //path.rLineTo(10f, 0f);
-            path.lineTo(mStartX+0f, -50f);
-            path.moveTo(0f, 50f);
-            path.lineTo(10f, 0f);
+            startX = mStartX;
+            startY = mStartY;
+            path.moveTo(startX, startY);
+            path.lineTo(startX, startY - 50f);
+            path.moveTo(startX, startY);
+            startX = startX + 10f;
+            path.lineTo(startX, startY);
             canvas.drawPath(path, mPaint);
             for (int j = 0; j < 9; j++) {
-                canvas.translate(10f, 0f);
-                path.lineTo(0f, -20f);
-                path.lineTo(0f, 20f);
-                path.lineTo(10f, 0f);
-                if (j == 4) {
-                    path.lineTo(0f, -35f);
-                    path.lineTo(0f, 35f);
-                    path.lineTo(10f, 0f);
+                path.lineTo(startX, startY - 20f);
+                path.lineTo(startX, startY);
+                startX += 10f;
+                path.lineTo(startX, startY);
+                if (j == 3) {
+                    path.lineTo(startX, startY - 35f);
+                    path.lineTo(startX, startY);
+                    startX += 10f;
+                    path.lineTo(startX, startY);
                 }
                 canvas.drawPath(path, mPaint);
             }
-            canvas.translate(10f, 0f);
+            canvas.translate(100f, 0f);
         }
-        path.lineTo(0f, -50f);
-        path.moveTo(0f, 50f);
-        path.lineTo(10f, 0f);
+        path.lineTo(startX, startY - 50f);
         canvas.drawPath(path, mPaint);
         canvas.restore();
-
     }
+
+    private void drawSkew(Canvas canvas, float centerX, float centerY) {
+        canvas.save();
+        canvas.skew(mSkewRatio, 0);
+        switch (mSkewType) {
+            case 0:
+                drawScale(canvas, centerX, centerY);
+                break;
+            case 1:
+                drawRotate(canvas, centerX, centerY);
+                break;
+            case 2:
+                drawTranslate(canvas);
+                break;
+        }
+        canvas.restore();
+    }
+
 }

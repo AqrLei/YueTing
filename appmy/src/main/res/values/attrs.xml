@@ -24,6 +24,8 @@
         <attr name="learnStartX" format="float"/>
         <attr name="learnStartY" format="float"/>
         <attr name="learnLength" format="float"/>
+        <attr name="learnSkewRatio" format="float" />
+        <attr name="learnSkewType" format="integer" />
 
 
     </declare-styleable>
