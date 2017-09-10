@@ -33,6 +33,14 @@
         android:groupIndicator="@null"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/tv_file_name"
+        android:scrollbars="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bt_post" />
+
     <Button
         android:id="@+id/bt_post"
         android:layout_width="wrap_content"
@@ -49,7 +57,8 @@
         yueting:openAnimation="true"
         yueting:useGradientGolor="true"
         yueting:animationVelocity="3"
-        yueting:capStyle="round" />
+        yueting:capStyle="round"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

@@ -10,7 +10,16 @@ class Info {
     data class FileInfo(
             var name: String = "",
             var path: String = "",
-            var isDir: Boolean = false,
+            var isDir: Boolean = true,
             var parentPath: String? = ""
-    )
+    ) : Comparable<FileInfo> {
+        override fun compareTo(other: FileInfo): Int {
+            if (this.name < other.name)
+                return -1
+            if (this.name > other.name)
+                return 1
+            return 0
+        }
+    }
+
 }

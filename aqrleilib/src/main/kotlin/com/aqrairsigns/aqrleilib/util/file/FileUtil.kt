@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.aqrairsigns.aqrleilib.constant.AppConstant
-import com.aqrairsigns.aqrleilib.info.Info
+import com.aqrairsigns.aqrleilib.info.Info.FileInfo
 import java.io.File
+import java.util.*
 
 /**
  * @Author: AqrLei
@@ -14,40 +15,44 @@ import java.io.File
  * @CreateTime: Date: 2017/9/8 Time: 14:30
  */
 object FileUtil {
-    private val fileInfoList = ArrayList<Info.FileInfo>()
-    fun createFileTree(path: String = AppConstant.ROOT_PATH): ArrayList<Info.FileInfo> {
+    private val fileInfoList = ArrayList<FileInfo>()
+    fun createFileInfos(dirPath: String = AppConstant.ROOT_PATH): ArrayList<FileInfo> {
         fileInfoList.clear()
-        val fileInfo = Info.FileInfo()
-        val file = File(path)
+        val fileInfoParent = FileInfo()
+        val file = File(dirPath)
         val files = file.listFiles()
-        fileInfo.path = path
-        fileInfo.isDir = file.isDirectory
-        if (!AppConstant.ROOT_PATH.equals(path)) {
-            fileInfo.name = "@1"
-            fileInfo.path = AppConstant.ROOT_PATH
-            fileInfoList.add(fileInfo)
-            fileInfo.name = "@2"
-            fileInfo.parentPath = file.parent.toString()
-            fileInfoList.add(fileInfo)
-        }
+        fileInfoParent.name = "@1"
+        fileInfoParent.path = file.path
+        fileInfoParent.parentPath = if (file.parent == null) " " else file.parent
+        fileInfoList.add(fileInfoParent)
         files.forEach { f ->
-            fileInfo.name = f.name
-            fileInfo.path = f.path
-            fileInfo.isDir = f.isDirectory
-            fileInfo.parentPath = f.parent
-            fileInfoList.add(fileInfo)
+            if (f.canRead()) {
+                val fileInfo = FileInfo()
+                fileInfo.name = f.name
+                fileInfo.path = f.path
+                fileInfo.isDir = f.isDirectory
+                fileInfo.parentPath = f.parent
+                fileInfoList.add(fileInfo)
+            }
         }
+        Collections.sort(fileInfoList)
         return fileInfoList
     }
 
-    fun getfileInfoList() = fileInfoList
-
-    fun deleteFile(file: File) = file.delete()
-
-    fun openFile(file: File, context: Context) {
-        if (file.isDirectory) {
-            return
+    fun deleteFolder(path: String) {
+        val folder = File(path)
+        if (folder.isDirectory) {
+            folder.listFiles().forEach { f ->
+                if (f.isDirectory) deleteFolder(f.path)
+                else f.delete()
+            }
         }
+        folder.delete()
+    }
+
+
+    fun openFile(filePath: String, context: Context) {
+        val file = File(filePath)
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val type = getMIMEType(file)

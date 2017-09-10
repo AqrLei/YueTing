@@ -6,15 +6,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.info.Info.FileInfo
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
+import com.aqrairsigns.aqrleilib.util.file.FileUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
@@ -80,6 +83,11 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         rb_test_ratio.setOnDrawProgressListener(this)
+        val fileInfos = FileUtil.createFileInfos()
+        tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
+        fileInfos.forEach { f ->
+            tv_file_name.append("name: ${f.name} path: ${f.path} \n")
+        }
         initData()
 
 
@@ -100,7 +108,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             YueTingActivity.jumpToAnimationActivity(this, 0)
         })
         lv_test.visibility = View.GONE
-        elv_test.visibility = View.VISIBLE
+        elv_test.visibility = View.GONE
         defaultExpandGroup()
 
     }
