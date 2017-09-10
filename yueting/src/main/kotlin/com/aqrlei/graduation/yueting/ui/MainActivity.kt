@@ -6,14 +6,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.info.Info.FileInfo
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
+import com.aqrairsigns.aqrleilib.util.file.FileUtil
+import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
 import com.aqrlei.graduation.yueting.model.local.ChildMessage
@@ -21,6 +26,7 @@ import com.aqrlei.graduation.yueting.model.resp.PictureRespBean
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.TestExpandableListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.TestListViewTypeAdapter
+import com.aqrlei.graduation.yueting.ui.dialog.TestDialog
 import kotlinx.android.synthetic.main.activity_picture.*
 import kotlinx.android.synthetic.main.picture_from_url.view.*
 
@@ -32,10 +38,23 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
  */
 
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
-        ExpandableListView.OnChildClickListener {
+        ExpandableListView.OnChildClickListener, RoundBar.OnDrawProgressListener {
+    override fun onDrawProgressRatio(ratio: Float) {
+        AppLog.logDebug("test", "Ratio: $ratio")
+    }
+
     override fun onChildClick(p0: ExpandableListView?, p1: View?, p2: Int, p3: Int, p4: Long): Boolean {
-        AppToast.toastShow(this, "Group: \t" + mData[p2].content
-                + "Child: \t" + (mData[p2].child?.get(p3)?.name ?: "--"), 2000)
+        //AppToast.toastShow(this, "Group: \t" + mData[p2].content
+        // + "Child: \t" + (mData[p2].child?.get(p3)?.name ?: "--"), 2000)
+
+        /*自定义Dialog的使用*/
+        TestDialog(this@MainActivity)
+                .setTitle("测试")
+                .setMessage("一个测试\n 就是一个测试\n真得就是一个测试")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", null)
+                .show()
+
         return true
     }
 
@@ -63,7 +82,14 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        rb_test_ratio.setOnDrawProgressListener(this)
+        val fileInfos = FileUtil.createFileInfos()
+        tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
+        fileInfos.forEach { f ->
+            tv_file_name.append("name: ${f.name} path: ${f.path} \n")
+        }
         initData()
+
 
         //mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
         //mHandler.sendEmptyMessageDelayed(1, 3000)
@@ -82,7 +108,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             YueTingActivity.jumpToAnimationActivity(this, 0)
         })
         lv_test.visibility = View.GONE
-        elv_test.visibility = View.VISIBLE
+        elv_test.visibility = View.GONE
         defaultExpandGroup()
 
     }

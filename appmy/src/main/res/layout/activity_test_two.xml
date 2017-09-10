@@ -9,6 +9,7 @@
         android:id="@+id/srb_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         appmy:sweepDegree="360"
         appmy:startDegree="150"
         appmy:radius="100dp"
@@ -17,12 +18,13 @@
         appmy:capStyle="0"
       />
     <com.leilei.guoshujinfu.mylearning.util.view.LearnView
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        appmy:learnType="1"
+        appmy:learnType="2"
         appmy:learnHeight="480"
-        appmy:learnWidth="320"
+        appmy:learnSkewType="0"
+        appmy:learnWidth="480"
         appmy:learnTimes="10"/>
 
 </LinearLayout>

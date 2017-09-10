@@ -45,6 +45,12 @@ public class TestDialog {
         wm.getDefaultDisplay().getMetrics(metrics);
         v.setLayoutParams(new FrameLayout.LayoutParams((int) (metrics.widthPixels * 0.75),
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+        new OnListener() {
+            @Override
+            public void onListener(int position) {
+
+            }
+        }.onListener(1);
     }
 
     public TestDialog setTitle(String title) {
@@ -56,7 +62,7 @@ public class TestDialog {
 
     public TestDialog setMsg(String msg) {
         boolean empty = TextUtils.isEmpty(msg);
-        mMsg.setText(empty ? "无内容" : msg);
+        mMsg.setText(TextUtils.isEmpty(msg) ? "无内容" : msg);
         mMsg.setVisibility(View.VISIBLE);
         return this;
     }
@@ -98,5 +104,9 @@ public class TestDialog {
 
     public void show() {
         mDialog.show();
+    }
+
+    interface OnListener {
+        public void onListener(int position);
     }
 }

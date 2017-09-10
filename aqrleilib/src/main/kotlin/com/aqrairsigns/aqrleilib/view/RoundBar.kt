@@ -25,6 +25,7 @@ import com.aqrairsigns.aqrleilib.R
 * @param defStyleRes 默认资源ID
 * @description: 画一个圆形或半圆的简单进度条
 * */
+
 class RoundBar @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -35,7 +36,7 @@ class RoundBar @JvmOverloads constructor(
     private lateinit var mContext: Context//上下文
     private var mBackgroundColor: Int = 0//背景颜色
     private var mProgressColor: Int = 0//进度颜色
-    private var mGradientListColor: ArrayList<Int>? = null
+    private var mGradientListColor: ArrayList<Int>? = null//渐变色
     private var mRadius: Float = 0F//圆半径
     private var mMaxProgress: Float = 0F//最大的进度
     private var mCurrentProgress: Float = 0f//当前进度
@@ -48,19 +49,19 @@ class RoundBar @JvmOverloads constructor(
     private var mDrawDegree: Int = 0//画的起始角度
     private var mAnimationV: Int = 0//画的速度
 
+    private var mListener: OnDrawProgressListener? = null//当前进度监听器
+
     /*标明画的时候是当前进度开始还是从头开始*/
     companion object {
-        @JvmStatic
-        val TYPE_CONTINUE: Int = 1
-        @JvmStatic
-        val TYPE_RESTART: Int = 0
+        /*cap类型*/
         private val BUTT = 0
         private val ROUND = 1
         private val SQUARE = 2
+
+        /*异常销毁需要保存的数据的key*/
         private val INSTANCE = "instance"
-        private val INSTANCE_ANIMATION = "animation"
+        private val INSTANCE_BOOLEAN = "boolean"
         private val INSTANCE_DEGREE = "degree"
-        private val INSTANCE_GRADIENT = "gradient"
     }
 
     init {
@@ -160,6 +161,10 @@ class RoundBar @JvmOverloads constructor(
         mIsOpenAnimation = openAnimation
     }
 
+    fun setOnDrawProgressListener(listener: OnDrawProgressListener) {
+        mListener = listener
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
@@ -184,12 +189,17 @@ class RoundBar @JvmOverloads constructor(
         if (mIsUseGradientColor && mGradientListColor != null) {
             mPaint.shader = SweepGradient(centerX, centerY,
                     mGradientListColor!![0], mGradientListColor!![1])
+        } else {
+            mPaint.color = mProgressColor
         }
         if (mIsOpenAnimation) {
-            canvas?.drawArc(left, top, right, bottom, mStartDegree.toFloat(),
+            val ratio = mDrawDegree.toFloat() / mProgressDegree
+            mListener?.onDrawProgressRatio(ratio)
+            val drawArc = canvas?.drawArc(left, top, right, bottom, mStartDegree.toFloat(),
                     mDrawDegree.toFloat(), false, mPaint)
 
-            if (mDrawDegree <= mProgressDegree) {
+
+            if (mDrawDegree < mProgressDegree) {
                 mDrawDegree += mAnimationV
                 mDrawDegree = Math.min(mDrawDegree, mProgressDegree)
                 invalidate()
@@ -204,30 +214,37 @@ class RoundBar @JvmOverloads constructor(
     override fun onSaveInstanceState(): Parcelable {
         val bundle = Bundle()
         bundle.putParcelable(INSTANCE, super.onSaveInstanceState())
-        bundle.putBoolean(INSTANCE_ANIMATION,mIsOpenAnimation)
-        bundle.putBoolean(INSTANCE_GRADIENT, mIsUseGradientColor)
-        val degree = ArrayList<Int> ()
-        degree.add(mStartDegree)
-        degree.add(mSweepDegree)
-        degree.add(mProgressDegree)
-        degree.add(mRotateDegree)
-        bundle.putIntegerArrayList(INSTANCE_DEGREE,degree)
+        val bool = booleanArrayOf(mIsOpenAnimation, mIsUseGradientColor)
+        val degree = intArrayOf(mStartDegree, mSweepDegree, mProgressDegree, mRotateDegree)
+        degree as ArrayList<Int>
+        with(bundle) {
+            putBooleanArray(INSTANCE_BOOLEAN, bool)
+            putIntegerArrayList(INSTANCE_DEGREE, degree)
+        }
         return bundle
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        if(state is Bundle) {
-            mIsOpenAnimation = state.getBoolean(INSTANCE_ANIMATION)
-            mIsUseGradientColor = state.getBoolean(INSTANCE_GRADIENT)
-            val degree = state.getIntegerArrayList(INSTANCE_DEGREE)
-            mStartDegree = degree[0]
-            mSweepDegree = degree[1]
-            mProgressDegree = degree[2]
-            mRotateDegree = degree[3]
-            super.onRestoreInstanceState(state.getParcelable(INSTANCE))
+        if (state is Bundle) {
+            with(state) {
+                val bool = getBooleanArray(INSTANCE_BOOLEAN)
+                val degree = getIntegerArrayList(INSTANCE_DEGREE)
+                mIsOpenAnimation = bool[0]
+                mIsUseGradientColor = bool[1]
+                mStartDegree = degree[0]
+                mSweepDegree = degree[1]
+                mProgressDegree = degree[2]
+                mRotateDegree = degree[3]
+                super.onRestoreInstanceState(getParcelable(INSTANCE))
+            }
             return
         }
         super.onRestoreInstanceState(state)
+    }
+
+    /*回调接口，传递 当前进度与已完成进度的比值*/
+    interface OnDrawProgressListener {
+        fun onDrawProgressRatio(ratio: Float)
     }
 }
 
