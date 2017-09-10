@@ -85,8 +85,8 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         rb_test_ratio.setOnDrawProgressListener(this)
         val fileInfos = FileUtil.createFileInfos()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
-        fileInfos.forEach { f ->
-            tv_file_name.append("name: ${f.name} path: ${f.path} \n")
+        fileInfos.forEach { (name, path, isDir) ->
+            tv_file_name.append("name:  $name path:  $path dir:  $isDir\n")
         }
         initData()
 

@@ -215,8 +215,9 @@ class RoundBar @JvmOverloads constructor(
         val bundle = Bundle()
         bundle.putParcelable(INSTANCE, super.onSaveInstanceState())
         val bool = booleanArrayOf(mIsOpenAnimation, mIsUseGradientColor)
-        val degree = intArrayOf(mStartDegree, mSweepDegree, mProgressDegree, mRotateDegree)
-        degree as ArrayList<Int>
+        val degree = ArrayList<Int>()
+        val degrees = intArrayOf(mStartDegree, mSweepDegree, mProgressDegree, mRotateDegree)
+        degree.addAll(degrees.asList())
         with(bundle) {
             putBooleanArray(INSTANCE_BOOLEAN, bool)
             putIntegerArrayList(INSTANCE_DEGREE, degree)
