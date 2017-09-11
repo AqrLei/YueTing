@@ -83,7 +83,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         super.initComponents(savedInstanceState)
         rb_test_ratio.visibility = View.VISIBLE
         rb_test_ratio.setOnDrawProgressListener(this)
-        val fileInfos = FileUtil.createFileInfos()
+        val fileInfos = FileUtil.createFileInfoS()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
         fileInfos.forEach { (name, path, isDir) ->
             tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
@@ -105,7 +105,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         lv_test.adapter = TestListViewTypeAdapter(this, R.layout.listitem_title_main,
                 R.layout.listitem_content, mData)
         bt_post.setOnClickListener({
-            YueTingActivity.jumpToAnimationActivity(this, 0)
+            YueTingActivity.jumpToYueTingActivity(this, 0)
         })
         lv_test.visibility = View.GONE
         elv_test.visibility = View.GONE
