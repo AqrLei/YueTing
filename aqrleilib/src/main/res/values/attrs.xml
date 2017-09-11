@@ -3,10 +3,10 @@
     <declare-styleable name="RoundBar">
         <attr name="backgroundColor" format="color"/>
         <attr name="progressColor" format="color"/>
-        <attr name="startDegree" format="integer"/>
-        <attr name="sweepDegree" format="integer"/>
-        <attr name="rotateDegree" format="integer"/>
-        <attr name="animationVelocity" format="integer"/>
+        <attr name="startDegree" format="float"/>
+        <attr name="sweepDegree" format="float"/>
+        <attr name="rotateDegree" format="float"/>
+        <attr name="animationVelocity" format="float"/>
         <attr name="radius" format="dimension"/>
         <attr name="roundWidth" format="dimension"/>
         <attr name="maxProgress" format="float"/>

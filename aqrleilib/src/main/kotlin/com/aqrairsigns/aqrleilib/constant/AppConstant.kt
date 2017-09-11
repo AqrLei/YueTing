@@ -8,6 +8,7 @@ package com.aqrairsigns.aqrleilib.constant
  */
 object AppConstant {
     val ROOT_PATH = "/"
+    val STORAGE_PATH = "/storage"
     val MIME_TYPE = arrayOf(
             arrayOf("mp3","audio"),
             arrayOf("ape","audio"),

@@ -10,6 +10,7 @@ android {
             res.srcDirs = ['src/main/res/yueting/read',
                            'src/main/res/yueting/music',
                            'src/main/res/yueting/common',
+                           'src/main/res/yueting/home',
                            'src/main/res/yueting',
                            'src/main/res'
             ]

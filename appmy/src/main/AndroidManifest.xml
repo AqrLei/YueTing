@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.leilei.guoshujinfu.mylearning">
+
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -14,44 +15,42 @@
         >
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
-
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
 
         </activity>
         <activity
             android:name=".activity.ChatActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
             android:name=".activity.PictureActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
 
         </activity>
         <activity
             android:name=".activity.SuspensionActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
 
         </activity>
         <activity
             android:name=".activity.MessageCenterActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
-
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
 
         </activity>
         <activity
             android:name=".activity.CameraActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity android:name=".activity.TestActivity">

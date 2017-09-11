@@ -13,9 +13,7 @@ import android.view.View
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.info.Info.FileInfo
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.util.file.FileUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
@@ -38,10 +36,11 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
  */
 
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
-        ExpandableListView.OnChildClickListener, RoundBar.OnDrawProgressListener {
-    override fun onDrawProgressRatio(ratio: Float) {
-        AppLog.logDebug("test", "Ratio: $ratio")
+        ExpandableListView.OnChildClickListener, RoundBar.OnDrawProgressChangeListener {
+    override fun onDrawProgressChange(currentProgress: Float) {
+        AppLog.logDebug("test", "currentProgress:\t$currentProgress")
     }
+
 
     override fun onChildClick(p0: ExpandableListView?, p1: View?, p2: Int, p3: Int, p4: Long): Boolean {
         //AppToast.toastShow(this, "Group: \t" + mData[p2].content
@@ -82,16 +81,17 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        rb_test_ratio.visibility = View.VISIBLE
         rb_test_ratio.setOnDrawProgressListener(this)
-        val fileInfos = FileUtil.createFileInfos()
+        val fileInfos = FileUtil.createFileInfoS()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
         fileInfos.forEach { (name, path, isDir) ->
-            tv_file_name.append("name:  $name path:  $path dir:  $isDir\n")
+            tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
         }
         initData()
 
 
-        //mPresenter.getImg(HttpReqConfig.RQ_IMG_TYPE)
+        //mPresenter.getImg(HttpReqCofig.RQ_IMG_TYPE)
         //mHandler.sendEmptyMessageDelayed(1, 3000)
 
         /*通过布局的id获取ExpandableListView实例，设置adapter*/
@@ -105,7 +105,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         lv_test.adapter = TestListViewTypeAdapter(this, R.layout.listitem_title_main,
                 R.layout.listitem_content, mData)
         bt_post.setOnClickListener({
-            YueTingActivity.jumpToAnimationActivity(this, 0)
+            YueTingActivity.jumpToYueTingActivity(this, 0)
         })
         lv_test.visibility = View.GONE
         elv_test.visibility = View.GONE
