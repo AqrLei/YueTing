@@ -72,7 +72,7 @@ class AppSharedPreferences private constructor() {
         private var mFileName: String? = null
 
         fun init(context: Context) {
-            mContext = context
+            mContext = context.applicationContext
         }
 
         fun setFileName(name: String?) {

@@ -14,14 +14,15 @@ data class DataTableInfo(
         var fileType: Array<String>? = null
 ) {
     override fun equals(other: Any?): Boolean {
+
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as DataTableInfo
-
+        if (this.name == other.name) return true
         if (name != other.name) return false
-        if (!Arrays.equals(fileId, other.fileId)) return false
-        if (!Arrays.equals(fileType, other.fileType)) return false
+        /*if (!Arrays.equals(fileId, other.fileId)) return false
+        if (!Arrays.equals(fileType, other.fileType)) return false*/
 
         return true
     }
