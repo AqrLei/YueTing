@@ -88,6 +88,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         fileInfos.forEach { (name, path, isDir) ->
             tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
         }
+        //tv_file_name.text = EnumSingleton.INSTANCE.getName()
 
         initData()
 
