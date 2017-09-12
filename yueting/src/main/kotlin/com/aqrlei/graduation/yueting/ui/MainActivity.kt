@@ -14,8 +14,8 @@ import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.util.file.FileUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
@@ -88,6 +88,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         fileInfos.forEach { (name, path, isDir) ->
             tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
         }
+
         initData()
 
 
