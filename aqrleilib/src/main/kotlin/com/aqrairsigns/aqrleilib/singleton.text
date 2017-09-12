@@ -1,0 +1,30 @@
+class EnumSingleton {
+    companion object {
+        val instance: EnumSingleton
+            get() = Singleton.INSTANCE.instance
+    }
+
+
+    private enum class Singleton {
+        INSTANCE;
+
+        val instance: EnumSingleton = EnumSingleton()
+    }
+
+}
+
+class EnumSingleton {
+    companion object {
+        val instance: EnumSingleton
+            get() = Singleton.INSTANCE.instance
+    }
+
+
+    private enum class Singleton {
+        INSTANCE;
+
+        val instance: EnumSingleton = EnumSingleton()
+    }
+
+
+}

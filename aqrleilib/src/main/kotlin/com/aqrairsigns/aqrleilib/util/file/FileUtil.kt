@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.aqrairsigns.aqrleilib.constant.AppConstant
-import com.aqrairsigns.aqrleilib.info.Info.FileInfo
+import com.aqrairsigns.aqrleilib.info.FileInfo
 import java.io.File
 import java.util.*
 

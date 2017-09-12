@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
-import com.aqrairsigns.aqrleilib.info.Info.FileInfo
+import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrlei.graduation.yueting.R
 
 /**
