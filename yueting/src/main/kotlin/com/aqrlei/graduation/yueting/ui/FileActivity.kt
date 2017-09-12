@@ -8,8 +8,8 @@ import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.util.file.FileUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter

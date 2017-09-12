@@ -1,4 +1,4 @@
-package com.aqrairsigns.aqrleilib.util.file
+package com.aqrairsigns.aqrleilib.util
 
 import android.content.Context
 import android.content.Intent
