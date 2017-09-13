@@ -17,6 +17,7 @@ import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
@@ -90,18 +91,20 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
 
 
-        /*  DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
-          DBManager.insertData(DBManager.SqlFormat.
-                  insertSqlFormat("test", arrayOf("name", "path")), arrayOf("大爱的", "xiao"))
-          val c = DBManager.queryData(DBManager.SqlFormat.selectSqlFormat("test"))
-          while (c!!.moveToNext()) {
-              tv_file_name.append(c?.getString(c.getColumnIndex("name")) + "\n")
-              tv_file_name.append(c?.getString(c.getColumnIndex("path")) + "\n")
+        DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
+                .createDB()
+        DBManager.insertData(DBManager.SqlFormat.
+                insertSqlFormat("test", arrayOf("name", "path")), arrayOf("大爱的", "xiao"))
+                .deleteData(DBManager.SqlFormat.deleteSqlFormat("test", "path", "= "), arrayOf("xiao"))
+        val c = DBManager.queryData(DBManager.SqlFormat.selectSqlFormat("test"))
+        while (c!!.moveToNext()) {
+            tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
+            tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
 
-          }
-          c.close()
-          DBManager.closeDB()
-          DBManager.deleteDB()*/
+        }
+        c.close()
+        //DBManager.closeDB()
+        //DBManager.deleteDB()
 
         /*
         * MediaMetadataRetriever()获取mp3文件相关信息

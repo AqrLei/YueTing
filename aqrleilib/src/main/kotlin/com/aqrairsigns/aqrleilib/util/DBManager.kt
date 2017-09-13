@@ -17,15 +17,20 @@ object DBManager {
     private var mContext: Context? = null
     private var mDBName: String = " "
     /*invoke first*/
-    fun initDBHelper(context: Context, dbName: String, version: Int) {
+    fun initDBHelper(context: Context, dbName: String, version: Int): DBManager {
         mContext = context
         mDBName = dbName
         DBHelper.init(context, dbName, version)
+        return this
     }
 
     /*invoke after {@link initDBHelper(context: Context, dbName: String, version: Int)}*/
-    fun addTable(name: String, fileId: Array<String>, fileType: Array<String>) {
+    fun addTable(name: String, fileId: Array<String>, fileType: Array<String>): DBManager {
         DBHelper.addTable(name, fileId, fileType)
+        return this
+    }
+
+    fun createDB() {
         db = DBHelper.dbHelper.writableDatabase
     }
 
@@ -46,44 +51,42 @@ object DBManager {
     fun deleteDB(context: Context) = context.deleteDatabase(mDBName)
     fun deleteDB(context: Context, name: String) = context.deleteDatabase(name)
 
-    fun insertData(sql: String, data: Array<Any>) {
-
-
-        db?.beginTransaction()
-        try {
-            //TODO db?.execSQL(sql, data)
-            db?.execSQL(sql, data)
-            db?.setTransactionSuccessful()
-
-        } finally {
-            db?.endTransaction()
-        }
-    }
-
-    fun deleteData(sql: String) {
-        db?.beginTransaction()
-        try {
-            db?.execSQL(sql)
-            db?.setTransactionSuccessful()
-        } finally {
-            db?.endTransaction()
-        }
-    }
-
-    fun updateData(sql: String, data: Array<String>) {
+    fun insertData(sql: String, data: Array<Any>): DBManager {
         db?.beginTransaction()
         try {
             db?.execSQL(sql, data)
             db?.setTransactionSuccessful()
+
         } finally {
             db?.endTransaction()
         }
+        return this
+    }
+
+    fun deleteData(sql: String, dataWhere: Array<String>?): DBManager {
+        db?.beginTransaction()
+        try {
+            db?.execSQL(sql, dataWhere)
+            db?.setTransactionSuccessful()
+        } finally {
+            db?.endTransaction()
+        }
+        return this
+    }
+
+    fun updateData(sql: String, data: Array<String>): DBManager {
+        db?.beginTransaction()
+        try {
+            db?.execSQL(sql, data)
+            db?.setTransactionSuccessful()
+        } finally {
+            db?.endTransaction()
+        }
+        return this
     }
 
     fun queryData(sql: String, dataWhere: Array<String>? = null) =
-            //TODO db?.rawQuery(sql,dataWhere)
             db?.rawQuery(sql, dataWhere)
-
 
     private class DBHelper private constructor(
             context: Context?,
@@ -110,7 +113,8 @@ object DBManager {
                 temp.name = name
                 temp.fileId = fileId
                 temp.fileType = fileType
-                mTableInfoList.add(temp)
+                if (!mTableInfoList.contains(temp))
+                    mTableInfoList.add(temp)
             }
 
             fun init(context: Context, name: String, version: Int) {
@@ -124,6 +128,7 @@ object DBManager {
         init {
             mDeleteTableInfoList = ArrayList()
         }
+
 
         fun remove(name: String): Boolean {
             if (!mTableInfoList.isEmpty()) {
@@ -183,6 +188,7 @@ object DBManager {
     }
 
     object SqlFormat {
+
         fun insertSqlFormat(tableName: String, fileIdList: Array<String>): String {
             var sql = "insert into $tableName( "
             fileIdList.indices
@@ -198,7 +204,7 @@ object DBManager {
         }
 
         fun deleteSqlFormat(tableName: String, fileId: String, where: String) =
-                "delete from $tableName where $fileId $where"
+                "delete from $tableName where $fileId $where ?"
 
         fun updateSqlFormat(tableName: String, fileId: String, where: String = "") =
                 "update $tableName  set $fileId = ?" +
