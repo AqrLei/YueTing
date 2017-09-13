@@ -17,7 +17,6 @@ import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
@@ -89,20 +88,26 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         rb_test_ratio.setOnDrawProgressListener(this)
         val fileInfos = FileUtil.createFileInfoS()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
+
+
+        /*  DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
+          DBManager.insertData(DBManager.SqlFormat.
+                  insertSqlFormat("test", arrayOf("name", "path")), arrayOf("大爱的", "xiao"))
+          val c = DBManager.queryData(DBManager.SqlFormat.selectSqlFormat("test"))
+          while (c!!.moveToNext()) {
+              tv_file_name.append(c?.getString(c.getColumnIndex("name")) + "\n")
+              tv_file_name.append(c?.getString(c.getColumnIndex("path")) + "\n")
+
+          }
+          c.close()
+          DBManager.closeDB()
+          DBManager.deleteDB()*/
+
         /*
         * MediaMetadataRetriever()获取mp3文件相关信息
         *
         * */
         val path = "/storage/sdcard0/netease/cloudmusic/Music/陈奕迅 - 重口味.mp3"
-        /* DBManager.addTable("test", arrayOf("name","path"), arrayOf("varchar","varchar"))
-         DBManager.insertData("test", arrayOf("大爱的","xiao"))*/
-        val c = DBManager.queryData("test")
-        while (c!!.moveToNext()) {
-            tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
-            tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
-
-        }
-
         val mmr = MediaMetadataRetriever()
         mmr.setDataSource(path)
         val title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)

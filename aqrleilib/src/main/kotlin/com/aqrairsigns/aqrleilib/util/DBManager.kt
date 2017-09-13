@@ -1,7 +1,6 @@
 package com.aqrairsigns.aqrleilib.util
 
 import android.content.Context
-import android.database.Cursor
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -30,7 +29,6 @@ object DBManager {
         db = DBHelper.dbHelper.writableDatabase
     }
 
-
     fun removeTable(name: String) {
         DBHelper.dbHelper.remove(name)
     }
@@ -48,24 +46,44 @@ object DBManager {
     fun deleteDB(context: Context) = context.deleteDatabase(mDBName)
     fun deleteDB(context: Context, name: String) = context.deleteDatabase(name)
 
-    fun insertData(tableName: String, data: Array<Any>) {
-        //TODO db?.execSQL("insert into $tableName(name, path) values(?,?)", data)
+    fun insertData(sql: String, data: Array<Any>) {
+
+
+        db?.beginTransaction()
+        try {
+            //TODO db?.execSQL(sql, data)
+            db?.execSQL(sql, data)
+            db?.setTransactionSuccessful()
+
+        } finally {
+            db?.endTransaction()
+        }
     }
 
-    fun deleteData(tableName: String, fileId: String, where: Any?) {
-        //TODO db?.execSQL("delete from $tableName where $fileId $where")
-
+    fun deleteData(sql: String) {
+        db?.beginTransaction()
+        try {
+            db?.execSQL(sql)
+            db?.setTransactionSuccessful()
+        } finally {
+            db?.endTransaction()
+        }
     }
 
-    fun updateData(tableName: String, fileId: String, where: Any?, data: Any) {
-        //TODO db?.execSQL("update $tableName set $fileId where $where", arrayOf(data))
-
+    fun updateData(sql: String, data: Array<String>) {
+        db?.beginTransaction()
+        try {
+            db?.execSQL(sql, data)
+            db?.setTransactionSuccessful()
+        } finally {
+            db?.endTransaction()
+        }
     }
 
-    fun queryData(tableName: String, fileId: String = "", where: Any = "", data: Array<String>? = null): Cursor? {
-        //TODO db?.rawQuery("select from $tableName where $fileId $where",data)
-        return null
-    }
+    fun queryData(sql: String, dataWhere: Array<String>? = null) =
+            //TODO db?.rawQuery(sql,dataWhere)
+            db?.rawQuery(sql, dataWhere)
+
 
     private class DBHelper private constructor(
             context: Context?,
@@ -164,4 +182,37 @@ object DBManager {
         }
     }
 
+    object SqlFormat {
+        fun insertSqlFormat(tableName: String, fileIdList: Array<String>): String {
+            var sql = "insert into $tableName( "
+            fileIdList.indices
+                    .filter { it != fileIdList.lastIndex }
+                    .forEach { sql += "${fileIdList[it]}, " }
+            sql += "${fileIdList.last()}) values("
+            fileIdList.indices
+                    .filter { it != fileIdList.lastIndex }
+                    .forEach { sql += "?, " }
+            sql += "?)"
+
+            return sql
+        }
+
+        fun deleteSqlFormat(tableName: String, fileId: String, where: String) =
+                "delete from $tableName where $fileId $where"
+
+        fun updateSqlFormat(tableName: String, fileId: String, where: String = "") =
+                "update $tableName  set $fileId = ?" +
+                        if (where == "") where
+                        else " where $where = ?"
+
+
+        fun selectSqlFormat(tableName: String, fileId: String = "", where: String = "") =
+                "select" +
+                        if (fileId == "") " * from $tableName"
+                        else {
+                            " $fileId from $tableName" +
+                                    if (where == "") where
+                                    else " where $where = ?"
+                        }
+    }
 }

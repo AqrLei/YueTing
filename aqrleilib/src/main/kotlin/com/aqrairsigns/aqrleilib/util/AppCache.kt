@@ -20,7 +20,7 @@ enum class AppCache {
         fun init(context: Context, name: String?) {
             mContext = context.applicationContext
             mFileName = name
-            mShared = mContext!!.getSharedPreferences(mFileName, Context.MODE_PRIVATE)
+            mShared = mContext.getSharedPreferences(mFileName, Context.MODE_PRIVATE)
             mEditor = mShared.edit()
         }
     }
@@ -70,5 +70,5 @@ enum class AppCache {
     fun getLong(key: String, defValue: Long) = mShared.getLong(key, defValue)
     fun getInt(key: String, defValue: Int) = mShared.getInt(key, defValue)
     fun getBoolean(key: String, defValue: Boolean) = mShared.getBoolean(key, defValue)
-    
+
 }
