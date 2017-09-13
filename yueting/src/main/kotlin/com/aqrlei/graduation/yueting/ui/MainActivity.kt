@@ -2,6 +2,9 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -14,6 +17,7 @@ import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
@@ -85,11 +89,39 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         rb_test_ratio.setOnDrawProgressListener(this)
         val fileInfos = FileUtil.createFileInfoS()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
-        fileInfos.forEach { (name, path, isDir) ->
-            tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
-        }
-        //tv_file_name.text = EnumSingleton.INSTANCE.getName()
+        /*
+        * MediaMetadataRetriever()获取mp3文件相关信息
+        *
+        * */
+        val path = "/storage/sdcard0/netease/cloudmusic/Music/陈奕迅 - 重口味.mp3"
+        /* DBManager.addTable("test", arrayOf("name","path"), arrayOf("varchar","varchar"))
+         DBManager.insertData("test", arrayOf("大爱的","xiao"))*/
+        val c = DBManager.queryData("test")
+        while (c!!.moveToNext()) {
+            tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
+            tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
 
+        }
+
+        val mmr = MediaMetadataRetriever()
+        mmr.setDataSource(path)
+        val title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+        val album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+        val artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+        val duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        val byte = mmr.embeddedPicture
+        val bitMap = BitmapFactory.decodeByteArray(byte, 0, byte.size)
+        var drawable = BitmapDrawable(null, bitMap)
+        drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+        tv_file_name.append("title:\t $title \n " +
+                "album:\t $album \n " +
+                "artist:\t $artist\n" +
+                " duration:\t $duration")
+        tv_file_name.setCompoundDrawables(drawable, null, null, null)
+        /*  fileInfos.forEach { (name, path, isDir) ->
+              tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
+          }*/
+        //tv_file_name.text = EnumSingleton.INSTANCE.getName()
         initData()
 
 

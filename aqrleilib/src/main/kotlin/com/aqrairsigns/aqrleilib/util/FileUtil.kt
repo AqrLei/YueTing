@@ -65,7 +65,7 @@ object FileUtil {
         val name = file.name
         val end = name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
         for (i in AppConstant.MIME_TYPE.indices) {
-            type = if (end.equals(AppConstant.MIME_TYPE[i][0])) {
+            type = if (end == AppConstant.MIME_TYPE[i][0]) {
                 AppConstant.MIME_TYPE[i][1]
             } else {
                 "*"

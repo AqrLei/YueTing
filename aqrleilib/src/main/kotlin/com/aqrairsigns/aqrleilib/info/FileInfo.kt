@@ -16,44 +16,25 @@ data class FileInfo(
         var parentPath: String = AppConstant.ROOT_PATH
 ) : Comparable<FileInfo> {
     override fun compareTo(other: FileInfo): Int {
-        if (other.name == "@1") {
+        val thisName = this.name.toLowerCase()
+        val otherName = other.name.toLowerCase()
+        if (otherName == "@1" || (!this.isDir && other.isDir)) {
             return 1
         }
-        if (this.name == "@1") {
+        if (thisName == "@1" || (this.isDir && !other.isDir)) {
             return -1
         }
-        if (!this.isDir && other.isDir) {
-            return 1
-        }
-        if (this.isDir && !other.isDir) {
-            return -1
-        }
-        if (this.isDir && other.isDir) {
-            if (other.name >= "一" || this.name >= "一") {
-                if (this.name < other.name)
+        if ((this.isDir && other.isDir) || (!this.isDir && !other.isDir)) {
+            if (otherName >= "一" || thisName >= "一") {
+                if (thisName < otherName)
                     return 1
-                if (this.name > other.name)
+                if (thisName > otherName)
                     return -1
                 return 0
             } else {
-                if (this.name < other.name)
+                if (thisName < otherName)
                     return -1
-                if (this.name > other.name)
-                    return 1
-                return 0
-            }
-        }
-        if (!this.isDir && !other.isDir) {
-            if (other.name >= "一" || this.name >= "一") {
-                if (this.name < other.name)
-                    return 1
-                if (this.name > other.name)
-                    return -1
-                return 0
-            } else {
-                if (this.name < other.name)
-                    return -1
-                if (this.name > other.name)
+                if (thisName > otherName)
                     return 1
                 return 0
             }

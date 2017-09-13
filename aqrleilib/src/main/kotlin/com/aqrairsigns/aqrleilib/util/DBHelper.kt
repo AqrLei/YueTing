@@ -1,3 +1,4 @@
+/*
 package com.aqrairsigns.aqrleilib.util
 
 import android.content.Context
@@ -6,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.aqrairsigns.aqrleilib.info.DataTableInfo
 
+*/
 /**
  * @Author: AqrLei
  * @Name MyLearning
  * @Description:
  * @CreateTime: Date: 2017/9/12 Time: 14:57
  */
+/*
+
 class DBHelper private constructor(
         context: Context?,
         name: String?,
@@ -106,4 +110,4 @@ class DBHelper private constructor(
         }
 
     }
-}
+}*/

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -48,9 +49,13 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     }
 
     private fun init() {
-        fileInfoList = FileUtil.createFileInfoS("/storage")
+        val path = AppCache.APPCACHE.getString("path", "/storage")
+        fileInfoList = FileUtil.createFileInfoS(path)
         mData = ArrayList()
-        mData.addAll(fileInfoList.subList(1, fileInfoList.size - 1))
+        if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
+            mData.addAll(fileInfoList.subList(1, fileInfoList.size - 1))
+        }
+
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
         tv_file_parent.text = fileInfoList[0].path
         tv_file_parent.setOnClickListener {
@@ -63,6 +68,9 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     private fun changeFileInfo(path: String) {
         fileInfoList = FileUtil.createFileInfoS(path)
+        AppCache.APPCACHE.putString("path", fileInfoList[0].path)
+                .commit()
+        AppLog.logDebug("cache", AppCache.APPCACHE.getString("path", "null"))
         mData.clear()
         mData.addAll(fileInfoList.subList(1, fileInfoList.size))
         tv_file_parent.text = fileInfoList[0].path
@@ -73,7 +81,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         fun jumpToFileActivity(context: Context, titleName: String = " ") {
             val intent = Intent(context, FileActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("path", titleName)
+            bundle.putString("title", titleName)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
 
         }
