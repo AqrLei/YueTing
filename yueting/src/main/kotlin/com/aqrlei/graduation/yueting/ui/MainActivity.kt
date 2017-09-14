@@ -83,6 +83,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun beforeSetContentView() {
         super.beforeSetContentView()
+        //TODO permissionCheck(context: Context, permission: String, mRequestCode: Int): Boolean
     }
 
     override fun initComponents(savedInstanceState: Bundle?) {
@@ -105,6 +106,14 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
         }
         c.close()
+        DBManager
+                .sqlData(
+                        DBManager.SqlFormat.deleteSqlFormat("test", "name", "="),
+                        null,
+                        arrayOf("大爱的"),
+                        DBManager.SqlType.DELETE
+                )
+                .closeDB()
         /*
         * MediaMetadataRetriever()获取mp3文件相关信息
         * */
@@ -117,7 +126,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         val duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
         val byte = mmr.embeddedPicture
         val bitMap = BitmapFactory.decodeByteArray(byte, 0, byte.size)
-        var drawable = BitmapDrawable(null, bitMap)
+        val drawable = BitmapDrawable(null, bitMap)
         drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
         tv_file_name.append("title:\t $title \n " +
                 "album:\t $album \n " +

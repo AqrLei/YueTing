@@ -7,24 +7,35 @@
     android:orientation="vertical"
     tools:context="com.aqrlei.graduation.yueting.ui.FileActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="#ffffffff"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/TitleBarImageViewStyle"
+            />
+
+        <TextView
+            style="@style/TitleBarTextViewStyle"
+            android:text="我的文件"/>
+    </FrameLayout>
+
+    <View style="@style/DividerStyle"/>
 
     <TextView
         android:id="@+id/tv_file_parent"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#ffffff"
-        android:gravity="center_vertical"
+        android:layout_height="30dp"
+        android:background="#ffffffee"
         android:ellipsize="end"
+        android:gravity="center_vertical"
         android:maxLines="1"
         android:textSize="12dp"
         tools:text="/dev"/>
 
-    <View
-        android:id="@+id/v_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#bbbbbb"
-        />
+    <View style="@style/DividerStyle"/>
 
     <ListView
         android:id="@+id/lv_file"

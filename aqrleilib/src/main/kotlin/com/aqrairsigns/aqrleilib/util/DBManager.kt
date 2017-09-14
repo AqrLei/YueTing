@@ -88,7 +88,7 @@ object DBManager {
         return this
     }
 
-    fun getCursor() = mCursor
+    fun getCursor(): Cursor? = mCursor
 
     private class DBHelper private constructor(
             context: Context?,

@@ -23,11 +23,24 @@ import kotlinx.android.synthetic.main.activity_file.*
  * @CreateTime: Date: 2017/9/11 Time: 13:40
  */
 class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener,
+        View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_back -> {
+                this@FileActivity.finish()
+            }
+            R.id.tv_file_parent -> {
+                changeFileInfo(fileInfoList[0].parentPath)
+            }
+        }
+
+    }
+
     override fun onItemClick(parent: AdapterView<*>?, convertView: View?,
                              position: Int, clickId: Long) {
         if (mData[position].isDir) {
-            AppLog.logDebug("item", "path:\t ${mData[position].parentPath}")
+            //AppLog.logDebug("item", "path:\t ${mData[position].parentPath}")
 
             changeFileInfo(mData[position].path)
         }
@@ -58,12 +71,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
         tv_file_parent.text = fileInfoList[0].path
-        tv_file_parent.setOnClickListener {
-
-            changeFileInfo(fileInfoList[0].parentPath)
-        }
+        tv_file_parent.setOnClickListener(this)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
+        iv_back.setOnClickListener(this)
     }
 
     private fun changeFileInfo(path: String) {

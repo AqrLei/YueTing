@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         AlphaListView.OnAlphaChangeListener {
     override fun onAlphaChanged(percent: Float) {
-        mContainerActivity.rg_anim_tab.setBackgroundColor(
+        mContainerActivity.ll_tab_title.setBackgroundColor(
                 Color.argb((175 * percent).toInt(), 113, 204, 180)
         )
     }
