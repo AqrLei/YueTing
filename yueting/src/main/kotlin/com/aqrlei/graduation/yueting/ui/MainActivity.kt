@@ -76,39 +76,37 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         }
     }
 
-
     override val layoutRes: Int
         get() = R.layout.activity_picture
     override val mPresenter: MainActivityPresenter
         get() = MainActivityPresenter(this)
 
+    override fun beforeSetContentView() {
+        super.beforeSetContentView()
+    }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         rb_test_ratio.visibility = View.VISIBLE
         rb_test_ratio.setOnDrawProgressListener(this)
-        val fileInfos = FileUtil.createFileInfoS()
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
 
-
+        /*数据库SQLiteDatabase操作相关*/
         DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
                 .createDB()
-        DBManager.insertData(DBManager.SqlFormat.
-                insertSqlFormat("test", arrayOf("name", "path")), arrayOf("大爱的", "xiao"))
-                .deleteData(DBManager.SqlFormat.deleteSqlFormat("test", "path", "= "), arrayOf("xiao"))
-        val c = DBManager.queryData(DBManager.SqlFormat.selectSqlFormat("test"))
+        DBManager.sqlData(DBManager.SqlFormat.insertSqlFormat("test", arrayOf("name", "path")),
+                arrayOf("大爱的", "xiao"), null, DBManager.SqlType.INSERT)
+        val c = DBManager
+                .sqlData(DBManager.SqlFormat.selectSqlFormat("test"), null, null, DBManager.SqlType.SELECT)
+                .getCursor()
         while (c!!.moveToNext()) {
             tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
             tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
 
         }
         c.close()
-        //DBManager.closeDB()
-        //DBManager.deleteDB()
-
         /*
         * MediaMetadataRetriever()获取mp3文件相关信息
-        *
         * */
         val path = "/storage/sdcard0/netease/cloudmusic/Music/陈奕迅 - 重口味.mp3"
         val mmr = MediaMetadataRetriever()
@@ -126,6 +124,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
                 "artist:\t $artist\n" +
                 " duration:\t $duration")
         tv_file_name.setCompoundDrawables(drawable, null, null, null)
+
+        /*文件操作相关*/
+        val fileInfos = FileUtil.createFileInfoS()
         /*  fileInfos.forEach { (name, path, isDir) ->
               tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
           }*/

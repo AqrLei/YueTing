@@ -1,6 +1,7 @@
 package com.aqrairsigns.aqrleilib.util
 
 import android.content.Context
+import android.database.Cursor
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -16,6 +17,7 @@ object DBManager {
     private var db: SQLiteDatabase? = null
     private var mContext: Context? = null
     private var mDBName: String = " "
+    private var mCursor: Cursor? = null
     /*invoke first*/
     fun initDBHelper(context: Context, dbName: String, version: Int): DBManager {
         mContext = context
@@ -47,46 +49,46 @@ object DBManager {
     }
 
     fun deleteDB() = mContext?.deleteDatabase(mDBName)
-    fun deleteDB(name: String) = mContext?.deleteDatabase(name)
-    fun deleteDB(context: Context) = context.deleteDatabase(mDBName)
-    fun deleteDB(context: Context, name: String) = context.deleteDatabase(name)
 
-    fun insertData(sql: String, data: Array<Any>): DBManager {
-        db?.beginTransaction()
-        try {
-            db?.execSQL(sql, data)
-            db?.setTransactionSuccessful()
+    fun sqlData(sql: String, data: Array<String>?, dataWhere: Array<String>?, type: SqlType)
+            : DBManager {
+        when (type) {
+            SqlType.DELETE -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, dataWhere)
+                    db?.setTransactionSuccessful()
+                } finally {
+                    db?.endTransaction()
+                }
+            }
+            SqlType.INSERT -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, data)
+                    db?.setTransactionSuccessful()
 
-        } finally {
-            db?.endTransaction()
+                } finally {
+                    db?.endTransaction()
+                }
+            }
+            SqlType.SELECT -> {
+                mCursor = db?.rawQuery(sql, dataWhere)
+            }
+            SqlType.UPDATE -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, data)
+                    db?.setTransactionSuccessful()
+                } finally {
+                    db?.endTransaction()
+                }
+            }
         }
         return this
     }
 
-    fun deleteData(sql: String, dataWhere: Array<String>?): DBManager {
-        db?.beginTransaction()
-        try {
-            db?.execSQL(sql, dataWhere)
-            db?.setTransactionSuccessful()
-        } finally {
-            db?.endTransaction()
-        }
-        return this
-    }
-
-    fun updateData(sql: String, data: Array<String>): DBManager {
-        db?.beginTransaction()
-        try {
-            db?.execSQL(sql, data)
-            db?.setTransactionSuccessful()
-        } finally {
-            db?.endTransaction()
-        }
-        return this
-    }
-
-    fun queryData(sql: String, dataWhere: Array<String>? = null) =
-            db?.rawQuery(sql, dataWhere)
+    fun getCursor() = mCursor
 
     private class DBHelper private constructor(
             context: Context?,
@@ -203,22 +205,28 @@ object DBManager {
             return sql
         }
 
-        fun deleteSqlFormat(tableName: String, fileId: String, where: String) =
-                "delete from $tableName where $fileId $where ?"
+        fun deleteSqlFormat(tableName: String, fileId: String, operator: String) =
+                "delete from $tableName where $fileId $operator ?"
 
-        fun updateSqlFormat(tableName: String, fileId: String, where: String = "") =
+        fun updateSqlFormat(tableName: String, fileId: String, where: String = "",
+                            operator: String = "") =
                 "update $tableName  set $fileId = ?" +
                         if (where == "") where
-                        else " where $where = ?"
+                        else " where $where $operator ?"
 
 
-        fun selectSqlFormat(tableName: String, fileId: String = "", where: String = "") =
+        fun selectSqlFormat(tableName: String, fileId: String = "", where: String = "",
+                            operator: String = "") =
                 "select" +
                         if (fileId == "") " * from $tableName"
                         else {
                             " $fileId from $tableName" +
                                     if (where == "") where
-                                    else " where $where = ?"
+                                    else " where $where $operator ?"
                         }
+    }
+
+    enum class SqlType {
+        DELETE, INSERT, UPDATE, SELECT
     }
 }
