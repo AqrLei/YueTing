@@ -50,7 +50,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         mPresenter.changeFragment(AppConstant.TAG_FRAGMENT_HOME, mFragmentManager, mFragments)
         rg_anim_tab.setOnCheckedChangeListener(this)
         tv_file_local.setOnClickListener {
-            FileActivity.jumpToFileActivity(this@YueTingActivity)
+            FileActivity.jumpToFileActivity(this@YueTingActivity, 1)
         }
     }
 

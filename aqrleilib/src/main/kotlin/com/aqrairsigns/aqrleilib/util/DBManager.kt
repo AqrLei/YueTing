@@ -32,16 +32,19 @@ object DBManager {
         return this
     }
 
-    fun createDB() {
+    fun createDB(): DBManager {
         db = DBHelper.dbHelper.writableDatabase
+        return this
     }
 
-    fun removeTable(name: String) {
+    fun removeTable(name: String): DBManager {
         DBHelper.dbHelper.remove(name)
+        return this
     }
 
-    fun removeAllTable() {
+    fun removeAllTable(): DBManager {
         DBHelper.dbHelper.clear()
+        return this
     }
 
     fun closeDB() {
@@ -153,7 +156,8 @@ object DBManager {
 
         override fun onCreate(db: SQLiteDatabase?) {
             mTableInfoList.forEach {
-                var sql = "create table ${it.name}( _id integer primary key autoincrement"
+                var sql = "create table ${it.name}( id integer primary key autoincrement" +
+                        ", createTime varchar"
                 for (i in it.fileId!!.indices) {
                     sql += ", "
                     sql += (it.fileId!![i] + " " + it.fileType!![i])

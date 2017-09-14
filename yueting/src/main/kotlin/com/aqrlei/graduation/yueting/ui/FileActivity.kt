@@ -1,6 +1,6 @@
 package com.aqrlei.graduation.yueting.ui
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -32,6 +32,11 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
             }
             R.id.tv_file_parent -> {
                 changeFileInfo(fileInfoList[0].parentPath)
+            }
+            R.id.tv_add_file -> {
+                val bundle = Bundle()
+                bundle.putSerializable("key", mData)
+
             }
         }
 
@@ -71,10 +76,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
         tv_file_parent.text = fileInfoList[0].path
-        tv_file_parent.setOnClickListener(this)
+        // tv_file_parent.setOnClickListener(this)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
-        iv_back.setOnClickListener(this)
+        //iv_back.setOnClickListener(this)
     }
 
     private fun changeFileInfo(path: String) {
@@ -89,11 +94,13 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     }
 
     companion object {
-        fun jumpToFileActivity(context: Context, titleName: String = " ") {
+        fun jumpToFileActivity(context: Activity, reqCode: Int) {
             val intent = Intent(context, FileActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("title", titleName)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+            intent.putExtras(bundle)
+            if (IntentUtil.queryActivities(context, intent)) {
+                context.startActivityForResult(intent, reqCode)
+            }
 
         }
     }

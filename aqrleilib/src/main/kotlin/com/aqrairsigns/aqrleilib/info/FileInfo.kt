@@ -1,6 +1,7 @@
 package com.aqrairsigns.aqrleilib.info
 
 import com.aqrairsigns.aqrleilib.constant.AppConstant
+import java.io.Serializable
 
 /**
  * @Author: AqrLei
@@ -14,7 +15,7 @@ data class FileInfo(
         var path: String = "",
         var isDir: Boolean = true,
         var parentPath: String = AppConstant.ROOT_PATH
-) : Comparable<FileInfo> {
+) : Comparable<FileInfo>, Serializable {
     override fun compareTo(other: FileInfo): Int {
         val thisName = this.name.toLowerCase()
         val otherName = other.name.toLowerCase()

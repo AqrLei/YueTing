@@ -2,8 +2,6 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
@@ -16,10 +14,7 @@ import android.view.View
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.FileUtil
-import com.aqrairsigns.aqrleilib.util.IntentUtil
+import com.aqrairsigns.aqrleilib.util.*
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
@@ -88,84 +83,25 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        bt_post.setOnClickListener({
+            YueTingActivity.jumpToYueTingActivity(this, 0)
+            //this@MainActivity.finish()
+        })
+        createDB()
+
+
+    }
+
+    private fun createDB() {
+        DBManager.addTable("musicInfo", arrayOf("path"), arrayOf("varchar"))
+    }
+
+
+    private fun initData() {
         rb_test_ratio.visibility = View.VISIBLE
         rb_test_ratio.setOnDrawProgressListener(this)
         tv_file_name.movementMethod = ScrollingMovementMethod.getInstance()
 
-        /*数据库SQLiteDatabase操作相关*/
-        DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
-                .createDB()
-        DBManager.sqlData(DBManager.SqlFormat.insertSqlFormat("test", arrayOf("name", "path")),
-                arrayOf("大爱的", "xiao"), null, DBManager.SqlType.INSERT)
-        val c = DBManager
-                .sqlData(DBManager.SqlFormat.selectSqlFormat("test"), null, null, DBManager.SqlType.SELECT)
-                .getCursor()
-        while (c!!.moveToNext()) {
-            tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
-            tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
-
-        }
-        c.close()
-        DBManager
-                .sqlData(
-                        DBManager.SqlFormat.deleteSqlFormat("test", "name", "="),
-                        null,
-                        arrayOf("大爱的"),
-                        DBManager.SqlType.DELETE
-                )
-                .closeDB()
-        /*
-        * MediaMetadataRetriever()获取mp3文件相关信息
-        * */
-        val path = "/storage/sdcard0/netease/cloudmusic/Music/陈奕迅 - 重口味.mp3"
-        val mmr = MediaMetadataRetriever()
-        mmr.setDataSource(path)
-        val title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
-        val album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-        val artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-        val duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        val byte = mmr.embeddedPicture
-        val bitMap = BitmapFactory.decodeByteArray(byte, 0, byte.size)
-        val drawable = BitmapDrawable(null, bitMap)
-        drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-        tv_file_name.append("title:\t $title \n " +
-                "album:\t $album \n " +
-                "artist:\t $artist\n" +
-                " duration:\t $duration")
-        tv_file_name.setCompoundDrawables(drawable, null, null, null)
-
-        /*文件操作相关*/
-        val fileInfos = FileUtil.createFileInfoS()
-        /*  fileInfos.forEach { (name, path, isDir) ->
-              tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
-          }*/
-        //tv_file_name.text = EnumSingleton.INSTANCE.getName()
-        initData()
-
-
-        //mPresenter.getImg(HttpReqCofig.RQ_IMG_TYPE)
-        //mHandler.sendEmptyMessageDelayed(1, 3000)
-
-        /*通过布局的id获取ExpandableListView实例，设置adapter*/
-        elv_test.setAdapter(TestExpandableListAdapter(this, mData, R.layout.listitem_content,
-                R.layout.listitem_title_main))
-        /*遍历group，默认展开*/
-        for (i in mData.indices) elv_test.expandGroup(i)
-        /*设置子项的点击事件*/
-        elv_test.setOnChildClickListener(this)
-
-        lv_test.adapter = TestListViewTypeAdapter(this, R.layout.listitem_title_main,
-                R.layout.listitem_content, mData)
-        bt_post.setOnClickListener({
-            YueTingActivity.jumpToYueTingActivity(this, 0)
-        })
-        lv_test.visibility = View.GONE
-        elv_test.visibility = View.GONE
-        defaultExpandGroup()
-
-    }
-
-    private fun initData() {
         mChild.add(ChildMessage("child1", getDrawable(R.mipmap.ic_launcher_round)))
         mChild.add(ChildMessage("child2", getDrawable(R.mipmap.ic_launcher_round)))
         mChild.add(ChildMessage("child3", getDrawable(R.mipmap.ic_launcher_round)))
@@ -188,7 +124,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     }
 
     fun defaultExpandGroup() {
-
+        // TODO() elv_test.expandGroup(groupIndex)
     }
 
     fun initViews(data: List<PictureRespBean>) {
@@ -209,6 +145,82 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         /* view.sdv_picture.setImageURI()*/
         mViews!!.add(view)
     }
+
+    fun dbManager() {
+        /*数据库SQLiteDatabase操作相关*/
+        DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))
+                .createDB()
+        DBManager.sqlData(DBManager.SqlFormat.insertSqlFormat("test", arrayOf("name", "path")),
+                arrayOf("大爱的", "xiao"), null, DBManager.SqlType.INSERT)
+        val c = DBManager
+                .sqlData(DBManager.SqlFormat.selectSqlFormat("test"), null, null, DBManager.SqlType.SELECT)
+                .getCursor()
+        while (c!!.moveToNext()) {
+            tv_file_name.append(c.getString(c.getColumnIndex("name")) + "\n")
+            tv_file_name.append(c.getString(c.getColumnIndex("path")) + "\n")
+
+        }
+        c.close()
+        DBManager
+                .sqlData(
+                        DBManager.SqlFormat.deleteSqlFormat("test", "name", "="),
+                        null,
+                        arrayOf("大爱的"),
+                        DBManager.SqlType.DELETE
+                )
+                .closeDB()
+    }
+
+    fun MediaData() {
+        /*
+       * MediaMetadataRetriever()获取mp3文件相关信息
+       * */
+        val path = "/storage/sdcard0/netease/cloudmusic/Music/陈奕迅 - 重口味.mp3"
+        val mmr = MediaMetadataRetriever()
+        mmr.setDataSource(path)
+        val title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+        val album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+        val artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+        val duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        val byte = mmr.embeddedPicture
+        val bitMap = ImageUtil.byteArrayToBitmap(byte)
+        val drawable = ImageUtil.bitmapToDrawable(bitMap)
+        drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+        tv_file_name.append("title:\t $title \n " +
+                "album:\t $album \n " +
+                "artist:\t $artist\n" +
+                " duration:\t $duration")
+        tv_file_name.setCompoundDrawables(drawable, null, null, null)
+    }
+
+    fun FileInfo() {
+
+        /*文件操作相关*/
+        val fileInfos = FileUtil.createFileInfoS()
+        /*  fileInfos.forEach { (name, path, isDir) ->
+              tv_file_name.append("name:  $name\t path:  $path\t dir:  $isDir\n")
+          }*/
+    }
+
+    fun ListViewTest() {
+        //mPresenter.getImg(HttpReqCofig.RQ_IMG_TYPE)
+        //mHandler.sendEmptyMessageDelayed(1, 3000)
+
+        /*通过布局的id获取ExpandableListView实例，设置adapter*/
+        elv_test.setAdapter(TestExpandableListAdapter(this, mData, R.layout.listitem_content,
+                R.layout.listitem_title_main))
+        /*遍历group，默认展开*/
+        for (i in mData.indices) elv_test.expandGroup(i)
+        /*设置子项的点击事件*/
+        elv_test.setOnChildClickListener(this)
+
+        lv_test.adapter = TestListViewTypeAdapter(this, R.layout.listitem_title_main,
+                R.layout.listitem_content, mData)
+        lv_test.visibility = View.GONE
+        elv_test.visibility = View.GONE
+        defaultExpandGroup()
+    }
+
 
     companion object {
         fun jumpToMainActivity(context: Context, data: Int) {

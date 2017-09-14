@@ -49,6 +49,14 @@
         android:text="post"
         android:visibility="visible"/>
 
+    <com.aqrairsigns.aqrleilib.view.RippleButton
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_above="@+id/bt_post"
+        android:background="#60000000"
+        android:gravity="center"
+        android:text="ripple"/>
+
     <com.aqrairsigns.aqrleilib.view.RoundBar
         android:id="@+id/rb_test_ratio"
         android:layout_width="match_parent"
@@ -58,6 +66,71 @@
         yueting:animationVelocity="3"
         yueting:capStyle="round"
         android:visibility="gone" />
+
+    <com.aqrairsigns.aqrleilib.view.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="技术宅"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="我是猿类，嗯，程序猿！"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="我叫雷雷，雷雷的雷，雷雷的雷，没毛病！"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="I have a dream"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="write the code,change the world"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+    </com.aqrairsigns.aqrleilib.view.FlowLayout>
 
 
 </RelativeLayout>

@@ -9,17 +9,31 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="#ffffffff"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:background="#ffffffff">
 
         <ImageView
             android:id="@+id/iv_back"
             style="@style/TitleBarImageViewStyle"
+            android:onClick="onClick"
             />
 
         <TextView
             style="@style/TitleBarTextViewStyle"
             android:text="我的文件"/>
+
+        <TextView
+            android:id="@+id/tv_add_file"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:onClick="onClick"
+            android:text="+"
+            android:textSize="30dp"
+            android:textStyle="normal"/>
     </FrameLayout>
 
     <View style="@style/DividerStyle"/>
@@ -31,6 +45,7 @@
         android:background="#ffffffee"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:onClick="onClick"
         android:maxLines="1"
         android:textSize="12dp"
         tools:text="/dev"/>
