@@ -1,14 +1,13 @@
 package com.aqrlei.graduation.yueting.ui
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.info.Info.FileInfo
-import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.FileUtil
+import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
@@ -22,13 +21,28 @@ import kotlinx.android.synthetic.main.activity_file.*
  * @CreateTime: Date: 2017/9/11 Time: 13:40
  */
 class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener,
+        View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_back -> {
+                this@FileActivity.finish()
+            }
+            R.id.tv_file_parent -> {
+                getFileInfo(fileInfoList[0].parentPath)
+            }
+            R.id.tv_add_file -> {
+                addToDatabase()
+                this@FileActivity.finish()
+            }
+        }
+
+    }
+
     override fun onItemClick(parent: AdapterView<*>?, convertView: View?,
                              position: Int, clickId: Long) {
         if (mData[position].isDir) {
-            AppLog.logDebug("item", "path:\t ${mData[position].parentPath}")
-
-            changeFileInfo(mData[position].path)
+            getFileInfo(mData[position].path)
         }
     }
 
@@ -48,33 +62,47 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     }
 
     private fun init() {
-        fileInfoList = FileUtil.createFileInfoS("/storage")
         mData = ArrayList()
-        mData.addAll(fileInfoList.subList(1, fileInfoList.size - 1))
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
-        tv_file_parent.text = fileInfoList[0].path
-        tv_file_parent.setOnClickListener {
-
-            changeFileInfo(fileInfoList[0].parentPath)
-        }
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
+        getFileInfo(AppCache.APPCACHE.getString("path", "/storage"))
     }
 
-    private fun changeFileInfo(path: String) {
-        fileInfoList = FileUtil.createFileInfoS(path)
+    private fun getFileInfo(path: String) {
+        mPresenter.getFileInfo(path)
+    }
+
+    private fun addToDatabase() {
+        mPresenter.addToDataBase(mData)
+    }
+
+
+    fun changeFileInfo(data: ArrayList<FileInfo>) {
         mData.clear()
-        mData.addAll(fileInfoList.subList(1, fileInfoList.size))
+        fileInfoList = data
+        if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
+            mData.addAll(fileInfoList.subList(1, fileInfoList.size))
+        }
         tv_file_parent.text = fileInfoList[0].path
         mAdapter.notifyDataSetChanged()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        AppCache.APPCACHE.putString("path", fileInfoList[0].path)
+                .commit()
+        fileInfoList.clear()
+    }
+
     companion object {
-        fun jumpToFileActivity(context: Context, titleName: String = " ") {
+        fun jumpToFileActivity(context: Activity) {
             val intent = Intent(context, FileActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("path", titleName)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+            intent.putExtras(bundle)
+            if (IntentUtil.queryActivities(context, intent)) {
+                context.startActivity(intent)
+            }
 
         }
     }

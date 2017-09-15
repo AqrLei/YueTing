@@ -3,7 +3,7 @@
     package="com.aqrlei.graduation.yueting">
 
     <application
-        android:name="com.aqrairsigns.aqrleilib.basemvp.BaseApplication"
+        android:name=".YueTingApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

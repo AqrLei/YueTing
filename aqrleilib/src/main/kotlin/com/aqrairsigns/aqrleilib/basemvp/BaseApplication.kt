@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @Author: AqrLei
@@ -12,10 +11,9 @@ import com.facebook.drawee.backends.pipeline.Fresco
  *@Description:
  *@Date: 2017/8/22
  */
-class BaseApplication : Application(), Application.ActivityLifecycleCallbacks {
+open class BaseApplication : Application(), Application.ActivityLifecycleCallbacks {
     override fun onCreate() {
         super.onCreate()
-        Fresco.initialize(this)
         registerActivityLifecycleCallbacks(this)
     }
 

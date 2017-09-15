@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.aqrairsigns.aqrleilib.constant.AppConstant
-import com.aqrairsigns.aqrleilib.info.Info.FileInfo
+import com.aqrairsigns.aqrleilib.info.FileInfo
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
@@ -60,12 +61,17 @@ object FileUtil {
         context.startActivity(intent)
     }
 
+    fun getFileSuffix(data: FileInfo): String {
+        val name = File(data.path).name
+        return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
+    }
+
     private fun getMIMEType(file: File): String {
         var type = ""
         val name = file.name
         val end = name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
         for (i in AppConstant.MIME_TYPE.indices) {
-            type = if (end.equals(AppConstant.MIME_TYPE[i][0])) {
+            type = if (end == AppConstant.MIME_TYPE[i][0]) {
                 AppConstant.MIME_TYPE[i][1]
             } else {
                 "*"

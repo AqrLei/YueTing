@@ -27,7 +27,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
-            android:src="@mipmap/tab_music_setting"/>
+            android:src="@mipmap/common_img_setting"/>
 
     </LinearLayout>
 

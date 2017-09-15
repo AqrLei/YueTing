@@ -7,18 +7,18 @@ import android.content.SharedPreferences
  * @Author: AqrLei
  * @Name MyLearning
  * @Description:
- * @CreateTime: Date: 2017/9/12 Time: 11:15
+ * @CreateTime: Date: 2017/9/12 Time: 14:54
  */
 class AppSharedPreferences private constructor() {
-    private val mSharedPreferences: SharedPreferences
+    private val mShared: SharedPreferences
     private val mEditor: SharedPreferences.Editor
 
     init {
         if (mContext == null) {
             throw RuntimeException("must invoke init ahead")
         }
-        mSharedPreferences = mContext!!.getSharedPreferences(mFileName, Context.MODE_PRIVATE)
-        mEditor = mSharedPreferences.edit()
+        mShared = mContext!!.getSharedPreferences(mFileName, Context.MODE_PRIVATE)
+        mEditor = mShared.edit()
     }
 
     fun putString(key: String, value: String): AppSharedPreferences {
@@ -61,18 +61,18 @@ class AppSharedPreferences private constructor() {
         return this
     }
 
-    fun getString(key: String, defValue: String) = mSharedPreferences.getString(key, defValue)
-    fun getFloat(key: String, defValue: Float) = mSharedPreferences.getFloat(key, defValue)
-    fun getLong(key: String, defValue: Long) = mSharedPreferences.getLong(key, defValue)
-    fun getInt(key: String, defValue: Int) = mSharedPreferences.getInt(key, defValue)
-    fun getBoolean(key: String, defValue: Boolean) = mSharedPreferences.getBoolean(key, defValue)
+    fun getString(key: String, defValue: String) = mShared.getString(key, defValue)
+    fun getFloat(key: String, defValue: Float) = mShared.getFloat(key, defValue)
+    fun getLong(key: String, defValue: Long) = mShared.getLong(key, defValue)
+    fun getInt(key: String, defValue: Int) = mShared.getInt(key, defValue)
+    fun getBoolean(key: String, defValue: Boolean) = mShared.getBoolean(key, defValue)
 
     companion object {
         private var mContext: Context? = null
         private var mFileName: String? = null
 
         fun init(context: Context) {
-            mContext = context
+            mContext = context.applicationContext
         }
 
         fun setFileName(name: String?) {
@@ -80,12 +80,10 @@ class AppSharedPreferences private constructor() {
         }
 
         val mSharedPreferences: AppSharedPreferences
-            get() = Singleton.APPCACHE.appcache
+            get() = Singleton.INSTANCE.instance
     }
-
     private enum class Singleton {
-        APPCACHE;
-
-        val appcache = AppSharedPreferences()
+        INSTANCE;
+        val instance = AppSharedPreferences()
     }
 }

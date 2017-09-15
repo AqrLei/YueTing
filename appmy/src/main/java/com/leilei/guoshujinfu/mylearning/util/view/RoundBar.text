@@ -22,7 +22,7 @@ public class RoundBar extends View {
 
     private int mAnimationV;
 
-    private static final String INSTANCE = "instance";
+    private static final String INSTANCE = "mInstance";
     private static final String INSTANCE_ANIMATION = "animation";
     private static final String INSTANCE_DEGREE = "degree";
 

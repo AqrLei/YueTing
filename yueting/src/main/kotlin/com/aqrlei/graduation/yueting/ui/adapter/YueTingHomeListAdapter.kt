@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
+import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.MusicMessage
+import com.aqrlei.graduation.yueting.model.local.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
+import com.facebook.drawee.view.SimpleDraweeView
 
 /**
  * @Author: AqrLei
@@ -38,9 +40,9 @@ class YueTingHomeListAdapter(private var mContext: Context,
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var mConvertView = convertView
-        var titleViewHolder: CommonListViewHolder
-        var readViewHolder: CommonListViewHolder
-        var musicViewHolder: CommonListViewHolder
+        val titleViewHolder: CommonListViewHolder
+        val readViewHolder: CommonListViewHolder
+        val musicViewHolder: CommonListViewHolder
         when (getItemViewType(position)) {
             TYPE_TITLE -> {
                 titleViewHolder = CommonListViewHolder.getCommonViewHolder(mContext, titleResId,
@@ -97,11 +99,14 @@ class YueTingHomeListAdapter(private var mContext: Context,
             }
             TYPE_MUSIC -> {
                 (holder.get(R.id.tv_music_name) as TextView).text =
-                        (data as MusicMessage).musicName
+                        (data as MusicInfo).title
                 (holder.get(R.id.tv_singer_name) as TextView).text =
-                        data.singerName
+                        data.artist
                 (holder.get(R.id.tv_play_time) as TextView).text =
-                        data.playTime.toString()
+                        data.duration.toString()
+                (holder.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
+                        ImageUtil.byteArrayToDrawable(data.picture) ?:
+                                mContext.getDrawable(R.mipmap.ic_launcher_round)
             }
         }
     }

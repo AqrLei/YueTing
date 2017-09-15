@@ -3,13 +3,12 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-
 import android.view.LayoutInflater
 import android.view.View
-import com.aqrlei.graduation.yueting.R
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.view.AlphaListView
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
@@ -38,7 +37,7 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
     private var mReadData = ArrayList<ReadMessage>()
 
     override fun onAlphaChanged(percent: Float) {
-        mContainerActivity.rg_anim_tab.setBackgroundColor(
+        mContainerActivity.ll_tab_title.setBackgroundColor(
                 Color.argb((175 * percent).toInt(), 113, 204, 180)
         )
     }

@@ -19,4 +19,8 @@
         <attr name="useGradientGolor" format="boolean"/>
         <attr name="openAnimation" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="FlowLayout">
+        <attr name="horizontalSpace" format="dimension"/>
+        <attr name="verticalSpace" format="dimension"/>
+    </declare-styleable>
 </resources>
