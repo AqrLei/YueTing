@@ -88,18 +88,17 @@ class TestView @JvmOverloads constructor(
 
             val childWidth = child.measuredWidth + lp.leftMargin + lp.rightMargin
             val childHeight = child.measuredHeight + lp.topMargin + lp.bottomMargin
-
             if (rowWidth + childWidth > maxWidth) {//如果当前的行宽在加上一个childView的宽度大于此行最大宽度
                 if (colIndex == 0) {// 位于第一列
-                    totalHeight += childHeight//dan
+                    totalHeight += childHeight
                     rowWidth = paddingLeft + paddingRight
                     rowHeight = 0
                 } else {
                     totalHeight += rowHeight
                     rowWidth = paddingLeft + paddingRight + childWidth
                     rowHeight = childHeight
+                    colIndex = 1
                 }
-                colIndex = 0
             } else {
                 colIndex++
                 rowWidth += childWidth

@@ -7,6 +7,7 @@ import com.aqrairsigns.aqrleilib.constant.AppConstant
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
@@ -58,6 +59,11 @@ object FileUtil {
         val type = getMIMEType(file)
         intent.setDataAndType(Uri.fromFile(file), type)
         context.startActivity(intent)
+    }
+
+    fun getFileSuffix(data: FileInfo): String {
+        val name = File(data.path).name
+        return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
     }
 
     private fun getMIMEType(file: File): String {

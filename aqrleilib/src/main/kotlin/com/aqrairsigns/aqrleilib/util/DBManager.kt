@@ -55,39 +55,41 @@ object DBManager {
 
     fun sqlData(sql: String, data: Array<String>?, dataWhere: Array<String>?, type: SqlType)
             : DBManager {
-        when (type) {
-            SqlType.DELETE -> {
-                db?.beginTransaction()
-                try {
-                    db?.execSQL(sql, dataWhere)
-                    db?.setTransactionSuccessful()
-                } finally {
-                    db?.endTransaction()
+        Thread(Runnable {
+            when (type) {
+                SqlType.DELETE -> {
+                    db?.beginTransaction()
+                    try {
+                        db?.execSQL(sql, dataWhere)
+                        db?.setTransactionSuccessful()
+                    } finally {
+                        db?.endTransaction()
+                    }
                 }
-            }
-            SqlType.INSERT -> {
-                db?.beginTransaction()
-                try {
-                    db?.execSQL(sql, data)
-                    db?.setTransactionSuccessful()
+                SqlType.INSERT -> {
+                    db?.beginTransaction()
+                    try {
+                        db?.execSQL(sql, data)
+                        db?.setTransactionSuccessful()
 
-                } finally {
-                    db?.endTransaction()
+                    } finally {
+                        db?.endTransaction()
+                    }
+                }
+                SqlType.SELECT -> {
+                    mCursor = db?.rawQuery(sql, dataWhere)
+                }
+                SqlType.UPDATE -> {
+                    db?.beginTransaction()
+                    try {
+                        db?.execSQL(sql, data)
+                        db?.setTransactionSuccessful()
+                    } finally {
+                        db?.endTransaction()
+                    }
                 }
             }
-            SqlType.SELECT -> {
-                mCursor = db?.rawQuery(sql, dataWhere)
-            }
-            SqlType.UPDATE -> {
-                db?.beginTransaction()
-                try {
-                    db?.execSQL(sql, data)
-                    db?.setTransactionSuccessful()
-                } finally {
-                    db?.endTransaction()
-                }
-            }
-        }
+        }).start()
         return this
     }
 
@@ -196,7 +198,7 @@ object DBManager {
     object SqlFormat {
 
         fun insertSqlFormat(tableName: String, fileIdList: Array<String>): String {
-            var sql = "insert into $tableName( "
+            var sql = "insert or ignore into $tableName( "
             fileIdList.indices
                     .filter { it != fileIdList.lastIndex }
                     .forEach { sql += "${fileIdList[it]}, " }

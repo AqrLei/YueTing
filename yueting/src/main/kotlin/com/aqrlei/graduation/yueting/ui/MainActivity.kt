@@ -87,15 +87,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             YueTingActivity.jumpToYueTingActivity(this, 0)
             //this@MainActivity.finish()
         })
-        createDB()
 
 
     }
-
-    private fun createDB() {
-        DBManager.addTable("musicInfo", arrayOf("path"), arrayOf("varchar"))
-    }
-
 
     private fun initData() {
         rb_test_ratio.visibility = View.VISIBLE

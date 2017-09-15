@@ -13,7 +13,8 @@ import java.util.*
 data class MusicInfo(
         var id: Int = 0,
         var albumUrl: String = "",
-        var album: ByteArray? = null,
+        var album: String = "",
+        var picture: ByteArray? = null,
         var title: String = "",
         var artist: String = "",
         var duration: Int = 0,
@@ -21,6 +22,7 @@ data class MusicInfo(
 ) : Comparable<MusicInfo>, Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
+            parcel.readString(),
             parcel.readString(),
             parcel.createByteArray(),
             parcel.readString(),
@@ -31,7 +33,9 @@ data class MusicInfo(
 
     override fun writeToParcel(out: Parcel?, flags: Int) {
         out?.writeString(albumUrl)
-        out?.writeByteArray(album)
+        out?.writeString(artist)
+        out?.writeString(album)
+        out?.writeByteArray(picture)
         out?.writeString(title)
         out?.writeString(createTime)
         out?.writeInt(id)
@@ -79,7 +83,8 @@ data class MusicInfo(
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + albumUrl.hashCode()
-        result = 31 * result + (album?.let { Arrays.hashCode(it) } ?: 0)
+        result = 31 * result + album.hashCode()
+        result = 31 * result + (picture?.let { Arrays.hashCode(it) } ?: 0)
         result = 31 * result + title.hashCode()
         result = 31 * result + artist.hashCode()
         result = 31 * result + duration

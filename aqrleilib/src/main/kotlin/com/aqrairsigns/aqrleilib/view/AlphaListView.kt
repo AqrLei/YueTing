@@ -50,6 +50,7 @@ class AlphaListView @JvmOverloads constructor(
         // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp*/
         val top = first.top
+        /*需要改进*/
         height -= DensityUtil.dipToPx(mContext, 10F)
         if (height <= DensityUtil.dipToPx(mContext, 40F)) return
 

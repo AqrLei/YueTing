@@ -8,6 +8,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.model.local.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
@@ -37,6 +38,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private var mReadData = ArrayList<ReadMessage>()
     private var mMusicData = ArrayList<MusicMessage>()
+    private var mMusicInfoList = ArrayList<MusicInfo>()
+    private lateinit var mAdapter: YueTingHomeListAdapter
 
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
@@ -56,22 +59,36 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         super.initComponents()
         initView()
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getMusicInfoFromDB()
+    }
+
+    private fun getMusicInfoFromDB() {
+        mPresenter.getMusicInfoFromDB()
+    }
+
+    fun setMusicInfo(data: ArrayList<MusicInfo>) {
+        mMusicInfoList.clear()
+        mMusicInfoList.addAll(data)
+        mAdapter.notifyDataSetChanged()
+
+
     }
 
     private fun initView() {
-        var mRecommendLv = mView.lv_fragment_home as AlphaListView
-        mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 100))
-        mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 200))
-        mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 300))
-        mMusicData.add(MusicMessage("", "这是歌名吧", "歌手名吧", 400))
-        mReadData.add(ReadMessage("这是书名吧1", null))
-        mReadData.add(ReadMessage("这是书名吧2", null))
-        mReadData.add(ReadMessage("这是书名吧3", null))
+        val mRecommendLv = mView.lv_fragment_home as AlphaListView
+
+        mAdapter = YueTingHomeListAdapter(mContainerActivity,
+                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
+                mReadData, mMusicInfoList)
+
         mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
                 inflate(R.layout.listheader_home, null))
-        mRecommendLv.adapter = YueTingHomeListAdapter(mContainerActivity,
-                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mReadData, mMusicData)
+        mRecommendLv.adapter = mAdapter
         mRecommendLv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             AppToast.toastShow(mContainerActivity, " " + position, 1000)
         }
