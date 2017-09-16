@@ -12,7 +12,6 @@ import com.leilei.guoshujinfu.mylearning.util.BaseActivityPresenter
 
 import retrofit2.Response
 import rx.Observer
-import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 //import java.util.*
 
@@ -24,21 +23,21 @@ import rx.schedulers.Schedulers
  */
 
 class PicturePresenter(mvpActivity: PictureActivity) : BaseActivityPresenter<PictureActivity>(mvpActivity) {
-    fun getImg(type: String) {
-        /*创建请求参数*/
+    /*fun getImg(type: String) {
+        *//*创建请求参数*//*
         val pictureReqBean = PictureReqBean()
         pictureReqBean.type = type
-        /*Subscription subscription(RxJava, RxAndroid)*/
+        *//*Subscription subscription(RxJava, RxAndroid)*//*
         val subscription = HttpReqHelper.getHttpHelper()
-                /*根据service接口*/
+                *//*根据service接口*//*
                 .creatService(PictureInfoService::class.java)
-                /*执行的方法*/
+                *//*执行的方法*//*
                 .getPicture(pictureReqBean)
-                /*调用之后回到Android的UI线程（RxAndroid)*/
+                *//*调用之后回到Android的UI线程（RxAndroid)*//*
                 .observeOn(AndroidSchedulers.mainThread())
-                /*调用之前启动新线程*/
+                *//*调用之前启动新线程*//*
                 .subscribeOn(Schedulers.io())
-                /*订阅（执行回调方法）*/
+                *//*订阅（执行回调方法）*//*
                 .subscribe(object : Observer<Response<BaseRespBean<BannerBean>>> {
                     override fun onCompleted() {
                         Log.d("Amoryan", "onCompleted")
@@ -56,14 +55,14 @@ class PicturePresenter(mvpActivity: PictureActivity) : BaseActivityPresenter<Pic
                             data.addAll(baseRespBeanResponse.body().data.bannerConfig)
                             if (data.size > 0) {
 
-                                /*  mPictureRespBeanList.addAll(data);
-                                initViews();*/
-                                /*
+                                *//*  mPictureRespBeanList.addAll(data);
+                                initViews();*//*
+                                *//*
                                 * 将获取到的数据用键值对的形式存入cache
                                 * AppCache.getAppCache().putString(key,defaultvalue).commit();
                                 * 之后需要数据亦可以从cache中取
                                 *
-                                * */
+                                * *//*
 
                                 mMvpActivity.initViews(data)
                             }
@@ -72,5 +71,5 @@ class PicturePresenter(mvpActivity: PictureActivity) : BaseActivityPresenter<Pic
                 })
         subscriptions.add(subscription)
 
-    }
+    }*/
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import retrofit2.Response;
 import rx.Observer;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -29,7 +28,7 @@ public class TabPicturePresenter extends BaseFragmentPresenter<TabPictureFragmen
     public TabPicturePresenter(TabPictureFragment mvpView) {
         super(mvpView);
     }
-    public void getImg(String type) {
+    /*public void getImg(String type) {
         PictureReqBean pictureReqBean = new PictureReqBean();
         pictureReqBean.setType(type);
         Subscription subscription = HttpReqHelper.getHttpHelper()
@@ -64,6 +63,6 @@ public class TabPicturePresenter extends BaseFragmentPresenter<TabPictureFragmen
         subscriptions.add(subscription);
     }
 
-
+*/
 
 }

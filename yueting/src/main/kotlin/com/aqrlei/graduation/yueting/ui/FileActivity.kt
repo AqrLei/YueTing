@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.AppCache
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
@@ -33,7 +34,6 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
             }
             R.id.tv_add_file -> {
                 addToDatabase()
-                this@FileActivity.finish()
             }
         }
 
@@ -93,6 +93,11 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         AppCache.APPCACHE.putString("path", fileInfoList[0].path)
                 .commit()
         fileInfoList.clear()
+    }
+
+    fun finishActivity() {
+        AppToast.toastShow(this@FileActivity, "添加完毕", 1000)
+        this@FileActivity.finish()
     }
 
     companion object {

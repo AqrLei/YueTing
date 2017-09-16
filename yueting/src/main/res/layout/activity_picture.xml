@@ -46,15 +46,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
+        android:onClick="onClick"
         android:text="post"
         android:visibility="visible"/>
 
     <com.aqrairsigns.aqrleilib.view.RippleButton
+        android:id="@+id/rb_test"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_above="@+id/bt_post"
         android:background="#60000000"
         android:gravity="center"
+        android:onClick="onClick"
         android:text="ripple"/>
 
     <com.aqrairsigns.aqrleilib.view.RoundBar
