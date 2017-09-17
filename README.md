@@ -1,4 +1,5 @@
 # MyLearning
+
 >#### **Using [**Kotlin**](http://kotlinlang.org/docs/reference/android-overview.html) to build a module**
 
 >## aqrleilib
@@ -81,5 +82,3 @@
 **ui** 下包括了*adapter, dialog, fragment, activity*
 ##### 详细内容
 > 后续。。。
-
-
