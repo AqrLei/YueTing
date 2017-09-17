@@ -1,8 +1,6 @@
 # MyLearning
 >#### **Using [**Kotlin**](http://kotlinlang.org/docs/reference/android-overview.html) to build a module**
 
-![**Kotlin**](https://github.com/AqrMen/MyLearning/tree/editing/raw/kotlin-Android.svg)
-## **List**
 >## aqrleilib
 >#### *adapter*
 >#### *basemvp*
