@@ -23,4 +23,12 @@
         <attr name="horizontalSpace" format="dimension"/>
         <attr name="verticalSpace" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="AlphaListView">
+        <attr name="listMinHeight" format="float" />
+        <attr name="listMinusHeight" format="float" />
+    </declare-styleable>
+    <declare-styleable name="AlphaExpandListView">
+        <attr name="expandMinHeight" format="float" />
+        <attr name="expandMinusHeight" format="float" />
+    </declare-styleable>
 </resources>

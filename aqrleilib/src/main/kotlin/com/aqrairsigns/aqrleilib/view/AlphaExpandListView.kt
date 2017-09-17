@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.ExpandableListView
+import com.aqrairsigns.aqrleilib.R
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 
 /**
@@ -30,11 +31,24 @@ class AlphaExpandListView @JvmOverloads constructor(
         ExpandableListView(context, attrs, defStyleAttr, defStyleRes) {
     private var mContext: Context = context
     private var mListener: OnAlphaChangeListener? = null
+    private var mMinusHeight: Float = 0F
+    private var mMinHeight: Float = 0F
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
         getScrollHeight()
 
+    }
+
+    init {
+        init(attrs)
+    }
+
+    fun init(attrs: AttributeSet?) {
+        val typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.AlphaExpandListView)
+        mMinusHeight = typedArray.getFloat(R.styleable.AlphaExpandListView_expandMinusHeight, 0F)
+        mMinHeight = typedArray.getFloat(R.styleable.AlphaExpandListView_expandMinHeight, 40F)
+        typedArray.recycle()
     }
 
     private fun getScrollHeight() {
@@ -50,8 +64,8 @@ class AlphaExpandListView @JvmOverloads constructor(
         // height -= DensityUtil.dipToPx(mContext, 20F)
         /*第一个item为40dp,需要改进*/
         val top = first.top
-        height -= DensityUtil.dipToPx(mContext, 10F)
-        if (height <= DensityUtil.dipToPx(mContext, 40F)) return
+        height -= DensityUtil.dipToPx(mContext, mMinusHeight)
+        if (height <= DensityUtil.dipToPx(mContext, mMinHeight)) return
 
         val absTop = Math.abs(top)
         val alpha: Float = absTop * 1.0f / height
