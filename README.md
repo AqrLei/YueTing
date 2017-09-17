@@ -27,7 +27,7 @@
 >* [*ui*](#13)
 
 <h2> 正文</h2>
-<h3 id="0"> <b>aqrleilib</b> <a href = https://github.com/AqrMen/MyLearning/tree/master/aqrleilib/src/main/kotlin/com/aqrairsigns/aqrleilib" />/h3>
+<h3 id="0"> <b>aqrleilib</b> <a href = https://github.com/AqrMen/MyLearning/tree/master/aqrleilib/src/main/kotlin/com/aqrairsigns/aqrleilib" /></h3>
  <i>自定义库</i>
 <h4 id="1"> 1. <i>adapter<i> <a href = "https://github.com/AqrMen/MyLearning/tree/master/aqrleilib/src/main/kotlin/com/aqrairsigns/aqrleilib/adapter" /></h4>
 <b>adapter</b>下包含了<i>ListView, ViewPager,ExpandListView<i>等的<i>通用、抽象adapter基类<i>
