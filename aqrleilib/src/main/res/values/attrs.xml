@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundBar">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="startDegree" format="float"/>
+        <attr name="sweepDegree" format="float"/>
+        <attr name="rotateDegree" format="float"/>
+        <attr name="animationVelocity" format="float"/>
+        <attr name="radius" format="dimension"/>
+        <attr name="roundWidth" format="dimension"/>
+        <attr name="maxProgress" format="float"/>
+        <attr name="progress" format="float"/>
+        <attr name="capStyle">
+            <enum name="butt" value="0"/>
+            <enum name="round" value="1"/>
+            <enum name="square" value="2"/>
+        </attr>
+        <attr name="useGradientGolor" format="boolean"/>
+        <attr name="openAnimation" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="FlowLayout">
+        <attr name="horizontalSpace" format="dimension"/>
+        <attr name="verticalSpace" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="AlphaListView">
+        <attr name="listMinHeight" format="float" />
+        <attr name="listMinusHeight" format="float" />
+    </declare-styleable>
+    <declare-styleable name="AlphaExpandListView">
+        <attr name="expandMinHeight" format="float" />
+        <attr name="expandMinusHeight" format="float" />
+    </declare-styleable>
+</resources>

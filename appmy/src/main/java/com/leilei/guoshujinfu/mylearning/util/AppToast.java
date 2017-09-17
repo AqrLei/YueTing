@@ -12,8 +12,15 @@ public final class AppToast extends Toast {
     public AppToast(Context context) {
         super(context);
     }
-    public static void toastShow(Context context, String content){
-        Toast toast = Toast.makeText(context,content, Toast.LENGTH_SHORT);
+
+    public static void toastShow(Context context, String content) {
+        Toast toast = Toast.makeText(context, content, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
+    public static void toastShow(Context context, String content, int duration) {
+        Toast toast = Toast.makeText(context, content, duration);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

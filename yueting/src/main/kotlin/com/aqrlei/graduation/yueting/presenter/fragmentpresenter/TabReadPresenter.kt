@@ -15,8 +15,8 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
 import com.aqrlei.graduation.yueting.ui.fragment.TabReadFragment
 
 /**

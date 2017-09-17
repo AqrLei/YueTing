@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:yueting="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_impage"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bt_post"
-        android:visibility="visible"/>
+        android:visibility="gone" />
 
     <ExpandableListView
         android:id="@+id/elv_test"
@@ -33,14 +33,107 @@
         android:groupIndicator="@null"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/tv_file_name"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bt_post" />
+
     <Button
         android:id="@+id/bt_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
+        android:onClick="onClick"
         android:text="post"
         android:visibility="visible"/>
+
+    <com.aqrairsigns.aqrleilib.view.RippleButton
+        android:id="@+id/rb_test"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_above="@+id/bt_post"
+        android:background="#60000000"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="ripple"/>
+
+    <com.aqrairsigns.aqrleilib.view.RoundBar
+        android:id="@+id/rb_test_ratio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        yueting:openAnimation="true"
+        yueting:useGradientGolor="true"
+        yueting:animationVelocity="3"
+        yueting:capStyle="round"
+        android:visibility="gone" />
+
+    <com.aqrairsigns.aqrleilib.view.TestView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="技术宅"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="我是猿类，嗯，程序猿！"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="我叫雷雷，雷雷的雷，雷雷的雷，没毛病！"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="I have a dream"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_shape"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="write the code,change the world"
+            android:textColor="#1b8fe6"
+            android:textSize="12dp"/>
+    </com.aqrairsigns.aqrleilib.view.TestView>
 
 
 </RelativeLayout>

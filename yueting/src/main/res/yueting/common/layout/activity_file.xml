@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.aqrlei.graduation.yueting.ui.FileActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffffff">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/TitleBarImageViewStyle"
+            android:onClick="onClick"
+            />
+
+        <TextView
+            style="@style/TitleBarTextViewStyle"
+            android:text="我的文件"/>
+
+        <TextView
+            android:id="@+id/tv_add_file"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:onClick="onClick"
+            android:text="+"
+            android:textSize="30dp"
+            android:textStyle="normal"/>
+    </FrameLayout>
+
+    <View style="@style/DividerStyle"/>
+
+    <TextView
+        android:id="@+id/tv_file_parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#ffffffee"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:maxLines="1"
+        android:textSize="12dp"
+        tools:text="/dev"/>
+
+    <View style="@style/DividerStyle"/>
+
+    <ListView
+        android:id="@+id/lv_file"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+
+        />
+
+
+</LinearLayout>

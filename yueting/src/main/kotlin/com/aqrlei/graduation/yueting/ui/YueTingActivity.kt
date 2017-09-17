@@ -5,11 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.baselib.mvp.MvpContract
-import com.aqrlei.graduation.yueting.baselib.util.AppConstant
-import com.aqrlei.graduation.yueting.baselib.util.IntentUtil
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import kotlinx.android.synthetic.main.activity_yueting.*
 
@@ -26,11 +27,15 @@ import kotlinx.android.synthetic.main.activity_yueting.*
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , RadioGroup.OnCheckedChangeListener {
     private var mFragments = ArrayList<Fragment>()
+    private var titleName: String = ""
     private lateinit var mFragmentManager: FragmentManager
     override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
         (0 until radioGroup!!.childCount)
                 .filter { radioGroup.getChildAt(it).id == checkedId }
-                .forEach { mPresenter.changeFragment(it, mFragmentManager, mFragments) }
+                .forEach {
+                    changeFragment(it)
+                    titleName = (radioGroup.getChildAt(it) as RadioButton).text.toString()
+                }
     }
 
     override val mPresenter: YueTingActivityPresenter
@@ -41,13 +46,40 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mFragmentManager = supportFragmentManager
-        mFragments = mPresenter.initFragments(savedInstanceState, mFragmentManager)
-        mPresenter.changeFragment(AppConstant.TAG_FRAGMENT_HOME, mFragmentManager, mFragments)
+        initFragments(savedInstanceState)
         rg_anim_tab.setOnCheckedChangeListener(this)
+        tv_file_local.setOnClickListener {
+            FileActivity.jumpToFileActivity(this@YueTingActivity)
+        }
+    }
+
+    private fun initFragments(savedInstanceState: Bundle?) {
+        mPresenter.initFragments(savedInstanceState, mFragmentManager)
+        changeFragment(YueTingConstant.TAG_FRAGMENT_HOME)
+    }
+
+    private fun changeFragment(position: Int) {
+        for (i in mFragments.indices) {
+            val currentFragment = mFragments[i]
+            val ft = mFragmentManager.beginTransaction()
+            if (i == position) {
+                if (!currentFragment.isAdded) {
+                    ft.add(R.id.fl_fragment, currentFragment, YueTingConstant.TAB_FRAGMENT_TAGS[i])
+                }
+                ft.show(currentFragment)
+            } else {
+                ft.hide(currentFragment)
+            }
+            ft.commit()
+        }
+    }
+
+    fun setFragments(fragments: ArrayList<Fragment>) {
+        mFragments = fragments
     }
 
     companion object {
-        fun jumpToAnimationActivity(context: Context, data: Int) {
+        fun jumpToYueTingActivity(context: Context, data: Int) {
             val intent = Intent(context, YueTingActivity::class.java)
             val bundle = Bundle()
             bundle.putInt("code", data)
