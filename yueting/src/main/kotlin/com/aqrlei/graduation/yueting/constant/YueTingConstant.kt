@@ -22,10 +22,14 @@ object YueTingConstant {
     val DB_NAME = "yueting.db"
     val MUSIC_TABLE_NAME = "musicInfo"
     val MUSIC_TABLE_C = arrayOf(
-            "path"
+            "path",
+            "type",
+            "fileInfo"
     )
     val MUSIC_TABLE_C_TYPE = arrayOf(
-            "varchar unique"
+            "varchar unique not null",
+            "integer default 0",
+            "text"
     )
     /*sharedpreference*/
     val SF_NAME = "yueting"

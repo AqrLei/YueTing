@@ -3,13 +3,10 @@ package com.aqrlei.graduation.yueting.ui
 import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.adapter.CommonPagerAdapter
@@ -19,13 +16,11 @@ import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChatMessage
 import com.aqrlei.graduation.yueting.model.local.ChildMessage
-import com.aqrlei.graduation.yueting.model.resp.PictureRespBean
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.TestExpandableListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.TestListViewTypeAdapter
 import com.aqrlei.graduation.yueting.ui.dialog.TestDialog
 import kotlinx.android.synthetic.main.activity_picture.*
-import kotlinx.android.synthetic.main.picture_from_url.view.*
 
 /**
  * @Author: AqrLei
@@ -35,7 +30,8 @@ import kotlinx.android.synthetic.main.picture_from_url.view.*
  */
 
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
-        ExpandableListView.OnChildClickListener, RoundBar.OnDrawProgressChangeListener {
+        ExpandableListView.OnChildClickListener, RoundBar.OnDrawProgressChangeListener,
+        View.OnClickListener {
     override fun onDrawProgressChange(currentProgress: Float) {
         AppLog.logDebug("test", "currentProgress:\t$currentProgress")
     }
@@ -56,8 +52,20 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         return true
     }
 
+    override fun onClick(p0: View?) {
+        when (p0?.id) {
+            R.id.bt_post -> {
+                YueTingActivity.jumpToYueTingActivity(this, 0)
+            }
+            R.id.rb_test -> {
+                AppToast.toastShow(this, "RippleButton", 1000)
+            }
 
-    private var mPictureRespBeans: MutableList<PictureRespBean>? = null
+        }
+    }
+
+
+    //private var mPictureRespBeans: MutableList<PictureRespBean>? = null
     private var mViewpagerAdapter: CommonPagerAdapter<*>? = null
     private var mViews: ArrayList<View>? = null
     val mData = ArrayList<ChatMessage>()
@@ -83,10 +91,6 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        bt_post.setOnClickListener({
-            YueTingActivity.jumpToYueTingActivity(this, 0)
-            //this@MainActivity.finish()
-        })
 
 
     }
@@ -121,25 +125,25 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         // TODO() elv_test.expandGroup(groupIndex)
     }
 
-    fun initViews(data: List<PictureRespBean>) {
-        Log.d("Lei", "initViews")
-        mPictureRespBeans = ArrayList()
-        mPictureRespBeans!!.addAll(data)
-        mViews = ArrayList()
-        for (i in mPictureRespBeans!!.indices) {
-            addImgs(i)
-        }
-        mViewpagerAdapter = CommonPagerAdapter(mViews as ArrayList<View>)
-        vp_impage!!.adapter = mViewpagerAdapter
-    }
+    /* fun initViews(data: List<PictureRespBean>) {
+         Log.d("Lei", "initViews")
+         mPictureRespBeans = ArrayList()
+         mPictureRespBeans!!.addAll(data)
+         mViews = ArrayList()
+         for (i in mPictureRespBeans!!.indices) {
+             addImgs(i)
+         }
+         mViewpagerAdapter = CommonPagerAdapter(mViews as ArrayList<View>)
+         vp_impage!!.adapter = mViewpagerAdapter
+     }*/
 
-    private fun addImgs(pos: Int) {
-        val view = LayoutInflater.from(this).inflate(R.layout.picture_from_url, null)
-        view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl), null)
-        /* view.sdv_picture.setImageURI()*/
+    /* private fun addImgs(pos: Int) {
+         val view = LayoutInflater.from(this).inflate(R.layout.picture_from_url, null)
+         view.sdv_picture.setImageURI(Uri.parse(mPictureRespBeans!![pos].pictureUrl), null)
+         *//* view.sdv_picture.setImageURI()*//*
         mViews!!.add(view)
     }
-
+*/
     fun dbManager() {
         /*数据库SQLiteDatabase操作相关*/
         DBManager.addTable("test", arrayOf("name", "path"), arrayOf("varchar", "varchar"))

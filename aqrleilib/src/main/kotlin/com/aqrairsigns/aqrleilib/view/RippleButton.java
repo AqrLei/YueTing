@@ -59,6 +59,7 @@ public class RippleButton extends android.support.v7.widget.AppCompatButton {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         rippleDrawable.onTouch(event);
+        super.onTouchEvent(event);
         return true;
     }
 

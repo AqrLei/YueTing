@@ -5,7 +5,9 @@ import android.database.Cursor
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Handler
 import com.aqrairsigns.aqrleilib.info.DataTableInfo
+
 
 /**
  * @Author: AqrLei
@@ -18,6 +20,7 @@ object DBManager {
     private var mContext: Context? = null
     private var mDBName: String = " "
     private var mCursor: Cursor? = null
+    private var isFinish: Boolean = false
     /*invoke first*/
     fun initDBHelper(context: Context, dbName: String, version: Int): DBManager {
         mContext = context
@@ -53,47 +56,55 @@ object DBManager {
 
     fun deleteDB() = mContext?.deleteDatabase(mDBName)
 
-    fun sqlData(sql: String, data: Array<String>?, dataWhere: Array<String>?, type: SqlType)
+    fun sqlData(sql: String, data: Array<Any?>?, dataWhere: Array<String>?, type: SqlType)
             : DBManager {
-        Thread(Runnable {
-            when (type) {
-                SqlType.DELETE -> {
-                    db?.beginTransaction()
-                    try {
-                        db?.execSQL(sql, dataWhere)
-                        db?.setTransactionSuccessful()
-                    } finally {
-                        db?.endTransaction()
-                    }
-                }
-                SqlType.INSERT -> {
-                    db?.beginTransaction()
-                    try {
-                        db?.execSQL(sql, data)
-                        db?.setTransactionSuccessful()
-
-                    } finally {
-                        db?.endTransaction()
-                    }
-                }
-                SqlType.SELECT -> {
-                    mCursor = db?.rawQuery(sql, dataWhere)
-                }
-                SqlType.UPDATE -> {
-                    db?.beginTransaction()
-                    try {
-                        db?.execSQL(sql, data)
-                        db?.setTransactionSuccessful()
-                    } finally {
-                        db?.endTransaction()
-                    }
+        isFinish = false
+        when (type) {
+            SqlType.DELETE -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, dataWhere)
+                    db?.setTransactionSuccessful()
+                } finally {
+                    db?.endTransaction()
+                    isFinish = true
                 }
             }
-        }).start()
+            SqlType.INSERT -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, data)
+                    db?.setTransactionSuccessful()
+
+                } finally {
+                    isFinish = true
+                    db?.endTransaction()
+                }
+            }
+            SqlType.SELECT -> {
+                mCursor = db?.rawQuery(sql, dataWhere)
+            }
+            SqlType.UPDATE -> {
+                db?.beginTransaction()
+                try {
+                    db?.execSQL(sql, data)
+                    db?.setTransactionSuccessful()
+                } finally {
+                    isFinish = true
+                    db?.endTransaction()
+                }
+            }
+
+        }
         return this
     }
 
     fun getCursor(): Cursor? = mCursor
+    fun finish() = isFinish
+    fun releaseCursor() {
+        mCursor?.close()
+        mCursor = null
+    }
 
     private class DBHelper private constructor(
             context: Context?,

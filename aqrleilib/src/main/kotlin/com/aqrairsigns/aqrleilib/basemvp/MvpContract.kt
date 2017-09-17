@@ -23,9 +23,8 @@ abstract class MvpContract {
 
         override fun onDestroy() {
             super.onDestroy()
-            if (mPresenter != null) {
-                mPresenter.cancle()
-            }
+            mPresenter.finish()
+
         }
     }
 
@@ -44,17 +43,13 @@ abstract class MvpContract {
 
         override fun onDestroy() {
             super.onDestroy()
-            if (mPresenter != null) {
-                mPresenter.cancle()
+            mPresenter.finish()
 
-            }
         }
 
         override fun onDestroyView() {
             super.onDestroyView()
-            if (mPresenter != null) {
-                mPresenter.cancle()
-            }
+
         }
     }
 

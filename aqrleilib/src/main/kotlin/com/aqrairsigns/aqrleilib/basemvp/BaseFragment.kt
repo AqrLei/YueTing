@@ -29,7 +29,7 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
         super.onAttach(context)
         if (context is BaseActivity) {
             mContainerActivity = context as T
-            AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "Attach" +
+            AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onAttach----" +
                     mContainerActivity.javaClass.simpleName)
 
         }
@@ -38,7 +38,57 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater!!.inflate(layoutRes, container, false)
         initComponents()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onCreateView----" +
+                mContainerActivity.javaClass.simpleName)
         return mView
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onActivityCreated----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onStart----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onResume----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onPause----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onStop----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onDestroyView----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onDestroy----" +
+                mContainerActivity.javaClass.simpleName)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onDetach----" +
+                mContainerActivity.javaClass.simpleName)
     }
 
     fun finish() {

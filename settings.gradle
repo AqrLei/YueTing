@@ -1,1 +1,1 @@
-include ':appmy', ':yueting', ':aqrleilib'
+include ':yueting', ':aqrleilib'

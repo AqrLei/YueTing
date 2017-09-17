@@ -1,6 +1,7 @@
 package com.aqrairsigns.aqrleilib.basemvp
 
-import rx.Subscription
+import io.reactivex.disposables.CompositeDisposable
+
 
 /**
  * @Author: AqrLei
@@ -9,21 +10,17 @@ import rx.Subscription
  *@Date: 2017/8/22
  */
 abstract class BasePresenter {
-    protected var subscriptions: MutableList<Subscription>
-
-    init {
-        subscriptions = ArrayList()
+    private var disposablesList = ArrayList<CompositeDisposable>()
+    fun addDisposables(disposable: CompositeDisposable) {
+        disposablesList.add(disposable)
     }
 
-    fun cancle() {
-        for (subscription in subscriptions) {
-            if (!subscription.isUnsubscribed)
-                subscription.unsubscribe()
+    fun finish() {
+        disposablesList.forEach {
+            it.dispose()
+            if (it.isDisposed) {
+                it.clear()
+            }
         }
-        subscriptions.clear()
-    }
-
-    fun addSubscription(subscription: Subscription) {
-        subscriptions.add(subscription)
     }
 }
