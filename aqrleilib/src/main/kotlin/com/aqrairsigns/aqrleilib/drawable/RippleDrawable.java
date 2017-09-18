@@ -22,7 +22,7 @@ public class RippleDrawable extends Drawable {
 
     private Paint mPaint;
     private Bitmap bitmap;
-    private int rippleColor;
+    private int mRippleColor;
     private float mRipplePointX = 0;
     private float mRipplePointY = 0;
     private float mRippleRadius = 0;
@@ -32,7 +32,7 @@ public class RippleDrawable extends Drawable {
     private float mClickPointX;
     private float mClickPointY;
     //最大半径
-    private float MaxRadius;
+    private float maxRadius;
     //开始半径
     private float startRadius;
     //结束半径
@@ -48,7 +48,7 @@ public class RippleDrawable extends Drawable {
      * 进入动画
      */
     //进入动画的进度值
-    private float mProgress;
+    private float mEnterProgress;
     //每次递增的时间
     private float mEnterIncrement = 16f / 360;
     //进入动画添加插值器
@@ -58,14 +58,14 @@ public class RippleDrawable extends Drawable {
         public void run() {
             mEnterDone = false;
             mCircleAlpha = 255;
-            mProgress = mProgress + mEnterIncrement;
-            if (mProgress > 1) {
+            mEnterProgress = mEnterProgress + mEnterIncrement;
+            if (mEnterProgress > 1) {
                 onEnterPrograss(1);
                 enterDone();
                 return;
             }
 
-            float interpolation = mEnterInterpolator.getInterpolation(mProgress);
+            float interpolation = mEnterInterpolator.getInterpolation(mEnterProgress);
             onEnterPrograss(interpolation);
             scheduleSelf(this, SystemClock.uptimeMillis() + 16);
         }
@@ -193,7 +193,6 @@ public class RippleDrawable extends Drawable {
         return (int) ((dAlpha * 255f) / (255f - bgAlpha));
     }
 
-
     public void onTouch(MotionEvent event) {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -229,8 +228,6 @@ public class RippleDrawable extends Drawable {
     }
 
     public void onTouchDown(float x, float y) {
-        //Log.i("onTouchDown====",x + "" + y );
-        //unscheduleSelf(runnable);
         mUpDone = false;
         mRipplePointX = x;
         mRipplePointY = y;
@@ -259,13 +256,11 @@ public class RippleDrawable extends Drawable {
 
     }
 
-    /**
-     * 开启进入动画
-     */
+    /*开启进入动画*/
     public void startEnterRunnable() {
 
 
-        mProgress = 0;
+        mEnterProgress = 0;
         //mEnterDone = false;
         unscheduleSelf(exitRunnable);
         unscheduleSelf(runnable);
@@ -273,9 +268,7 @@ public class RippleDrawable extends Drawable {
 
     }
 
-    /**
-     * 开启退出动画
-     */
+    /* 开启退出动画*/
     public void startExitRunnable() {
         mExitProgress = 0;
         unscheduleSelf(runnable);
@@ -304,11 +297,11 @@ public class RippleDrawable extends Drawable {
         mCenterPointX = bounds.centerX();
         mCenterPointY = bounds.centerY();
 
-        MaxRadius = Math.max(mCenterPointX, mCenterPointY);
-        startRadius = MaxRadius * 0.1f;
-        endRadius = MaxRadius * 0.8f;
-
+        maxRadius = Math.max(mCenterPointX, mCenterPointY);
+        startRadius = maxRadius * 0.1f;
+        endRadius = maxRadius * 0.8f;
     }
+
 
     @Override
     public void setAlpha(int alpha) {
@@ -321,6 +314,7 @@ public class RippleDrawable extends Drawable {
     public int getAlpha() {
         return mAlpha;
     }
+
 
     @Override
     public void setColorFilter(ColorFilter colorFilter) {
@@ -344,14 +338,15 @@ public class RippleDrawable extends Drawable {
 
     }
 
+
     public void setRippleColor(int rippleColor) {
-        this.rippleColor = rippleColor;
+        mRippleColor = rippleColor;
         onColorOrAlphaChange();
     }
 
     private void onColorOrAlphaChange() {
         //设置画笔颜色
-        mPaint.setColor(rippleColor);
+        mPaint.setColor(mRippleColor);
         if (mAlpha != 255) {
             int pAlpha = mPaint.getAlpha();
             int realAlpha = (int) (pAlpha * (mAlpha / 255f));
