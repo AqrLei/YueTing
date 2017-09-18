@@ -2,8 +2,13 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.webkit.JsResult
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
@@ -15,6 +20,7 @@ import com.aqrlei.graduation.yueting.ui.adapter.TestExpandableListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.TestListViewTypeAdapter
 import com.aqrlei.graduation.yueting.ui.dialog.TestDialog
 import kotlinx.android.synthetic.main.activity_picture.*
+
 
 /**
  * @Author: AqrLei
@@ -43,7 +49,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.bt_post -> {
-                YueTingActivity.jumpToYueTingActivity(this, 0)
+
+
+                //YueTingActivity.jumpToYueTingActivity(this, 0)
             }
             R.id.rb_test -> {
                 AppToast.toastShow(this, "RippleButton", 1000)
@@ -82,6 +90,40 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         aqr_tv_test.visibility = View.GONE
         tv_file_name.visibility = View.VISIBLE
         tv_file_name.text = " Hello World"
+        webViewTest()
+
+    }
+
+    private fun webViewTest() {
+        val webSetting = wv_test.settings
+        webSetting.javaScriptEnabled = true
+        webSetting.javaScriptCanOpenWindowsAutomatically = true
+        wv_test.loadUrl("file:///android_asset/html/test.html")
+        wv_test.webChromeClient = object : WebChromeClient() {
+            override fun onJsAlert(view: WebView?, url: String?, message: String?,
+                                   result: JsResult?): Boolean {
+                tv_file_name.text = " loadUrl:\t $message"
+                result?.confirm()
+                return true
+            }
+        }
+        wv_test.webViewClient = object : WebViewClient() {
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+                    view?.loadUrl("javascript:callJS()")
+                else
+                    view?.evaluateJavascript("javascript:call()") { message ->
+                        tv_file_name.text = "evaluate:\t $message"
+                    }
+            }
+        }
+        /* wv_test.webViewClient = object : WebViewClient() {
+             override fun onPageFinished(view: WebView?, url: String?) {
+                 super.onPageFinished(view, url)
+             }
+         }*/
     }
 
     fun defaultExpandGroup() {

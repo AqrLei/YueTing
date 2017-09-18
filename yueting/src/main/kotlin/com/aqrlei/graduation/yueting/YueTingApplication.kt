@@ -1,6 +1,5 @@
 package com.aqrlei.graduation.yueting
 
-import android.app.Activity
 import android.os.StrictMode
 import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
@@ -15,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
  * @CreateTime: Date: 2017/9/14 Time: 16:17
  */
 class YueTingApplication : BaseApplication() {
+
     override fun onCreate() {
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
