@@ -91,6 +91,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        aqr_tv_test.visibility = View.GONE
+        tv_file_name.visibility = View.VISIBLE
+        tv_file_name.text = " Hello World"
 
 
     }

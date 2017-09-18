@@ -70,7 +70,8 @@
         yueting:capStyle="round"
         android:visibility="gone" />
 
-    <com.aqrairsigns.aqrleilib.view.TestView
+    <com.aqrairsigns.aqrleilib.view.FlowLayout
+        android:id="@+id/aqr_tv_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -133,7 +134,7 @@
             android:text="write the code,change the world"
             android:textColor="#1b8fe6"
             android:textSize="12dp"/>
-    </com.aqrairsigns.aqrleilib.view.TestView>
+    </com.aqrairsigns.aqrleilib.view.FlowLayout>
 
 
 </RelativeLayout>
