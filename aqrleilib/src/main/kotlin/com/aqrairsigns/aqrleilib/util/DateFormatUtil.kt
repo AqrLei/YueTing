@@ -11,7 +11,7 @@ import java.util.*
  */
 object DateFormatUtil {
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    fun simpleDateFormat(time: Long) {
+    fun simpleDateFormat(time: Long): String =
         dateFormatter.format(Date(time))
-    }
+
 }

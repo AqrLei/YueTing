@@ -5,18 +5,34 @@
     <meta charset="utf-8">
     <title>Carson_Ho</title>
     <script>
-        function callJS(){
+        function callJS() {
             alert("Android调用了JS的callJS方法");
         }
         function call(){
-        return "evaluateJavaScript from Android"
+            return "evaluateJavaScript from Android"
         }
+        function showAndroidOne() {
+            obj.showFromJs("调用了Android");
+        }
+        function showAndroidTwo() {
+            document.location = "js://webView?arg1=111&arg2=222";
 
-
-
+        }
+        function showAndroidThree() {
+            var result = prompt("js://webView?arg1=111&arg2=222");
+            alert("webView "+result);
+        }
 
     </script>
 
 </head>
+<body>
+
+<button type="button" id="button1" onclick="showAndroidOne()"> Js对象映射调用Android中的方法</button>
+<br><br>
+<button type="button" onclick="showAndroidTwo()">JsUrl协议拦截调用Android中的方法</button>
+<br><br>
+<button type="button" onclick="showAndroidThree()">JsPrompt弹窗调用Android</button>
+</body>
 
 </html>

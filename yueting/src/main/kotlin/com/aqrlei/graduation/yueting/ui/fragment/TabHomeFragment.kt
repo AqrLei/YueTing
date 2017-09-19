@@ -3,13 +3,12 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
-import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
@@ -29,7 +28,11 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 * @param mContainerActivity 访问对应的Activity
 * */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
-        AlphaListView.OnAlphaChangeListener {
+        AlphaListView.OnAlphaChangeListener, AdapterView.OnItemClickListener {
+    override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
+        startMusicService(position)
+    }
+
     override fun onAlphaChanged(percent: Float) {
         mContainerActivity.ll_tab_title.setBackgroundColor(
                 Color.argb((175 * percent).toInt(), 113, 204, 180)
@@ -37,7 +40,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private var mReadData = ArrayList<ReadMessage>()
-    private var mMusicData = ArrayList<MusicMessage>()
     private var mMusicInfoList = ArrayList<MusicInfo>()
     private lateinit var mAdapter: YueTingHomeListAdapter
 
@@ -71,6 +73,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mPresenter.getMusicInfoFromDB()
     }
 
+    private fun startMusicService(position: Int) {
+        mPresenter.startMusicService(mContainerActivity, position)
+    }
+
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoList.clear()
         mMusicInfoList.addAll(data)
@@ -78,6 +84,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
 
     }
+
+    fun getMusicInfo() = mMusicInfoList
 
     private fun initView() {
         val mRecommendLv = mView.lv_fragment_home as AlphaListView
@@ -89,9 +97,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
                 inflate(R.layout.listheader_home, null))
         mRecommendLv.adapter = mAdapter
-        mRecommendLv.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            AppToast.toastShow(mContainerActivity, " " + position, 1000)
-        }
+        mRecommendLv.onItemClickListener = this
         mRecommendLv.setAlphaChangeListener(this)
     }
 }

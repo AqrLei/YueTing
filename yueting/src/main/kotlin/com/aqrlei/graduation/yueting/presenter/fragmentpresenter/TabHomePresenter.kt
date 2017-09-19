@@ -1,11 +1,16 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
+import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.os.Bundle
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.SQLDataUtil
+import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
+import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
@@ -27,7 +32,6 @@ import io.reactivex.schedulers.Schedulers
 * */
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
-
     companion object {
         fun selectObservable(): Observable<Cursor?> {
             return Observable.defer {
@@ -36,6 +40,21 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         null, null, DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
+            }
+        }
+
+        fun parcelableObservable(musicIntent: Intent?,
+                                 context: Context,
+                                 position: Int,
+                                 musicInfoS: ArrayList<MusicInfo>): Observable<Boolean> {
+            return Observable.defer {
+                val bundle = Bundle()
+                //这种方式会OOM，考虑新方式
+                bundle.putParcelableArrayList("musicInfo", musicInfoS)
+                bundle.putInt("position", position)
+                musicIntent?.putExtras(bundle)
+                context.startService(musicIntent)
+                Observable.just(true)
             }
         }
     }
@@ -59,11 +78,14 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                 while (t.moveToNext()) {
                                     val musicInfo = MusicInfo()
                                     val mmr = MediaMetadataRetriever()
-                                    val fileInfo = SQLDataUtil.getData(t.getBlob(t.getColumnIndex("fileInfo")))
+                                    val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex("fileInfo")))
                                             as FileInfo
                                     val name = (fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
-                                    mmr.setDataSource(t.getString(t.getColumnIndex("path")))
+                                    val path = t.getString(t.getColumnIndex("path"))
+                                    mmr.setDataSource(path)
                                     musicInfo.id = t.getInt(t.getColumnIndex("id"))
+                                    musicInfo.createTime = t.getString(t.getColumnIndex("createTime"))
+                                    musicInfo.albumUrl = path ?: " "
                                     musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                             ?: name
                                     musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
@@ -74,6 +96,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                             MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
                                     musicInfo.picture = mmr.embeddedPicture
 
+
+
                                     musicInfoList.add(musicInfo)
                                     mmr.release()
                                 }
@@ -82,6 +106,32 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             }
 
                         })
+        )
+    }
+
+    fun startMusicService(context: Context, position: Int) {
+        val mContext = context.applicationContext as YueTingApplication
+        val disposables = CompositeDisposable()
+        val musicIntent = mContext.getServiceIntent()
+        addDisposables(disposables)
+        disposables.add(
+                parcelableObservable(musicIntent, mContext, position, mMvpView.getMusicInfo())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Boolean>() {
+                            override fun onComplete() {
+                                AppToast.toastShow(mContext, "启动服务成功", 1000)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                AppToast.toastShow(mContext, "启动服务失败", 1000)
+                            }
+
+                            override fun onNext(t: Boolean) {
+                                AppToast.toastShow(mContext, "启动服务成功", 1000)
+                            }
+                        })
+
         )
     }
 

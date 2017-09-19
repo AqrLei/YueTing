@@ -28,12 +28,13 @@
     <WebView
         android:id="@+id/wv_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_file_name"/>
 
     <TextView
         android:id="@+id/tv_file_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bt_post"
         android:scrollbars="vertical"/>
 
@@ -62,7 +63,8 @@
     <com.aqrairsigns.aqrleilib.view.FlowLayout
         android:id="@+id/aqr_tv_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

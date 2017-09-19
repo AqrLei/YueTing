@@ -2,15 +2,13 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.webkit.JsResult
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
@@ -49,9 +47,11 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.bt_post -> {
-
-
-                //YueTingActivity.jumpToYueTingActivity(this, 0)
+                /*val musicIntent: Intent? = (this@MainActivity.application as YueTingApplication).getServiceIntent()
+                if(musicIntent != null) {
+                    this@MainActivity.applicationContext.startService(musicIntent)
+                }*/
+                YueTingActivity.jumpToYueTingActivity(this, 0)
             }
             R.id.rb_test -> {
                 AppToast.toastShow(this, "RippleButton", 1000)
@@ -89,9 +89,14 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         super.initComponents(savedInstanceState)
         aqr_tv_test.visibility = View.GONE
         tv_file_name.visibility = View.VISIBLE
-        tv_file_name.text = " Hello World"
-        webViewTest()
+        tv_file_name.text = " Hello World \n"
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webViewTest()
     }
 
     private fun webViewTest() {
@@ -99,31 +104,76 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         webSetting.javaScriptEnabled = true
         webSetting.javaScriptCanOpenWindowsAutomatically = true
         wv_test.loadUrl("file:///android_asset/html/test.html")
-        wv_test.webChromeClient = object : WebChromeClient() {
+        wv_test.setWebChromeClient(object : WebChromeClient() {
+            /*警告弹窗拦截, 没有放回值*/
             override fun onJsAlert(view: WebView?, url: String?, message: String?,
                                    result: JsResult?): Boolean {
-                tv_file_name.text = " loadUrl:\t $message"
-                result?.confirm()
-                return true
+                tv_file_name.append(" loadUrl:\t $message \n")
+                // result?.confirm()//确认，窗口消失
+                // return true ,事件不再传递
+                return super.onJsAlert(view, url, message, result)
             }
-        }
-        wv_test.webViewClient = object : WebViewClient() {
+
+            /*确认框拦截，返回值只有true 和false*/
+            override fun onJsConfirm(view: WebView?, url: String?, message: String?,
+                                     result: JsResult?): Boolean {
+                return super.onJsConfirm(view, url, message, result)
+            }
+
+            /*消息框拦截,返回值自定义*/
+            override fun onJsPrompt(view: WebView?, url: String?, message: String?,
+                                    defaultValue: String?, result: JsPromptResult?):
+                    Boolean {
+                val uri = Uri.parse(message)
+                if (uri.scheme == "js") {
+                    if (uri.authority == "webView") {
+                        result?.confirm("来自Android - Native 的回调")
+                    }
+                    return true
+                }
+                return super.onJsPrompt(view, url, message, defaultValue, result)
+            }
+        })
+        wv_test.addJavascriptInterface(JsInterface(), "obj")
+        wv_test.setWebViewClient(object : WebViewClient() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
-
+                view?.loadUrl("javascript:callJS()")
+                view?.evaluateJavascript("javascript:call()") { message ->
+                    tv_file_name.append("evaluate:\t $message \n")
+                }
+                //view?.loadUrl("javascript:show()")
+                /*
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
                     view?.loadUrl("javascript:callJS()")
                 else
                     view?.evaluateJavascript("javascript:call()") { message ->
-                        tv_file_name.text = "evaluate:\t $message"
-                    }
+                        tv_file_name.append( "evaluate:\t $message \n")
+                    }*/
             }
-        }
-        /* wv_test.webViewClient = object : WebViewClient() {
-             override fun onPageFinished(view: WebView?, url: String?) {
-                 super.onPageFinished(view, url)
-             }
-         }*/
+
+            /*在版本24（7.0)及以上不建议使用*/
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                val uri = Uri.parse(url)
+                if (uri.scheme == "js") {
+                    if (uri.authority == "webView") {
+                        val collection = uri.queryParameterNames//获取属性名集合
+                        collection.forEach {
+                            tv_file_name.append(" $it:\t")
+                            val p = uri.getQueryParameter(it)//获取属性值
+                            tv_file_name.append("$p\n")
+
+                        }
+
+                        return true//此次拦截事件执行完毕
+                    }
+                }
+
+                return super.shouldOverrideUrlLoading(view, url)//执行父类的
+            }
+
+
+        })
     }
 
     fun defaultExpandGroup() {
@@ -156,6 +206,14 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             bundle.putInt("code", data)
             intent.putExtras(bundle)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
+    }
+
+    private class JsInterface {
+
+        @JavascriptInterface
+        fun showFromJs(toast: String) {
+            AppLog.logDebug("js", toast)
         }
     }
 }
