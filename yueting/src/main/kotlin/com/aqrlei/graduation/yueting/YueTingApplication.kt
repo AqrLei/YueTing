@@ -1,10 +1,12 @@
 package com.aqrlei.graduation.yueting
 
+import android.content.Intent
 import android.os.StrictMode
 import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.service.MusicService
 import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
@@ -14,6 +16,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
  * @CreateTime: Date: 2017/9/14 Time: 16:17
  */
 class YueTingApplication : BaseApplication() {
+    private var musicIntent: Intent? = null
 
     override fun onCreate() {
         if (BuildConfig.DEBUG) {
@@ -33,10 +36,19 @@ class YueTingApplication : BaseApplication() {
                         YueTingConstant.MUSIC_TABLE_C_TYPE
                 ).createDB()
         Fresco.initialize(this)
+
+    }
+
+    fun getServiceIntent(): Intent? {
+        if (musicIntent == null) {
+            musicIntent = Intent(this, MusicService::class.java)
+        }
+        return musicIntent
     }
 
     override fun onTerminate() {
         DBManager.closeDB()
+        this@YueTingApplication.stopService(musicIntent)
         super.onTerminate()
     }
 }

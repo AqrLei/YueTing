@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".service.MusicService"/>
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"
@@ -18,12 +19,10 @@
         </activity>
         <activity
             android:name=".ui.FileActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -7,8 +7,7 @@ package com.aqrlei.graduation.yueting.constant
  * @Date: 2017/8/25
  */
 object YueTingConstant {
-    /*Chat Type*/
-    val TYPE_MESSAGE_FLAG: Int = 5
+
     /*fragment tag*/
     val TAB_FRAGMENT_TAGS = arrayOf(
             "tag_fragment_home",
@@ -33,4 +32,24 @@ object YueTingConstant {
     )
     /*sharedpreference*/
     val SF_NAME = "yueting"
+    /*BroadcastReceiverAction*/
+    val ACTION_BROADCAST = arrayOf(
+            "play",
+            "next",
+            "previous",
+            "finish",
+            "single",
+            "list",
+            "random"
+    )
+    val ACTION_PLAY = 0
+    val ACTION_NEXT = 1
+    val ACTION_PREVIOUS = 2
+    val ACTION_FINISH = 3
+    val ACTION_SINGLE = 4
+    val ACTION_LIST = 5
+    val ACTION_RANDOM = 6
+    val ACTION_REQ_CODE = arrayOf(
+            1, 2, 3, 4, 5, 6, 7
+    )
 }
