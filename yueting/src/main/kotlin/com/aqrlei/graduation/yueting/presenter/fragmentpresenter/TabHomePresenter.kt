@@ -1,13 +1,10 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
-import android.os.Bundle
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
-import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrlei.graduation.yueting.YueTingApplication
@@ -40,21 +37,6 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         null, null, DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
-            }
-        }
-
-        fun parcelableObservable(musicIntent: Intent?,
-                                 context: Context,
-                                 position: Int,
-                                 musicInfoS: ArrayList<MusicInfo>): Observable<Boolean> {
-            return Observable.defer {
-                val bundle = Bundle()
-                //这种方式会OOM，考虑新方式
-                bundle.putParcelableArrayList("musicInfo", musicInfoS)
-                bundle.putInt("position", position)
-                musicIntent?.putExtras(bundle)
-                context.startService(musicIntent)
-                Observable.just(true)
             }
         }
     }
@@ -111,28 +93,15 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
     fun startMusicService(context: Context, position: Int) {
         val mContext = context.applicationContext as YueTingApplication
-        val disposables = CompositeDisposable()
         val musicIntent = mContext.getServiceIntent()
-        addDisposables(disposables)
-        disposables.add(
-                parcelableObservable(musicIntent, mContext, position, mMvpView.getMusicInfo())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                                AppToast.toastShow(mContext, "启动服务成功", 1000)
-                            }
 
-                            override fun onError(e: Throwable) {
-                                AppToast.toastShow(mContext, "启动服务失败", 1000)
-                            }
 
-                            override fun onNext(t: Boolean) {
-                                AppToast.toastShow(mContext, "启动服务成功", 1000)
-                            }
-                        })
+        musicIntent?.putExtra("position", position)
+        context.startService(musicIntent)
+    }
 
-        )
+    private fun getRealPosition() {
+
     }
 
 

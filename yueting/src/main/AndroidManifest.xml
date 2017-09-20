@@ -19,12 +19,10 @@
         </activity>
         <activity
             android:name=".ui.FileActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

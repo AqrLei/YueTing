@@ -6,6 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+    </style>
+
+    <style name="ActivityAnimation">
+        <!--新的Activity进入-->
+        <item name="android:activityOpenEnterAnimation">@anim/activity_new_in</item>
+        <!--旧的Activity退出-->
+        <item name="android:activityOpenExitAnimation">@anim/activity_old_out</item>
+        <!--旧的Activity进入-->
+        <item name="android:activityCloseEnterAnimation">@anim/activity_old_in</item>
+        <!--新的Activity退出-->
+        <item name="android:activityCloseExitAnimation">@anim/activity_new_out</item>
     </style>
 
     <style name="TabTextAppearance">

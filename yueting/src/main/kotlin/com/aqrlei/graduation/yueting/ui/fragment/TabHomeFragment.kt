@@ -10,6 +10,7 @@ import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
@@ -30,7 +31,10 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         AlphaListView.OnAlphaChangeListener, AdapterView.OnItemClickListener {
     override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
-        startMusicService(position)
+        if (position < 3) {
+            return
+        }
+        startMusicService(position - 3)
     }
 
     override fun onAlphaChanged(percent: Float) {
@@ -40,7 +44,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private var mReadData = ArrayList<ReadMessage>()
-    private var mMusicInfoList = ArrayList<MusicInfo>()
+    private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
 
     override val mPresenter: TabHomePresenter
@@ -78,21 +82,16 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
-        mMusicInfoList.clear()
-        mMusicInfoList.addAll(data)
+        mMusicInfoShared.setInfoS(data)
         mAdapter.notifyDataSetChanged()
-
-
     }
-
-    fun getMusicInfo() = mMusicInfoList
 
     private fun initView() {
         val mRecommendLv = mView.lv_fragment_home as AlphaListView
 
         mAdapter = YueTingHomeListAdapter(mContainerActivity,
                 R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mReadData, mMusicInfoList)
+                mReadData, mMusicInfoShared.getInfoS())
 
         mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
                 inflate(R.layout.listheader_home, null))
