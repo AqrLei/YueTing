@@ -240,6 +240,7 @@ class MusicService : BaseService(),
         when (playState) {
             PlayState.PAUSE -> {
                 message.arg1 = 0
+                message.arg2 = cPosition
             }
             PlayState.PLAY -> {
                 message.arg1 = 1

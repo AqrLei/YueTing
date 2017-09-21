@@ -110,6 +110,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
     fun refreshPlayView(view: LinearLayout, msg: Message) {
         view.visibility = View.VISIBLE
+        view.bringToFront()
         when (msg.what) {
             YueTingConstant.CURRENT_DURATION -> {
 
