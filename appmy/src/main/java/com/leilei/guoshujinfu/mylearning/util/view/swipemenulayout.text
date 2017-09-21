@@ -42,7 +42,7 @@ public class SwipeMenuLayout extends FrameLayout {
 	private ScrollerCompat mOpenScroller;
 	private ScrollerCompat mCloseScroller;
 	private int mBaseX;
-	private int position;
+	private int cPosition;
 	private Interpolator mCloseInterpolator;
 	private Interpolator mOpenInterpolator;
 
@@ -74,12 +74,12 @@ public class SwipeMenuLayout extends FrameLayout {
 	}
 
 	public int getPosition() {
-		return position;
+		return cPosition;
 	}
 
-	public void setPosition(int position) {
-		this.position = position;
-		mMenuView.setPosition(position);
+	public void setPosition(int cPosition) {
+		this.cPosition = cPosition;
+		mMenuView.setPosition(cPosition);
 	}
 
 	public void setSwipeDirection(int swipeDirection) {
@@ -313,7 +313,7 @@ public class SwipeMenuLayout extends FrameLayout {
 	}
 
 	public void setMenuHeight(int measuredHeight) {
-		Log.i("byz", "pos = " + position + ", height = " + measuredHeight);
+		Log.i("byz", "pos = " + cPosition + ", height = " + measuredHeight);
 		LayoutParams params = (LayoutParams) mMenuView.getLayoutParams();
 		if (params.height != measuredHeight) {
 			params.height = measuredHeight;

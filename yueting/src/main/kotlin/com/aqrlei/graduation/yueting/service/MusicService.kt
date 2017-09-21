@@ -8,17 +8,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Message
+import android.os.Messenger
 import android.support.v4.app.NotificationCompat
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
+import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
+import java.util.*
 
 /**
  * @Author: AqrLei
@@ -32,22 +36,27 @@ class MusicService : BaseService(),
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
     override fun onPrepared(mp: MediaPlayer?) {
-        val musicInfo = mMusicInfoShare.getInfo(position)
-        remoteViews.setTextViewText(R.id.tv_title, musicInfo.title)
-        remoteViews.setTextViewText(R.id.tv_artist_album, "${musicInfo.artist} - ${musicInfo.album}")
-        val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
-        remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
-        startForeground(NOTIFICATION_ID, notification)
+        refreshNotification()
         mPlayer?.start()
+        sendPlayState(PlayState.PLAY)
 
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        if (mp != null) {
+            mp.release()
+            mp.reset()
+            sendPlayState(PlayState.PAUSE)
+        }
         return true
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-
+        if (playType == PlayType.SINGLE) {
+            cPosition -= 1
+        }
+        sendPlayState(PlayState.COMPLETE)
+        next()
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
@@ -61,11 +70,31 @@ class MusicService : BaseService(),
     }
 
 
-    private var position: Int = 0
+    private var cPosition: Int = -1
+    private var pPosition: Int = -1
+    private var cDuration: Int = 0
+    private var playType: PlayType = PlayType.LIST
     private var playerReceiver: PlayerReceiver? = null
+    private var isPause: Boolean = false
+    private val handler = Handler()
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
+    private lateinit var messenger: Messenger
     private val NOTIFICATION_ID = 1
+    private val sendCDurationR = object : Runnable {
+        override fun run() {
+            cDuration = mPlayer?.currentPosition ?: 0
+            val message = Message()
+            message.what = YueTingConstant.CURRENT_DURATION
+            message.arg1 = cDuration
+            messenger.send(message)
+            if (!isPause) {
+                handler.postDelayed(this, 100)
+            }
+        }
+    }
+
+
     override fun onBind(p0: Intent?): IBinder? {
         return super.onBind(p0)
     }
@@ -77,11 +106,11 @@ class MusicService : BaseService(),
         super.onCreate()
     }
 
-
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val bundle = intent.extras as Bundle
-        position = bundle.getInt("position")
+        cPosition = intent.extras.get("position") as Int
+        messenger = intent.extras.get("messenger") as Messenger
+        play()
         return START_REDELIVER_INTENT
     }
 
@@ -94,9 +123,11 @@ class MusicService : BaseService(),
         stopForeground(true)
         if (playerReceiver != null) {
             unregisterReceiver(playerReceiver)
+            mMusicInfoShare.getBroadcastManager()?.unregisterReceiver(playerReceiver)
         }
         super.onDestroy()
     }
+
 
     private fun regReceiver() {
         playerReceiver = PlayerReceiver()
@@ -104,6 +135,7 @@ class MusicService : BaseService(),
         YueTingConstant.ACTION_BROADCAST.forEach {
             filter.addAction(it)
         }
+        mMusicInfoShare.getBroadcastManager()?.registerReceiver(playerReceiver, filter)
         registerReceiver(playerReceiver, filter)
     }
 
@@ -160,6 +192,15 @@ class MusicService : BaseService(),
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    private fun refreshNotification() {
+        val musicInfo = mMusicInfoShare.getInfo(cPosition)
+        remoteViews.setTextViewText(R.id.tv_title, musicInfo.title)
+        remoteViews.setTextViewText(R.id.tv_artist_album, "${musicInfo.artist} - ${musicInfo.album}")
+        val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
+        remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
+        startForeground(NOTIFICATION_ID, notification)
+    }
+
     private fun bindListener(action: String, requestCode: Int): PendingIntent {
         return PendingIntent.getBroadcast(
                 this.applicationContext,
@@ -168,24 +209,127 @@ class MusicService : BaseService(),
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-
     private fun play() {
         if (mPlayer != null && mMusicInfoShare.getInfoS().size > 0) {
-            val musicInfo = mMusicInfoShare.getInfoS()[position]
-            mPlayer?.reset()
-            try {
-                mPlayer?.setDataSource(musicInfo.albumUrl)
-                mPlayer?.prepareAsync()
-            } catch (e: IOException) {
-                e.printStackTrace()
+            if (isPause) {
+                mPlayer?.seekTo(cDuration)
+                mPlayer?.start()
+                sendPlayState(PlayState.PLAY)
+                isPause = false
+            } else {
+                val musicInfo = mMusicInfoShare.getInfoS()[cPosition]
+                mPlayer?.reset()
+                try {
+                    mPlayer?.setDataSource(musicInfo.albumUrl)
+                    mPlayer?.prepareAsync()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
+            sendCDuration()
+        }
+    }
+
+    private fun sendCDuration() {
+        handler.post(sendCDurationR)
+    }
+
+    private fun sendPlayState(playState: PlayState) {
+        val message = Message()
+        message.what = YueTingConstant.PLAY_STATE
+        when (playState) {
+            PlayState.PAUSE -> {
+                message.arg1 = 0
+                message.arg2 = cPosition
+            }
+            PlayState.PLAY -> {
+                message.arg1 = 1
+                message.arg2 = cPosition
+            }
+            PlayState.COMPLETE -> {
+                message.arg1 = 2
+            }
+        }
+        messenger.send(message)
+    }
+
+    private fun pauseOrPlay() {
+        if (mPlayer != null && mPlayer!!.isPlaying) {
+            pause()
+        } else {
+            play()
         }
     }
 
     private fun pause() {
         mPlayer?.pause()
+        sendPlayState(PlayState.PAUSE)
+        isPause = true
     }
 
+    private fun next() {
+        changePosition(PlayDirection.NEXT)
+        play()
+    }
+
+    private fun previous() {
+        changePosition(PlayDirection.PREVIOUS)
+        play()
+    }
+
+    private fun changePosition(direction: PlayDirection) {
+        if (direction == PlayDirection.NEXT) {
+            when (playType) {
+                PlayType.SINGLE -> {
+                    nextPosition()
+                }
+                PlayType.LIST -> {
+                    nextPosition()
+                }
+                PlayType.RANDOM -> {
+                    randomPosition()
+                }
+            }
+        } else {
+            when (playType) {
+                PlayType.SINGLE -> {
+                    previousPosition()
+                }
+                PlayType.LIST -> {
+                    previousPosition()
+                }
+                PlayType.RANDOM -> {
+                    randomPosition()
+                }
+            }
+        }
+
+    }
+
+    private fun randomPosition() {
+        cPosition = Random().nextInt(mMusicInfoShare.getSize())
+        pPosition = cPosition
+    }
+
+    private fun nextPosition() {
+        cPosition =
+                if (cPosition + 1 > mMusicInfoShare.getSize() - 1) {
+                    0
+                } else {
+                    cPosition + 1
+                }
+        pPosition = cPosition
+    }
+
+    private fun previousPosition() {
+        cPosition =
+                if (cPosition - 1 < 0) {
+                    mMusicInfoShare.getSize() - 1
+                } else {
+                    cPosition - 1
+                }
+        pPosition = cPosition
+    }
 
     inner class PlayerReceiver : BroadcastReceiver() {
 
@@ -194,35 +338,49 @@ class MusicService : BaseService(),
             val action = intent?.action
             when (action) {
                 ACTION[YueTingConstant.ACTION_PLAY] -> {
-                    if (mPlayer != null && mPlayer!!.isPlaying) {
-                        pause()
+                    cPosition = intent.getIntExtra("position", cPosition)
+                    if (cPosition == pPosition) {
+                        pauseOrPlay()
                     } else {
                         play()
+                        pPosition = cPosition
                     }
-
                 }
                 ACTION[YueTingConstant.ACTION_NEXT] -> {
+                    next()
 
                 }
                 ACTION[YueTingConstant.ACTION_PREVIOUS] -> {
-
+                    previous()
                 }
                 ACTION[YueTingConstant.ACTION_FINISH] -> {
-
+                    ActivityCollector.removeAll()
+                    stopSelf()
                 }
                 ACTION[YueTingConstant.ACTION_SINGLE] -> {
-
+                    playType = PlayType.SINGLE
                 }
                 ACTION[YueTingConstant.ACTION_LIST] -> {
-
+                    playType = PlayType.LIST
                 }
                 ACTION[YueTingConstant.ACTION_RANDOM] -> {
-
+                    playType = PlayType.RANDOM
                 }
             }
         }
 
     }
 
+    enum class PlayType {
+        SINGLE, RANDOM, LIST
+    }
+
+    enum class PlayState {
+        PAUSE, PLAY, COMPLETE
+    }
+
+    private enum class PlayDirection {
+        NEXT, PREVIOUS
+    }
 
 }

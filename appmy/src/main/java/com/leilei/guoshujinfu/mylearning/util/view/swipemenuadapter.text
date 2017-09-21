@@ -34,22 +34,22 @@ public class SwipeMenuAdapter implements WrapperListAdapter,
     }
 
     @Override
-    public Object getItem(int position) {
-        return mAdapter.getItem(position);
+    public Object getItem(int cPosition) {
+        return mAdapter.getItem(cPosition);
     }
 
     @Override
-    public long getItemId(int position) {
-        return mAdapter.getItemId(position);
+    public long getItemId(int cPosition) {
+        return mAdapter.getItemId(cPosition);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int cPosition, View convertView, ViewGroup parent) {
         SwipeMenuLayout layout = null;
         if (convertView == null) {
-            View contentView = mAdapter.getView(position, convertView, parent);
+            View contentView = mAdapter.getView(cPosition, convertView, parent);
             SwipeMenu menu = new SwipeMenu(mContext);
-            menu.setViewType(getItemViewType(position));
+            menu.setViewType(getItemViewType(cPosition));
             createMenu(menu);
             SwipeMenuView menuView = new SwipeMenuView(menu,
                     (SwipeMenuListView) parent);
@@ -58,16 +58,16 @@ public class SwipeMenuAdapter implements WrapperListAdapter,
             layout = new SwipeMenuLayout(contentView, menuView,
                     listView.getCloseInterpolator(),
                     listView.getOpenInterpolator());
-            layout.setPosition(position);
+            layout.setPosition(cPosition);
         } else {
             layout = (SwipeMenuLayout) convertView;
             layout.closeMenu();
-            layout.setPosition(position);
-            View view = mAdapter.getView(position, layout.getContentView(),
+            layout.setPosition(cPosition);
+            View view = mAdapter.getView(cPosition, layout.getContentView(),
                     parent);
         }
         if (mAdapter instanceof BaseSwipListAdapter) {
-            boolean swipEnable = (((BaseSwipListAdapter) mAdapter).getSwipEnableByPosition(position));
+            boolean swipEnable = (((BaseSwipListAdapter) mAdapter).getSwipEnableByPosition(cPosition));
             layout.setSwipEnable(swipEnable);
         }
         return layout;
@@ -117,8 +117,8 @@ public class SwipeMenuAdapter implements WrapperListAdapter,
     }
 
     @Override
-    public boolean isEnabled(int position) {
-        return mAdapter.isEnabled(position);
+    public boolean isEnabled(int cPosition) {
+        return mAdapter.isEnabled(cPosition);
     }
 
     @Override
@@ -127,8 +127,8 @@ public class SwipeMenuAdapter implements WrapperListAdapter,
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return mAdapter.getItemViewType(position);
+    public int getItemViewType(int cPosition) {
+        return mAdapter.getItemViewType(cPosition);
     }
 
     @Override

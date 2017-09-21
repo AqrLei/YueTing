@@ -32,6 +32,7 @@ object YueTingConstant {
     )
     /*sharedpreference*/
     val SF_NAME = "yueting"
+
     /*BroadcastReceiverAction*/
     val ACTION_BROADCAST = arrayOf(
             "play",
@@ -52,4 +53,7 @@ object YueTingConstant {
     val ACTION_REQ_CODE = arrayOf(
             1, 2, 3, 4, 5, 6, 7
     )
+    /*HandlerMessageWhat*/
+    val CURRENT_DURATION = 1
+    val PLAY_STATE = 2
 }

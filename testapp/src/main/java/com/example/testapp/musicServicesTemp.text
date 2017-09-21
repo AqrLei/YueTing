@@ -152,11 +152,11 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
                 try {
                     if (mPlayer.isPlaying()) {
                         //1.准备好的时候.告诉activity,当前歌曲的总时长
-                        int currentPosition = mPlayer.getCurrentPosition();
+                        int cPosition = mPlayer.getCurrentPosition();
                         int totalDuration = mPlayer.getDuration();
                         mMessage = Message.obtain();
                         mMessage.what = Constants.MSG_PROGRESS;
-                        mMessage.arg1 = currentPosition;
+                        mMessage.arg1 = cPosition;
                         mMessage.arg2 = totalDuration;
                         //2.发送消息
                         mMessenger.send(mMessage);
@@ -178,11 +178,11 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     /**
      * 播放
      */
-    private void play(int position) {
+    private void play(int cPosition) {
         if (mPlayer != null && mMusic_list.size() > 0) {
             mPlayer.reset();
             try {
-                mPlayer.setDataSource(mMusic_list.get(position).getUrl());
+                mPlayer.setDataSource(mMusic_list.get(cPosition).getUrl());
                 mPlayer.prepareAsync();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -231,7 +231,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
                     Log.i(TAG, "onReceive: ACTION_LIST_ITEM");
                     //点击左侧菜单
                     isFirst = false;
-                    mPosition = intent.getIntExtra("position", 0);
+                    mPosition = intent.getIntExtra("cPosition", 0);
                     play(mPosition);
                     break;
                 case Constants.ACTION_PAUSE:
