@@ -1,13 +1,20 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
+import android.os.Messenger
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -34,7 +41,13 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         if (position < 3) {
             return
         }
-        startMusicService(position - 3)
+        val realPosition = position - 3
+        if (!isServiceStart) {
+            startMusicService(realPosition)
+            isServiceStart = true
+        } else {
+            sendPlayBroadcast(realPosition)
+        }
     }
 
     override fun onAlphaChanged(percent: Float) {
@@ -44,8 +57,20 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private var mReadData = ArrayList<ReadMessage>()
+    private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
+    private lateinit var mLocalBroadcast: LocalBroadcastManager
+    private lateinit var mPlayView: LinearLayout
+
+    private val mHandler =
+            object : Handler(
+            ) {
+                override fun handleMessage(msg: Message) {
+                    refreshPlayView(msg)
+                }
+            }
+
 
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
@@ -63,6 +88,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun initComponents() {
         super.initComponents()
+        initBroadcast()
         initView()
 
 
@@ -73,12 +99,29 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         getMusicInfoFromDB()
     }
 
+    private fun refreshPlayView(message: Message) {
+        mPresenter.refreshPlayView(mPlayView, message)
+    }
+
     private fun getMusicInfoFromDB() {
         mPresenter.getMusicInfoFromDB()
     }
 
+    private fun initBroadcast() {
+        mLocalBroadcast = LocalBroadcastManager.getInstance(mContainerActivity)
+        mMusicInfoShared.setBroadcastManager(mLocalBroadcast)
+    }
+
     private fun startMusicService(position: Int) {
-        mPresenter.startMusicService(mContainerActivity, position)
+        mPresenter.startMusicService(mContainerActivity, position, Messenger(mHandler))
+    }
+
+    private fun sendPlayBroadcast(position: Int) {
+        val ACTION_PLAY = YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY]
+        val playIntent = Intent(ACTION_PLAY)
+        playIntent.putExtra("position", position)
+        mLocalBroadcast.sendBroadcast(playIntent)
+
     }
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
@@ -98,5 +141,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mRecommendLv.adapter = mAdapter
         mRecommendLv.onItemClickListener = this
         mRecommendLv.setAlphaChangeListener(this)
+        mPlayView = mContainerActivity.window.decorView
+                .findViewById(R.id.ll_play_control) as LinearLayout
     }
 }

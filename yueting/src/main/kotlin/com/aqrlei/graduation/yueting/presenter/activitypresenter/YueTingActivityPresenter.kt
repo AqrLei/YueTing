@@ -1,11 +1,13 @@
 package com.aqrlei.graduation.yueting.presenter.activitypresenter
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
@@ -48,5 +50,26 @@ class YueTingActivityPresenter(mMvpActivity: YueTingActivity) :
         mFragments.add(mTabReadFragment)
         mFragments.add(mTabMusicFragment)
         mMvpActivity.setFragments(mFragments)
+    }
+
+    fun sendMusicBroadcast(type: SendType) {
+        val intent = Intent()
+        val action = when (type) {
+            SendType.PLAY -> {
+                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY]
+            }
+            SendType.NEXT -> {
+                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_NEXT]
+            }
+            SendType.PREVIOUS -> {
+                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PREVIOUS]
+            }
+        }
+        intent.action = action
+        ShareMusicInfo.MusicInfoTool.getBroadcastManager()?.sendBroadcast(intent)
+    }
+
+    enum class SendType {
+        PLAY, NEXT, PREVIOUS
     }
 }

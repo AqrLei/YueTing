@@ -90,18 +90,96 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
         <FrameLayout
             android:id="@+id/fl_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_play_control"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="#6df98989"/>
+            android:paddingBottom="10dp"
+            android:background="@drawable/layout_ripple_music"
+            android:visibility="gone"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/iv_album_picture"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_launcher_round"/>
+
+            <LinearLayout
+                android:id="@+id/ll_to_play"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="这是歌的名字"
+                    android:textSize="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_artist_album"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="这是歌手和唱片的名字"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_previous"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="上"
+                />
+
+            <TextView
+                android:id="@+id/tv_play_control"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="播"
+                />
+
+            <TextView
+                android:id="@+id/tv_next"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="下"
+                />
+
+        </LinearLayout>
     </FrameLayout>
 
 

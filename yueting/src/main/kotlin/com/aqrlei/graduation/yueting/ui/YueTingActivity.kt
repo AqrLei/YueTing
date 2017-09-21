@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
@@ -25,10 +26,8 @@ import kotlinx.android.synthetic.main.activity_yueting.*
 * @param mPresenter 访问对应的Presenter
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
-        , RadioGroup.OnCheckedChangeListener {
-    private var mFragments = ArrayList<Fragment>()
-    private var titleName: String = ""
-    private lateinit var mFragmentManager: FragmentManager
+        , RadioGroup.OnCheckedChangeListener
+        , View.OnClickListener {
     override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
         (0 until radioGroup!!.childCount)
                 .filter { radioGroup.getChildAt(it).id == checkedId }
@@ -38,10 +37,33 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 }
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.tv_play_control -> {
+                sendMusicBroadcast(YueTingActivityPresenter.SendType.PLAY)
+
+            }
+            R.id.tv_next -> {
+                sendMusicBroadcast(YueTingActivityPresenter.SendType.NEXT)
+            }
+            R.id.tv_previous -> {
+                sendMusicBroadcast(YueTingActivityPresenter.SendType.PREVIOUS)
+            }
+            R.id.ll_to_play -> {
+                //TODO jumpTOPlayActivity()
+            }
+        }
+    }
+
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_yueting
+
+
+    private var mFragments = ArrayList<Fragment>()
+    private var titleName: String = ""
+    private lateinit var mFragmentManager: FragmentManager
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -74,9 +96,14 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
+    private fun sendMusicBroadcast(type: YueTingActivityPresenter.SendType) {
+        mPresenter.sendMusicBroadcast(type)
+    }
+
     fun setFragments(fragments: ArrayList<Fragment>) {
         mFragments = fragments
     }
+
 
     companion object {
         fun jumpToYueTingActivity(context: Context, data: Int) {

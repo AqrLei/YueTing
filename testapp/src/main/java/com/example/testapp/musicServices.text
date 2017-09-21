@@ -144,7 +144,7 @@ public class musicServices extends Service {
     public void prepareAndPlayMusic(int current) {
 
         Uri uri = Uri.parse(music_uris.get(current));
-        toMain.putExtra("position", current);
+        toMain.putExtra("cPosition", current);
         if(MainActivity.mVisualizer != null&&MainActivity.mVisualizer.getEnabled() == true) {
             MainActivity.mVisualizer.setEnabled(false);
         }
@@ -277,7 +277,7 @@ public class musicServices extends Service {
         public void onReceive(Context context, Intent intent) {
             int control = intent.getIntExtra("control", -1);
             int style = intent.getIntExtra("style", -1);
-            int position = intent.getIntExtra("position", -1);
+            int cPosition = intent.getIntExtra("cPosition", -1);
             if (intent.getStringArrayListExtra("musicname") != null) {
                 if (!music_names.isEmpty()) {
                     music_names.clear();
@@ -286,8 +286,8 @@ public class musicServices extends Service {
                 music_names.addAll(intent.getStringArrayListExtra("musicname"));
                 music_uris.addAll(intent.getStringArrayListExtra("musicuri"));
             }
-            if (position != -1) {
-                current = position;
+            if (cPosition != -1) {
+                current = cPosition;
 
             }
             if (current != preCurrent && control == 1) {

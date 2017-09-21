@@ -3,13 +3,22 @@ package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 import android.content.Context
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.os.Message
+import android.os.Messenger
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
+import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -91,16 +100,29 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
-    fun startMusicService(context: Context, position: Int) {
+    fun startMusicService(context: Context, position: Int, messenger: Messenger) {
         val mContext = context.applicationContext as YueTingApplication
         val musicIntent = mContext.getServiceIntent()
-
-
         musicIntent?.putExtra("position", position)
+        musicIntent?.putExtra("messenger", messenger)
         context.startService(musicIntent)
     }
 
-    private fun getRealPosition() {
+    fun refreshPlayView(view: LinearLayout, msg: Message) {
+        view.visibility = View.VISIBLE
+        when (msg.what) {
+            YueTingConstant.CURRENT_DURATION -> {
+
+            }
+            YueTingConstant.PLAY_STATE -> {
+                val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
+                val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
+                (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
+                (view.findViewById(R.id.tv_title) as TextView).text = musicInfo.title
+                (view.findViewById(R.id.tv_artist_album) as TextView).text =
+                        "${musicInfo.title} - ${musicInfo.album}"
+            }
+        }
 
     }
 

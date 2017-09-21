@@ -10,7 +10,7 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
  *@Date: 2017/8/22
  */
 object ActivityCollector {
-    private var activities = ArrayList<BaseActivity>()
+    private var activities = ArrayList<BaseActivity?>()
 
     fun add(activity: BaseActivity?) {
         if (activity == null) return
@@ -23,11 +23,10 @@ object ActivityCollector {
     }
 
     fun removeAll() {
-        for (activity in activities) {
-            if (activity != null && !activity.isFinishing) {
-                activity.finish()
-            }
-            activities.clear()
-        }
+        activities
+                .filterNotNull()
+                .filterNot { it.isFinishing }
+                .forEach { it.finish() }
+        activities.clear()
     }
 }
