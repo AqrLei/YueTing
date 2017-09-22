@@ -2,6 +2,7 @@ package com.aqrlei.graduation.yueting.model.local
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.aqrlei.graduation.yueting.aidl.MusicInfo
 
 /**
  * Author : AqrLei

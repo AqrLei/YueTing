@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.model.local
+package com.aqrlei.graduation.yueting.aidl
 
 import android.os.Parcel
 import android.os.Parcelable

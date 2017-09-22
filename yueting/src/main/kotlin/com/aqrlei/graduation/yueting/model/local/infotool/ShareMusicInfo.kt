@@ -1,6 +1,6 @@
 package com.aqrlei.graduation.yueting.model.local.infotool
 
-import com.aqrlei.graduation.yueting.model.local.MusicInfo
+import com.aqrlei.graduation.yueting.aidl.MusicInfo
 
 /**
  * @Author: AqrLei
