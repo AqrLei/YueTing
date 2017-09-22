@@ -1,12 +1,10 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Color
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.Messenger
-import android.support.v4.content.LocalBroadcastManager
+import android.os.*
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
@@ -60,19 +58,31 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
-    private lateinit var mLocalBroadcast: LocalBroadcastManager
     private lateinit var mPlayView: LinearLayout
+    private lateinit var sendMessenger: Messenger
 
-    private val mHandler =
-            object : Handler(
-            ) {
-                override fun handleMessage(msg: Message) {
-                    if (msg.what == YueTingConstant.PLAY_STATE && msg.arg1 == 2) {
-                        val temp = msg.obj
-                    }
-                    refreshPlayView(msg)
-                }
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            if (msg.what == YueTingConstant.PLAY_STATE) {
+                refreshPlayView(msg)
             }
+
+        }
+    }
+    private val serviceConn = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            /*   val binder = IMusicInfo.Stub.asInterface(service)
+               sendMessenger = binder.messenger
+               // 开一个线程
+               sendMusicInfoS()*/
+
+
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+    }
 
 
     override val mPresenter: TabHomePresenter
@@ -91,7 +101,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun initComponents() {
         super.initComponents()
-        initBroadcast()
         initView()
 
 
@@ -110,28 +119,29 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mPresenter.getMusicInfoFromDB()
     }
 
-    private fun initBroadcast() {
-        mLocalBroadcast = LocalBroadcastManager.getInstance(mContainerActivity)
-        mMusicInfoShared.setBroadcastManager(mLocalBroadcast)
-    }
-
     private fun startMusicService(position: Int) {
-        mPresenter.startMusicService(mContainerActivity, position, Messenger(mHandler))
+        mPresenter.startMusicService(mContainerActivity, position, Messenger(mHandler), serviceConn)
     }
 
     private fun sendPlayBroadcast(position: Int) {
         val ACTION_PLAY = YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY]
         val playIntent = Intent(ACTION_PLAY)
         playIntent.putExtra("position", position)
-        mLocalBroadcast.sendBroadcast(playIntent)
+        mContainerActivity.sendOrderedBroadcast(playIntent, null)
+    }
 
+    private fun sendMusicInfoS() {
+        mPresenter.sendMusicInfo(sendMessenger)
+    }
+
+    fun unbindMusicService() {
+        mContainerActivity.unbindService(serviceConn)
     }
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoShared.setInfoS(data)
         mAdapter.notifyDataSetChanged()
     }
-
     private fun initView() {
         val mRecommendLv = mView.lv_fragment_home as AlphaListView
 

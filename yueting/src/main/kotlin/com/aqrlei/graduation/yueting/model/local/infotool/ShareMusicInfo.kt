@@ -1,6 +1,5 @@
 package com.aqrlei.graduation.yueting.model.local.infotool
 
-import android.support.v4.content.LocalBroadcastManager
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
 
 /**
@@ -16,8 +15,6 @@ enum class ShareMusicInfo {
 
     MusicInfoTool;
 
-    private var localBroadcastManager: LocalBroadcastManager? = null
-
     fun setInfoS(infoS: ArrayList<MusicInfo>) {
         clearAll()
         musicInfoList.addAll(infoS)
@@ -26,8 +23,9 @@ enum class ShareMusicInfo {
     fun getInfo(position: Int) = musicInfoList[position]
 
     fun getInfoS() = musicInfoList
-
-    // TODO addInfo()
+    fun addInfo(musicInfo: MusicInfo) {
+        musicInfoList.add(musicInfo)
+    }
 
     fun removeInfo(info: MusicInfo) {
         if (!musicInfoList.isEmpty()) {
@@ -46,13 +44,6 @@ enum class ShareMusicInfo {
     private fun clearAll() {
         musicInfoList.clear()
     }
-
-    fun setBroadcastManager(manager: LocalBroadcastManager) {
-        localBroadcastManager = manager
-    }
-
-    fun getBroadcastManager() = localBroadcastManager
-
 
     companion object {
         private var musicInfoList = ArrayList<MusicInfo>()

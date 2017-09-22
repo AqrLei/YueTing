@@ -1,6 +1,8 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
+import android.app.Service
 import android.content.Context
+import android.content.ServiceConnection
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.os.Message
@@ -19,6 +21,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.MusicInfo
+import com.aqrlei.graduation.yueting.model.local.MusicInfoList
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
@@ -49,6 +52,50 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 Observable.just(c)
             }
         }
+
+        fun sendMusicInfoObservable(messenger: Messenger): Observable<Boolean> {
+            return Observable.defer {
+                var bool = false
+                try {
+                    val msg = Message()
+                    msg.what = 0x11
+                    val musicInfoList = MusicInfoList(ShareMusicInfo.MusicInfoTool.getInfoS())
+
+                    msg.obj = musicInfoList
+                    messenger.send(msg)
+                    bool = true
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    bool = false
+                }
+                Observable.just(bool)
+            }
+        }
+    }
+
+    fun sendMusicInfo(messenger: Messenger) {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        disposables.add(
+                sendMusicInfoObservable(messenger)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Boolean>() {
+                            override fun onComplete() {
+
+
+                            }
+
+                            override fun onError(e: Throwable) {
+
+                            }
+
+                            override fun onNext(t: Boolean) {
+                                mMvpView.unbindMusicService()
+                            }
+                        })
+        )
+
     }
 
     fun getMusicInfoFromDB() {
@@ -101,12 +148,13 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
-    fun startMusicService(context: Context, position: Int, messenger: Messenger) {
+    fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication
         val musicIntent = mContext.getServiceIntent()
         musicIntent?.putExtra("position", position)
         musicIntent?.putExtra("messenger", messenger)
         context.startService(musicIntent)
+        context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
     }
 
     fun refreshPlayView(view: LinearLayout, msg: Message) {

@@ -30,14 +30,17 @@ class YueTingApplication : BaseApplication() {
         super.onCreate()
         /*AppSharedPreferences.init(this)
             AppSharedPreferences.setFileName("yueting")*/
-        AppCache.init(this, YueTingConstant.SF_NAME)
-        DBManager
-                .initDBHelper(this, YueTingConstant.DB_NAME, 1)
-                .addTable(YueTingConstant.MUSIC_TABLE_NAME,
-                        YueTingConstant.MUSIC_TABLE_C,
-                        YueTingConstant.MUSIC_TABLE_C_TYPE
-                ).createDB()
-        Fresco.initialize(this)
+        val processName = getProcessName(this)
+        if (!TextUtils.isEmpty(processName) && processName == this.packageName) {
+            AppCache.init(this, YueTingConstant.SF_NAME)
+            DBManager
+                    .initDBHelper(this, YueTingConstant.DB_NAME, 1)
+                    .addTable(YueTingConstant.MUSIC_TABLE_NAME,
+                            YueTingConstant.MUSIC_TABLE_C,
+                            YueTingConstant.MUSIC_TABLE_C_TYPE
+                    ).createDB()
+            Fresco.initialize(this)
+        }
 
     }
 

@@ -8,10 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.IBinder
-import android.os.Message
-import android.os.Messenger
+import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
@@ -20,6 +17,7 @@ import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.MusicInfoList
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
@@ -74,6 +72,7 @@ class MusicService : BaseService(),
     companion object {
         private val mMusicInfoShare = ShareMusicInfo.MusicInfoTool
         private var mPlayer: MediaPlayer? = null
+
     }
 
 
@@ -87,7 +86,7 @@ class MusicService : BaseService(),
     private val handler = Handler()
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
-    private lateinit var messenger: Messenger
+    private lateinit var sendMessenger: Messenger
     private val NOTIFICATION_ID = 1
     private val sendCDurationR = object : Runnable {
         override fun run() {
@@ -95,16 +94,32 @@ class MusicService : BaseService(),
             val message = Message()
             message.what = YueTingConstant.CURRENT_DURATION
             message.arg1 = cDuration
-            messenger.send(message)
+            sendMessenger.send(message)
             if (!isPause) {
                 handler.postDelayed(this, 100)
             }
         }
     }
-
+    private val serviceHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            if (msg.what == 0x11) {
+                val musicInfoS = (msg.obj as MusicInfoList).musicInfoList
+                /*if (musicInfoS != null) {
+                    mMusicInfoShare.setInfoS(musicInfoS)
+                }*/
+            }
+        }
+    }
 
     override fun onBind(p0: Intent?): IBinder? {
-        return super.onBind(p0)
+        super.onBind(p0)
+        /*return MusicBinder()*/
+        return null
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        play()
+        return super.onUnbind(intent)
     }
 
     override fun onCreate() {
@@ -117,8 +132,7 @@ class MusicService : BaseService(),
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         cPosition = intent.extras.get("position") as Int
-        messenger = intent.extras.get("messenger") as Messenger
-        play()
+        sendMessenger = intent.extras.get("messenger") as Messenger
         return START_REDELIVER_INTENT
     }
 
@@ -131,7 +145,6 @@ class MusicService : BaseService(),
         stopForeground(true)
         if (playerReceiver != null) {
             unregisterReceiver(playerReceiver)
-            mMusicInfoShare.getBroadcastManager()?.unregisterReceiver(playerReceiver)
         }
         super.onDestroy()
     }
@@ -143,7 +156,7 @@ class MusicService : BaseService(),
         YueTingConstant.ACTION_BROADCAST.forEach {
             filter.addAction(it)
         }
-        mMusicInfoShare.getBroadcastManager()?.registerReceiver(playerReceiver, filter)
+        filter.priority = 1000
         registerReceiver(playerReceiver, filter)
     }
 
@@ -165,8 +178,8 @@ class MusicService : BaseService(),
     }
 
     private fun buildNotification() {
-        val intent = Intent(this, YueTingActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, 0)
+        val intent = Intent(applicationContext, YueTingActivity::class.java)
+        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
         for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
 
@@ -265,7 +278,8 @@ class MusicService : BaseService(),
                 message.arg1 = 2
             }
         }
-        messenger.send(message)
+        message.obj = mMusicInfoShare.getInfoS()
+        sendMessenger.send(message)
     }
 
     private fun pauseOrPlay() {
@@ -378,9 +392,18 @@ class MusicService : BaseService(),
                     playType = PlayType.RANDOM
                 }
             }
+
         }
 
+
     }
+
+    /* inner class MusicBinder : IMusicInfo.Stub() {
+         override fun getMessenger(): Messenger {
+             return Messenger(serviceHandler)
+         }
+
+     }*/
 
     enum class PlayType {
         SINGLE, RANDOM, LIST
