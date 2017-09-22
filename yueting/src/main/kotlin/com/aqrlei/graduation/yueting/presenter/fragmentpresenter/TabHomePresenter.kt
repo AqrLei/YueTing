@@ -14,6 +14,7 @@ import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -110,7 +111,6 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
     fun refreshPlayView(view: LinearLayout, msg: Message) {
         view.visibility = View.VISIBLE
-        view.bringToFront()
         when (msg.what) {
             YueTingConstant.CURRENT_DURATION -> {
 
@@ -119,9 +119,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
                 val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
                 (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-                (view.findViewById(R.id.tv_title) as TextView).text = musicInfo.title
-                (view.findViewById(R.id.tv_artist_album) as TextView).text =
-                        "${musicInfo.title} - ${musicInfo.album}"
+
+                (view.findViewById(R.id.tv_music_info) as TextView).text =
+                        StringChangeUtil.SPANNABLE.clear()
+                                .foregroundColorChange("#1c4243", musicInfo.title)
+                                .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
+                                .complete()
             }
         }
 

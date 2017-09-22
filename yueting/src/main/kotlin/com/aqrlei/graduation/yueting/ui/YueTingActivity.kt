@@ -49,7 +49,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             R.id.tv_previous -> {
                 sendMusicBroadcast(YueTingActivityPresenter.SendType.PREVIOUS)
             }
-            R.id.ll_to_play -> {
+            R.id.tv_music_info -> {
                 //TODO jumpTOPlayActivity()
             }
         }

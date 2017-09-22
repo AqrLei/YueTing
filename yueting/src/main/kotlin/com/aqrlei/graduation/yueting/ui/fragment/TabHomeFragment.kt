@@ -67,6 +67,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             object : Handler(
             ) {
                 override fun handleMessage(msg: Message) {
+                    if (msg.what == YueTingConstant.PLAY_STATE && msg.arg1 == 2) {
+                        val temp = msg.obj
+                    }
                     refreshPlayView(msg)
                 }
             }

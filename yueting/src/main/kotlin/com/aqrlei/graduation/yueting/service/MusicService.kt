@@ -17,6 +17,7 @@ import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -37,8 +38,14 @@ class MusicService : BaseService(),
         AudioManager.OnAudioFocusChangeListener {
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
-        mPlayer?.start()
-        sendPlayState(PlayState.PLAY)
+        pPosition = cPosition
+        if (!isPause) {
+            mPlayer?.start()
+
+            sendPlayState(PlayState.PLAY)
+        } else {
+            sendPlayState(PlayState.PAUSE)
+        }
 
     }
 
@@ -76,6 +83,7 @@ class MusicService : BaseService(),
     private var playType: PlayType = PlayType.LIST
     private var playerReceiver: PlayerReceiver? = null
     private var isPause: Boolean = false
+    private var isSame: Boolean = false
     private val handler = Handler()
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
@@ -194,8 +202,11 @@ class MusicService : BaseService(),
 
     private fun refreshNotification() {
         val musicInfo = mMusicInfoShare.getInfo(cPosition)
-        remoteViews.setTextViewText(R.id.tv_title, musicInfo.title)
-        remoteViews.setTextViewText(R.id.tv_artist_album, "${musicInfo.artist} - ${musicInfo.album}")
+        val musicString = StringChangeUtil.SPANNABLE.clear()
+                .foregroundColorChange("#1c4243", musicInfo.title)
+                .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
+                .complete()
+        remoteViews.setTextViewText(R.id.tv_music_info, musicString)
         val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
         remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
         startForeground(NOTIFICATION_ID, notification)
@@ -210,10 +221,14 @@ class MusicService : BaseService(),
     }
 
     private fun play() {
+        isSame = (cPosition == pPosition)
         if (mPlayer != null && mMusicInfoShare.getInfoS().size > 0) {
-            if (isPause) {
-                mPlayer?.seekTo(cDuration)
-                mPlayer?.start()
+            if (isSame) {
+                mPlayer?.seekTo(0)
+                if (isPause) {
+                    mPlayer?.seekTo(cDuration)
+                    mPlayer?.start()
+                }
                 sendPlayState(PlayState.PLAY)
                 isPause = false
             } else {
@@ -308,7 +323,6 @@ class MusicService : BaseService(),
 
     private fun randomPosition() {
         cPosition = Random().nextInt(mMusicInfoShare.getSize())
-        pPosition = cPosition
     }
 
     private fun nextPosition() {
@@ -318,7 +332,6 @@ class MusicService : BaseService(),
                 } else {
                     cPosition + 1
                 }
-        pPosition = cPosition
     }
 
     private fun previousPosition() {
@@ -328,7 +341,6 @@ class MusicService : BaseService(),
                 } else {
                     cPosition - 1
                 }
-        pPosition = cPosition
     }
 
     inner class PlayerReceiver : BroadcastReceiver() {
@@ -343,7 +355,6 @@ class MusicService : BaseService(),
                         pauseOrPlay()
                     } else {
                         play()
-                        pPosition = cPosition
                     }
                 }
                 ACTION[YueTingConstant.ACTION_NEXT] -> {
