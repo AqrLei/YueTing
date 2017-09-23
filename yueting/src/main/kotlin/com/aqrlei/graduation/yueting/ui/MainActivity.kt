@@ -1,5 +1,6 @@
 package com.aqrlei.graduation.yueting.ui
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -89,14 +90,15 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         super.initComponents(savedInstanceState)
         aqr_tv_test.visibility = View.GONE
         tv_file_name.visibility = View.VISIBLE
-        tv_file_name.text = " Hello World \n"
+        val memory = (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).memoryClass
+        tv_file_name.text = " Hello World $memory\n"
 
 
     }
 
     override fun onResume() {
         super.onResume()
-        webViewTest()
+        /* webViewTest()*/
     }
 
     private fun webViewTest() {

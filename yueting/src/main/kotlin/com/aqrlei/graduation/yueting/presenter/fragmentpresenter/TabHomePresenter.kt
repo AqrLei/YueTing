@@ -1,8 +1,11 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
+import android.app.Service
 import android.content.Context
+import android.content.ServiceConnection
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 import android.view.View
@@ -14,10 +17,12 @@ import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
+import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.MusicInfo
+import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
@@ -48,6 +53,49 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 Observable.just(c)
             }
         }
+
+        fun sendMusicInfoObservable(service: IBinder): Observable<Boolean> {
+            return Observable.defer {
+                val bool = try {
+                    val binder = IMusicInfo.Stub.asInterface(service)
+                    val musicInfoList = ArrayList<MusicInfo>()
+                    musicInfoList.addAll(ShareMusicInfo.MusicInfoTool.getInfoS())
+                    binder.setMusicInfo(musicInfoList)
+                    true
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    false
+                }
+                Observable.just(bool)
+            }
+        }
+    }
+
+    fun sendMusicInfo(service: IBinder) {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        disposables.add(
+                sendMusicInfoObservable(service)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Boolean>() {
+                            override fun onComplete() {
+
+
+                            }
+
+                            override fun onError(e: Throwable) {
+
+                            }
+
+                            override fun onNext(t: Boolean) {
+                                if (t) {
+                                    mMvpView.unbindMusicService()
+                                }
+                            }
+                        })
+        )
+
     }
 
     fun getMusicInfoFromDB() {
@@ -100,17 +148,17 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
-    fun startMusicService(context: Context, position: Int, messenger: Messenger) {
+    fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication
         val musicIntent = mContext.getServiceIntent()
         musicIntent?.putExtra("position", position)
         musicIntent?.putExtra("messenger", messenger)
         context.startService(musicIntent)
+        context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
     }
 
     fun refreshPlayView(view: LinearLayout, msg: Message) {
         view.visibility = View.VISIBLE
-        view.bringToFront()
         when (msg.what) {
             YueTingConstant.CURRENT_DURATION -> {
 
@@ -119,9 +167,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
                 val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
                 (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-                (view.findViewById(R.id.tv_title) as TextView).text = musicInfo.title
-                (view.findViewById(R.id.tv_artist_album) as TextView).text =
-                        "${musicInfo.title} - ${musicInfo.album}"
+
+                (view.findViewById(R.id.tv_music_info) as TextView).text =
+                        StringChangeUtil.SPANNABLE.clear()
+                                .foregroundColorChange("#1c4243", musicInfo.title)
+                                .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
+                                .complete()
             }
         }
 

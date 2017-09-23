@@ -2,6 +2,7 @@ package com.aqrlei.graduation.yueting
 
 import android.content.Intent
 import android.os.StrictMode
+import android.text.TextUtils
 import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
@@ -19,6 +20,7 @@ class YueTingApplication : BaseApplication() {
     private var musicIntent: Intent? = null
 
     override fun onCreate() {
+
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                     .detectAll().penaltyLog().build())
@@ -27,15 +29,18 @@ class YueTingApplication : BaseApplication() {
         }
         super.onCreate()
         /*AppSharedPreferences.init(this)
-        AppSharedPreferences.setFileName("yueting")*/
-        AppCache.init(this, YueTingConstant.SF_NAME)
-        DBManager
-                .initDBHelper(this, YueTingConstant.DB_NAME, 1)
-                .addTable(YueTingConstant.MUSIC_TABLE_NAME,
-                        YueTingConstant.MUSIC_TABLE_C,
-                        YueTingConstant.MUSIC_TABLE_C_TYPE
-                ).createDB()
-        Fresco.initialize(this)
+            AppSharedPreferences.setFileName("yueting")*/
+        val processName = getProcessName(this)
+        if (!TextUtils.isEmpty(processName) && processName == this.packageName) {
+            AppCache.init(this, YueTingConstant.SF_NAME)
+            DBManager
+                    .initDBHelper(this, YueTingConstant.DB_NAME, 1)
+                    .addTable(YueTingConstant.MUSIC_TABLE_NAME,
+                            YueTingConstant.MUSIC_TABLE_C,
+                            YueTingConstant.MUSIC_TABLE_C_TYPE
+                    ).createDB()
+            Fresco.initialize(this)
+        }
 
     }
 

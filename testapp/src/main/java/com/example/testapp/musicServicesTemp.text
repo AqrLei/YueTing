@@ -67,7 +67,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             mMusic_list = intent.getParcelableArrayListExtra("music_list");
-            mMessenger = (Messenger) intent.getExtras().get("messenger");
+            mMessenger = (Messenger) intent.getExtras().get("sendMessenger");
             mPosition = SpTools.getInt(getApplicationContext(), "music_current_position", 0);
         }
         return super.onStartCommand(intent, flags, startId);

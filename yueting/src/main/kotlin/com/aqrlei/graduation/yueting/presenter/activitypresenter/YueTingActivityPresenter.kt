@@ -66,7 +66,8 @@ class YueTingActivityPresenter(mMvpActivity: YueTingActivity) :
             }
         }
         intent.action = action
-        ShareMusicInfo.MusicInfoTool.getBroadcastManager()?.sendBroadcast(intent)
+
+        mMvpActivity.sendOrderedBroadcast(intent, null)
     }
 
     enum class SendType {
