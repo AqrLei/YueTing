@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.*
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.TaskStackBuilder
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
@@ -17,6 +18,7 @@ import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.ui.MainActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
 import java.util.*
@@ -163,10 +165,16 @@ class MusicService : BaseService(),
     }
 
     private fun buildNotification() {
-        //val intent = Intent(applicationContext, YueTingActivity::class.java)
+        val intent = Intent(this, YueTingActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        val stackBuilder = TaskStackBuilder.create(this)
+        stackBuilder.addParentStack(YueTingActivity::class.java)
+        stackBuilder.addNextIntent(intent)
+
+        val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val pi = PendingIntent.getActivities(this, 0, makeIntentStack(), 0)
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
         for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
 
@@ -191,9 +199,9 @@ class MusicService : BaseService(),
             if (i == 3) break
         }
         notification = NotificationCompat.Builder(this.applicationContext)
+                .setContentIntent(pi)
                 .setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
-                .setContentIntent(pi)
                 .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
                 .build()
 
