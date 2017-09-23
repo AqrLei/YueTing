@@ -23,7 +23,6 @@ import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.model.local.MusicInfoList
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
@@ -57,8 +56,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
         fun sendMusicInfoObservable(service: IBinder): Observable<Boolean> {
             return Observable.defer {
-                var bool = false
-                bool = try {
+                val bool = try {
                     val binder = IMusicInfo.Stub.asInterface(service)
                     val musicInfoList = ArrayList<MusicInfo>()
                     musicInfoList.addAll(ShareMusicInfo.MusicInfoTool.getInfoS())

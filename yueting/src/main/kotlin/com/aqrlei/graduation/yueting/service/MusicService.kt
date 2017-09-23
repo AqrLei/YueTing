@@ -19,7 +19,6 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.MusicInfoList
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
@@ -42,12 +41,10 @@ class MusicService : BaseService(),
         pPosition = cPosition
         if (!isPause) {
             mPlayer?.start()
-
             sendPlayState(PlayState.PLAY)
         } else {
             sendPlayState(PlayState.PAUSE)
         }
-
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
@@ -71,13 +68,10 @@ class MusicService : BaseService(),
 
     }
 
-
     companion object {
         private val mMusicInfoShare = ShareMusicInfo.MusicInfoTool
         private var mPlayer: MediaPlayer? = null
-
     }
-
 
     private var cPosition: Int = -1
     private var pPosition: Int = -1
@@ -100,16 +94,6 @@ class MusicService : BaseService(),
             sendMessenger.send(message)
             if (!isPause) {
                 handler.postDelayed(this, 100)
-            }
-        }
-    }
-    private val serviceHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            if (msg.what == 0x11) {
-                val musicInfoS = (msg.obj as MusicInfoList).musicInfoList
-                /*if (musicInfoS != null) {
-                    mMusicInfoShare.setInfoS(musicInfoS)
-                }*/
             }
         }
     }
@@ -281,7 +265,6 @@ class MusicService : BaseService(),
                 message.arg1 = 2
             }
         }
-        message.obj = mMusicInfoShare.getInfoS()
         sendMessenger.send(message)
     }
 

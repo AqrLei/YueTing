@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
@@ -60,27 +59,22 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
     private lateinit var mPlayView: LinearLayout
-    private lateinit var sendMessenger: Messenger
-
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             if (msg.what == YueTingConstant.PLAY_STATE) {
                 refreshPlayView(msg)
             }
-
         }
     }
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
-
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
 
         }
     }
-
 
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
@@ -141,6 +135,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mMusicInfoShared.setInfoS(data)
         mAdapter.notifyDataSetChanged()
     }
+
     private fun initView() {
         val mRecommendLv = mView.lv_fragment_home as AlphaListView
 
