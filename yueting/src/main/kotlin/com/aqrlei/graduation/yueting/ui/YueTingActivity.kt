@@ -14,6 +14,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import kotlinx.android.synthetic.main.activity_yueting.*
+import kotlinx.android.synthetic.main.layout_yueting_header.*
 
 
 /**

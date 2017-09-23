@@ -19,7 +19,7 @@ import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
-import kotlinx.android.synthetic.main.activity_yueting.*
+import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 
 /**
@@ -61,9 +61,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private lateinit var mPlayView: LinearLayout
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
-            if (msg.what == YueTingConstant.PLAY_STATE) {
-                refreshPlayView(msg)
-            }
+
+            refreshPlayView(msg)
+
         }
     }
     private val serviceConn = object : ServiceConnection {

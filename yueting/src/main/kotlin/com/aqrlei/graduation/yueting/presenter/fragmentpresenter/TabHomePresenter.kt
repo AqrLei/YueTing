@@ -18,6 +18,7 @@ import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
+import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
@@ -158,25 +159,36 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
     }
 
     fun refreshPlayView(view: LinearLayout, msg: Message) {
+
         view.visibility = View.VISIBLE
-        when (msg.what) {
-            YueTingConstant.CURRENT_DURATION -> {
+        if (msg.what == YueTingConstant.CURRENT_DURATION) {
+            (view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
+        } else if (msg.what == YueTingConstant.PLAY_STATE) {
+            when (msg.arg1) {
+                0 -> {//PAUSE
+                    (view.findViewById(R.id.tv_play_control) as TextView).text = "播"
+                }
+                1 -> {//PLAY
+                    (view.findViewById(R.id.tv_play_control) as TextView).text = "停"
+                }
+                2 -> {//COMPLETE
+                    //(view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
+                }
+                3 -> {//PREPARE
+                    val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
+                    val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
+                    val maxProgress = musicInfo.duration.toFloat()
 
-            }
-            YueTingConstant.PLAY_STATE -> {
-                val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
-                val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
-                (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-
-                (view.findViewById(R.id.tv_music_info) as TextView).text =
-                        StringChangeUtil.SPANNABLE.clear()
-                                .foregroundColorChange("#1c4243", musicInfo.title)
-                                .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
-                                .complete()
+                    (view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
+                    (view.findViewById(R.id.rb_progress_play) as RoundBar).setMaxProgress(maxProgress)
+                    (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
+                    (view.findViewById(R.id.tv_music_info) as TextView).text =
+                            StringChangeUtil.SPANNABLE.clear()
+                                    .foregroundColorChange("#1c4243", musicInfo.title)
+                                    .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
+                                    .complete()
+                }
             }
         }
-
     }
-
-
 }

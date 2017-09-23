@@ -39,6 +39,7 @@ class MusicService : BaseService(),
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
         pPosition = cPosition
+        sendPlayState(PlayState.PREPARE)
         if (!isPause) {
             mPlayer?.start()
             sendPlayState(PlayState.PLAY)
@@ -255,16 +256,18 @@ class MusicService : BaseService(),
         when (playState) {
             PlayState.PAUSE -> {
                 message.arg1 = 0
-                message.arg2 = cPosition
             }
             PlayState.PLAY -> {
                 message.arg1 = 1
-                message.arg2 = cPosition
             }
             PlayState.COMPLETE -> {
                 message.arg1 = 2
             }
+            PlayState.PREPARE -> {
+                message.arg1 = 3
+            }
         }
+        message.arg2 = cPosition
         sendMessenger.send(message)
     }
 
@@ -396,7 +399,7 @@ class MusicService : BaseService(),
     }
 
     enum class PlayState {
-        PAUSE, PLAY, COMPLETE
+        PAUSE, PLAY, COMPLETE, PREPARE
     }
 
     private enum class PlayDirection {
