@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
 import android.view.View
@@ -19,6 +20,7 @@ import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
+import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.MusicInfoList
@@ -53,31 +55,29 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
             }
         }
 
-        fun sendMusicInfoObservable(messenger: Messenger): Observable<Boolean> {
+        fun sendMusicInfoObservable(service: IBinder): Observable<Boolean> {
             return Observable.defer {
                 var bool = false
-                try {
-                    val msg = Message()
-                    msg.what = 0x11
-                    val musicInfoList = MusicInfoList(ShareMusicInfo.MusicInfoTool.getInfoS())
-
-                    msg.obj = musicInfoList
-                    messenger.send(msg)
-                    bool = true
+                bool = try {
+                    val binder = IMusicInfo.Stub.asInterface(service)
+                    val musicInfoList = ArrayList<MusicInfo>()
+                    musicInfoList.addAll(ShareMusicInfo.MusicInfoTool.getInfoS())
+                    binder.setMusicInfo(musicInfoList)
+                    true
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    bool = false
+                    false
                 }
                 Observable.just(bool)
             }
         }
     }
 
-    fun sendMusicInfo(messenger: Messenger) {
+    fun sendMusicInfo(service: IBinder) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         disposables.add(
-                sendMusicInfoObservable(messenger)
+                sendMusicInfoObservable(service)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
@@ -91,7 +91,9 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             }
 
                             override fun onNext(t: Boolean) {
-                                mMvpView.unbindMusicService()
+                                if (t) {
+                                    mMvpView.unbindMusicService()
+                                }
                             }
                         })
         )

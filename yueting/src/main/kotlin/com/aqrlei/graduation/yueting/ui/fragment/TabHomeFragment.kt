@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
@@ -71,11 +72,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            /*   val binder = IMusicInfo.Stub.asInterface(service)
-               sendMessenger = binder.messenger
-               // 开一个线程
-               sendMusicInfoS()*/
-
+            sendMusicInfoS(service)
 
         }
 
@@ -130,8 +127,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mContainerActivity.sendOrderedBroadcast(playIntent, null)
     }
 
-    private fun sendMusicInfoS() {
-        mPresenter.sendMusicInfo(sendMessenger)
+    private fun sendMusicInfoS(binder: IBinder?) {
+        if (binder != null) {
+            mPresenter.sendMusicInfo(binder)
+        }
     }
 
     fun unbindMusicService() {

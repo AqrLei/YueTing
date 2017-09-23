@@ -16,12 +16,15 @@ import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.aidl.IMusicInfo
+import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.MusicInfoList
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
@@ -113,8 +116,8 @@ class MusicService : BaseService(),
 
     override fun onBind(p0: Intent?): IBinder? {
         super.onBind(p0)
-        /*return MusicBinder()*/
-        return null
+        return MusicBinder()
+
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -398,12 +401,12 @@ class MusicService : BaseService(),
 
     }
 
-    /* inner class MusicBinder : IMusicInfo.Stub() {
-         override fun getMessenger(): Messenger {
-             return Messenger(serviceHandler)
-         }
-
-     }*/
+    inner class MusicBinder : IMusicInfo.Stub() {
+        override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
+            val musicInfoS = infoS as ArrayList<MusicInfo>
+            mMusicInfoShare.setInfoS(musicInfoS)
+        }
+    }
 
     enum class PlayType {
         SINGLE, RANDOM, LIST
