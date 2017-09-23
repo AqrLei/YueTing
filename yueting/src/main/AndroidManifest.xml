@@ -17,7 +17,9 @@
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
 
         </activity>
         <activity

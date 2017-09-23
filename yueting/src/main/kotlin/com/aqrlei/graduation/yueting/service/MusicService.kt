@@ -2,10 +2,7 @@ package com.aqrlei.graduation.yueting.service
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.*
@@ -166,8 +163,10 @@ class MusicService : BaseService(),
     }
 
     private fun buildNotification() {
-        val intent = Intent(applicationContext, YueTingActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        //val intent = Intent(applicationContext, YueTingActivity::class.java)
+
+        //val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pi = PendingIntent.getActivities(this, 0, makeIntentStack(), 0)
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
         for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
 
@@ -199,6 +198,20 @@ class MusicService : BaseService(),
                 .build()
 
         startForeground(NOTIFICATION_ID, notification)
+    }
+
+
+    private fun makeIntentStack(): Array<Intent?> {
+        val intents = arrayOfNulls<Intent>(2)
+        intents[0] = Intent.makeRestartActivityTask(ComponentName(this,
+                com.aqrlei.graduation.yueting.ui.MainActivity::class.java))
+        /* intents[0]?.action = Intent.ACTION_MAIN
+         intents[0]?.addCategory(Intent.CATEGORY_LAUNCHER)
+         intents[0]?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED*/
+
+        intents[1] = Intent(this,
+                com.aqrlei.graduation.yueting.ui.YueTingActivity::class.java)
+        return intents
     }
 
     private fun refreshNotification() {

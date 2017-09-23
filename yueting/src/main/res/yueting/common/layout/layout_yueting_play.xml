@@ -63,7 +63,7 @@
             yueting:radius="12dp"
             yueting:progress="0"
             yueting:roundWidth="3dp"
-            yueting:startDegree="180" />
+            yueting:rotateDegree="180" />
 
         <TextView
             android:id="@+id/tv_play_control"
