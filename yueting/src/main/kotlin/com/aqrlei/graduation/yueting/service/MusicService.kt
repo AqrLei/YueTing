@@ -44,8 +44,10 @@ class MusicService : BaseService(),
         if (!isPause) {
             mPlayer?.start()
             sendPlayState(PlayState.PLAY)
+
         } else {
             sendPlayState(PlayState.PAUSE)
+
         }
     }
 
@@ -224,6 +226,11 @@ class MusicService : BaseService(),
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    private fun refreshPlayView(playState: String) {
+        remoteViews.setTextViewText(R.id.tv_play_control, playState)
+        startForeground(NOTIFICATION_ID, notification)
+    }
+
     private fun bindListener(action: String, requestCode: Int): PendingIntent {
         return PendingIntent.getBroadcast(
                 this.applicationContext,
@@ -267,9 +274,11 @@ class MusicService : BaseService(),
         when (playState) {
             PlayState.PAUSE -> {
                 message.arg1 = 0
+                refreshPlayView("播")
             }
             PlayState.PLAY -> {
                 message.arg1 = 1
+                refreshPlayView("停")
             }
             PlayState.COMPLETE -> {
                 message.arg1 = 2
