@@ -158,37 +158,4 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
     }
 
-    fun refreshPlayView(view: LinearLayout, msg: Message) {
-
-        view.visibility = View.VISIBLE
-        if (msg.what == YueTingConstant.CURRENT_DURATION) {
-            (view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
-        } else if (msg.what == YueTingConstant.PLAY_STATE) {
-            when (msg.arg1) {
-                0 -> {//PAUSE
-                    (view.findViewById(R.id.tv_play_control) as TextView).text = "播"
-                }
-                1 -> {//PLAY
-                    (view.findViewById(R.id.tv_play_control) as TextView).text = "停"
-                }
-                2 -> {//COMPLETE
-                    //(view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
-                }
-                3 -> {//PREPARE
-                    val musicInfo = ShareMusicInfo.MusicInfoTool.getInfo(msg.arg2)
-                    val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
-                    val maxProgress = musicInfo.duration.toFloat()
-
-                    (view.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
-                    (view.findViewById(R.id.rb_progress_play) as RoundBar).setMaxProgress(maxProgress)
-                    (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-                    (view.findViewById(R.id.tv_music_info) as TextView).text =
-                            StringChangeUtil.SPANNABLE.clear()
-                                    .foregroundColorChange("#1c4243", musicInfo.title)
-                                    .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
-                                    .complete()
-                }
-            }
-        }
-    }
 }

@@ -16,6 +16,7 @@ import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
+import com.aqrlei.graduation.yueting.constant.PlayState
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.MainActivity
@@ -209,19 +210,6 @@ class MusicService : BaseService(),
     }
 
 
-    private fun makeIntentStack(): Array<Intent?> {
-        val intents = arrayOfNulls<Intent>(2)
-        intents[0] = Intent.makeRestartActivityTask(ComponentName(this,
-                com.aqrlei.graduation.yueting.ui.MainActivity::class.java))
-        /* intents[0]?.action = Intent.ACTION_MAIN
-         intents[0]?.addCategory(Intent.CATEGORY_LAUNCHER)
-         intents[0]?.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED*/
-
-        intents[1] = Intent(this,
-                com.aqrlei.graduation.yueting.ui.YueTingActivity::class.java)
-        return intents
-    }
-
     private fun refreshNotification() {
         val musicInfo = mMusicInfoShare.getInfo(cPosition)
         val musicString = StringChangeUtil.SPANNABLE.clear()
@@ -249,8 +237,8 @@ class MusicService : BaseService(),
                 mPlayer?.seekTo(0)
                 if (isPause) {
                     mPlayer?.seekTo(cDuration)
-                    mPlayer?.start()
                 }
+                mPlayer?.start()
                 sendPlayState(PlayState.PLAY)
                 isPause = false
             } else {
@@ -290,6 +278,23 @@ class MusicService : BaseService(),
         }
         message.arg2 = cPosition
         sendMessenger.send(message)
+    }
+
+    private fun sendPlayType() {
+        val msg = Message()
+        msg.what = YueTingConstant.PLAY_TYPE
+        when (playType) {
+            PlayType.SINGLE -> {
+                msg.arg1 = YueTingConstant.ACTION_SINGLE
+            }
+            PlayType.LIST -> {
+                msg.arg1 = YueTingConstant.ACTION_LIST
+            }
+            PlayType.RANDOM -> {
+                msg.arg1 = YueTingConstant.ACTION_RANDOM
+            }
+        }
+        sendMessenger.send(msg)
     }
 
     private fun pauseOrPlay() {
@@ -402,6 +407,7 @@ class MusicService : BaseService(),
                     playType = PlayType.RANDOM
                 }
             }
+            sendPlayType()
 
         }
 
@@ -418,11 +424,6 @@ class MusicService : BaseService(),
     enum class PlayType {
         SINGLE, RANDOM, LIST
     }
-
-    enum class PlayState {
-        PAUSE, PLAY, COMPLETE, PREPARE
-    }
-
     private enum class PlayDirection {
         NEXT, PREVIOUS
     }

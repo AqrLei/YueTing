@@ -8,9 +8,14 @@ import android.os.*
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrairsigns.aqrleilib.view.AlphaListView
+import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
@@ -58,14 +63,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
-    private lateinit var mPlayView: LinearLayout
-    private val mHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
 
-            refreshPlayView(msg)
-
-        }
-    }
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
@@ -96,22 +94,34 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
 
     }
-
     override fun onResume() {
         super.onResume()
         getMusicInfoFromDB()
     }
 
-    private fun refreshPlayView(message: Message) {
-        mPresenter.refreshPlayView(mPlayView, message)
+    private fun initView() {
+
+        val mRecommendLv = mView.lv_fragment_home as AlphaListView
+
+        mAdapter = YueTingHomeListAdapter(mContainerActivity,
+                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
+                mReadData, mMusicInfoShared.getInfoS())
+
+        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
+                inflate(R.layout.listheader_home, null))
+        mRecommendLv.adapter = mAdapter
+        mRecommendLv.onItemClickListener = this
+        mRecommendLv.setAlphaChangeListener(this)
+
     }
+
 
     private fun getMusicInfoFromDB() {
         mPresenter.getMusicInfoFromDB()
     }
 
     private fun startMusicService(position: Int) {
-        mPresenter.startMusicService(mContainerActivity, position, Messenger(mHandler), serviceConn)
+        mPresenter.startMusicService(mContainerActivity, position, Messenger(mMusicInfoShared.getHandler(mContainerActivity)), serviceConn)
     }
 
     private fun sendPlayBroadcast(position: Int) {
@@ -136,19 +146,5 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mAdapter.notifyDataSetChanged()
     }
 
-    private fun initView() {
-        val mRecommendLv = mView.lv_fragment_home as AlphaListView
 
-        mAdapter = YueTingHomeListAdapter(mContainerActivity,
-                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mReadData, mMusicInfoShared.getInfoS())
-
-        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
-                inflate(R.layout.listheader_home, null))
-        mRecommendLv.adapter = mAdapter
-        mRecommendLv.onItemClickListener = this
-        mRecommendLv.setAlphaChangeListener(this)
-        mPlayView = mContainerActivity.window.decorView
-                .findViewById(R.id.ll_play_control) as LinearLayout
-    }
 }
