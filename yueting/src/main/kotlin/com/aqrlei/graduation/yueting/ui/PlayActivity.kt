@@ -85,28 +85,15 @@ class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
     private fun init() {
         mHandler = mMusicShareInfo.getHandler(this)
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as LinearLayout
+        (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
+                mMusicShareInfo.getPlayType()
         initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
     }
 
     private fun initPlayView(position: Int, duration: Int = 0) {
+        mMusicShareInfo.shareViewInit(mPlayView, position, duration)
 
-        val musicInfo = mMusicShareInfo.getInfo(position)
-        val roundBar = mPlayView.findViewById(R.id.rb_progress_play) as RoundBar
-        val playState = mMusicShareInfo.getPlayState()
-        val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
-        val maxProgress = musicInfo.duration.toFloat()
 
-        roundBar.setMaxProgress(maxProgress)
-        roundBar.setProgress(duration.toFloat())
-        (mPlayView.findViewById(R.id.tv_play_type) as TextView).text = mMusicShareInfo.getPlayType()
-        (mPlayView.findViewById(R.id.tv_play_control) as TextView).text =
-                if (PlayState.PAUSE == playState) "播" else "停"
-        (mPlayView.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-        (mPlayView.findViewById(R.id.tv_music_info) as TextView).text =
-                StringChangeUtil.SPANNABLE.clear()
-                        .foregroundColorChange("#1c4243", musicInfo.title)
-                        .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
-                        .complete()
     }
 
     fun refreshPlayView(msg: Message) {
@@ -129,6 +116,8 @@ class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
                 3 -> {//PREPARE
                     // position, cDuration
                     val position = msg.arg2
+                    (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
+                            mMusicShareInfo.getPlayType()
                     initPlayView(position)
                 }
             }

@@ -20,6 +20,7 @@ import com.aqrlei.graduation.yueting.constant.PlayState
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.MainActivity
+import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
 import java.util.*
@@ -166,17 +167,14 @@ class MusicService : BaseService(),
     }
 
     private fun buildNotification() {
-        val intent = Intent(this, YueTingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
+        val intent = Intent(this, PlayActivity::class.java)
         val stackBuilder = TaskStackBuilder.create(this)
-        stackBuilder.addParentStack(YueTingActivity::class.java)
+        stackBuilder.addParentStack(PlayActivity::class.java)
         stackBuilder.addNextIntent(intent)
-
         val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        //val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
+        remoteViews.setOnClickPendingIntent(R.id.tv_music_info, pi)
         for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
 
             if (i == 2) continue
@@ -199,8 +197,8 @@ class MusicService : BaseService(),
 
             if (i == 3) break
         }
+
         notification = NotificationCompat.Builder(this.applicationContext)
-                .setContentIntent(pi)
                 .setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
@@ -424,6 +422,7 @@ class MusicService : BaseService(),
     enum class PlayType {
         SINGLE, RANDOM, LIST
     }
+
     private enum class PlayDirection {
         NEXT, PREVIOUS
     }

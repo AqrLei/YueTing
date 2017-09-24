@@ -4,7 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
+import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
+import com.aqrairsigns.aqrleilib.view.RoundBar
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.PlayState
 import com.aqrlei.graduation.yueting.constant.SendType
@@ -99,6 +106,7 @@ enum class ShareMusicInfo {
     private var duration: Int = 0
     private var position: Int = 0
     private var playType: String = "表"
+
     private var playState: PlayState = PlayState.PAUSE
     private var mHandler: Handler? = null
     fun setPosition(p: Int) {
@@ -142,6 +150,25 @@ enum class ShareMusicInfo {
             }
         }
         return mHandler ?: Handler()
+    }
+
+    fun shareViewInit(view: LinearLayout, position: Int, duration: Int) {
+        val musicInfo = getInfo(position)
+        val roundBar = view.findViewById(R.id.rb_progress_play) as RoundBar
+        val playState = getPlayState()
+        val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
+        val maxProgress = musicInfo.duration.toFloat()
+
+        roundBar.setMaxProgress(maxProgress)
+        roundBar.setProgress(duration.toFloat())
+        (view.findViewById(R.id.tv_play_control) as TextView).text =
+                if (PlayState.PAUSE == playState) "播" else "停"
+        (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
+        (view.findViewById(R.id.tv_music_info) as TextView).text =
+                StringChangeUtil.SPANNABLE.clear()
+                        .foregroundColorChange("#1c4243", musicInfo.title)
+                        .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
+                        .complete()
     }
 
 

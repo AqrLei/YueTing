@@ -23,7 +23,13 @@
                 android:value=".ui.MainActivity" />
 
         </activity>
-        <activity android:name=".ui.PlayActivity" />
+        <activity
+            android:name=".ui.PlayActivity"
+            android:parentActivityName=".ui.YueTingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.YueTingActivity" />
+        </activity>
         <activity
             android:name=".ui.FileActivity"
             android:screenOrientation="portrait" />
