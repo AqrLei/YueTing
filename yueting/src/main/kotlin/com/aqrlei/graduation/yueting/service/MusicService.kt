@@ -174,6 +174,10 @@ class MusicService : BaseService(),
         val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
+        /*
+        * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
+        * 黑屏 且结束后为锁屏界面
+        * */
         remoteViews.setOnClickPendingIntent(R.id.tv_music_info, pi)
         for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
 
