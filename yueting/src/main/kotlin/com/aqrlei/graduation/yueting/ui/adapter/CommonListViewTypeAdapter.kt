@@ -42,19 +42,19 @@ class CommonListViewTypeAdapter(private var mContext: Context, private var title
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var mConvertView = convertView
         var titleViewHolder: CommonListViewHolder? = null
         var contentViewHolder: CommonListViewHolder? = null
         when (getItemViewType(position)) {
             TYPE_TITLE -> {
                 titleViewHolder = CommonListViewHolder.getCommonViewHolder(mContext,
-                        titleResId, position, convertView, parent)
-                convertView = titleViewHolder.convertView
+                        titleResId, position, mConvertView, parent)
+                mConvertView = titleViewHolder.convertView
             }
             TYPE_CONTENT -> {
                 contentViewHolder = CommonListViewHolder.getCommonViewHolder(mContext,
-                        contentResId, position, convertView, parent)
-                convertView = contentViewHolder.convertView
+                        contentResId, position, mConvertView, parent)
+                mConvertView = contentViewHolder.convertView
             }
         }
         var obj = getItem(position)
@@ -66,7 +66,7 @@ class CommonListViewTypeAdapter(private var mContext: Context, private var title
 
             }
         }
-        return convertView!!
+        return mConvertView!!
     }
 
     private fun bindData(holder: CommonListViewHolder, data: String) {

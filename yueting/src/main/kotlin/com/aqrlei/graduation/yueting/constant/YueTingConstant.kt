@@ -56,4 +56,5 @@ object YueTingConstant {
     /*HandlerMessageWhat*/
     val CURRENT_DURATION = 1
     val PLAY_STATE = 2
+    val PLAY_TYPE = 3
 }

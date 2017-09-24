@@ -14,7 +14,7 @@ import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabMusicPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingMusicExpandListAdapter
-import kotlinx.android.synthetic.main.activity_yueting.*
+import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.yueting_fragment_music.view.*
 
 /**

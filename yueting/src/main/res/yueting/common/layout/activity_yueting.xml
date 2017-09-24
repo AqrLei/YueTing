@@ -1,90 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ll_tab_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#af71ccb4"
-        android:orientation="horizontal">
-        <!--以后替换成图-->
-        <TextView
-            android:id="@+id/tv_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="设置" />
-
-        <RadioGroup
-            android:id="@+id/rg_anim_tab"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb_tab_home"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:checked="true"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="首页"
-                android:textColor="@color/main_selector_tab_text"
-                android:textSize="15dp" />
-
-            <RadioButton
-                android:id="@+id/rb_tab_anim"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="悦读"
-                android:textColor="@color/main_selector_tab_text"
-                android:textSize="15dp" />
-
-            <RadioButton
-                android:id="@+id/rb_tab_chat"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:button="@null"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="音乐"
-                android:textColor="@color/main_selector_tab_text"
-                android:textSize="15dp" />
-
-        </RadioGroup>
-        <!--以后替换成图-->
-        <TextView
-            android:id="@+id/tv_file_local"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="本地" />
-    </LinearLayout>
+    <include layout="@layout/layout_yueting_header" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -97,78 +17,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/ll_play_control" />
 
-        <LinearLayout
-            android:id="@+id/ll_play_control"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#9eec8484"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/iv_album_picture"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher_round" />
-
-            <TextView
-                android:id="@+id/tv_music_info"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:gravity="center_vertical"
-                android:lineSpacingExtra="4dp"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="2"
-                android:onClick="onClick"
-                android:scrollHorizontally="true"
-                android:text="这是歌的名字"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/tv_previous"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="上" />
-
-            <TextView
-                android:id="@+id/tv_play_control"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/layout_ripple_music"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="播" />
-
-            <TextView
-                android:id="@+id/tv_next"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="下" />
-        </LinearLayout>
+        <include layout="@layout/layout_yueting_play" />
     </RelativeLayout>
 
 

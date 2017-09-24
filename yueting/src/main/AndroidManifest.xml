@@ -17,17 +17,28 @@
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
 
         </activity>
         <activity
+            android:name=".ui.PlayActivity"
+            android:parentActivityName=".ui.YueTingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.YueTingActivity" />
+        </activity>
+        <activity
             android:name=".ui.FileActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
