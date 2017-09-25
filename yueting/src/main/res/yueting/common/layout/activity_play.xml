@@ -6,14 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.aqrlei.graduation.yueting.ui.PlayActivity">
 
-    <TextView
+    <com.aqrlei.graduation.yueting.TestView
         android:id="@+id/tv_hello"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Hello World"
-        android:textColor="#130426"
-        android:textSize="25dp"
         yueting:layout_constraintBottom_toBottomOf="@+id/ll_play_control"
         yueting:layout_constraintLeft_toLeftOf="parent"
         yueting:layout_constraintRight_toRightOf="parent"
@@ -21,11 +17,10 @@
 
     <LinearLayout
         android:id="@+id/ll_play_control"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#9eec8484"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteX="8dp"
         yueting:layout_constraintBottom_toBottomOf="parent"
         yueting:layout_constraintLeft_toLeftOf="parent"
         yueting:layout_constraintRight_toRightOf="parent">

@@ -2,18 +2,17 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.content.Context
 import android.content.Intent
+import android.media.audiofx.Visualizer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.PlayState
@@ -29,8 +28,19 @@ import kotlinx.android.synthetic.main.activity_play.*
  * Description :
  * Date : 2017/9/24.
  */
-class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
-        View.OnClickListener {
+class PlayActivity :
+        MvpContract.MvpActivity<PlayActivityPresenter>(),
+        View.OnClickListener,
+        Visualizer.OnDataCaptureListener {
+    override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {
+
+    }
+
+    override fun onWaveFormDataCapture(visualizer: Visualizer?, waveform: ByteArray?, samplingRate: Int) {
+        AppLog.logDebug("test", waveform.toString())
+        tv_hello.Update(waveform)
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_play_control -> {
@@ -67,6 +77,7 @@ class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
         get() = R.layout.activity_play
 
     private lateinit var mHandler: Handler
+    private var mVisualizer: Visualizer? = null
     private lateinit var mPlayView: LinearLayout
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
 
@@ -80,6 +91,16 @@ class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
             this.finish()
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun setVisualizer(audioSessionId: Int) {
+        if (mVisualizer != null && mVisualizer!!.enabled) {
+            mVisualizer?.enabled = false
+        }
+        mVisualizer = Visualizer(audioSessionId)
+        mVisualizer?.captureSize = Visualizer.getCaptureSizeRange()[1]
+        mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
+        mVisualizer?.enabled = true
     }
 
     private fun init() {
@@ -118,7 +139,10 @@ class PlayActivity : MvpContract.MvpActivity<PlayActivityPresenter>(),
                     val position = msg.arg2
                     (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
                             mMusicShareInfo.getPlayType()
+
                     initPlayView(position)
+                    val audioSessionId = msg.data["audioSessionId"] as Int
+                    setVisualizer(audioSessionId)
                 }
             }
         }

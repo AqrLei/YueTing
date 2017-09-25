@@ -8,15 +8,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.IBinder
-import android.os.Message
-import android.os.Messenger
+import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
@@ -73,6 +71,40 @@ class MusicService : BaseService(),
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> {//获得焦点
+                if (isLossFocus) {
+                    mPlayer?.setVolume(1.0F, 1.0F)
+                    play()
+                    isLossFocus = false
+                }
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT -> {//暂时获得焦点
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> {//暂时独占焦点
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T_E")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> {//暂时获得焦点，小声
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T_M_D")
+
+            }
+            AudioManager.AUDIOFOCUS_LOSS -> {//失去焦点，应该释放资源
+                pause()
+                isLossFocus = true
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS")
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {//暂时失去焦点， 暂停播放
+                //mPlayer?.setVolume(0.2F,0.2F)
+                pause()
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS_T")
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {//暂时失去焦点，可以小声播放
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS_T_C_D")
+                mPlayer?.setVolume(0.2F, 0.2F)
+            }
+        }
 
     }
 
@@ -88,6 +120,7 @@ class MusicService : BaseService(),
     private var playerReceiver: PlayerReceiver? = null
     private var isPause: Boolean = false
     private var isSame: Boolean = false
+    private var isLossFocus: Boolean = false
     private val handler = Handler()
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
@@ -152,6 +185,7 @@ class MusicService : BaseService(),
         YueTingConstant.ACTION_BROADCAST.forEach {
             filter.addAction(it)
         }
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         filter.priority = 1000
         registerReceiver(playerReceiver, filter)
     }
@@ -290,6 +324,9 @@ class MusicService : BaseService(),
             }
             PlayState.PREPARE -> {
                 message.arg1 = 3
+                val bundle = Bundle()
+                bundle.putInt("audioSessionId", mPlayer?.audioSessionId ?: 0)
+                message.data = bundle
             }
         }
         message.arg2 = cPosition
@@ -422,12 +459,16 @@ class MusicService : BaseService(),
                 ACTION[YueTingConstant.ACTION_RANDOM] -> {
                     playType = PlayType.RANDOM
                 }
+                AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
+                    pause()
+                }
             }
             sendPlayType()
         }
     }
 
     private val musicInfos = ArrayList<MusicInfo>()
+
     inner class MusicBinder : IMusicInfo.Stub() {
         override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
             if (infoS != null) {
