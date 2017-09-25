@@ -6,24 +6,15 @@ import android.content.ServiceConnection
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.os.IBinder
-import android.os.Message
 import android.os.Messenger
-import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
-import com.aqrairsigns.aqrleilib.util.ImageUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
-import com.aqrairsigns.aqrleilib.view.RoundBar
-import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
@@ -61,7 +52,28 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                     val binder = IMusicInfo.Stub.asInterface(service)
                     val musicInfoList = ArrayList<MusicInfo>()
                     musicInfoList.addAll(ShareMusicInfo.MusicInfoTool.getInfoS())
-                    binder.setMusicInfo(musicInfoList)
+                    var size = 0
+                    var position = 0
+                    /*binder一次性传递数据量大小由限制，大概为1024KB，故要分批传递*/
+                    for (i in 0 until musicInfoList.size) {
+                        val it = musicInfoList[i]
+                        size += it.album.length
+                        size += it.albumUrl.length
+                        size += it.artist.length
+                        size += it.createTime.length
+                        size += it.picture?.size ?: 0
+                        size += it.title.length
+                        size += 8
+                        if ((size / (1024 * 512)) >= 1) {
+                            val list = musicInfoList.subList(position, i + 1)
+                            size = 0
+                            position = i + 1
+                            binder.setMusicInfo(list)
+                        }
+                    }
+                    //将最后的数据传输
+                    val list = musicInfoList.subList(position, musicInfoList.size)
+                    binder.setMusicInfo(list)
                     true
                 } catch (e: Exception) {
                     e.printStackTrace()

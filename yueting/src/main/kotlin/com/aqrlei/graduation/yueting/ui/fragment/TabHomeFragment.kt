@@ -4,21 +4,17 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
-import android.os.*
+import android.os.Bundle
+import android.os.IBinder
+import android.os.Messenger
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.ImageUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrairsigns.aqrleilib.view.AlphaListView
-import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
@@ -45,7 +41,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             return
         }
         val realPosition = position - 3
-        isServiceStart = mContainerActivity.isStartService()
+        isServiceStart = mContainerActivity.isStartService() or isServiceStart
         if (!isServiceStart) {
             startMusicService(realPosition)
             isServiceStart = true
@@ -95,6 +91,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
 
     }
+
     override fun onResume() {
         super.onResume()
         getMusicInfoFromDB()

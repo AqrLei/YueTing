@@ -44,6 +44,7 @@ public class TestService extends Service {
 
     private void next() {
         position = position + 1 > 10 ? 10 : position + 1;
+        position = position >> 10;
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override

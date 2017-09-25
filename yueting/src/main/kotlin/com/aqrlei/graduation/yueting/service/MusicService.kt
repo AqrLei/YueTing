@@ -2,10 +2,16 @@ package com.aqrlei.graduation.yueting.service
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.*
+import android.os.Handler
+import android.os.IBinder
+import android.os.Message
+import android.os.Messenger
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import android.widget.RemoteViews
@@ -19,9 +25,7 @@ import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.PlayState
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.ui.MainActivity
 import com.aqrlei.graduation.yueting.ui.PlayActivity
-import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -109,6 +113,7 @@ class MusicService : BaseService(),
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        mMusicInfoShare.setInfoS(musicInfos)
         play()
         return super.onUnbind(intent)
     }
@@ -419,16 +424,15 @@ class MusicService : BaseService(),
                 }
             }
             sendPlayType()
-
         }
-
-
     }
 
+    private val musicInfos = ArrayList<MusicInfo>()
     inner class MusicBinder : IMusicInfo.Stub() {
         override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
-            val musicInfoS = infoS as ArrayList<MusicInfo>
-            mMusicInfoShare.setInfoS(musicInfoS)
+            if (infoS != null) {
+                musicInfos.addAll(infoS)
+            }
         }
     }
 
