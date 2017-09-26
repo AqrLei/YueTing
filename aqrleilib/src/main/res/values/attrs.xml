@@ -23,8 +23,15 @@
         <attr name="useMultiColor" format="boolean"/>
         <attr name="color" format="color"/>
         <attr name="scaleTime" format="integer"/>
+        <attr name="scaleRatio" format="float"/>
         <attr name="vRadius" format="dimension"/>
         <attr name="offSetX" format="integer"/>
+        <attr name="scaleStyle">
+            <enum name="center" value="0"/>
+            <enum name="centerX" value="1"/>
+            <enum name="centerXLeft" value="10"/>
+            <enum name="centerXRight" value="11"/>
+        </attr>
     </declare-styleable>
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpace" format="dimension"/>

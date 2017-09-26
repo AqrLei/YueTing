@@ -31,6 +31,12 @@ public class VisualizerView extends View {
     private int mColor;
     private int mOffSetX;
     private boolean isMultiColor;
+    private int scaleType;
+    private float scaleRatio;
+    private static final int CENTER = 0;
+    private static final int CENTER_X = 1;
+    private static final int CENTER_X_LEFT = 10;
+    private static final int CENTER_X_RIGHT = 11;
 
     public VisualizerView(Context context) {
         this(context, null);
@@ -58,6 +64,9 @@ public class VisualizerView extends View {
         mScaleTime = typedArray.getInteger(R.styleable.VisualizerView_scaleTime, 3);
         mColor = typedArray.getColor(R.styleable.VisualizerView_color, Color.GREEN);
         isMultiColor = typedArray.getBoolean(R.styleable.VisualizerView_useMultiColor, false);
+        scaleType = typedArray.getInteger(R.styleable.VisualizerView_scaleStyle, CENTER);
+        scaleRatio = typedArray.getFloat(R.styleable.VisualizerView_scaleRatio, 0.01F);
+        typedArray.recycle();
     }
 
     public byte[] getBytes() {
@@ -83,7 +92,6 @@ public class VisualizerView extends View {
 
     public void setMultiColor(boolean multiColor) {
         isMultiColor = multiColor;
-
     }
 
     public float getRadius() {
@@ -92,7 +100,6 @@ public class VisualizerView extends View {
 
     public void setRadius(float radius) {
         mRadius = radius;
-
     }
 
     public int getScaleTime() {
@@ -101,7 +108,6 @@ public class VisualizerView extends View {
 
     public void setScaleTime(int scaleTime) {
         mScaleTime = scaleTime;
-
     }
 
     public int getColor() {
@@ -110,7 +116,6 @@ public class VisualizerView extends View {
 
     public void setColor(int color) {
         mColor = color;
-
     }
 
     public int getOffSetX() {
@@ -119,42 +124,62 @@ public class VisualizerView extends View {
 
     public void setOffSetX(int offSetX) {
         mOffSetX = offSetX;
-
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (bytes == null) {
-            return;
-        }
         canvas.save();
+
         float centerX = getWidth() / 2;
         float centerY = getHeight() / 2;
         mRectF.set(centerX - mRadius, centerY - mRadius, centerX + mRadius, centerY + mRadius);
-        mPaint.setColor(Color.BLUE);
-        mPaint.setAlpha(0);
-        canvas.drawArc(mRectF, 0f, 360f, false, mPaint);
-        float rotateD = 360F / bytes.length;
-        float startX, startY, stopX, stopY;
-        mPaint.setAlpha(255);
         mPaint.setColor(mColor);
+        if (bytes != null) {
+            drawVisualizer(canvas, centerX, centerY);
+        } else {
+            float ratio = 1.00F;
+            do {
+                canvas.scale(ratio, ratio, centerX, centerY);
+                canvas.drawCircle(centerX, centerY, mRadius, mPaint);
+                ratio -= scaleRatio;
+            } while (ratio > scaleRatio);
+        }
+        canvas.restore();
+    }
+
+    private void drawVisualizer(Canvas canvas, float centerX, float centerY) {
         float scaleRatio = (float) (1.0 / mScaleTime);
+        float rotateD = 360F / (bytes.length - 2);
+        float startX, startY, stopX, stopY;
         for (int j = mScaleTime; j > 0; j--) {
             if (isMultiColor) {
                 mPaint.setColor(mMultiColor[j % 5]);
             }
-            canvas.scale(j * scaleRatio, j * scaleRatio, centerX, centerY);
+            switch (scaleType) {
+                case CENTER:
+                    canvas.scale(j * scaleRatio, j * scaleRatio, centerX, centerY);
+                    break;
+                case CENTER_X:
+                    canvas.scale(j * scaleRatio, j * scaleRatio, centerX, 0);
+                    break;
+                case CENTER_X_LEFT:
+                    canvas.scale(j * scaleRatio, j * scaleRatio);
+                    break;
+                case CENTER_X_RIGHT:
+                    canvas.scale(j * scaleRatio, j * scaleRatio, getWidth(), 0);
+                    break;
+            }
             for (int i = 0; i < bytes.length - 1; i++) {//X0, Y0, X1, Y1
                 startX = (centerX + mRadius) + (bytes[i] + mOffSetX);
                 startY = centerY;
-                stopX = (centerX + mRadius) + (bytes[i + 1] + mOffSetX);
+                stopX = (centerX + mRadius) + (bytes[i + 1] + mOffSetX * 1.5F);
                 stopY = centerY;
                 canvas.drawLine(startX, startY, stopX, stopY, mPaint);
                 canvas.rotate(rotateD, centerX, centerY);
             }
+
         }
-        canvas.restore();
     }
+
 }

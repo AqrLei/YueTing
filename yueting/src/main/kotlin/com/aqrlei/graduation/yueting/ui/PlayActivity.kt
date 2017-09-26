@@ -41,6 +41,9 @@ class PlayActivity :
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.iv_back -> {
+                this.finish()
+            }
             R.id.tv_play_control -> {
                 sendMusicBroadcast(SendType.PLAY)
 
