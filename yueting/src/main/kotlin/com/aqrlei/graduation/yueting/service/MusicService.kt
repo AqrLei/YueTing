@@ -165,6 +165,10 @@ class MusicService : BaseService(),
         return START_REDELIVER_INTENT
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+    }
+
     override fun onDestroy() {
 
         if (mPlayer != null) {

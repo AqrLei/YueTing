@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
@@ -37,8 +36,7 @@ class PlayActivity :
     }
 
     override fun onWaveFormDataCapture(visualizer: Visualizer?, waveform: ByteArray?, samplingRate: Int) {
-        AppLog.logDebug("test", waveform.toString())
-        tv_hello.Update(waveform)
+        vv_play.bytes = waveform
     }
 
     override fun onClick(v: View?) {
@@ -94,12 +92,24 @@ class PlayActivity :
     }
 
     private fun setVisualizer(audioSessionId: Int) {
-        if (mVisualizer != null && mVisualizer!!.enabled) {
+
+        mVisualizer = Visualizer(audioSessionId)
+        if (mVisualizer!!.enabled) {
             mVisualizer?.enabled = false
         }
-        mVisualizer = Visualizer(audioSessionId)
+        /*
+        * getCaptureSizeRange()
+        * [0] 128
+        * [1] 1024
+        * Size: 2
+        * */
         mVisualizer?.captureSize = Visualizer.getCaptureSizeRange()[1]
+        /*
+        * getMaxCaptureRate()
+        * 20000
+        * */
         mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
+
         mVisualizer?.enabled = true
     }
 
@@ -109,6 +119,7 @@ class PlayActivity :
         (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
                 mMusicShareInfo.getPlayType()
         initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
+        setVisualizer(mMusicShareInfo.getAudioSessionId())
     }
 
     private fun initPlayView(position: Int, duration: Int = 0) {
@@ -118,6 +129,7 @@ class PlayActivity :
     }
 
     fun refreshPlayView(msg: Message) {
+        var i = 0
         if (msg.what == YueTingConstant.CURRENT_DURATION) {
             (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
         }
@@ -143,6 +155,7 @@ class PlayActivity :
                     initPlayView(position)
                     val audioSessionId = msg.data["audioSessionId"] as Int
                     setVisualizer(audioSessionId)
+                    mMusicShareInfo.setAudioSessionId(audioSessionId)
                 }
             }
         }

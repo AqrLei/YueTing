@@ -105,15 +105,16 @@ enum class ShareMusicInfo {
 
     private var duration: Int = 0
     private var position: Int = 0
+    private var audioSessionId: Int = 0
     private var playType: String = "表"
 
     private var playState: PlayState = PlayState.PAUSE
     private var mHandler: Handler? = null
+
     fun setPosition(p: Int) {
         position = p
     }
 
-    fun getPosition() = position
     fun setDuration(d: Int) {
         duration = d
     }
@@ -122,11 +123,17 @@ enum class ShareMusicInfo {
         playType = type
     }
 
+    fun setAudioSessionId(id: Int) {
+        audioSessionId = id
+    }
+
     fun setPlayState(state: PlayState) {
         playState = state
     }
 
+    fun getPosition() = position
     fun getDuration() = duration
+    fun getAudioSessionId() = audioSessionId
     fun getPlayType() = playType
     fun getPlayState() = playState
     fun getHandler(context: BaseActivity? = null): Handler {

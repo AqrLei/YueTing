@@ -8,11 +8,12 @@ import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrairsigns.aqrleilib.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.PlayState
@@ -20,7 +21,6 @@ import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
-import kotlinx.android.synthetic.main.activity_yueting.*
 import kotlinx.android.synthetic.main.layout_yueting_header.*
 
 
@@ -154,6 +154,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 3 -> {//PREPARE
                     initPlayView(msg.arg2)
                     mMusicShareInfo.setPosition(msg.arg2)
+                    val audioSessionId = msg.data["audioSessionId"] as Int
+                    mMusicShareInfo.setAudioSessionId(audioSessionId)
                 }
             }
         }

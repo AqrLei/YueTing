@@ -19,16 +19,23 @@
         <attr name="useGradientGolor" format="boolean"/>
         <attr name="openAnimation" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="VisualizerView">
+        <attr name="useMultiColor" format="boolean"/>
+        <attr name="color" format="color"/>
+        <attr name="scaleTime" format="integer"/>
+        <attr name="vRadius" format="dimension"/>
+        <attr name="offSetX" format="integer"/>
+    </declare-styleable>
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpace" format="dimension"/>
         <attr name="verticalSpace" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="AlphaListView">
-        <attr name="listMinHeight" format="float" />
-        <attr name="listMinusHeight" format="float" />
+        <attr name="listMinHeight" format="float"/>
+        <attr name="listMinusHeight" format="float"/>
     </declare-styleable>
     <declare-styleable name="AlphaExpandListView">
-        <attr name="expandMinHeight" format="float" />
-        <attr name="expandMinusHeight" format="float" />
+        <attr name="expandMinHeight" format="float"/>
+        <attr name="expandMinusHeight" format="float"/>
     </declare-styleable>
 </resources>
