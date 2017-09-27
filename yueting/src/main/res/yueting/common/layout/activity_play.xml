@@ -30,7 +30,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#76a1d4"
-        yueting:scaleTime="10"
+        yueting:scaleTime="7"
         yueting:useMultiColor="true"
         yueting:vRadius="100dp"
         yueting:offSetX="64"

@@ -9,12 +9,12 @@
 
     <TextView
         android:id="@+id/tv_test"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="HELLO WORLD"
         android:scrollbars="none"
+        android:text="HELLO WORLD"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

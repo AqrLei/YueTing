@@ -118,7 +118,16 @@ class PlayActivity :
 
     private fun init() {
         mHandler = mMusicShareInfo.getHandler(this)
+        val mBundle = intent.getBundleExtra("init_bundle")
+
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as LinearLayout
+        if (mBundle.getIntArray("init") != null) {
+            val initArray = mBundle.getIntArray("init")
+            mMusicShareInfo.setPosition(initArray[0])
+            mMusicShareInfo.setAudioSessionId(initArray[1])
+            changePlayType(initArray[2])
+            changePlayState(initArray[3])
+        }
         (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
                 mMusicShareInfo.getPlayType()
         initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
@@ -131,54 +140,59 @@ class PlayActivity :
 
     }
 
+    private fun changePlayType(type: Int) {
+        val tv = (mPlayView.findViewById(R.id.tv_play_type) as TextView)
+        when (type) {
+            YueTingConstant.ACTION_SINGLE -> {
+                tv.text = "单"
+                mMusicShareInfo.setPlayType("单")
+            }
+            YueTingConstant.ACTION_LIST -> {
+                tv.text = "表"
+                mMusicShareInfo.setPlayType("表")
+            }
+            YueTingConstant.ACTION_RANDOM -> {
+                tv.text = "变"
+                mMusicShareInfo.setPlayType("变")
+            }
+        }
+    }
+
+    private fun changePlayState(state: Int = 0, msg: Message = Message()) {
+        when (state) {
+            0 -> {//PAUSE
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
+                mMusicShareInfo.setPlayState(PlayState.PAUSE)
+            }
+            1 -> {//PLAY
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
+                mMusicShareInfo.setPlayState(PlayState.PLAY)
+            }
+            2 -> {//COMPLETE
+                //(mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
+            }
+            3 -> {//PREPARE
+                // position, cDuration
+                val position = msg.arg2
+                (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
+                        mMusicShareInfo.getPlayType()
+                initPlayView(position)
+                val audioSessionId = msg.data["audioSessionId"] as Int
+                setVisualizer(audioSessionId)
+                mMusicShareInfo.setAudioSessionId(audioSessionId)
+            }
+        }
+    }
+
     fun refreshPlayView(msg: Message) {
-        var i = 0
-        if (msg.what == YueTingConstant.CURRENT_DURATION) {
+        if (msg.what == YueTingConstant.CURRENT_DURATION) {//can be shared
             (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
         }
-        if (msg.what == YueTingConstant.PLAY_STATE) {
-            when (msg.arg1) {
-                0 -> {//PAUSE
-                    (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
-                    mMusicShareInfo.setPlayState(PlayState.PAUSE)
-                }
-                1 -> {//PLAY
-                    (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
-                    mMusicShareInfo.setPlayState(PlayState.PLAY)
-                }
-                2 -> {//COMPLETE
-                    //(mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
-                }
-                3 -> {//PREPARE
-                    // position, cDuration
-                    val position = msg.arg2
-                    (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
-                            mMusicShareInfo.getPlayType()
-
-                    initPlayView(position)
-                    val audioSessionId = msg.data["audioSessionId"] as Int
-                    setVisualizer(audioSessionId)
-                    mMusicShareInfo.setAudioSessionId(audioSessionId)
-                }
-            }
+        if (msg.what == YueTingConstant.PLAY_STATE) {//can be shared
+            changePlayState(msg.arg1, msg)
         }
-
-        if (msg.what == YueTingConstant.PLAY_TYPE) {
-            val tv = (mPlayView.findViewById(R.id.tv_play_type) as TextView)
-            when (msg.arg1) {
-                YueTingConstant.ACTION_SINGLE -> {
-                    tv.text = "单"
-                    mMusicShareInfo.setPlayType("单")
-                }
-                YueTingConstant.ACTION_LIST -> {
-                    tv.text = "表"
-                    mMusicShareInfo.setPlayType("表")
-                }
-                YueTingConstant.ACTION_RANDOM -> {
-                    tv.text = "变"
-                    mMusicShareInfo.setPlayType("变")
-                }
-            }
+        if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
+            changePlayType(msg.arg1)
         }
     }
 
@@ -188,7 +202,9 @@ class PlayActivity :
 
     companion object {
         fun jumpToPlayActivity(context: Context) {
+            val bundle = Bundle()
             val intent = Intent(context, PlayActivity::class.java)
+            intent.putExtra("init_bundle", bundle)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
