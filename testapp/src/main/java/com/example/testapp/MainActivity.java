@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             TextView tv = (TextView) findViewById(R.id.tv_test);
             tv.setMovementMethod(ScrollingMovementMethod.getInstance());
             tv.setText(str);
+
         }
 
     }
