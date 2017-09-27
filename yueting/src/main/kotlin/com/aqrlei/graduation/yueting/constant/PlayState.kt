@@ -7,5 +7,5 @@ package com.aqrlei.graduation.yueting.constant
  * Date : 2017/9/24.
  */
 enum class PlayState {
-    PAUSE, PLAY, COMPLETE, PREPARE
+    PAUSE, PLAY, COMPLETE, PREPARE, FINISH, START
 }

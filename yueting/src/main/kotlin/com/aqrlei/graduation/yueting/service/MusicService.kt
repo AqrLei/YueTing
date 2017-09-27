@@ -55,9 +55,8 @@ class MusicService : BaseService(),
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        if (mp != null) {
-            mp.release()
-            mp.reset()
+        if (mPlayer != null) {
+            mPlayer?.reset()
             sendPlayState(PlayState.PAUSE)
         }
         return true
@@ -167,6 +166,7 @@ class MusicService : BaseService(),
         super.onStartCommand(intent, flags, startId)
         cPosition = intent.extras.get("position") as Int
         sendMessenger = intent.extras.get("messenger") as Messenger
+        sendPlayState(PlayState.START)
         return START_REDELIVER_INTENT
     }
 
@@ -175,15 +175,15 @@ class MusicService : BaseService(),
     }
 
     override fun onDestroy() {
-
+        sendPlayState(PlayState.FINISH)
         if (mPlayer != null) {
             mPlayer?.release()
             mPlayer = null
         }
-        stopForeground(true)
         if (playerReceiver != null) {
             unregisterReceiver(playerReceiver)
         }
+        stopForeground(true)
         super.onDestroy()
     }
 
@@ -357,6 +357,12 @@ class MusicService : BaseService(),
                 val bundle = Bundle()
                 bundle.putInt("audioSessionId", mPlayer?.audioSessionId ?: 0)
                 message.data = bundle
+            }
+            PlayState.FINISH -> {
+                message.arg1 = 4
+            }
+            PlayState.START -> {
+                message.arg1 = 5
             }
         }
         message.arg2 = cPosition

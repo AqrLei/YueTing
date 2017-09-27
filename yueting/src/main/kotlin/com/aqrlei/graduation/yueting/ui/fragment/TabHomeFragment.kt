@@ -41,7 +41,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             return
         }
         val realPosition = position - 3
-        isServiceStart = mContainerActivity.isStartService() or isServiceStart
+        isServiceStart = mMusicInfoShared.isStartService()
         if (!isServiceStart) {
             startMusicService(realPosition)
             isServiceStart = true
