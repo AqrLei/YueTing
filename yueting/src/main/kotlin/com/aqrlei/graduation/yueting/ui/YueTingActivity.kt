@@ -130,34 +130,41 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
     }
 
+    private fun changePlayState(msg: Message) {
+        when (msg.arg1) {
+            0 -> {//PAUSE
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
+                mMusicShareInfo.setPlayState(PlayState.PAUSE)
+            }
+            1 -> {//PLAY
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
+                mMusicShareInfo.setPlayState(PlayState.PLAY)
+            }
+            2 -> {//COMPLETE
+                //(mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
+            }
+            3 -> {//PREPARE
+                val position = msg.arg2
+                val audioSessionId = msg.data["audioSessionId"] as Int
+
+                initPlayView(position)
+                (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
+                        mMusicShareInfo.getPlayType()
+                mMusicShareInfo.setPosition(position)
+                mMusicShareInfo.setAudioSessionId(audioSessionId)
+            }
+        }
+    }
+
     fun refreshPlayView(msg: Message) {
         /*视图更新在包含其的组件中执行*/
-
         mPlayView.visibility = View.VISIBLE
         if (msg.what == YueTingConstant.CURRENT_DURATION) {
             (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
             mMusicShareInfo.setDuration(msg.arg1)
         }
         if (msg.what == YueTingConstant.PLAY_STATE) {
-            when (msg.arg1) {
-                0 -> {//PAUSE
-                    (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
-                    mMusicShareInfo.setPlayState(PlayState.PAUSE)
-                }
-                1 -> {//PLAY
-                    (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
-                    mMusicShareInfo.setPlayState(PlayState.PLAY)
-                }
-                2 -> {//COMPLETE
-                    //(mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
-                }
-                3 -> {//PREPARE
-                    initPlayView(msg.arg2)
-                    mMusicShareInfo.setPosition(msg.arg2)
-                    val audioSessionId = msg.data["audioSessionId"] as Int
-                    mMusicShareInfo.setAudioSessionId(audioSessionId)
-                }
-            }
+            changePlayState(msg)
         }
     }
 
