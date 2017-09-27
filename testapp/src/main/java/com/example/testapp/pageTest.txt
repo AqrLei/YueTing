@@ -1,21 +1,4 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
- @AqrMen
- Sign out
- Watch 1
-  Unstar 18  Fork 10 YuanWenHai/IReader
- Code  Issues 1  Pull requests 0  Projects 0  Wiki Insights
-Branch: master Find file Copy pathIReader/app/src/main/java/com/will/ireader/View/PageView.java
-d85f328  on 22 Nov 2016
-@YuanWenHai YuanWenHai 11/22
-1 contributor
-RawBlameHistory
-100 lines (93 sloc)  2.93 KB
+
 package com.will.ireader.view;
 
 import android.content.Context;
@@ -115,15 +98,3 @@ public class PageView extends View {
         void onRightClick();
     }
 }
-© 2017 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
