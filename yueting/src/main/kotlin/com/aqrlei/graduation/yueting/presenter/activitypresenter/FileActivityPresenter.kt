@@ -5,7 +5,7 @@ import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.FileUtil
-import com.aqrairsigns.aqrleilib.util.SQLDataUtil
+import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.ui.FileActivity
 import kotlin.collections.ArrayList
@@ -40,7 +40,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
 
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                     val tempData = data[i]
-                    val byteData = SQLDataUtil.saveData(tempData)
+                    val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
 
                     DBManager.sqlData(
                             DBManager.SqlFormat.insertSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,

@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
@@ -61,6 +62,20 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            this.finish()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppCache.APPCACHE.putString("path", fileInfoList[0].path)
+                .commit()
+        fileInfoList.clear()
+    }
+
     private fun init() {
         mData = ArrayList()
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
@@ -86,13 +101,6 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         }
         tv_file_parent.text = fileInfoList[0].path
         mAdapter.notifyDataSetChanged()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        AppCache.APPCACHE.putString("path", fileInfoList[0].path)
-                .commit()
-        fileInfoList.clear()
     }
 
     fun finishActivity() {

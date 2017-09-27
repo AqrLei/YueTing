@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.MusicInfo
+import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.facebook.drawee.view.SimpleDraweeView
 

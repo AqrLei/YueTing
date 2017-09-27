@@ -13,7 +13,7 @@ import com.aqrlei.graduation.yueting.model.local.ReadMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingReadListAdapter
-import kotlinx.android.synthetic.main.activity_yueting.*
+import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.listheader_read_tab.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_read.view.*
 

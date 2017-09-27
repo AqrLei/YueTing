@@ -22,14 +22,14 @@ public class SwipeMenuView extends LinearLayout implements OnClickListener {
 	private SwipeMenuLayout mLayout;
 	private SwipeMenu mMenu;
 	private OnSwipeItemClickListener onItemClickListener;
-	private int position;
+	private int cPosition;
 
 	public int getPosition() {
-		return position;
+		return cPosition;
 	}
 
-	public void setPosition(int position) {
-		this.position = position;
+	public void setPosition(int cPosition) {
+		this.cPosition = cPosition;
 	}
 
 	public SwipeMenuView(SwipeMenu menu, SwipeMenuListView listView) {

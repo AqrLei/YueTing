@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.model.local
+package com.aqrlei.graduation.yueting.aidl
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -21,25 +21,26 @@ data class MusicInfo(
         var createTime: String = ""
 ) : Comparable<MusicInfo>, Parcelable {
     constructor(parcel: Parcel) : this(
+            /*String属性值不为null，但readString()可能为null, 许StrictMode*/
             parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
+            parcel.readString() ?: " ",
+            parcel.readString() ?: " ",
             parcel.createByteArray(),
-            parcel.readString(),
-            parcel.readString(),
+            parcel.readString() ?: " ",
+            parcel.readString() ?: " ",
             parcel.readInt(),
-            parcel.readString())
+            parcel.readString() ?: " ")
 
 
     override fun writeToParcel(out: Parcel?, flags: Int) {
+        out?.writeInt(id)
         out?.writeString(albumUrl)
-        out?.writeString(artist)
         out?.writeString(album)
         out?.writeByteArray(picture)
         out?.writeString(title)
-        out?.writeString(createTime)
-        out?.writeInt(id)
+        out?.writeString(artist)
         out?.writeInt(duration)
+        out?.writeString(createTime)
     }
 
 

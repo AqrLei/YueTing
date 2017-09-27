@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aqrlei.graduation.yueting">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
         android:name=".YueTingApplication"
         android:allowBackup="true"
@@ -10,23 +12,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".service.MusicService"
+            android:process=":musicPlayer" />
+
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
 
         </activity>
         <activity
-            android:name=".ui.FileActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:name=".ui.PlayActivity"
+            android:parentActivityName=".ui.YueTingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.YueTingActivity" />
         </activity>
         <activity
+            android:name=".ui.FileActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

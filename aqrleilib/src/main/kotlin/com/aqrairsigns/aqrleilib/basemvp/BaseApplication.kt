@@ -1,9 +1,15 @@
 package com.aqrairsigns.aqrleilib.basemvp
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import com.aqrairsigns.aqrleilib.util.AppLog
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+
 
 /**
  * @Author: AqrLei
@@ -50,5 +56,22 @@ open class BaseApplication : Application(), Application.ActivityLifecycleCallbac
     override fun onActivityCreated(p0: Activity?, p1: Bundle?) {
         AppLog.logDebug(AppLog.LOG_TAG_APPLICATION, "-----\t" + this.javaClass.simpleName + "-----\t:"
                 + "Created")
+    }
+
+    companion object {
+        fun getProcessName(context: Context, pid: Int = android.os.Process.myPid()): String? {
+            val activityManger = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val list = activityManger.runningAppProcesses
+            list.forEach {
+                try {
+                    if (it.pid == pid) {
+                        return it.processName
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            return null
+        }
     }
 }

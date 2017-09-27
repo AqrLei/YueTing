@@ -256,12 +256,12 @@ public class SwipeMenuListView extends ListView {
         return super.onTouchEvent(ev);
     }
 
-    public void smoothOpenMenu(int position) {
-        if (position >= getFirstVisiblePosition()
-                && position <= getLastVisiblePosition()) {
-            View view = getChildAt(position - getFirstVisiblePosition());
+    public void smoothOpenMenu(int cPosition) {
+        if (cPosition >= getFirstVisiblePosition()
+                && cPosition <= getLastVisiblePosition()) {
+            View view = getChildAt(cPosition - getFirstVisiblePosition());
             if (view instanceof SwipeMenuLayout) {
-                mTouchPosition = position;
+                mTouchPosition = cPosition;
                 if (mTouchView != null && mTouchView.isOpen()) {
                     mTouchView.smoothCloseMenu();
                 }
@@ -301,19 +301,19 @@ public class SwipeMenuListView extends ListView {
     }
 
     public static interface OnMenuItemClickListener {
-        boolean onMenuItemClick(int position, SwipeMenu menu, int index);
+        boolean onMenuItemClick(int cPosition, SwipeMenu menu, int index);
     }
 
     public static interface OnSwipeListener {
-        void onSwipeStart(int position);
+        void onSwipeStart(int cPosition);
 
-        void onSwipeEnd(int position);
+        void onSwipeEnd(int cPosition);
     }
 
     public static interface OnMenuStateChangeListener {
-        void onMenuOpen(int position);
+        void onMenuOpen(int cPosition);
 
-        void onMenuClose(int position);
+        void onMenuClose(int cPosition);
     }
 
     public void setSwipeDirection(int direction) {

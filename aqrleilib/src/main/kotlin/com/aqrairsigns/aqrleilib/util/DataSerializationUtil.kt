@@ -11,8 +11,8 @@ import java.io.ObjectOutputStream
  * Description :
  * Date : 2017/9/16.
  */
-object SQLDataUtil {
-    fun getData(data: ByteArray): Any? {
+object DataSerializationUtil {
+    fun byteArrayToSequence(data: ByteArray): Any? {
         val result: Any?
         val arrayInputStream = ByteArrayInputStream(data)
         var inputStream: ObjectInputStream? = null
@@ -27,7 +27,7 @@ object SQLDataUtil {
         return result
     }
 
-    fun saveData(data: Any): ByteArray? {
+    fun sequenceToByteArray(data: Any): ByteArray? {
         val result: ByteArray?
         val arrayOutputStream = ByteArrayOutputStream()
         val objectOutputStream = ObjectOutputStream(arrayOutputStream)
