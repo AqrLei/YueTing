@@ -166,6 +166,9 @@ enum class ShareMusicInfo {
     }
 
     fun isStartService() = isStartService
+    fun isStartService(isStart: Boolean) {
+        isStartService = isStart
+    }
 
     private fun refreshPlayView(mPlayView: LinearLayout, msg: Message) {
 
