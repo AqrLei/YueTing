@@ -2,7 +2,10 @@ package com.aqrlei.graduation.yueting.service
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.*
@@ -11,6 +14,7 @@ import android.support.v4.app.TaskStackBuilder
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
@@ -19,9 +23,7 @@ import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.PlayState
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.ui.MainActivity
 import com.aqrlei.graduation.yueting.ui.PlayActivity
-import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,6 +42,7 @@ class MusicService : BaseService(),
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
         pPosition = cPosition
+        refreshPi()
         sendPlayState(PlayState.PREPARE)
         if (!isPause) {
             mPlayer?.start()
@@ -52,9 +55,8 @@ class MusicService : BaseService(),
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        if (mp != null) {
-            mp.release()
-            mp.reset()
+        if (mPlayer != null) {
+            mPlayer?.reset()
             sendPlayState(PlayState.PAUSE)
         }
         return true
@@ -69,6 +71,40 @@ class MusicService : BaseService(),
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> {//获得焦点
+                if (isLossFocus) {
+                    mPlayer?.setVolume(1.0F, 1.0F)
+                    play()
+                    isLossFocus = false
+                }
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT -> {//暂时获得焦点
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> {//暂时独占焦点
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T_E")
+            }
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> {//暂时获得焦点，小声
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_GAIN_T_M_D")
+
+            }
+            AudioManager.AUDIOFOCUS_LOSS -> {//失去焦点，应该释放资源
+                pause()
+                isLossFocus = true
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS")
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {//暂时失去焦点， 暂停播放
+                //mPlayer?.setVolume(0.2F,0.2F)
+                pause()
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS_T")
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {//暂时失去焦点，可以小声播放
+                AppLog.logDebug("audioFocus", "AUDIOFOCUS_LOSS_T_C_D")
+                mPlayer?.setVolume(0.2F, 0.2F)
+            }
+        }
 
     }
 
@@ -84,11 +120,16 @@ class MusicService : BaseService(),
     private var playerReceiver: PlayerReceiver? = null
     private var isPause: Boolean = false
     private var isSame: Boolean = false
+    private var isLossFocus: Boolean = false
     private val handler = Handler()
+    private var pi: PendingIntent? = null
+    private var intent: Intent? = null
+    private var stackBuilder: TaskStackBuilder? = null
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
     private lateinit var sendMessenger: Messenger
     private val NOTIFICATION_ID = 1
+    private val PENDING_INTENT_ID = 0
     private val sendCDurationR = object : Runnable {
         override fun run() {
             cDuration = mPlayer?.currentPosition ?: 0
@@ -109,6 +150,7 @@ class MusicService : BaseService(),
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        mMusicInfoShare.setInfoS(musicInfoS)
         play()
         return super.onUnbind(intent)
     }
@@ -124,22 +166,26 @@ class MusicService : BaseService(),
         super.onStartCommand(intent, flags, startId)
         cPosition = intent.extras.get("position") as Int
         sendMessenger = intent.extras.get("messenger") as Messenger
+        sendPlayState(PlayState.START)
         return START_REDELIVER_INTENT
     }
 
-    override fun onDestroy() {
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+    }
 
+    override fun onDestroy() {
+        sendPlayState(PlayState.FINISH)
         if (mPlayer != null) {
             mPlayer?.release()
             mPlayer = null
         }
-        stopForeground(true)
         if (playerReceiver != null) {
             unregisterReceiver(playerReceiver)
         }
+        stopForeground(true)
         super.onDestroy()
     }
-
 
     private fun regReceiver() {
         playerReceiver = PlayerReceiver()
@@ -147,6 +193,7 @@ class MusicService : BaseService(),
         YueTingConstant.ACTION_BROADCAST.forEach {
             filter.addAction(it)
         }
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         filter.priority = 1000
         registerReceiver(playerReceiver, filter)
     }
@@ -168,13 +215,36 @@ class MusicService : BaseService(),
 
     }
 
-    private fun buildNotification() {
-        val intent = Intent(this, PlayActivity::class.java)
-        val stackBuilder = TaskStackBuilder.create(this)
-        stackBuilder.addParentStack(PlayActivity::class.java)
-        stackBuilder.addNextIntent(intent)
-        val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+    private fun refreshPi() {
+        val bundle = Bundle()
+        val playType = sendPlayType()
+        val playState = if (mPlayer!!.isPlaying) 1 else 0
+        val initArray = intArrayOf(cPosition, mPlayer?.audioSessionId ?: 0, playType, playState)
+        bundle.putIntArray("init", initArray)
+        intent?.putExtra("init_bundle", bundle)
+        /*
+        * stackBuilder?.addNextIntent(intent)
+        * after the first addition will always exist, do not repeat the add
+        */
+        pi = stackBuilder?.getPendingIntent(
+                PENDING_INTENT_ID,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+        startForeground(NOTIFICATION_ID, notification)
+    }
 
+    private fun makeTaskStack(): PendingIntent? {
+        intent = Intent(this, PlayActivity::class.java)
+        stackBuilder = TaskStackBuilder.create(this)
+        stackBuilder?.addParentStack(PlayActivity::class.java)
+        stackBuilder?.addNextIntent(intent)
+        return stackBuilder?.getPendingIntent(
+                PENDING_INTENT_ID,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun buildNotification() {
+
+        pi = makeTaskStack()
         remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
         /*
         * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
@@ -212,7 +282,6 @@ class MusicService : BaseService(),
 
         startForeground(NOTIFICATION_ID, notification)
     }
-
 
     private fun refreshNotification() {
         val musicInfo = mMusicInfoShare.getInfo(cPosition)
@@ -285,13 +354,22 @@ class MusicService : BaseService(),
             }
             PlayState.PREPARE -> {
                 message.arg1 = 3
+                val bundle = Bundle()
+                bundle.putInt("audioSessionId", mPlayer?.audioSessionId ?: 0)
+                message.data = bundle
+            }
+            PlayState.FINISH -> {
+                message.arg1 = 4
+            }
+            PlayState.START -> {
+                message.arg1 = 5
             }
         }
         message.arg2 = cPosition
         sendMessenger.send(message)
     }
 
-    private fun sendPlayType() {
+    private fun sendPlayType(): Int {
         val msg = Message()
         msg.what = YueTingConstant.PLAY_TYPE
         when (playType) {
@@ -306,6 +384,7 @@ class MusicService : BaseService(),
             }
         }
         sendMessenger.send(msg)
+        return msg.arg1
     }
 
     private fun pauseOrPlay() {
@@ -383,52 +462,66 @@ class MusicService : BaseService(),
                 }
     }
 
-    inner class PlayerReceiver : BroadcastReceiver() {
+    private fun changePlayType(action: String?) {
+        val ACTION = YueTingConstant.ACTION_BROADCAST
+        when (action) {
+            ACTION[YueTingConstant.ACTION_SINGLE] -> {
+                playType = PlayType.SINGLE
+            }
+            ACTION[YueTingConstant.ACTION_LIST] -> {
+                playType = PlayType.LIST
+            }
+            ACTION[YueTingConstant.ACTION_RANDOM] -> {
+                playType = PlayType.RANDOM
+            }
+        }
+    }
 
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val ACTION = YueTingConstant.ACTION_BROADCAST
-            val action = intent?.action
-            when (action) {
-                ACTION[YueTingConstant.ACTION_PLAY] -> {
-                    cPosition = intent.getIntExtra("position", cPosition)
-                    if (cPosition == pPosition) {
-                        pauseOrPlay()
-                    } else {
-                        play()
-                    }
-                }
-                ACTION[YueTingConstant.ACTION_NEXT] -> {
-                    next()
-
-                }
-                ACTION[YueTingConstant.ACTION_PREVIOUS] -> {
-                    previous()
-                }
-                ACTION[YueTingConstant.ACTION_FINISH] -> {
-                    ActivityCollector.removeAll()
-                    stopSelf()
-                }
-                ACTION[YueTingConstant.ACTION_SINGLE] -> {
-                    playType = PlayType.SINGLE
-                }
-                ACTION[YueTingConstant.ACTION_LIST] -> {
-                    playType = PlayType.LIST
-                }
-                ACTION[YueTingConstant.ACTION_RANDOM] -> {
-                    playType = PlayType.RANDOM
+    private fun changePlayState(action: String?, intent: Intent?) {
+        val ACTION = YueTingConstant.ACTION_BROADCAST
+        when (action) {
+            ACTION[YueTingConstant.ACTION_PLAY] -> {
+                cPosition = intent?.getIntExtra("position", cPosition) ?: cPosition
+                if (cPosition == pPosition) {
+                    pauseOrPlay()
+                } else {
+                    play()
                 }
             }
-            sendPlayType()
+            ACTION[YueTingConstant.ACTION_NEXT] -> {
+                next()
 
+            }
+            ACTION[YueTingConstant.ACTION_PREVIOUS] -> {
+                previous()
+            }
+
+            ACTION[YueTingConstant.ACTION_FINISH] -> {
+                ActivityCollector.removeAll()
+                stopSelf()
+            }
+            AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
+                pause()
+            }
         }
-
-
     }
+
+    inner class PlayerReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+            changePlayType(action)
+            changePlayState(action, intent)
+            sendPlayType()
+        }
+    }
+
+    private val musicInfoS = ArrayList<MusicInfo>()
 
     inner class MusicBinder : IMusicInfo.Stub() {
         override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
-            val musicInfoS = infoS as ArrayList<MusicInfo>
-            mMusicInfoShare.setInfoS(musicInfoS)
+            if (infoS != null) {
+                musicInfoS.addAll(infoS)
+            }
         }
     }
 

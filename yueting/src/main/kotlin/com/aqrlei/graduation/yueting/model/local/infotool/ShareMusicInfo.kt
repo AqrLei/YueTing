@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -105,30 +106,23 @@ enum class ShareMusicInfo {
 
     private var duration: Int = 0
     private var position: Int = 0
+    private var audioSessionId: Int = 0
     private var playType: String = "表"
-
     private var playState: PlayState = PlayState.PAUSE
     private var mHandler: Handler? = null
+    private var isStartService: Boolean = false
     fun setPosition(p: Int) {
         position = p
     }
 
+    fun setAudioSessionId(id: Int) {
+        audioSessionId = id
+    }
+
     fun getPosition() = position
-    fun setDuration(d: Int) {
-        duration = d
-    }
-
-    fun setPlayType(type: String) {
-        playType = type
-    }
-
-    fun setPlayState(state: PlayState) {
-        playState = state
-    }
-
     fun getDuration() = duration
+    fun getAudioSessionId() = audioSessionId
     fun getPlayType() = playType
-    fun getPlayState() = playState
     fun getHandler(context: BaseActivity? = null): Handler {
         if (context != null) {
             mContext.add(context)
@@ -139,10 +133,10 @@ enum class ShareMusicInfo {
                     mContext.forEach {
                         if (!it.isFinishing) {
                             if (it is PlayActivity) {
-                                it.refreshPlayView(msg)
+                                refreshPlayView(it.getMPlayView(), msg)
                             }
                             if (it is YueTingActivity) {
-                                it.refreshPlayView(msg)
+                                refreshPlayView(it.getMPlayView(), msg)
                             }
                         }
                     }
@@ -155,7 +149,7 @@ enum class ShareMusicInfo {
     fun shareViewInit(view: LinearLayout, position: Int, duration: Int) {
         val musicInfo = getInfo(position)
         val roundBar = view.findViewById(R.id.rb_progress_play) as RoundBar
-        val playState = getPlayState()
+        val playState = playState
         val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
         val maxProgress = musicInfo.duration.toFloat()
 
@@ -169,6 +163,79 @@ enum class ShareMusicInfo {
                         .foregroundColorChange("#1c4243", musicInfo.title)
                         .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
                         .complete()
+    }
+
+    fun isStartService() = isStartService
+
+    private fun refreshPlayView(mPlayView: LinearLayout, msg: Message) {
+
+        if (msg.what == YueTingConstant.CURRENT_DURATION) {
+            (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
+            duration = msg.arg1
+        }
+        if (msg.what == YueTingConstant.PLAY_STATE) {
+            changePlayState(msg.arg1, mPlayView, msg)
+        }
+        if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
+            val tv = mPlayView.findViewById(R.id.tv_play_type)
+            if (tv != null) {
+                changePlayType(msg.arg1, tv as TextView)
+            }
+        }
+    }
+
+    fun changePlayType(type: Int, tv: TextView) {
+        when (type) {
+            YueTingConstant.ACTION_SINGLE -> {
+                tv.text = "单"
+                playType = "单"
+            }
+            YueTingConstant.ACTION_LIST -> {
+                tv.text = "表"
+                playType = "表"
+
+            }
+            YueTingConstant.ACTION_RANDOM -> {
+                tv.text = "变"
+                playType = "变"
+            }
+        }
+    }
+
+    fun changePlayState(state: Int = 0, mPlayView: LinearLayout, msg: Message = Message()) {
+        when (state) {
+            0 -> {//PAUSE
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
+                playState = PlayState.PAUSE
+            }
+            1 -> {//PLAY
+                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
+                playState = PlayState.PLAY
+            }
+            2 -> {//COMPLETE
+                //(mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(0F)
+            }
+            3 -> {//PREPARE
+                val position = msg.arg2
+                val audioSessionId = msg.data["audioSessionId"] as Int
+                val tv = mPlayView.findViewById(R.id.tv_play_type)
+                if (tv != null) {
+                    (tv as TextView).text = getPlayType()
+                }
+                setPosition(position)
+                setAudioSessionId(audioSessionId)
+                shareViewInit(mPlayView, position, duration)
+            }
+            4 -> {//FINISH
+                isStartService = false
+                mPlayView.visibility = View.GONE
+            }
+            5 -> {
+                isStartService = true
+                mPlayView.visibility = View.VISIBLE
+
+            }
+        }
     }
 
 
