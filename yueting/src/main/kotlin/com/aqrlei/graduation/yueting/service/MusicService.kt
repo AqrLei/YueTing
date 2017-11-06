@@ -42,7 +42,7 @@ class MusicService : BaseService(),
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
         pPosition = cPosition
-        refreshPi()
+
         sendPlayState(PlayState.PREPARE)
         if (!isPause) {
             mPlayer?.start()
@@ -338,6 +338,7 @@ class MusicService : BaseService(),
     }
 
     private fun sendPlayState(playState: PlayState) {
+        refreshPi()
         val message = Message()
         message.what = YueTingConstant.PLAY_STATE
         when (playState) {

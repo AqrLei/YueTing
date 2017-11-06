@@ -83,6 +83,9 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 .findViewById(R.id.ll_play_control) as LinearLayout
         initFragments(savedInstanceState)
         if (mMusicShareInfo.getSize() > 0) {
+            if (mMusicShareInfo.isStartService()) {
+                mPlayView.visibility = View.VISIBLE
+            }
             initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
         rg_anim_tab.setOnCheckedChangeListener(this)

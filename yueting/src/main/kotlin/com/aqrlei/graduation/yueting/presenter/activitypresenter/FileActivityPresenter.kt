@@ -3,12 +3,11 @@ package com.aqrlei.graduation.yueting.presenter.activitypresenter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.FileUtil
-import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.ui.FileActivity
-import kotlin.collections.ArrayList
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -90,10 +89,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     }
 
                     override fun onNext(t: Boolean) {
-                        if (t) {
-                            mMvpActivity.finishActivity()
-                        }
-
+                        mMvpActivity.finishActivity(t)
                     }
                 }))
 
