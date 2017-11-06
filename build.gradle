@@ -2,7 +2,7 @@
 
 
 buildscript {
-    ext.kotlin_version = '1.1.4-release-Studio2.3-3'
+    ext.kotlin_version = '1.1.51-release-Studio3.0-1'
     ext.android_support_version="25.1.0"
     ext.retrofit_version = "2.1.0"
     ext.kotlin_version= "1.1.4"
@@ -12,7 +12,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.7.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
