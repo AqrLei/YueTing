@@ -90,6 +90,7 @@ public class PageFactory {
     }
 
     public void nextPage() {
+        begin = end;
         if (end >= fileLength) {
             return;
         } else {
@@ -102,7 +103,7 @@ public class PageFactory {
 
     private void pageDown() {
         String strParagraph = "";
-        int i = 0;
+        //int i = 0;
         while ((content.size() < lineNumber) && (end < fileLength)) {
             byte[] byteTemp = readParagraphForward(end);
             end += byteTemp.length;
@@ -114,7 +115,7 @@ public class PageFactory {
             strParagraph = strParagraph.replaceAll("\r\n", "  ");
             strParagraph = strParagraph.replaceAll("\n", " ");
             while (strParagraph.length() > 0) {
-                i++;
+                //i++;
                 int size = mPaint.breakText(strParagraph, true, pageWidth,
                         null);
                 content.add(strParagraph.substring(0, size));
@@ -165,6 +166,7 @@ public class PageFactory {
     }
 
     public void prePage() {
+        end = begin;
         if (begin <= 0) {
             return;
         } else {
