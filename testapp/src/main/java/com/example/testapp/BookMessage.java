@@ -7,7 +7,7 @@ package com.example.testapp;
  * Date : 2017/11/10.
  */
 
-public class Book {
+public class BookMessage {
     private String name;
     private String path;
     private String encoding;

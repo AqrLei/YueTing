@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class Util {
 
-    /*public static String getEncoding(Book book) {
+    /*public static String getEncoding(BookMessage book) {
         UniversalDetector detector = new UniversalDetector(null);
         byte[] bytes = new byte[1024];
         try{

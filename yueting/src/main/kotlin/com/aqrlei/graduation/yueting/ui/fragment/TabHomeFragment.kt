@@ -15,7 +15,7 @@ import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.ReadMessage
+import com.aqrlei.graduation.yueting.model.local.BookMessage
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
@@ -56,7 +56,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         )
     }
 
-    private var mReadData = ArrayList<ReadMessage>()
+    private var mReadData = ArrayList<BookMessage>()
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter

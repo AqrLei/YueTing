@@ -18,6 +18,7 @@ import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPre
 import com.aqrlei.graduation.yueting.ui.adapter.TestExpandableListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.TestListViewTypeAdapter
 import com.aqrlei.graduation.yueting.ui.dialog.TestDialog
+import com.facebook.stetho.common.LogUtil
 import kotlinx.android.synthetic.main.activity_picture.*
 
 
@@ -58,6 +59,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
                 AppToast.toastShow(this, "RippleButton", 1000)
             }
             R.id.bt_read -> {
+                AppLog.logDebug("readTest", "button")
                 ReadActivity.jumpToReadActivity(this, 0)
             }
 

@@ -33,6 +33,9 @@
                 android:value=".ui.YueTingActivity" />
         </activity>
         <activity
+            android:name=".ui.ReadActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.FileActivity"
             android:screenOrientation="portrait" />
         <activity

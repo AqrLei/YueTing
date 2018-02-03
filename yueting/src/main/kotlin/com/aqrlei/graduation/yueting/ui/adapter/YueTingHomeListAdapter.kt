@@ -9,7 +9,7 @@ import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.model.local.ReadMessage
+import com.aqrlei.graduation.yueting.model.local.BookMessage
 import com.facebook.drawee.view.SimpleDraweeView
 
 /**
@@ -95,7 +95,7 @@ class YueTingHomeListAdapter(private var mContext: Context,
 
             }
             TYPE_READ -> {
-                (holder.get(R.id.tv_book_name) as TextView).text = (data as ReadMessage).bookName
+                (holder.get(R.id.tv_book_name) as TextView).text = (data as BookMessage).name
             }
             TYPE_MUSIC -> {
                 (holder.get(R.id.tv_music_name) as TextView).text =

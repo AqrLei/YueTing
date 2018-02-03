@@ -21,18 +21,19 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Book book = new Book();
+        BookMessage bookMessage = new BookMessage();
         File sd = Environment.getExternalStorageDirectory();
         String path = sd.getPath() + "/太古神王.txt";
         File file = new File(path);
-        book.setName(file.getName());
-        book.setPath(file.getPath());
-        book.setEncoding("GBK");
+        bookMessage.setName(file.getName());
+        bookMessage.setPath(file.getPath());
+        bookMessage.setEncoding("GBK");
 
         PageView mView = (PageView) findViewById(R.id.pv_page);
-        pageFactory = new PageFactory(mView, book);
+        pageFactory = new PageFactory(mView, bookMessage);
         pageFactory.nextPage();
         mView.setOnScrollListener(this);
+        /*Test*/
         InputStream inputStream = null;
         try {
             inputStream = getAssets().open("test.txt");
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
 
     }
 
+    /*Test*/
     private String getString(InputStream inputStream) {
         InputStreamReader inputStreamReader = null;
         try {

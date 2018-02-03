@@ -44,7 +44,7 @@ public class PageFactory {
 
     private ArrayList<String> content = new ArrayList<>();
 
-    public PageFactory(PageView pageView, Book book) {
+    public PageFactory(PageView pageView, BookMessage bookMessage) {
 
         DisplayMetrics metrics = new DisplayMetrics();
         mContext = pageView.getContext();
@@ -66,16 +66,16 @@ public class PageFactory {
         mView.setBitmap(bitmap);
         mCanvas = new Canvas(bitmap);
         mCanvas.drawColor(Color.YELLOW);
-        content.add(book.getName());
-        content.add(book.getPath());
-        openBook(book);
+        content.add(bookMessage.getName());
+        content.add(bookMessage.getPath());
+        openBook(bookMessage);
 
 
     }
 
-    private void openBook(Book book) {
-        encoding = book.getEncoding();
-        File file = new File(book.getPath());
+    private void openBook(BookMessage bookMessage) {
+        encoding = bookMessage.getEncoding();
+        File file = new File(bookMessage.getPath());
         begin = 0;
         end = 0;
         fileLength = (int) file.length();
@@ -86,7 +86,7 @@ public class PageFactory {
             e.printStackTrace();
             Log.d("testApp", "打开失败");
         }
-        // Log.d("testApp", book.getName());
+        // Log.d("testApp", bookMessage.getName());
     }
 
     public void nextPage() {
