@@ -33,7 +33,9 @@ class PageView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.save()
-        canvas.drawBitmap(mBitmap, 0f, 0f, null)
+        if (mBitmap != null) {
+            canvas.drawBitmap(mBitmap, 0f, 0f, null)
+        }
         canvas.restore()
     }
 

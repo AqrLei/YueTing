@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.DisplayMetrics
 import android.util.Log
+import com.aqrairsigns.aqrleilib.util.AppLog
 
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrairsigns.aqrleilib.view.PageView
@@ -39,7 +40,7 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
     private var margin: Int = 0
     private var lineSpace: Int = 0
     private val mCanvas: Canvas
-    private var encoding: String = ""
+    private var encoding: String = " "
     private var fileLength: Int = 0
     private var end: Int = 0
     private var begin: Int = 0
@@ -88,7 +89,7 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
             mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("testApp", "打开失败")
+            AppLog.logDebug("readTest", "打开失败")
         }
 
         // Log.d("testApp", bookMessage.getName());
@@ -114,7 +115,7 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
             val byteTemp = readParagraphForward(end)
             end += byteTemp.size
             try {
-                strParagraph = String(byteTemp, encoding as Charset)
+                strParagraph = String(byteTemp, Charset.forName(encoding))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -195,7 +196,7 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
             val byteTemp = readParagraphBack(begin)
             begin -= byteTemp.size
             try {
-                strParagraph = String(byteTemp, encoding as Charset)
+                strParagraph = String(byteTemp, Charset.forName(encoding))
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
             }
