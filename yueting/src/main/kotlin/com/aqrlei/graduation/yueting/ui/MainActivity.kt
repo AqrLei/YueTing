@@ -57,6 +57,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             R.id.rb_test -> {
                 AppToast.toastShow(this, "RippleButton", 1000)
             }
+            R.id.bt_read -> {
+                ReadActivity.jumpToReadActivity(this, 0)
+            }
 
         }
     }
