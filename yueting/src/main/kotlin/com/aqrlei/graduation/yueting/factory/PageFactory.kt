@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.DisplayMetrics
 import android.util.Log
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 
 import com.aqrairsigns.aqrleilib.util.DensityUtil
@@ -40,19 +41,21 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
     private var margin: Int = 0
     private var lineSpace: Int = 0
     private val mCanvas: Canvas
-    private var encoding: String = " "
     private var fileLength: Int = 0
     private var end: Int = 0
     private var begin: Int = 0
     private val fontSize = 45
+    private lateinit var encoding: String
     private var mappedFile: MappedByteBuffer? = null
     private var randomFile: RandomAccessFile? = null
+    private var refreshPage: Boolean = true
 
     private val content = ArrayList<String>()
 
     init {
 
         val metrics = DisplayMetrics()
+
         mContext = mView.context
         (mContext as Activity).windowManager.defaultDisplay.getMetrics(metrics)
         screenHeight = metrics.heightPixels
@@ -81,8 +84,10 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
     private fun openBook(bookMessage: BookMessage) {
         encoding = bookMessage.encoding
         val file = File(bookMessage.path)
-        begin = 0
-        end = 0
+        getCache()
+        if (begin != end) {
+            refreshPage = false
+        }
         fileLength = file.length().toInt()
         try {
             randomFile = RandomAccessFile(file, "r")
@@ -95,15 +100,30 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
         // Log.d("testApp", bookMessage.getName());
     }
 
-    fun nextPage() {
-        begin = end
-        if (end >= fileLength) {
-            return
-        } else {
-            content.clear()
-            pageDown()
-        }
+    fun savePageMark() {
 
+    }
+
+
+    fun nextPage() {
+        if (refreshPage) {
+            begin = end
+            if (end >= fileLength) {
+                return
+            } else {
+                content.clear()
+                pageDown()
+            }
+        } else {
+            end = begin
+            if (end >= fileLength) {
+                return
+            } else {
+                content.clear()
+                pageDown()
+            }
+            refreshPage = true
+        }
         printPage()
 
     }
@@ -250,7 +270,6 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
         }
         return buf
     }
-
     private fun printPage() {
         var y = margin
         mCanvas.drawColor(Color.YELLOW)
@@ -259,8 +278,19 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
             mCanvas.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
             // Log.d("text",line);
         }
+        putCache()
         mView.invalidate()
     }
 
+    private fun putCache() {
+        AppCache.APPCACHE.putInt("cBegin", begin)
+        AppCache.APPCACHE.putInt("cEnd", end)
+        AppCache.APPCACHE.commit()
+    }
+
+    private fun getCache() {
+        begin = AppCache.APPCACHE.getInt("cBegin", 0)
+        end = AppCache.APPCACHE.getInt("cEnd", 0)
+    }
 
 }

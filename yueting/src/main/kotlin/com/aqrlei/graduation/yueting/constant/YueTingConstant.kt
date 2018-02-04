@@ -30,6 +30,19 @@ object YueTingConstant {
             "integer default 0",
             "text"
     )
+    val BOOK_TABLE_NAME = "bookInfo"
+    val BOOK_TABLE_C = arrayOf(
+            "path",
+            "type",
+            "bookMark",
+            "bookInfo"
+    )
+    val BOOK_TABLE_C_TYPE = arrayOf(
+            "varchar unique not null",
+            "integer default 0",
+            "varchar",
+            "text"
+    )
     /*sharedpreference*/
     val SF_NAME = "yueting"
 

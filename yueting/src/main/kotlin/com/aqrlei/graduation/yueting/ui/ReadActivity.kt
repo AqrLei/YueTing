@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.PageView
@@ -16,7 +17,12 @@ import com.aqrlei.graduation.yueting.presenter.activitypresenter.ReadActivityPre
  * Description :
  * Date : 2017/11/17.
  */
-class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(), PageView.OnScrollListener {
+class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(), PageView.OnScrollListener,
+        View.OnLongClickListener {
+    override fun onLongClick(v: View?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onLeftScroll() {
         pageFactory.nextPage()
     }
@@ -41,6 +47,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(), PageView.
     private fun setPageFactory(pageView: PageView) {
         pageFactory = mPresenter.getPageFactory(pageView)
         pageFactory.nextPage()
+        pageView.setOnLongClickListener(this)
         pageView.setOnScrollListener(this)
     }
 
