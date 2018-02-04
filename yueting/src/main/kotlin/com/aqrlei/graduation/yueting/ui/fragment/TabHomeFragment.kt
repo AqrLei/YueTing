@@ -11,13 +11,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookMessage
+import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.ReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
 import kotlinx.android.synthetic.main.layout_yueting_header.*
@@ -37,17 +40,25 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         AlphaListView.OnAlphaChangeListener, AdapterView.OnItemClickListener {
     override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
-        if (position < 3) {
-            return
+        when (convertView.id) {
+            R.id.ll_title_item -> {
+                return
+            }
+            R.id.ll_music_item -> {
+                val realPosition = position - 3 - mBookInfoShred.getSize()
+                isServiceStart = mMusicInfoShared.isStartService()
+                if (!isServiceStart) {
+                    startMusicService(realPosition)
+                    isServiceStart = true
+                } else {
+                    sendPlayBroadcast(realPosition)
+                }
+            }
+            R.id.ll_read_item -> {
+                ReadActivity.jumpToReadActivity(mContainerActivity, mBookInfoShred.getInfo(position - 2))
+            }
         }
-        val realPosition = position - 3
-        isServiceStart = mMusicInfoShared.isStartService()
-        if (!isServiceStart) {
-            startMusicService(realPosition)
-            isServiceStart = true
-        } else {
-            sendPlayBroadcast(realPosition)
-        }
+
     }
 
     override fun onAlphaChanged(percent: Float) {
@@ -56,9 +67,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         )
     }
 
-    private var mReadData = ArrayList<BookMessage>()
+    private var mReadData = ArrayList<BookInfo>()
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
+    private var mBookInfoShred = ShareBookInfo.BookInfoTool
     private lateinit var mAdapter: YueTingHomeListAdapter
 
     private val serviceConn = object : ServiceConnection {
@@ -95,6 +107,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override fun onResume() {
         super.onResume()
         getMusicInfoFromDB()
+        getBookInfoFromDB()
+        DBManager.releaseCursor()
     }
 
     private fun initView() {
@@ -103,7 +117,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
         mAdapter = YueTingHomeListAdapter(mContainerActivity,
                 R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mReadData, mMusicInfoShared.getInfoS())
+                mBookInfoShred.getInfoS(), mMusicInfoShared.getInfoS())
 
         mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
                 inflate(R.layout.listheader_home, null))
@@ -116,6 +130,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun getMusicInfoFromDB() {
         mPresenter.getMusicInfoFromDB()
+    }
+
+    private fun getBookInfoFromDB() {
+        mPresenter.getBookInfoFromDB()
+
     }
 
     private fun startMusicService(position: Int) {
@@ -142,6 +161,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoShared.setInfoS(data)
         mAdapter.notifyDataSetChanged()
+    }
+
+    fun setBookInfo(data: ArrayList<BookInfo>) {
+        mBookInfoShred.setInfoS(data)
+        mAdapter.notifyDataSetChanged()
+
     }
 
 

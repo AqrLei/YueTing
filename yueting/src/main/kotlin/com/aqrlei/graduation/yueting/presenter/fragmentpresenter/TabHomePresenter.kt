@@ -15,6 +15,7 @@ import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
@@ -36,10 +37,20 @@ import io.reactivex.schedulers.Schedulers
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
     companion object {
-        fun selectObservable(): Observable<Cursor?> {
+        fun selectMusicObservable(): Observable<Cursor?> {
             return Observable.defer {
                 val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
                         YueTingConstant.MUSIC_TABLE_NAME),
+                        null, null, DBManager.SqlType.SELECT)
+                        .getCursor()
+                Observable.just(c)
+            }
+        }
+
+        fun selectBookObservable(): Observable<Cursor?> {
+            return Observable.defer {
+                val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
+                        YueTingConstant.BOOK_TABLE_NAME),
                         null, null, DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
@@ -116,7 +127,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposables)
         val musicInfoList = ArrayList<MusicInfo>()
         disposables.add(
-                selectObservable()
+                selectMusicObservable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
@@ -132,7 +143,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val mmr = MediaMetadataRetriever()
                                     val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex("fileInfo")))
                                             as FileInfo
-                                    val name = (fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
+
+                                    val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
                                     val path = t.getString(t.getColumnIndex("path"))
                                     mmr.setDataSource(path)
                                     musicInfo.id = t.getInt(t.getColumnIndex("id"))
@@ -153,8 +165,49 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     musicInfoList.add(musicInfo)
                                     mmr.release()
                                 }
-                                DBManager.releaseCursor()
+                                //  DBManager.releaseCursor()
                                 mMvpView.setMusicInfo(musicInfoList)
+                            }
+
+                        })
+        )
+    }
+
+    fun getBookInfoFromDB() {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        val bookInfoList = ArrayList<BookInfo>()
+        disposables.add(
+                selectBookObservable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Cursor>() {
+                            override fun onComplete() {
+                            }
+
+                            override fun onError(e: Throwable) {
+                            }
+
+                            override fun onNext(t: Cursor) {
+                                while (t.moveToNext()) {
+                                    val bookInfo = BookInfo()
+                                    val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex("fileInfo")))
+                                            as FileInfo
+                                    val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))
+                                    val path = t.getString(t.getColumnIndex("path"))
+                                    bookInfo.id = t.getInt(t.getColumnIndex("id"))
+                                    bookInfo.createTime = t.getString(t.getColumnIndex("createTime"))
+                                    bookInfo.name = name
+                                    bookInfo.path = path ?: ""
+
+
+
+
+
+                                    bookInfoList.add(bookInfo)
+                                }
+                                //  DBManager.releaseCursor()
+                                mMvpView.setBookInfo(bookInfoList)
                             }
 
                         })

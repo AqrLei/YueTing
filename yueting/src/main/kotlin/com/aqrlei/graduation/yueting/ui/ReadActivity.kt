@@ -9,6 +9,7 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.PageView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.PageFactory
+import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.ReadActivityPresenter
 
 /**
@@ -45,17 +46,19 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(), PageView.
     }
 
     private fun setPageFactory(pageView: PageView) {
-        pageFactory = mPresenter.getPageFactory(pageView)
+        val bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
+        pageFactory = mPresenter.getPageFactory(bookInfo, pageView)
         pageFactory.nextPage()
         pageView.setOnLongClickListener(this)
         pageView.setOnScrollListener(this)
     }
 
     companion object {
-        fun jumpToReadActivity(context: Context, data: Int) {
+        fun jumpToReadActivity(context: Context, data: BookInfo) {
             val intent = Intent(context, ReadActivity::class.java)
-            val bundle = Bundle()
-            bundle.putInt("code", data)
+            /* val bundle = Bundle()
+             bundle.putSerializable("bookInfo",data)*/
+            intent.putExtra("bookInfo", data)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
 

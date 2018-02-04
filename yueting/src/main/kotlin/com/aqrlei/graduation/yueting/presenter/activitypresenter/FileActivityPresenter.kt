@@ -35,19 +35,28 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 for (i in 0 until data.size) {
 
                     val suffix = FileUtil.getFileSuffix(data[i])
-                    if (suffix != "mp3" && suffix != "ape") continue
-
+                    if (suffix != "mp3" && suffix != "ape" && suffix != "txt" && suffix != "pdf") continue
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                     val tempData = data[i]
                     val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
+                    if (suffix == "mp3" || suffix == "ape") {
 
-                    DBManager.sqlData(
-                            DBManager.SqlFormat.insertSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,
-                                    arrayOf("path", "fileInfo", "createTime")),
-                            arrayOf(tempData.path, byteData, dateTime),
-                            null,
-                            DBManager.SqlType.INSERT
-                    )
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.insertSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,
+                                        arrayOf("path", "fileInfo", "createTime")),
+                                arrayOf(tempData.path, byteData, dateTime),
+                                null,
+                                DBManager.SqlType.INSERT
+                        )
+                    } else {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.insertSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                                        arrayOf("path", "fileInfo", "createTime")),
+                                arrayOf(tempData.path, byteData, dateTime),
+                                null,
+                                DBManager.SqlType.INSERT
+                        )
+                    }
                 }
                 val result = DBManager.finish()
                 Observable.just(result)
@@ -75,7 +84,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 }))
     }
 
-    fun addToDataBase(data: ArrayList<FileInfo>) {
+    fun addToDataBase(data: ArrayList<FileInfo>) {// True: music/ False: book
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         disposables.add(addDataToDB(data)

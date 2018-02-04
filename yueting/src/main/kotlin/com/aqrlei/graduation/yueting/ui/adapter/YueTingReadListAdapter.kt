@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.BookMessage
+import com.aqrlei.graduation.yueting.model.local.BookInfo
 
 /**
  * @Author: AqrLei
@@ -13,9 +13,9 @@ import com.aqrlei.graduation.yueting.model.local.BookMessage
  * @Description:
  * @Date: 2017/8/29
  */
-class YueTingReadListAdapter(mData: List<BookMessage>, mContext: Context, mResId: Int) :
-        CommonListAdapter<BookMessage>(mData, mContext, mResId) {
-    override fun bindData(holderList: CommonListViewHolder, data: BookMessage) {
+class YueTingReadListAdapter(mData: List<BookInfo>, mContext: Context, mResId: Int) :
+        CommonListAdapter<BookInfo>(mData, mContext, mResId) {
+    override fun bindData(holderList: CommonListViewHolder, data: BookInfo) {
         (holderList.get(R.id.tv_book_name) as TextView).text = data.name
     }
 

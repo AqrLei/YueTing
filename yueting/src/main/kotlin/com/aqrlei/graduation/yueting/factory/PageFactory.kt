@@ -7,13 +7,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.DisplayMetrics
-import android.util.Log
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrairsigns.aqrleilib.view.PageView
-import com.aqrlei.graduation.yueting.model.local.BookMessage
+import com.aqrlei.graduation.yueting.model.local.BookInfo
 
 import java.io.File
 import java.io.RandomAccessFile
@@ -30,7 +29,7 @@ import java.util.ArrayList
  * Date : 2017/11/9.
  */
 
-class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
+class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     private val screenHeight: Int
     private val screenWidth: Int
     private val pageHeight: Int
@@ -74,16 +73,16 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
         mView.setBitmap(bitmap)
         mCanvas = Canvas(bitmap)
         mCanvas.drawColor(Color.YELLOW)
-        content.add(bookMessage.name)
-        content.add(bookMessage.path)
-        openBook(bookMessage)
+        content.add(bookInfo.name)
+        content.add(bookInfo.path)
+        openBook(bookInfo)
 
 
     }
 
-    private fun openBook(bookMessage: BookMessage) {
-        encoding = bookMessage.encoding
-        val file = File(bookMessage.path)
+    private fun openBook(bookInfo: BookInfo) {
+        encoding = bookInfo.encoding
+        val file = File(bookInfo.path)
         getCache()
         if (begin != end) {
             refreshPage = false
@@ -97,7 +96,7 @@ class PageFactory(private val mView: PageView, bookMessage: BookMessage) {
             AppLog.logDebug("readTest", "打开失败")
         }
 
-        // Log.d("testApp", bookMessage.getName());
+        // Log.d("testApp", bookInfo.getName());
     }
 
     fun savePageMark() {

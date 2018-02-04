@@ -35,7 +35,7 @@ object YueTingConstant {
             "path",
             "type",
             "bookMark",
-            "bookInfo"
+            "fileInfo"
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",

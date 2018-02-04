@@ -56,16 +56,16 @@ public class PageFactory {
     private PageView mView;
     private Canvas mCanvas;
     private ArrayList<String> content = new ArrayList<>();
-    private Book bookMessage;
+    private Book bookInfo;
 
     private static PageFactory instance;
 
-    public static PageFactory getInstance(PageView view,Book bookMessage){
+    public static PageFactory getInstance(PageView view,Book bookInfo){
         if(instance == null){
             synchronized (PageFactory.class){
                 if(instance == null){
                     instance = new PageFactory(view);
-                    instance.openBook(bookMessage);
+                    instance.openBook(bookInfo);
                 }
             }
         }
@@ -98,12 +98,12 @@ public class PageFactory {
 
     }
 
-    private void openBook(final Book bookMessage){
-        this.bookMessage = bookMessage;
-        encoding = bookMessage.getEncoding();
-        begin = spHelper.getBookmarkStart(bookMessage.getBookName());
-        end = spHelper.getBookmarkEnd(bookMessage.getBookName());
-        File file = new File(bookMessage.getPath());
+    private void openBook(final Book bookInfo){
+        this.bookInfo = bookInfo;
+        encoding = bookInfo.getEncoding();
+        begin = spHelper.getBookmarkStart(bookInfo.getBookName());
+        end = spHelper.getBookmarkEnd(bookInfo.getBookName());
+        File file = new File(bookInfo.getPath());
         fileLength = (int) file.length();
             try {
                 randomFile = new RandomAccessFile(file, "r");
@@ -112,7 +112,7 @@ public class PageFactory {
                 e.printStackTrace();
                 Util.makeToast("打开失败！");
             }
-        Log.e(bookMessage.getBookName(),encoding);
+        Log.e(bookInfo.getBookName(),encoding);
     }
     //向后读取一个段落，返回bytes
 
@@ -324,8 +324,8 @@ private void pageDown(){
         printPage();
     }
     public void saveBookmark(){
-        SPHelper.getInstance().setBookmarkEnd(bookMessage.getBookName(),begin);
-        SPHelper.getInstance().setBookmarkStart(bookMessage.getBookName(),begin);
+        SPHelper.getInstance().setBookmarkEnd(bookInfo.getBookName(),begin);
+        SPHelper.getInstance().setBookmarkStart(bookInfo.getBookName(),begin);
     }
     public void setFontSize(int size){
         if(size < 15){
@@ -386,7 +386,7 @@ private void pageDown(){
         printPage( );
     }
     public Book getBook(){
-        return bookMessage;
+        return bookInfo;
     }
     public String getEncoding(){
         return encoding;
