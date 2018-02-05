@@ -33,6 +33,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
+
     override val mPresenter: CatalogActivityPresenter
         get() = CatalogActivityPresenter(this)
     override val layoutRes: Int
