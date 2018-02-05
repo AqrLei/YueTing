@@ -108,7 +108,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         super.onResume()
         getMusicInfoFromDB()
         getBookInfoFromDB()
-        DBManager.releaseCursor()
+
     }
 
     private fun initView() {

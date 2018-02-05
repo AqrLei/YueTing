@@ -7,6 +7,7 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -60,8 +61,10 @@ class YueTingApplication : BaseApplication() {
 
     override fun onTerminate() {
         if (isSameProcess) {
+            DBManager.releaseCursor()
             DBManager.closeDB()
             ShareMusicInfo.MusicInfoTool.clear()
+            ShareBookInfo.BookInfoTool.clear()
         }
         super.onTerminate()
     }
