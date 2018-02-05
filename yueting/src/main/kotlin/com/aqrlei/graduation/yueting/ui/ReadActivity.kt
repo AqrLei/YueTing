@@ -85,15 +85,20 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
             R.id.tv_catalog -> {
                 AppLog.logDebug("test", "jump to catalog")
                 hideView()
+                CatalogActivity.jumpToCatalogActivity(this, " ")
                 //TODO JumpToCatalogActivity
             }
             R.id.tv_rate -> {
                 AppLog.logDebug("test", "display progress control")
                 lLSeekBar.visibility = View.VISIBLE
+                lLSeekBar.bringToFront()
                 hideView()
 //TODO Display progress control
             }
             R.id.tv_setting -> {
+                lLSetting.visibility = View.VISIBLE
+                lLSetting.bringToFront()
+                hideView()
                 AppLog.logDebug("test", "show setting")
 //TODO about text, background and others
             }
@@ -108,6 +113,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
     private lateinit var bottomLinearLayout: LinearLayout
+    private lateinit var lLSetting: LinearLayout
     private lateinit var lLSeekBar: LinearLayout
     private lateinit var pageView: PageView
     private var display: Boolean = false
@@ -119,6 +125,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         topRelativeLayout = findViewById(R.id.fl_top_read) as RelativeLayout
         bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
         lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
+        lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
         seekBar.setOnSeekBarChangeListener(this)
         setPageFactory(pageView)
 

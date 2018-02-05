@@ -36,6 +36,9 @@
             android:name=".ui.ReadActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.CatalogActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.FileActivity"
             android:screenOrientation="portrait" />
         <activity

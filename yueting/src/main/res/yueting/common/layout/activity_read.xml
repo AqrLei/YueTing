@@ -1,45 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_gravity="top"
-        android:background="#ff3a454d"
-        android:id="@+id/fl_top_read"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="40dp"
-        android:visibility="invisible"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/TitleBarImageViewStyle"
-            android:layout_alignParentLeft="true"
-            android:onClick="onClick" />
-
-        <TextView
-            style="@style/TitleBarTextViewStyle"
-            android:layout_centerInParent="true"
-            android:text="文件名" />
-
-        <TextView
-            android:id="@+id/tv_add_mark"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="+"
-            android:textSize="30dp"
-            android:textStyle="normal" />
-    </RelativeLayout>
+    <include layout="@layout/read_item_top" />
 
     <com.aqrairsigns.aqrleilib.view.PageView
         android:id="@+id/pv_read"
@@ -47,82 +12,11 @@
         android:layout_height="match_parent"
         android:clickable="true" />
 
-    <LinearLayout
-        android:background="#ff3a454d"
-        android:id="@+id/ll_bottom_read"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        tools:visibility="invisible">
+    <include layout="@layout/read_item_bottom" />
 
-        <TextView
-            android:id="@+id/tv_catalog"
-            android:onClick="onClick"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="目录"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+    <include layout="@layout/read_item_progress" />
 
-        <TextView
-            android:id="@+id/tv_rate"
-            android:onClick="onClick"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="进度"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_setting"
-            android:onClick="onClick"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="设置"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_bottom_read_seekBar"
-        android:background="#ff3a454d"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/sb_rate"
-            android:max="1000"
-            android:progress="0"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tv_done"
-            android:layout_width="wrap_content"
-            android:text="*"
-            android:onClick="onClick"
-            android:padding="5dp"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:textColor="#a6cc10"
-            android:layout_height="40dp" />
-
-
-    </LinearLayout>
+    <include layout="@layout/read_item_setting" />
 
 
 </FrameLayout>
