@@ -15,6 +15,8 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.ReadActivityPresenter
+import kotlinx.android.synthetic.main.read_item_progress.*
+import java.text.DecimalFormat
 
 /**
  * Author : AqrLei
@@ -28,6 +30,8 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         AppLog.logDebug("test", "onProgressChanged $progress")
+        val percent = DecimalFormat("#00.0").format(progress * 1.0f / 10.0f)
+        tv_done_percent.text = "$percent %"
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -74,7 +78,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
             R.id.iv_back -> {
                 this@ReadActivity.finish()
             }
-            R.id.tv_done -> {
+            R.id.tv_done_percent -> {
                 lLSeekBar.visibility = View.INVISIBLE
             }
             R.id.tv_add_mark -> {

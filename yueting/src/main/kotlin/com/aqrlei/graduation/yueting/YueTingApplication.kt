@@ -61,7 +61,6 @@ class YueTingApplication : BaseApplication() {
 
     override fun onTerminate() {
         if (isSameProcess) {
-            DBManager.releaseCursor()
             DBManager.closeDB()
             ShareMusicInfo.MusicInfoTool.clear()
             ShareBookInfo.BookInfoTool.clear()
