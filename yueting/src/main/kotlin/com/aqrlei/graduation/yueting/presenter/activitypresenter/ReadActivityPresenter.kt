@@ -17,14 +17,14 @@ import java.io.File
 class ReadActivityPresenter(mMvpActivity: ReadActivity) :
         MvpContract.ActivityPresenter<ReadActivity>(mMvpActivity) {
 
-    fun getPageFactory(bookInfo: BookInfo?, pageView: PageView): PageFactory {
-        val bookMessage = BookInfo()
-        val sd = Environment.getExternalStorageDirectory()
-        val path = bookInfo?.path ?: sd.path+"/太古神王.txt"
-        val file = File(path)
-        bookMessage.name = file.name
-        bookMessage.path = file.path
-        bookMessage.encoding = "GBK"
-        return PageFactory(pageView, bookMessage)
-    }
+    fun getPageFactory(bookInfo: BookInfo, pageView: PageView): PageFactory = PageFactory(pageView, bookInfo)
+    /*  val bookMessage = BookInfo()
+      val sd = Environment.getExternalStorageDirectory()
+      val path = bookInfo?.path ?: sd.path+"/太古神王.txt"
+      val file = File(path)
+      bookMessage.name = file.name
+      bookMessage.path = file.path
+      bookMessage.encoding = "GBK"*/
+
+
 }

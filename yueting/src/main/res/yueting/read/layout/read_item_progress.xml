@@ -23,7 +23,6 @@
         android:id="@+id/tv_done_percent"
         android:layout_width="wrap_content"
         android:text="00.0%"
-        android:onClick="onClick"
         android:padding="5dp"
         android:gravity="center"
         android:textSize="20dp"

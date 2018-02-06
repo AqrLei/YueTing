@@ -48,6 +48,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     private var mappedFile: MappedByteBuffer? = null
     private var randomFile: RandomAccessFile? = null
     private var refreshPage: Boolean = true
+    private var bgColor: Int = Color.parseColor("#c7eece")
 
     private val content = ArrayList<String>()
 
@@ -72,7 +73,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         val bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
         mView.setBitmap(bitmap)
         mCanvas = Canvas(bitmap)
-        mCanvas.drawColor(Color.YELLOW)
+        mCanvas.drawColor(bgColor)
         content.add(bookInfo.name)
         content.add(bookInfo.path)
         openBook(bookInfo)
@@ -82,12 +83,13 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
     private fun openBook(bookInfo: BookInfo) {
         encoding = bookInfo.encoding
+        bgColor = AppCache.APPCACHE.getInt("bgColor", bgColor)
         val file = File(bookInfo.path)
         getCache()
         if (begin != end) {
             refreshPage = false
         }
-        fileLength = file.length().toInt()
+        fileLength = bookInfo.fileLength
         try {
             randomFile = RandomAccessFile(file, "r")
             mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
@@ -104,7 +106,11 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     }
 
 
-    fun nextPage() {
+    fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {
+        if (isProgress == 1) {
+            refreshPage = false
+            begin = pBegin
+        }
         if (refreshPage) {
             begin = end
             if (end >= fileLength) {
@@ -269,9 +275,21 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         }
         return buf
     }
+
+    fun setPageBackground(color: Int) {
+        bgColor = color
+        AppCache.APPCACHE.putInt("bgColor", bgColor)
+                .commit()
+        // mCanvas.drawColor(bgColor)
+        //mView.invalidate()
+        refreshPage = false
+        nextPage()
+
+
+    }
     private fun printPage() {
         var y = margin
-        mCanvas.drawColor(Color.YELLOW)
+        mCanvas.drawColor(bgColor)
         for (line in content) {
             y += fontSize + lineSpace
             mCanvas.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
@@ -280,6 +298,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         putCache()
         mView.invalidate()
     }
+
 
     private fun putCache() {
         AppCache.APPCACHE.putInt("cBegin", begin)

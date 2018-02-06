@@ -44,17 +44,17 @@
     <RadioGroup
         android:layout_marginTop="15dp"
         android:orientation="horizontal"
-        android:id="@+id/rg_read_back"
+        android:id="@+id/rg_read_bg"
         android:layout_width="match_parent"
         android:layout_gravity="center_vertical"
         android:layout_height="40dp">
 
         <RadioButton
-            android:id="@+id/rb_back_green"
+            android:id="@+id/rb_bg_green"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#ffc7eece"
+            android:background="@color/colorPageGreen"
             android:button="@null"
             android:checked="true"
             android:drawablePadding="4dp"
@@ -65,29 +65,29 @@
             android:textSize="15dp" />
 
         <RadioButton
-            android:id="@+id/rb_back_yellow"
+            android:id="@+id/rb_bg_yellow"
 
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#fff9915b"
+            android:background="@color/colorPageYellow"
             android:button="@null"
             android:checked="false"
             android:drawablePadding="4dp"
             android:gravity="center"
             android:paddingTop="5dp"
-            android:text="棋盘黄"
+            android:text="书页黄"
             android:textColor="@color/main_selector_tab_text"
             android:textSize="15dp" />
 
         <RadioButton
-            android:id="@+id/rb_catalog_title"
+            android:id="@+id/rb_bg_white"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#FFFFFFF0"
+            android:background="@color/colorPageWhite"
             android:button="@null"
-            android:checked="true"
+            android:checked="false"
             android:drawablePadding="4dp"
             android:gravity="center"
             android:paddingTop="5dp"
@@ -96,11 +96,11 @@
             android:textSize="15dp" />
 
         <RadioButton
-            android:id="@+id/rb_bookMark_title"
+            android:id="@+id/rb_bg_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#FF9999cc"
+            android:background="@color/colorPageGrey"
             android:button="@null"
             android:checked="false"
             android:drawablePadding="4dp"

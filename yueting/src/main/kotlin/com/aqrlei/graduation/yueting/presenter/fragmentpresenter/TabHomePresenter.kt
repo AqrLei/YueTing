@@ -23,6 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import java.io.File
 
 
 /**
@@ -199,9 +200,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     bookInfo.createTime = t.getString(t.getColumnIndex("createTime"))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
-
-
-
+                                    bookInfo.fileLength = File(path).length().toInt()
 
 
                                     bookInfoList.add(bookInfo)
