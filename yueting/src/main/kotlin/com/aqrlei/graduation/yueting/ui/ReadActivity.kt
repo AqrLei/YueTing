@@ -5,10 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
-import android.widget.SeekBar
+import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -32,7 +29,17 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         PageView.OnScrollListener,
         View.OnLongClickListener,
         SeekBar.OnSeekBarChangeListener,
-        RadioGroup.OnCheckedChangeListener {
+        RadioGroup.OnCheckedChangeListener,
+        AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        pageFactory.changeFontStyle(position)
+    }
+
+
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
         pageFactory.setPageBackground(bgColor)
@@ -111,7 +118,6 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
                 AppLog.logDebug("test", "jump to catalog")
                 hideView()
                 CatalogActivity.jumpToCatalogActivity(this, " ")
-                //TODO JumpToCatalogActivity
             }
             R.id.tv_rate -> {
                 AppLog.logDebug("test", "display progress control")
@@ -119,7 +125,6 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
                 lLSeekBar.bringToFront()
                 dProgress = true
                 hideView()
-//TODO Display progress control
             }
             R.id.tv_setting -> {
                 lLSetting.visibility = View.VISIBLE
@@ -127,7 +132,16 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
                 dSetting = true
                 hideView()
                 AppLog.logDebug("test", "show setting")
-//TODO about text, background and others
+            }
+            R.id.tv_textSize_small -> {
+                pageFactory.changeFontSize(15f)
+
+            }
+            R.id.tv_textSize_middle -> {
+                pageFactory.changeFontSize(22f)
+            }
+            R.id.tv_textSize_big -> {
+                pageFactory.changeFontSize(30f)
             }
         }
     }
@@ -157,6 +171,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
         seekBar.setOnSeekBarChangeListener(this)
+        sp_textStyle_select.onItemSelectedListener = this
         sb_light_degree.setOnSeekBarChangeListener(this)
         sb_light_degree.progress = (window.attributes.screenBrightness * 100).toInt()
         rg_read_bg.setOnCheckedChangeListener(this)

@@ -2,10 +2,7 @@ package com.aqrlei.graduation.yueting.factory
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.DisplayMetrics
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
@@ -34,7 +31,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     private val screenWidth: Int
     private val pageHeight: Int
     private val pageWidth: Int
-    private val lineNumber: Int
+    private var lineNumber: Int
     private val mPaint: Paint
     private val mContext: Context
     private var margin: Int = 0
@@ -43,7 +40,8 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     private var fileLength: Int = 0
     private var end: Int = 0
     private var begin: Int = 0
-    private val fontSize = 45
+    private var fontSize = 45
+    private var fontStyle = 0
     private lateinit var encoding: String
     private var mappedFile: MappedByteBuffer? = null
     private var randomFile: RandomAccessFile? = null
@@ -67,6 +65,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint.textSize = fontSize.toFloat()
         mPaint.color = Color.BLACK
+        mPaint.typeface = Typeface.DEFAULT
         margin = DensityUtil.pxToDip(mContext, 5f)
         lineSpace = DensityUtil.pxToDip(mContext, 5F)
 
@@ -79,6 +78,33 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         openBook(bookInfo)
 
 
+    }
+
+    fun changeFontSize(dpSize: Float) {
+        fontSize = DensityUtil.dipToPx(mContext, dpSize)
+        mPaint.textSize = fontSize.toFloat()
+        lineNumber = pageHeight / (fontSize + lineSpace) - 1
+        refreshPage = false
+        nextPage()
+    }
+
+    fun changeFontStyle(style: Int) {
+        when (style) {
+            0 -> {
+                mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+            }
+            1 -> {
+                mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            }
+            2 -> {
+                mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+            3 -> {
+                mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC)
+            }
+        }
+        refreshPage = false
+        nextPage()
     }
 
     private fun openBook(bookInfo: BookInfo) {
@@ -106,7 +132,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     }
 
 
-    fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {
+    fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条控制参数
         if (isProgress == 1) {
             refreshPage = false
             begin = pBegin

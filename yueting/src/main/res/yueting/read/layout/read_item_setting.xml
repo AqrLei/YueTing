@@ -13,7 +13,7 @@
     <android.support.v7.widget.AppCompatSeekBar
         android:id="@+id/sb_light_degree"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
         android:max="100"
@@ -25,24 +25,45 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_textSize_small"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_weight="2"
-            android:textSize="25sp"
-            android:text="字号" />
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="15sp"
+            android:text="小" />
+        <TextView
+            android:id="@+id/tv_textSize_middle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="22sp"
+            android:text="中" />
 
         <TextView
+            android:id="@+id/tv_textSize_big"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="30sp"
+            android:text="大" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_textStyle_select"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:text="字体" />
+            android:entries="@array/read_textStyle_SP"
+            android:gravity="center" />
     </LinearLayout>
 
     <RadioGroup
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:id="@+id/rg_read_bg"
         android:layout_width="match_parent"
