@@ -1,5 +1,6 @@
 package com.aqrairsigns.aqrleilib.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseErrorHandler
@@ -9,6 +10,7 @@ import android.os.Handler
 import com.aqrairsigns.aqrleilib.info.DataTableInfo
 
 
+@SuppressLint("StaticFieldLeak")
 /**
  * @Author: AqrLei
  * @Name MyLearning

@@ -60,7 +60,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         screenWidth = metrics.widthPixels
         pageHeight = screenHeight - 2 * margin
         pageWidth = screenWidth - 2 * margin
-        lineNumber = pageHeight / (fontSize + lineSpace) - 1
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
 
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint.textSize = fontSize.toFloat()
@@ -83,7 +83,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     fun changeFontSize(dpSize: Float) {
         fontSize = DensityUtil.dipToPx(mContext, dpSize)
         mPaint.textSize = fontSize.toFloat()
-        lineNumber = pageHeight / (fontSize + lineSpace) - 1
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
         refreshPage = false
         nextPage()
     }

@@ -11,6 +11,7 @@ import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.PageView
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.ReadActivityPresenter
@@ -90,61 +91,19 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         }
     }
 
-    private fun displayView() {
-        bottomLinearLayout.visibility = View.VISIBLE
-        topRelativeLayout.visibility = View.VISIBLE
-        bottomLinearLayout.bringToFront()
-        topRelativeLayout.bringToFront()
-        display = true
-    }
-
-    private fun hideView() {
-        bottomLinearLayout.visibility = View.GONE
-        topRelativeLayout.visibility = View.GONE
-        display = false
-    }
-
-    fun onClick(v: View) {
-        when (v.id) {
-            R.id.iv_back -> {
-                this@ReadActivity.finish()
-            }
-            R.id.tv_add_mark -> {
-                AppLog.logDebug("test", "add mark")
-                hideView()
-//TODO add bookmark to DB
-            }
-            R.id.tv_catalog -> {
-                AppLog.logDebug("test", "jump to catalog")
-                hideView()
-                CatalogActivity.jumpToCatalogActivity(this, " ")
-            }
-            R.id.tv_rate -> {
-                AppLog.logDebug("test", "display progress control")
-                lLSeekBar.visibility = View.VISIBLE
-                lLSeekBar.bringToFront()
-                dProgress = true
-                hideView()
-            }
-            R.id.tv_setting -> {
-                lLSetting.visibility = View.VISIBLE
-                lLSetting.bringToFront()
-                dSetting = true
-                hideView()
-                AppLog.logDebug("test", "show setting")
-            }
-            R.id.tv_textSize_small -> {
-                pageFactory.changeFontSize(15f)
-
-            }
-            R.id.tv_textSize_middle -> {
-                pageFactory.changeFontSize(22f)
-            }
-            R.id.tv_textSize_big -> {
-                pageFactory.changeFontSize(30f)
-            }
+    override fun onBackPressed() {
+        if (display || dSetting || dProgress) {
+            lLSeekBar.visibility = View.INVISIBLE
+            lLSetting.visibility = View.INVISIBLE
+            hideView()
+            dSetting = false
+            dProgress = false
+            display = false
+        } else {
+            super.onBackPressed()
         }
     }
+
 
     override val mPresenter: ReadActivityPresenter
         get() = ReadActivityPresenter(this)
@@ -179,21 +138,72 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
 
     }
 
-    override fun onBackPressed() {
-        if (display || dSetting || dProgress) {
-            lLSeekBar.visibility = View.INVISIBLE
-            lLSetting.visibility = View.INVISIBLE
-            hideView()
-            dSetting = false
-            dProgress = false
-            display = false
-        } else {
-            super.onBackPressed()
+    fun onClick(v: View) {
+        when (v.id) {
+            R.id.iv_back -> {
+                this@ReadActivity.finish()
+            }
+            R.id.tv_add_mark -> {
+                AppLog.logDebug("test", "add mark")
+                hideView()
+//TODO add bookmark to DB
+            }
+            R.id.tv_catalog -> {
+                AppLog.logDebug("test", "jump to catalog")
+                getCatalog()
+                hideView()
+
+            }
+            R.id.tv_rate -> {
+                AppLog.logDebug("test", "display progress control")
+                lLSeekBar.visibility = View.VISIBLE
+                lLSeekBar.bringToFront()
+                dProgress = true
+                hideView()
+            }
+            R.id.tv_setting -> {
+                lLSetting.visibility = View.VISIBLE
+                lLSetting.bringToFront()
+                dSetting = true
+                hideView()
+                AppLog.logDebug("test", "show setting")
+            }
+            R.id.tv_textSize_small -> {
+                pageFactory.changeFontSize(15f)
+
+            }
+            R.id.tv_textSize_middle -> {
+                pageFactory.changeFontSize(22f)
+            }
+            R.id.tv_textSize_big -> {
+                pageFactory.changeFontSize(30f)
+            }
         }
+    }
+
+    fun jumpToCatalog(flag: Boolean) {
+        if (flag) AppLog.logDebug("test", "catalog load successful")
+        else AppLog.logDebug("test", "catalog load failure")
+        CatalogActivity.jumpToCatalogActivity(this, " ")
+    }
+
+    private fun displayView() {
+        bottomLinearLayout.visibility = View.VISIBLE
+        topRelativeLayout.visibility = View.VISIBLE
+        bottomLinearLayout.bringToFront()
+        topRelativeLayout.bringToFront()
+        display = true
+    }
+
+    private fun hideView() {
+        bottomLinearLayout.visibility = View.GONE
+        topRelativeLayout.visibility = View.GONE
+        display = false
     }
 
     private fun setPageFactory(pageView: PageView) {
         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
+        ChapterFactory.init(bookInfo)
         pageFactory = mPresenter.getPageFactory(bookInfo, pageView)
         pageFactory.nextPage()
         pageView.setOnLongClickListener(this)
@@ -204,6 +214,10 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         val lp = window.attributes
         lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
         window.attributes = lp
+    }
+
+    private fun getCatalog() {
+        mPresenter.getCatalog()
     }
 
     companion object {

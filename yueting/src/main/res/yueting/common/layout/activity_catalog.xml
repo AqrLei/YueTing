@@ -40,8 +40,6 @@
             android:text="书签"
             android:textColor="@color/main_selector_tab_text"
             android:textSize="15dp" />
-
-
     </RadioGroup>
 
     <com.aqrairsigns.aqrleilib.view.AlphaListView

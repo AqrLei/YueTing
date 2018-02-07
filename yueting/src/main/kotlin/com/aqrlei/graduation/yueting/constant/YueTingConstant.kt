@@ -35,12 +35,14 @@ object YueTingConstant {
             "path",
             "type",
             "bookMark",
+            "catalog",
             "fileInfo"
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",
             "integer default 0",
-            "varchar",
+            "text",
+            "text",
             "text"
     )
     /*sharedpreference*/
@@ -70,4 +72,11 @@ object YueTingConstant {
     val CURRENT_DURATION = 1
     val PLAY_STATE = 2
     val PLAY_TYPE = 3
+    /*Book Chapter keyWord*/
+    val CHAPTER_KEY_WORD = arrayOf(
+            "第",
+            "章",
+            "节",
+            "回"
+    )
 }

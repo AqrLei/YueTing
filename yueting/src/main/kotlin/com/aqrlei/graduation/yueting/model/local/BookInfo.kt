@@ -9,7 +9,7 @@ import java.io.Serializable
  * @Description:
  * @Date: 2017/8/28
  */
-data class BookInfo(
+open class BookInfo(
 
         var name: String = "",
         var bookIcon: Drawable? = null,

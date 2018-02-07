@@ -3,13 +3,19 @@ package com.aqrlei.graduation.yueting.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ListView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
+import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.activity_catalog.*
 
 /**
@@ -19,7 +25,12 @@ import kotlinx.android.synthetic.main.activity_catalog.*
  * Date : 2017/11/17.
  */
 class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
-        RadioGroup.OnCheckedChangeListener {
+        RadioGroup.OnCheckedChangeListener,
+        AdapterView.OnItemClickListener {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        AppLog.logDebug("test", "catalog test")
+    }
+
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
@@ -42,6 +53,16 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         rg_read_catalog.setOnCheckedChangeListener(this)
+        initView()
+    }
+
+    private fun initView() {
+        val mView = findViewById(R.id.lv_catalog) as AlphaListView
+        mView.adapter = YueTingCatalogListAdapter(
+                ChapterFactory.CHAPTER.getChapters(),
+                this,
+                R.layout.catelog_bookmark_item, true)
+        mView.onItemClickListener = this
     }
 
 
