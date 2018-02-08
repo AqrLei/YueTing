@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
+import android.text.TextUtils
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
@@ -22,7 +23,10 @@ class YueTingCatalogListAdapter(
     private var flag = isCatalog
     override fun bindData(holderList: CommonListViewHolder, data: ChapterInfo) {
         if (flag) {
-            (holderList.get(R.id.tv_catalog_name) as TextView).text = data.chapterName
+            val catalogView = holderList.get(R.id.tv_catalog_name) as TextView
+            catalogView.setLines(1)
+            catalogView.ellipsize = TextUtils.TruncateAt.END
+            catalogView.text = data.chapterName
         } else {
 
         }

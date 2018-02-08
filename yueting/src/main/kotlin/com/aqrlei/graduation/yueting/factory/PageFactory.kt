@@ -109,7 +109,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
     private fun openBook(bookInfo: BookInfo) {
         encoding = bookInfo.encoding
-        bgColor = AppCache.APPCACHE.getInt("bgColor", bgColor)
+
         val file = File(bookInfo.path)
         getCache()
         if (begin != end) {
@@ -304,8 +304,6 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
     fun setPageBackground(color: Int) {
         bgColor = color
-        AppCache.APPCACHE.putInt("bgColor", bgColor)
-                .commit()
         // mCanvas.drawColor(bgColor)
         //mView.invalidate()
         refreshPage = false

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.PageView
@@ -43,6 +44,13 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
+        (0 until 4).filter { group?.getChildAt(it)?.id == checkedId }
+                .forEach {
+                    AppCache.APPCACHE.putInt("cIndex", it)
+                    AppCache.APPCACHE.commit()
+                    AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
+                }
+
         pageFactory.setPageBackground(bgColor)
     }
 
@@ -135,9 +143,9 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         sb_light_degree.progress = (window.attributes.screenBrightness * 100).toInt()
         rg_read_bg.setOnCheckedChangeListener(this)
         setPageFactory(pageView)
+        setCheckedId()
 
     }
-
     fun onClick(v: View) {
         when (v.id) {
             R.id.iv_back -> {
@@ -178,6 +186,14 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
             R.id.tv_textSize_big -> {
                 pageFactory.changeFontSize(30f)
             }
+        }
+    }
+
+    private fun setCheckedId() {
+        for (i in 0 until 4) {
+            (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
+                    i == AppCache.APPCACHE.getInt("cIndex", 0)
+            AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
         }
     }
 
