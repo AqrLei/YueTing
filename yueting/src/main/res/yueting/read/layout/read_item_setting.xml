@@ -77,7 +77,6 @@
             android:layout_weight="1"
             android:background="@color/colorPageGreen"
             android:button="@null"
-            android:checked="true"
             android:drawablePadding="4dp"
             android:gravity="center"
             android:paddingTop="5dp"

@@ -44,14 +44,16 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
-        (0 until 4).filter { group?.getChildAt(it)?.id == checkedId }
+        val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
+                ?: 0
+        /* (0 until 4).filter { group?.getChildAt(it)?.id == checkedId }
                 .forEach {
                     AppCache.APPCACHE.putInt("cIndex", it)
                     AppCache.APPCACHE.commit()
                     AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
-                }
+                }*/
 
-        pageFactory.setPageBackground(bgColor)
+        pageFactory.setPageBackground(bgColor, position)
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -192,8 +194,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     private fun setCheckedId() {
         for (i in 0 until 4) {
             (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
-                    i == AppCache.APPCACHE.getInt("cIndex", 0)
-            AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
+                    i == AppCache.APPCACHE.getInt("bPosition", 0)
         }
     }
 

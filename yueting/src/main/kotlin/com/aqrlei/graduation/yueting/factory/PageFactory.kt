@@ -47,6 +47,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     private var randomFile: RandomAccessFile? = null
     private var refreshPage: Boolean = true
     private var bgColor: Int = Color.parseColor("#c7eece")
+    private var bPosition: Int = 0
 
     private val content = ArrayList<String>()
 
@@ -302,7 +303,8 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         return buf
     }
 
-    fun setPageBackground(color: Int) {
+    fun setPageBackground(color: Int, position: Int) {
+        bPosition = position
         bgColor = color
         // mCanvas.drawColor(bgColor)
         //mView.invalidate()
@@ -325,12 +327,14 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
 
     private fun putCache() {
+        AppCache.APPCACHE.putInt("bPosition", bPosition)
         AppCache.APPCACHE.putInt("cBegin", begin)
         AppCache.APPCACHE.putInt("cEnd", end)
         AppCache.APPCACHE.commit()
     }
 
     private fun getCache() {
+        bPosition = AppCache.APPCACHE.getInt("bPosition", 0)
         begin = AppCache.APPCACHE.getInt("cBegin", 0)
         end = AppCache.APPCACHE.getInt("cEnd", 0)
     }
