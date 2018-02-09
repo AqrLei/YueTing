@@ -28,15 +28,6 @@ class ReadActivityPresenter(mMvpActivity: ReadActivity) :
             }
         }
     }
-
-    fun getPageFactory(bookInfo: BookInfo, pageView: PageView): PageFactory = PageFactory(pageView, bookInfo)
-    /*  val bookMessage = BookInfo()
-      val sd = Environment.getExternalStorageDirectory()
-      val path = bookInfo?.path ?: sd.path+"/太古神王.txt"
-      val file = File(path)
-      bookMessage.name = file.name
-      bookMessage.path = file.path
-      bookMessage.encoding = "GBK"*/
     fun getCatalog() {
         val disposables = CompositeDisposable()
         addDisposables(disposables)

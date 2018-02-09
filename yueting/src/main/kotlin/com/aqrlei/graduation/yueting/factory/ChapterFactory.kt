@@ -57,13 +57,16 @@ enum class ChapterFactory {
                     , chapterList[0].encoding)
             val reader = BufferedReader(isr)
             var temp = ""
+            var bPosition = 0
             while ((temp.apply { temp = reader.readLine() ?: " " }) != " ") {
+                bPosition += temp.length
                 if (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[0])
                         && (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[1])
                                 || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[2])
                                 || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[3]))) {
                     val chapterInfo = ChapterInfo()
                     chapterInfo.chapterName = temp
+                    chapterInfo.bPosition = bPosition
                     chapterList.add(chapterInfo)
                 }
             }

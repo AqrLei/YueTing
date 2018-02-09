@@ -14,6 +14,8 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
+import com.aqrlei.graduation.yueting.factory.PageFactory
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.activity_catalog.*
@@ -28,7 +30,11 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener {
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        // ReadActivity.jumpToReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
+        val intent = Intent().putExtra("bPosition", chapterInfoS[position].bPosition)
+        setResult(2, intent)
         AppLog.logDebug("test", "catalog test")
+        finish()
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
@@ -49,6 +55,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         get() = CatalogActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_catalog
+    private val chapterInfoS = ChapterFactory.CHAPTER.getChapters()
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -59,21 +66,12 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     private fun initView() {
         val mView = findViewById(R.id.lv_catalog) as AlphaListView
         mView.adapter = YueTingCatalogListAdapter(
-                ChapterFactory.CHAPTER.getChapters(),
+                chapterInfoS,
                 this,
                 R.layout.catelog_bookmark_item, true)
         mView.onItemClickListener = this
     }
 
 
-    companion object {
-        fun jumpToCatalogActivity(context: Context, data: String) {
-            val intent = Intent(context, CatalogActivity::class.java)
-            /* val bundle = Bundle()
-             bundle.putSerializable("bookInfo",data)*/
-            intent.putExtra("bookInfo", data)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
-        }
 
-    }
 }

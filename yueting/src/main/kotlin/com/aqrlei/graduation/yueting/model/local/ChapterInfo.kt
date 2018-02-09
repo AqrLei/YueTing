@@ -9,7 +9,8 @@ import java.io.Serializable
  * Date : 2018/2/7.
  */
 class ChapterInfo(
-        var chapterName: String = ""
+        var chapterName: String = "",
+        var bPosition: Int = 0
 ) : BookInfo(),
         Serializable {
     override fun equals(other: Any?): Boolean {

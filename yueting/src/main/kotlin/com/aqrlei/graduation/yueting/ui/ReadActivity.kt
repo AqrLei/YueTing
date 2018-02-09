@@ -114,12 +114,21 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 2) {
+            if (requestCode == REQUESTCODE) {
+                val bPosition = data?.extras?.getInt("bPosition") ?: 0
+                pageFactory.nextPage(1, bPosition)
+            }
+        }
+    }
 
     override val mPresenter: ReadActivityPresenter
         get() = ReadActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_read
-    private lateinit var pageFactory: PageFactory
+    private val pageFactory = PageFactory.PAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
     private lateinit var bottomLinearLayout: LinearLayout
@@ -130,6 +139,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private lateinit var bookInfo: BookInfo
+    private val REQUESTCODE = 1
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -199,9 +209,12 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     }
 
     fun jumpToCatalog(flag: Boolean) {
+
         if (flag) AppLog.logDebug("test", "catalog load successful")
         else AppLog.logDebug("test", "catalog load failure")
-        CatalogActivity.jumpToCatalogActivity(this, " ")
+        //CatalogActivity.jumpToCatalogActivity(this, " ")
+
+        startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
     }
 
     private fun displayView() {
@@ -221,7 +234,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     private fun setPageFactory(pageView: PageView) {
         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
         ChapterFactory.init(bookInfo)
-        pageFactory = mPresenter.getPageFactory(bookInfo, pageView)
+        pageFactory.setBookInfo(pageView, bookInfo)
         pageFactory.nextPage()
         pageView.setOnLongClickListener(this)
         pageView.setOnScrollListener(this)
@@ -238,11 +251,12 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     }
 
     companion object {
-        fun jumpToReadActivity(context: Context, data: BookInfo) {
+        fun jumpToReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
             val intent = Intent(context, ReadActivity::class.java)
             /* val bundle = Bundle()
              bundle.putSerializable("bookInfo",data)*/
-            intent.putExtra("bookInfo", data)
+            intent.putExtra("bookInfo", data0)
+            intent.putExtra("bPosition", data1)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
 

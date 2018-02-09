@@ -29,14 +29,4 @@ class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
 
 
-    fun getPageFactory(bookInfo: BookInfo?, pageView: PageView): PageFactory {
-        val bookMessage = BookInfo()
-        val sd = Environment.getExternalStorageDirectory()
-        val path = bookInfo?.path ?: sd.path+"/太古神王.txt"
-        val file = File(path)
-        bookMessage.name = file.name
-        bookMessage.path = file.path
-        bookMessage.encoding = "GBK"
-        return PageFactory(pageView, bookMessage)
-    }
 }

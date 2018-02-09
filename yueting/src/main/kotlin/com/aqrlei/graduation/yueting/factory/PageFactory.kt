@@ -6,18 +6,16 @@ import android.graphics.*
 import android.util.DisplayMetrics
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
-
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrairsigns.aqrleilib.view.PageView
 import com.aqrlei.graduation.yueting.model.local.BookInfo
-
 import java.io.File
 import java.io.RandomAccessFile
 import java.io.UnsupportedEncodingException
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.charset.Charset
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Author : AqrLei
@@ -26,17 +24,20 @@ import java.util.ArrayList
  * Date : 2017/11/9.
  */
 
-class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
-    private val screenHeight: Int
-    private val screenWidth: Int
-    private val pageHeight: Int
-    private val pageWidth: Int
-    private var lineNumber: Int
-    private val mPaint: Paint
-    private val mContext: Context
+enum class PageFactory {
+    PAGEFACTORY;
+
+    private var screenHeight: Int = 0
+    private var screenWidth: Int = 0
+    private var pageHeight: Int = 0
+    private var pageWidth: Int = 0
+    private var lineNumber: Int = 0
+    private lateinit var mPaint: Paint
+    private lateinit var mContext: Context
     private var margin: Int = 0
     private var lineSpace: Int = 0
-    private val mCanvas: Canvas
+    private lateinit var mCanvas: Canvas
+    private lateinit var mView: PageView
     private var fileLength: Int = 0
     private var end: Int = 0
     private var begin: Int = 0
@@ -51,9 +52,9 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
     private val content = ArrayList<String>()
 
-    init {
-
+    fun setBookInfo(view: PageView, bookInfo: BookInfo) {
         val metrics = DisplayMetrics()
+        mView = view
 
         mContext = mView.context
         (mContext as Activity).windowManager.defaultDisplay.getMetrics(metrics)
@@ -77,8 +78,6 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
         content.add(bookInfo.name)
         content.add(bookInfo.path)
         openBook(bookInfo)
-
-
     }
 
     fun changeFontSize(dpSize: Float) {
@@ -133,7 +132,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
     }
 
 
-    fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条控制参数
+    fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
         if (isProgress == 1) {
             refreshPage = false
             begin = pBegin
@@ -313,6 +312,7 @@ class PageFactory(private val mView: PageView, bookInfo: BookInfo) {
 
 
     }
+
     private fun printPage() {
         var y = margin
         mCanvas.drawColor(bgColor)
