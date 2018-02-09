@@ -40,9 +40,9 @@ object YueTingConstant {
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",
-            "integer default 0",
-            "text",
-            "text",
+            "integer ",
+            "text ",
+            "text ",
             "text"
     )
     /*sharedpreference*/

@@ -1,9 +1,12 @@
 package com.aqrlei.graduation.yueting.factory
 
+import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 import java.io.*
+import java.nio.charset.Charset
 
 /**
  * Author : AqrLei
@@ -42,12 +45,15 @@ enum class ChapterFactory {
     }
 
     fun getChapter(): Boolean {
-        if (getChapterFromDB()) {
-
+        if (chapterList.size > 1) {
+            return isDone
+        }
+        return if (getChapterFromDB()) {
+            isDone
         } else {
             getChapterFromBook()
         }
-        return isDone
+
     }
 
     private fun getChapterFromBook(): Boolean {//需要在线程中执行
@@ -59,14 +65,15 @@ enum class ChapterFactory {
             var temp = ""
             var bPosition = 0
             while ((temp.apply { temp = reader.readLine() ?: " " }) != " ") {
-                bPosition += temp.length
+                val length = temp.toByteArray(Charset.forName(chapterList[0].encoding)).size
+                bPosition += length
                 if (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[0])
                         && (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[1])
                                 || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[2])
                                 || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[3]))) {
                     val chapterInfo = ChapterInfo()
                     chapterInfo.chapterName = temp
-                    chapterInfo.bPosition = bPosition
+                    chapterInfo.bPosition = bPosition - length
                     chapterList.add(chapterInfo)
                 }
             }
@@ -85,11 +92,38 @@ enum class ChapterFactory {
     }
 
     private fun addChapterToDB() {
+        for (i in 0 until chapterList.size) {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.insertSqlFormat(
+                            YueTingConstant.BOOK_TABLE_NAME,
+                            arrayOf("catalog")), arrayOf(chapterList[i]),
+                    null,
+                    DBManager.SqlType.INSERT
+            )
+        }
 
     }
 
     private fun getChapterFromDB(): Boolean {
-        return false
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                "catalog"),
+                null, null, DBManager.SqlType.SELECT)
+                .getCursor()
+        // isDone =( c?.moveToNext() == true)
+        // c?.moveToPrevious()
+        while (c?.moveToNext() == true) {
+            try {
+                val temp = DataSerializationUtil.byteArrayToSequence(
+                        c.getBlob(c.getColumnIndex("catalog")))
+                chapterList.clear()
+                chapterList.add(temp as ChapterInfo)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                isDone = false
+            }
+        }
+        // DBManager.releaseCursor()
+        return isDone
 
     }
 }

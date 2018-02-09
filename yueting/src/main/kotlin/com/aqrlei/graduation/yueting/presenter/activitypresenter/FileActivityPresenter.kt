@@ -50,7 +50,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         )
                     } else {
                         DBManager.sqlData(
-                                DBManager.SqlFormat.insertSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                                DBManager.SqlFormat.insertSqlFormat(
+                                        YueTingConstant.BOOK_TABLE_NAME,
                                         arrayOf("path", "fileInfo", "createTime")),
                                 arrayOf(tempData.path, byteData, dateTime),
                                 null,
