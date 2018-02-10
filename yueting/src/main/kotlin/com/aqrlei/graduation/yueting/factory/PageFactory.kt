@@ -127,9 +127,7 @@ enum class PageFactory {
         // Log.d("testApp", bookInfo.getName());
     }
 
-    fun savePageMark() {
-
-    }
+    fun getCurrentBegin() = begin
 
 
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
@@ -324,7 +322,6 @@ enum class PageFactory {
         putCache()
         mView.invalidate()
     }
-
 
     private fun putCache() {
         AppCache.APPCACHE.putInt("bPosition", bPosition)

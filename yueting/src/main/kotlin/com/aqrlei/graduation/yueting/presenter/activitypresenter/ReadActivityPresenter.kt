@@ -1,7 +1,11 @@
 package com.aqrlei.graduation.yueting.presenter.activitypresenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.view.PageView
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
@@ -27,6 +31,21 @@ class ReadActivityPresenter(mMvpActivity: ReadActivity) :
                 Observable.just(ChapterFactory.CHAPTER.getChapter())
             }
         }
+
+        fun markObservable(path: String, currentBegin: Int): Observable<Boolean> {
+            return Observable.defer {
+                val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
+                DBManager.sqlData(
+                        DBManager.SqlFormat.insertSqlFormat(
+                                YueTingConstant.MARK_TABLE_NAME,
+                                arrayOf("path", "markPosition", "createTime")),
+                        arrayOf(path, currentBegin, dateTime),
+                        null,
+                        DBManager.SqlType.INSERT
+                )
+                Observable.just(DBManager.finish())
+            }
+        }
     }
     fun getCatalog() {
         val disposables = CompositeDisposable()
@@ -49,6 +68,26 @@ class ReadActivityPresenter(mMvpActivity: ReadActivity) :
                         )
 
         )
+
+    }
+
+    fun addMarkToDB(path: String, currentBegin: Int) {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        disposables.add(markObservable(path, currentBegin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<Boolean>() {
+                    override fun onComplete() {
+                    }
+
+                    override fun onError(e: Throwable) {
+                    }
+
+                    override fun onNext(t: Boolean) {
+                        AppToast.toastShow(mMvpActivity, if (t) "书签添加完毕" else "书签添加失败", 1000)
+                    }
+                }))
 
     }
 

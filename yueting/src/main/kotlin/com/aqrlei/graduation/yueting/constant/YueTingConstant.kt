@@ -34,16 +34,32 @@ object YueTingConstant {
     val BOOK_TABLE_C = arrayOf(
             "path",
             "type",
-            "bookMark",
-            "catalog",
             "fileInfo"
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",
             "integer ",
-            "text ",
-            "text ",
             "text"
+    )
+    val MARK_TABLE_NAME = "markInfo"
+    val MARK_TABLE_C = arrayOf(
+            "path",
+            "markPosition"
+    )
+    val MARK_TABLE_C_TYPE = arrayOf(
+            "varchar",
+            "integer unique"
+    )
+    val CATALOG_TABLE_NAME = "catalogInfo"
+    val CATALOG_TABLE_C = arrayOf(
+            "path",
+            "catalogName",
+            "catalogPosition"
+    )
+    val CATALOG_TABLE_C_TYPE = arrayOf(
+            "varchar not null",
+            "varchar",
+            "integer unique"
     )
     /*sharedpreference*/
     val SF_NAME = "yueting"

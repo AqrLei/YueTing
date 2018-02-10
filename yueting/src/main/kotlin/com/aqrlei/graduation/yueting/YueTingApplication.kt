@@ -41,11 +41,16 @@ class YueTingApplication : BaseApplication() {
                     .initDBHelper(this, YueTingConstant.DB_NAME, 1)
                     .addTable(YueTingConstant.MUSIC_TABLE_NAME,
                             YueTingConstant.MUSIC_TABLE_C,
-                            YueTingConstant.MUSIC_TABLE_C_TYPE
-                    )
+                            YueTingConstant.MUSIC_TABLE_C_TYPE)
                     .addTable(YueTingConstant.BOOK_TABLE_NAME,
                             YueTingConstant.BOOK_TABLE_C,
                             YueTingConstant.BOOK_TABLE_C_TYPE)
+                    .addTable(YueTingConstant.CATALOG_TABLE_NAME,
+                            YueTingConstant.CATALOG_TABLE_C,
+                            YueTingConstant.CATALOG_TABLE_C_TYPE)
+                    .addTable(YueTingConstant.MARK_TABLE_NAME,
+                            YueTingConstant.MARK_TABLE_C,
+                            YueTingConstant.MARK_TABLE_C_TYPE)
                     .createDB()
             Fresco.initialize(this)
         }

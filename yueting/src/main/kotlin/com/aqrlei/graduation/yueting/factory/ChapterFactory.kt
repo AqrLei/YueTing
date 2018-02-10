@@ -19,9 +19,10 @@ enum class ChapterFactory {
 
     companion object {
         private var chapterList = ArrayList<ChapterInfo>()
+        private var chapterBuffer = ChapterInfo()
         fun init(bookInfo: BookInfo) {
-            val chapter = ChapterInfo()
-            chapter.apply {
+
+            chapterBuffer.apply {
                 id = bookInfo.id
                 name = bookInfo.name
                 path = bookInfo.path
@@ -31,8 +32,6 @@ enum class ChapterFactory {
                 accessTime = bookInfo.accessTime
 
             }
-            chapterList.clear()
-            chapterList.add(chapter)
         }
     }
 
@@ -45,7 +44,7 @@ enum class ChapterFactory {
     }
 
     fun getChapter(): Boolean {
-        if (chapterList.size > 1) {
+        if (chapterList.size > 0) {
             return isDone
         }
         return if (getChapterFromDB()) {
@@ -59,8 +58,8 @@ enum class ChapterFactory {
     private fun getChapterFromBook(): Boolean {//需要在线程中执行
 
         try {
-            val isr = InputStreamReader(FileInputStream(File(chapterList[0].path))
-                    , chapterList[0].encoding)
+            val isr = InputStreamReader(FileInputStream(File(chapterBuffer.path))
+                    , chapterBuffer.encoding)
             val reader = BufferedReader(isr)
             var temp = ""
             var bPosition = 0
@@ -95,8 +94,9 @@ enum class ChapterFactory {
         for (i in 0 until chapterList.size) {
             DBManager.sqlData(
                     DBManager.SqlFormat.insertSqlFormat(
-                            YueTingConstant.BOOK_TABLE_NAME,
-                            arrayOf("catalog")), arrayOf(chapterList[i]),
+                            YueTingConstant.CATALOG_TABLE_NAME,
+                            YueTingConstant.CATALOG_TABLE_C),
+                    arrayOf(chapterBuffer.path, chapterList[i].chapterName, chapterList[i].bPosition),
                     null,
                     DBManager.SqlType.INSERT
             )
@@ -105,18 +105,18 @@ enum class ChapterFactory {
     }
 
     private fun getChapterFromDB(): Boolean {
-        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
-                "catalog"),
-                null, null, DBManager.SqlType.SELECT)
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.CATALOG_TABLE_NAME,
+                "", YueTingConstant.CATALOG_TABLE_C[0], "="),
+                null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
         // isDone =( c?.moveToNext() == true)
         // c?.moveToPrevious()
         while (c?.moveToNext() == true) {
             try {
-                val temp = DataSerializationUtil.byteArrayToSequence(
-                        c.getBlob(c.getColumnIndex("catalog")))
-                chapterList.clear()
-                chapterList.add(temp as ChapterInfo)
+                val chapterTemp = ChapterInfo()
+                chapterTemp.chapterName = c.getString(c.getColumnIndex(YueTingConstant.CATALOG_TABLE_C[1]))
+                chapterTemp.bPosition = c.getInt(c.getColumnIndex(YueTingConstant.CATALOG_TABLE_C[2]))
+                chapterList.add(chapterTemp)
             } catch (e: Exception) {
                 e.printStackTrace()
                 isDone = false

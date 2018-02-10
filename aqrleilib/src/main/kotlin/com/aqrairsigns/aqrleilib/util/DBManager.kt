@@ -237,7 +237,13 @@ object DBManager {
         fun selectSqlFormat(tableName: String, fileId: String = "", where: String = "",
                             operator: String = "") =
                 "select" +
-                        if (fileId == "") " * from $tableName"
+                        if (fileId == "") {
+                            if (where == "") {
+                                " * from $tableName"
+                            } else {
+                                " * from $tableName where $where $operator ?"
+                            }
+                        }
                         else {
                             " $fileId from $tableName" +
                                     if (where == "") where

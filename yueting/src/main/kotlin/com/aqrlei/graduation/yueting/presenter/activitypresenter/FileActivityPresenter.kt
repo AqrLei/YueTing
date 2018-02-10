@@ -42,7 +42,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     if (suffix == "mp3" || suffix == "ape") {
 
                         DBManager.sqlData(
-                                DBManager.SqlFormat.insertSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,
+                                DBManager.SqlFormat.insertSqlFormat(
+                                        YueTingConstant.MUSIC_TABLE_NAME,
                                         arrayOf("path", "fileInfo", "createTime")),
                                 arrayOf(tempData.path, byteData, dateTime),
                                 null,

@@ -165,6 +165,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
             }
             R.id.tv_add_mark -> {
                 AppLog.logDebug("test", "add mark")
+                addBookMark(pageFactory.getCurrentBegin())
                 hideView()
 //TODO add bookmark to DB
             }
@@ -206,6 +207,10 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
             (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
                     i == AppCache.APPCACHE.getInt("bPosition", 0)
         }
+    }
+
+    private fun addBookMark(currentBegin: Int) {
+        mPresenter.addMarkToDB(bookInfo.path, currentBegin)
     }
 
     fun jumpToCatalog(flag: Boolean) {
