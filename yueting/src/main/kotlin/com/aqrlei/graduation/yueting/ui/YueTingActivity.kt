@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.SendType
@@ -123,6 +124,11 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     private fun initPlayView(position: Int, duration: Int = 0) {
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DBManager.releaseCursor()
     }
 
     fun getMPlayView() = mPlayView

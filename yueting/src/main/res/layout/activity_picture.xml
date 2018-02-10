@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_impage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/lv_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bt_post"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ExpandableListView
         android:id="@+id/elv_test"
@@ -23,20 +23,20 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bt_post"
         android:groupIndicator="@null"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <WebView
         android:id="@+id/wv_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tv_file_name"/>
+        android:layout_above="@+id/tv_file_name" />
 
     <TextView
         android:id="@+id/tv_file_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bt_post"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/bt_post"
@@ -47,7 +47,16 @@
         android:background="@drawable/button_ripple_back"
         android:onClick="onClick"
         android:text="post"
-        android:visibility="visible"/>
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/bt_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="onClick"
+        android:text="read" />
 
     <com.aqrairsigns.aqrleilib.view.RippleButton
         android:id="@+id/rb_test"
@@ -58,7 +67,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="ripple"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <com.aqrairsigns.aqrleilib.view.FlowLayout
         android:id="@+id/aqr_tv_test"
@@ -76,7 +85,7 @@
             android:paddingTop="5dp"
             android:text="技术宅"
             android:textColor="#1b8fe6"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,7 +97,7 @@
             android:paddingTop="5dp"
             android:text="我是猿类，嗯，程序猿！"
             android:textColor="#1b8fe6"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -100,7 +109,7 @@
             android:paddingTop="5dp"
             android:text="我叫雷雷，雷雷的雷，雷雷的雷，没毛病！"
             android:textColor="#1b8fe6"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -112,7 +121,7 @@
             android:paddingTop="5dp"
             android:text="I have a dream"
             android:textColor="#1b8fe6"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,7 +133,7 @@
             android:paddingTop="5dp"
             android:text="write the code,change the world"
             android:textColor="#1b8fe6"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
     </com.aqrairsigns.aqrleilib.view.FlowLayout>
 
 

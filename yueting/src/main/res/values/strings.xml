@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">yueting</string>
+    <string-array name="read_textStyle_SP">
+        <item>正常</item>
+        <item>斜体</item>
+        <item>粗体</item>
+        <item>粗斜体</item>
+    </string-array>
 </resources>
+

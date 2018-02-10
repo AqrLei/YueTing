@@ -7,6 +7,7 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -40,8 +41,17 @@ class YueTingApplication : BaseApplication() {
                     .initDBHelper(this, YueTingConstant.DB_NAME, 1)
                     .addTable(YueTingConstant.MUSIC_TABLE_NAME,
                             YueTingConstant.MUSIC_TABLE_C,
-                            YueTingConstant.MUSIC_TABLE_C_TYPE
-                    ).createDB()
+                            YueTingConstant.MUSIC_TABLE_C_TYPE)
+                    .addTable(YueTingConstant.BOOK_TABLE_NAME,
+                            YueTingConstant.BOOK_TABLE_C,
+                            YueTingConstant.BOOK_TABLE_C_TYPE)
+                    .addTable(YueTingConstant.CATALOG_TABLE_NAME,
+                            YueTingConstant.CATALOG_TABLE_C,
+                            YueTingConstant.CATALOG_TABLE_C_TYPE)
+                    .addTable(YueTingConstant.MARK_TABLE_NAME,
+                            YueTingConstant.MARK_TABLE_C,
+                            YueTingConstant.MARK_TABLE_C_TYPE)
+                    .createDB()
             Fresco.initialize(this)
         }
 
@@ -58,6 +68,7 @@ class YueTingApplication : BaseApplication() {
         if (isSameProcess) {
             DBManager.closeDB()
             ShareMusicInfo.MusicInfoTool.clear()
+            ShareBookInfo.BookInfoTool.clear()
         }
         super.onTerminate()
     }
