@@ -89,10 +89,6 @@ object YueTingConstant {
     val PLAY_STATE = 2
     val PLAY_TYPE = 3
     /*Book Chapter keyWord*/
-    val CHAPTER_KEY_WORD = arrayOf(
-            "第",
-            "章",
-            "节",
-            "回"
-    )
+    // val  ="(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)"
+    val CHAPTER_KEY_WORD = "(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)(\n|\r|\r\n)"
 }

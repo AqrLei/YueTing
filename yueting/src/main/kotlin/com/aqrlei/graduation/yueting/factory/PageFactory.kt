@@ -62,7 +62,7 @@ enum class PageFactory {
         screenWidth = metrics.widthPixels
         pageHeight = screenHeight - 2 * margin
         pageWidth = screenWidth - 2 * margin
-        lineNumber = pageHeight / (fontSize + lineSpace) - 1
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
 
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint.textSize = fontSize.toFloat()
@@ -83,7 +83,7 @@ enum class PageFactory {
     fun changeFontSize(dpSize: Float) {
         fontSize = DensityUtil.dipToPx(mContext, dpSize)
         mPaint.textSize = fontSize.toFloat()
-        lineNumber = pageHeight / (fontSize + lineSpace) - 1
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
         refreshPage = false
         nextPage()
     }
@@ -107,27 +107,8 @@ enum class PageFactory {
         nextPage()
     }
 
-    private fun openBook(bookInfo: BookInfo) {
-        encoding = bookInfo.encoding
-
-        val file = File(bookInfo.path)
-        getCache()
-        if (begin != end) {
-            refreshPage = false
-        }
-        fileLength = bookInfo.fileLength
-        try {
-            randomFile = RandomAccessFile(file, "r")
-            mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
-        } catch (e: Exception) {
-            e.printStackTrace()
-            AppLog.logDebug("readTest", "打开失败")
-        }
-
-        // Log.d("testApp", bookInfo.getName());
-    }
-
     fun getCurrentBegin() = begin
+    fun getBookByteArray(position: Int) = readParagraphForward(position)
 
 
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
@@ -156,6 +137,28 @@ enum class PageFactory {
         printPage()
 
     }
+
+
+    private fun openBook(bookInfo: BookInfo) {
+        encoding = bookInfo.encoding
+
+        val file = File(bookInfo.path)
+        getCache()
+        if (begin != end) {
+            refreshPage = false
+        }
+        fileLength = bookInfo.fileLength
+        try {
+            randomFile = RandomAccessFile(file, "r")
+            mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            AppLog.logDebug("readTest", "打开失败")
+        }
+
+        // Log.d("testApp", bookInfo.getName());
+    }
+
 
     private fun pageDown() {
         var strParagraph = ""
@@ -238,6 +241,17 @@ enum class PageFactory {
 
     }
 
+    fun setPageBackground(color: Int, position: Int) {
+        bPosition = position
+        bgColor = color
+        // mCanvas.drawColor(bgColor)
+        //mView.invalidate()
+        refreshPage = false
+        nextPage()
+
+
+    }
+
     private fun pageUp() {
         var strParagraph = ""
         val tempList = ArrayList<String>()
@@ -300,16 +314,6 @@ enum class PageFactory {
         return buf
     }
 
-    fun setPageBackground(color: Int, position: Int) {
-        bPosition = position
-        bgColor = color
-        // mCanvas.drawColor(bgColor)
-        //mView.invalidate()
-        refreshPage = false
-        nextPage()
-
-
-    }
 
     private fun printPage() {
         var y = margin

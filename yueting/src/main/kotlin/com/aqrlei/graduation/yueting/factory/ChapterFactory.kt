@@ -1,12 +1,12 @@
 package com.aqrlei.graduation.yueting.factory
 
 import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
+import com.aqrairsigns.aqrleilib.util.ReaderUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
-import java.io.*
 import java.nio.charset.Charset
+import java.util.regex.Pattern
 
 /**
  * Author : AqrLei
@@ -36,12 +36,8 @@ enum class ChapterFactory {
     }
 
     private var isDone: Boolean = true
-    fun getChapters(): ArrayList<ChapterInfo> {
-        val chapterInfoS = ArrayList<ChapterInfo>()
-        chapterInfoS.addAll(chapterList)
-        chapterInfoS.removeAt(0)
-        return chapterInfoS
-    }
+    fun getChapters() = chapterList
+
 
     fun getChapter(): Boolean {
         if (chapterList.size > 0) {
@@ -56,34 +52,22 @@ enum class ChapterFactory {
     }
 
     private fun getChapterFromBook(): Boolean {//需要在线程中执行
-
-        try {
-            val isr = InputStreamReader(FileInputStream(File(chapterBuffer.path))
-                    , chapterBuffer.encoding)
-            val reader = BufferedReader(isr)
-            var temp = ""
-            var bPosition = 0
-            while ((temp.apply { temp = reader.readLine() ?: " " }) != " ") {
-                val length = temp.toByteArray(Charset.forName(chapterList[0].encoding)).size
-                bPosition += length
-                if (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[0])
-                        && (temp.contains(YueTingConstant.CHAPTER_KEY_WORD[1])
-                                || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[2])
-                                || temp.contains(YueTingConstant.CHAPTER_KEY_WORD[3]))) {
+        var position = 0
+        while (position < chapterBuffer.fileLength) {
+            val bookByteArray = PageFactory.PAGEFACTORY.getBookByteArray(position)
+            position += bookByteArray.size
+            try {
+                val strLine = String(bookByteArray, Charset.forName(chapterBuffer.encoding))
+                val p = Pattern.compile(YueTingConstant.CHAPTER_KEY_WORD)
+                if (p.matcher(strLine).find()) {
                     val chapterInfo = ChapterInfo()
-                    chapterInfo.chapterName = temp
-                    chapterInfo.bPosition = bPosition - length
+                    chapterInfo.chapterName = strLine
+                    chapterInfo.bPosition = position - bookByteArray.size
                     chapterList.add(chapterInfo)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-        } catch (f: FileNotFoundException) {
-            f.printStackTrace()
-            isDone = false
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-            isDone = false
         }
         addChapterToDB()
 
@@ -109,8 +93,8 @@ enum class ChapterFactory {
                 "", YueTingConstant.CATALOG_TABLE_C[0], "="),
                 null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
-        // isDone =( c?.moveToNext() == true)
-        // c?.moveToPrevious()
+        isDone = (c?.moveToNext() == true)
+        c?.moveToPrevious()
         while (c?.moveToNext() == true) {
             try {
                 val chapterTemp = ChapterInfo()
