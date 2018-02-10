@@ -1,5 +1,6 @@
 package com.aqrairsigns.aqrleilib.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseErrorHandler
@@ -9,6 +10,7 @@ import android.os.Handler
 import com.aqrairsigns.aqrleilib.info.DataTableInfo
 
 
+@SuppressLint("StaticFieldLeak")
 /**
  * @Author: AqrLei
  * @Name MyLearning
@@ -235,7 +237,13 @@ object DBManager {
         fun selectSqlFormat(tableName: String, fileId: String = "", where: String = "",
                             operator: String = "") =
                 "select" +
-                        if (fileId == "") " * from $tableName"
+                        if (fileId == "") {
+                            if (where == "") {
+                                " * from $tableName"
+                            } else {
+                                " * from $tableName where $where $operator ?"
+                            }
+                        }
                         else {
                             " $fileId from $tableName" +
                                     if (where == "") where

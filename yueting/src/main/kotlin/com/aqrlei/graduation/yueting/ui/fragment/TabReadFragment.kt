@@ -9,7 +9,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.ReadMessage
+import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingReadListAdapter
@@ -34,7 +34,7 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         get() = TabReadPresenter(this)
 
     private lateinit var mHeaderView: View
-    private var mReadData = ArrayList<ReadMessage>()
+    private var mReadData = ArrayList<BookInfo>()
 
     override fun onAlphaChanged(percent: Float) {
         mContainerActivity.ll_tab_title.setBackgroundColor(
@@ -83,18 +83,18 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         mReadLv.addHeaderView(LayoutInflater.from(mContainerActivity)
                 .inflate(R.layout.listheader_read, null))
         mReadLv.addHeaderView(mHeaderView)
-        mReadData.add(ReadMessage("这是书名吧1", null))
-        mReadData.add(ReadMessage("这是书名吧2", null))
-        mReadData.add(ReadMessage("这是书名吧3", null))
-        mReadData.add(ReadMessage("这是书名吧4", null))
-        mReadData.add(ReadMessage("这是书名吧5", null))
-        mReadData.add(ReadMessage("这是书名吧6", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
-        mReadData.add(ReadMessage("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧1", null))
+        mReadData.add(BookInfo("这是书名吧2", null))
+        mReadData.add(BookInfo("这是书名吧3", null))
+        mReadData.add(BookInfo("这是书名吧4", null))
+        mReadData.add(BookInfo("这是书名吧5", null))
+        mReadData.add(BookInfo("这是书名吧6", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
+        mReadData.add(BookInfo("这是书名吧7", null))
         mReadLv.adapter = YueTingReadListAdapter(mReadData, mContainerActivity,
                 R.layout.listitem_read)
         mReadLv.setAlphaChangeListener(this)

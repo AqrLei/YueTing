@@ -118,6 +118,7 @@ class PlayActivity :
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as LinearLayout
         if (mBundle.getIntArray("init") != null) {//PlayActivity privately-owned
             val initArray = mBundle.getIntArray("init")
+            mMusicShareInfo.isStartService(true)
             mMusicShareInfo.setPosition(initArray[0])
             mMusicShareInfo.setAudioSessionId(initArray[1])
             changePlayType(initArray[2])

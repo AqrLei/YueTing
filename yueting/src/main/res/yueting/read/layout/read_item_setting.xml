@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_bottom_read_setting"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:background="#ff3a454d"
+    android:visibility="invisible"
+    tools:visibility="visible">
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/sb_light_degree"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:max="100"
+        android:progress="70" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_textSize_small"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="15sp"
+            android:text="小" />
+        <TextView
+            android:id="@+id/tv_textSize_middle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="22sp"
+            android:text="中" />
+
+        <TextView
+            android:id="@+id/tv_textSize_big"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:textSize="30sp"
+            android:text="大" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sp_textStyle_select"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/read_textStyle_SP"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:id="@+id/rg_read_bg"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_height="40dp">
+
+        <RadioButton
+            android:id="@+id/rb_bg_green"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPageGreen"
+            android:button="@null"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="护眼绿"
+            android:textColor="@color/main_selector_tab_text"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/rb_bg_yellow"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPageYellow"
+            android:button="@null"
+            android:checked="false"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="书页黄"
+            android:textColor="@color/main_selector_tab_text"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/rb_bg_white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPageWhite"
+            android:button="@null"
+            android:checked="false"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="象牙白"
+            android:textColor="@color/main_selector_tab_text"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/rb_bg_grey"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPageGrey"
+            android:button="@null"
+            android:checked="false"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="自然灰"
+            android:textColor="@color/main_selector_tab_text"
+            android:textSize="15dp" />
+    </RadioGroup>
+
+
+</LinearLayout>

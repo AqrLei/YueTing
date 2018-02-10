@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.SendType
@@ -83,6 +84,9 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 .findViewById(R.id.ll_play_control) as LinearLayout
         initFragments(savedInstanceState)
         if (mMusicShareInfo.getSize() > 0) {
+            if (mMusicShareInfo.isStartService()) {
+                mPlayView.visibility = View.VISIBLE
+            }
             initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
         rg_anim_tab.setOnCheckedChangeListener(this)
@@ -120,6 +124,11 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     private fun initPlayView(position: Int, duration: Int = 0) {
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DBManager.releaseCursor()
     }
 
     fun getMPlayView() = mPlayView

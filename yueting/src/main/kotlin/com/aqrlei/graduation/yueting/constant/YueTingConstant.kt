@@ -30,6 +30,37 @@ object YueTingConstant {
             "integer default 0",
             "text"
     )
+    val BOOK_TABLE_NAME = "bookInfo"
+    val BOOK_TABLE_C = arrayOf(
+            "path",
+            "type",
+            "fileInfo"
+    )
+    val BOOK_TABLE_C_TYPE = arrayOf(
+            "varchar unique not null",
+            "integer ",
+            "text"
+    )
+    val MARK_TABLE_NAME = "markInfo"
+    val MARK_TABLE_C = arrayOf(
+            "path",
+            "markPosition"
+    )
+    val MARK_TABLE_C_TYPE = arrayOf(
+            "varchar",
+            "integer unique"
+    )
+    val CATALOG_TABLE_NAME = "catalogInfo"
+    val CATALOG_TABLE_C = arrayOf(
+            "path",
+            "catalogName",
+            "catalogPosition"
+    )
+    val CATALOG_TABLE_C_TYPE = arrayOf(
+            "varchar not null",
+            "varchar",
+            "integer unique"
+    )
     /*sharedpreference*/
     val SF_NAME = "yueting"
 
@@ -57,4 +88,7 @@ object YueTingConstant {
     val CURRENT_DURATION = 1
     val PLAY_STATE = 2
     val PLAY_TYPE = 3
+    /*Book Chapter keyWord*/
+    // val  ="(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)"
+    val CHAPTER_KEY_WORD = "(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)(\n|\r|\r\n)"
 }

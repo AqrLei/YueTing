@@ -30,6 +30,14 @@ enum class StringChangeUtil {
         return this
     }
 
+    fun relativeSizeChange(size: Float, text0: String, text1: String): StringChangeUtil {
+        val spannableString = SpannableString(text0 + text1)
+        val sizeSpan = RelativeSizeSpan(size)
+        spannableString.setSpan(sizeSpan, 0, text0.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        builder.append(spannableString)
+        return this
+    }
+
     fun foregroundColorChange(color: String, text: String): StringChangeUtil {
         val spannableString = SpannableString(text)
 

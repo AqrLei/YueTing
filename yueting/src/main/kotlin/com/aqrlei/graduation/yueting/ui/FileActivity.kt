@@ -103,8 +103,8 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         mAdapter.notifyDataSetChanged()
     }
 
-    fun finishActivity() {
-        AppToast.toastShow(this@FileActivity, "添加完毕", 1000)
+    fun finishActivity(result: Boolean) {
+        AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
         this@FileActivity.finish()
     }
 
