@@ -28,6 +28,7 @@ class ReadActivityPresenter(mMvpActivity: ReadActivity) :
     companion object {
         fun catalogsObservable(): Observable<Boolean> {
             return Observable.defer {
+                ChapterFactory.CHAPTER.getBookMarkFromDB()
                 Observable.just(ChapterFactory.CHAPTER.getChapter())
             }
         }

@@ -10,7 +10,8 @@ import java.io.Serializable
  */
 class ChapterInfo(
         var chapterName: String = "",
-        var bPosition: Int = 0
+        var bPosition: Int = 0,
+        var flag: Boolean = true
 ) : BookInfo(),
         Serializable {
     override fun equals(other: Any?): Boolean {
@@ -22,7 +23,10 @@ class ChapterInfo(
     }
 
     override fun hashCode(): Int {
-        val result = 17
+        var result = 17
+        result = result * 31 + chapterName.hashCode()
+        result = result * 31 + bPosition
+        result = result * 31 + flag.hashCode()
         return (result * 31 + super.hashCode())
 
     }

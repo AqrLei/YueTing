@@ -1,21 +1,17 @@
 package com.aqrlei.graduation.yueting.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.factory.PageFactory
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.activity_catalog.*
@@ -28,10 +24,19 @@ import kotlinx.android.synthetic.main.activity_catalog.*
  */
 class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener {
+    override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        if (!mDataInfoS[position].flag) {
+            ChapterFactory.CHAPTER.removeBookMark(position)
+            dataChange(ChapterFactory.CHAPTER.getBookMarks())
+        }
+        return true
+    }
+
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         // ReadActivity.jumpToReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
-        val intent = Intent().putExtra("bPosition", chapterInfoS[position].bPosition)
+        val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
         setResult(2, intent)
         AppLog.logDebug("test", "catalog test")
         finish()
@@ -40,10 +45,12 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
+                dataChange(ChapterFactory.CHAPTER.getChapters())
                 AppLog.logDebug("test",
                         (findViewById(R.id.rb_catalog_title) as RadioButton).text.toString())
             }
             R.id.rb_bookMark_title -> {
+                dataChange(ChapterFactory.CHAPTER.getBookMarks())
                 AppLog.logDebug("test",
                         (findViewById(R.id.rb_bookMark_title) as RadioButton).text.toString())
             }
@@ -55,7 +62,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         get() = CatalogActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_catalog
-    private val chapterInfoS = ChapterFactory.CHAPTER.getChapters()
+    private val mDataInfoS = ArrayList<ChapterInfo>()
+    private lateinit var mAdapter: YueTingCatalogListAdapter
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -63,15 +71,22 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         initView()
     }
 
-    private fun initView() {
-        val mView = findViewById(R.id.lv_catalog) as AlphaListView
-        mView.adapter = YueTingCatalogListAdapter(
-                chapterInfoS,
-                this,
-                R.layout.catelog_bookmark_item, true)
-        mView.onItemClickListener = this
+    private fun dataChange(data: ArrayList<ChapterInfo>) {
+        mDataInfoS.clear()
+        mDataInfoS.addAll(data)
+        mAdapter.notifyDataSetInvalidated()
     }
 
+    private fun initView() {
+        val mView = findViewById(R.id.lv_catalog) as AlphaListView
+        mDataInfoS.addAll(ChapterFactory.CHAPTER.getChapters())
+        mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
+                R.layout.catelog_bookmark_item)
+        mView.adapter = mAdapter
+        mView.onItemClickListener = this
+        mView.onItemLongClickListener = this
+
+    }
 
 
 }

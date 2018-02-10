@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
+import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 
@@ -17,17 +18,20 @@ import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 class YueTingCatalogListAdapter(
         mData: List<ChapterInfo>,
         mContext: Context,
-        mResId: Int,
-        isCatalog: Boolean)
+        mResId: Int)
     : CommonListAdapter<ChapterInfo>(mData, mContext, mResId) {
-    private var flag = isCatalog
     override fun bindData(holderList: CommonListViewHolder, data: ChapterInfo) {
-        if (flag) {
-            val catalogView = holderList.get(R.id.tv_catalog_name) as TextView
+        val catalogView = holderList.get(R.id.tv_catalog_name) as TextView
+        if (data.flag) {
             catalogView.setLines(1)
             catalogView.ellipsize = TextUtils.TruncateAt.END
+            catalogView.textSize = 12F
             catalogView.text = data.chapterName
         } else {
+            catalogView.ellipsize = TextUtils.TruncateAt.END
+            catalogView.textSize = 12f
+            catalogView.text = data.chapterName
+
 
         }
     }

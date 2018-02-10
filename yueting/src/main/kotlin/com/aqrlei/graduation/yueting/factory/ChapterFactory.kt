@@ -19,6 +19,7 @@ enum class ChapterFactory {
 
     companion object {
         private var chapterList = ArrayList<ChapterInfo>()
+        private var bookMarkList = ArrayList<ChapterInfo>()
         private var chapterBuffer = ChapterInfo()
         fun init(bookInfo: BookInfo) {
 
@@ -37,6 +38,22 @@ enum class ChapterFactory {
 
     private var isDone: Boolean = true
     fun getChapters() = chapterList
+    fun getBookMarks() = bookMarkList
+    fun removeBookMark(position: Int) {
+        val markInfo = bookMarkList.removeAt(position)
+        deleteFromDB(markInfo.bPosition)
+        if (DBManager.finish()) {
+            getBookMarkFromDB()
+        }
+    }
+
+    private fun deleteFromDB(bPosition: Int) {
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MARK_TABLE_NAME,
+                        YueTingConstant.MARK_TABLE_C[1], "="),
+                null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
+    }
+
 
 
     fun getChapter(): Boolean {
@@ -49,6 +66,30 @@ enum class ChapterFactory {
             getChapterFromBook()
         }
 
+    }
+
+    fun getBookMarkFromDB(): Boolean {
+        var haveMark = false
+        bookMarkList.clear()//书签数可能改变，故每次都要清空后重新从数据库获取，章节数固定不变故不必
+        val c = DBManager.sqlData(
+                DBManager.SqlFormat.selectSqlFormat(YueTingConstant.MARK_TABLE_NAME,
+                        "", YueTingConstant.MARK_TABLE_C[0], "="),
+                null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
+                .getCursor()
+        while (c?.moveToNext() == true) {
+            haveMark = true
+            val markInfo = ChapterInfo()
+            val tempP = c.getInt(c.getColumnIndex(YueTingConstant.MARK_TABLE_C[1]))
+            val tempName = String(
+                    PageFactory.PAGEFACTORY.getBookByteArray(tempP),
+                    Charset.forName(chapterBuffer.encoding))
+            markInfo.bPosition = tempP
+            markInfo.chapterName = tempName
+            markInfo.createTime = c.getString(c.getColumnIndex("createTime"))
+            markInfo.flag = false
+            bookMarkList.add(markInfo)
+        }
+        return haveMark
     }
 
     private fun getChapterFromBook(): Boolean {//需要在线程中执行
