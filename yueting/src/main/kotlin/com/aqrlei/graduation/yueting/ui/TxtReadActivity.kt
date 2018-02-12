@@ -10,7 +10,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.view.PageView
+import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.factory.PageFactory
@@ -27,7 +27,7 @@ import java.text.DecimalFormat
  * Description :
  * Date : 2017/11/17.
  */
-class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
+class TxtReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         PageView.OnScrollListener,
         View.OnLongClickListener,
         SeekBar.OnSeekBarChangeListener,
@@ -161,7 +161,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     fun onClick(v: View) {
         when (v.id) {
             R.id.iv_back -> {
-                this@ReadActivity.finish()
+                this@TxtReadActivity.finish()
             }
             R.id.tv_add_mark -> {
                 AppLog.logDebug("test", "add mark")
@@ -256,8 +256,8 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     }
 
     companion object {
-        fun jumpToReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
-            val intent = Intent(context, ReadActivity::class.java)
+        fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
+            val intent = Intent(context, TxtReadActivity::class.java)
             /* val bundle = Bundle()
              bundle.putSerializable("bookInfo",data)*/
             intent.putExtra("bookInfo", data0)

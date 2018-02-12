@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.aqrairsigns.aqrleilib.view.AlphaListView
+    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
         android:id="@+id/lv_fragment_read"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

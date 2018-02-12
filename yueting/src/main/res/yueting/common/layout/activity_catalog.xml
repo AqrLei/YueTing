@@ -42,7 +42,7 @@
             android:textSize="15dp" />
     </RadioGroup>
 
-    <com.aqrairsigns.aqrleilib.view.AlphaListView
+    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
         android:id="@+id/lv_catalog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

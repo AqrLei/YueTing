@@ -198,6 +198,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val path = t.getString(t.getColumnIndex("path"))
                                     bookInfo.id = t.getInt(t.getColumnIndex("id"))
                                     bookInfo.createTime = t.getString(t.getColumnIndex("createTime"))
+                                    bookInfo.type = t.getString(t.getColumnIndex("type"))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()

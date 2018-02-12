@@ -60,7 +60,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             }
             R.id.bt_read -> {
                 AppLog.logDebug("readTest", "button")
-                // ReadActivity.jumpToReadActivity(this, "")
+                // TxtReadActivity.jumpToTxtReadActivity(this, "")
             }
 
         }

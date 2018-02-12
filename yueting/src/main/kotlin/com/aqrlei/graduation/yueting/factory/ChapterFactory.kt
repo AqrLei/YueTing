@@ -27,6 +27,7 @@ enum class ChapterFactory {
                 id = bookInfo.id
                 name = bookInfo.name
                 path = bookInfo.path
+                type = bookInfo.type
                 createTime = bookInfo.createTime
                 fileLength = bookInfo.fileLength
                 encoding = bookInfo.encoding

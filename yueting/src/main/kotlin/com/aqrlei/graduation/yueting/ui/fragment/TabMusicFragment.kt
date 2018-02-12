@@ -8,7 +8,7 @@ import com.aqrairsigns.aqrleilib.adapter.CommonExpandListAdapter
 import com.aqrlei.graduation.yueting.R
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.view.AlphaExpandListView
+import com.aqrairsigns.aqrleilib.ui.view.AlphaExpandListView
 import com.aqrlei.graduation.yueting.model.local.ExpandMusicMessage
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabMusicPresenter

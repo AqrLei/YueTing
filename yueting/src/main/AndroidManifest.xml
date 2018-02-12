@@ -33,7 +33,7 @@
                 android:value=".ui.YueTingActivity" />
         </activity>
         <activity
-            android:name=".ui.ReadActivity"
+            android:name=".ui.TxtReadActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CatalogActivity"

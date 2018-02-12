@@ -38,7 +38,7 @@ object YueTingConstant {
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",
-            "integer ",
+            "varchar ",
             "text"
     )
     val MARK_TABLE_NAME = "markInfo"

@@ -13,6 +13,7 @@ open class BookInfo(
 
         var name: String = "",
         var bookIcon: Drawable? = null,
+        var type: String = "txt",//0 : txt; 1 : pdf
         var id: Int = 0,
         var path: String = "",
         var encoding: String = "GBK",
@@ -32,6 +33,7 @@ open class BookInfo(
         var result = 17
         result = result * 31 + name.hashCode()
         result = result * 31 + id
+        result = result * 31 + type.hashCode()
         result = result * 31 + path.hashCode()
         result = result * 31 + encoding.hashCode()
         result = result * 31 + accessTime.hashCode()

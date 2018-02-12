@@ -11,8 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.view.AlphaListView
+import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -20,7 +19,7 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
-import com.aqrlei.graduation.yueting.ui.ReadActivity
+import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
 import kotlinx.android.synthetic.main.layout_yueting_header.*
@@ -55,7 +54,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
             }
             R.id.ll_read_item -> {
-                ReadActivity.jumpToReadActivity(mContainerActivity, mBookInfoShred.getInfo(position - 2))
+                if (mBookInfoShred.getInfo(position - 2).type == "txt") {
+                    TxtReadActivity.jumpToTxtReadActivity(mContainerActivity, mBookInfoShred.getInfo(position - 2))
+                }
             }
         }
 

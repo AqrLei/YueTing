@@ -8,7 +8,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.view.AlphaListView
+import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -35,7 +35,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // ReadActivity.jumpToReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
+        // TxtReadActivity.jumpToTxtReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
         setResult(2, intent)
         AppLog.logDebug("test", "catalog test")
