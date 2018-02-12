@@ -13,18 +13,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-public class MainActivity extends AppCompatActivity implements PageView.OnScrollListener {
+public class MainActivity extends AppCompatActivity {
 
-    private PageFactory pageFactory;
-
+    //private PageFactory pageFactory;
+    public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BookMessage bookMessage = new BookMessage();
+        setContentView(R.layout.activity_container);
+        // BookMessage bookMessage = new BookMessage();
         File sd = Environment.getExternalStorageDirectory();
-        String path = sd.getPath() + "/太古神王.txt";
-        File file = new File(path);
+        String path = sd.getPath() + "/Android.pdf";
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fl_container, new PdfRendererFragment(),
+                            FRAGMENT_PDF_RENDERER_BASIC)
+                    .commit();
+        }
+
+
+        // String path = sd.getPath() + "/太古神王.txt";
+      /*  File file = new File(path);
         bookMessage.setName(file.getName());
         bookMessage.setPath(file.getPath());
         bookMessage.setEncoding("GBK");
@@ -33,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
         pageFactory = new PageFactory(mView, bookMessage);
         pageFactory.nextPage();
         mView.setOnScrollListener(this);
-        /*Test*/
+        *//*Test*//*
         InputStream inputStream = null;
         try {
             inputStream = getAssets().open("test.txt");
@@ -47,10 +57,10 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
             tv.setText(str);
 
         }
-
+*/
     }
 
-    /*Test*/
+  /*  *//*Test*//*
     private String getString(InputStream inputStream) {
         InputStreamReader inputStreamReader = null;
         try {
@@ -81,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
     @Override
     public void onRightScroll() {
         pageFactory.prePage();
-    }
+    }*/
    /* public static String getString(InputStream inputStream) {
         InputStreamReader inputStreamReader = null;
         try {
