@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,8 +57,6 @@ public class PdfRendererFragment extends Fragment implements View.OnTouchListene
 
     private GestureDetector gestureDetector;
 
-    public PdfRendererFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,8 +119,10 @@ public class PdfRendererFragment extends Fragment implements View.OnTouchListene
 
 
     private void openRenderer(Context context) throws IOException {
+        File sd = Environment.getExternalStorageDirectory();
+        String path = sd.getPath() + "/Android.pdf";
 
-        File file = new File(context.getCacheDir(), FILENAME);
+        File file = new File(path);
         if (!file.exists()) {
 
             InputStream asset = context.getAssets().open(FILENAME);
@@ -163,11 +165,11 @@ public class PdfRendererFragment extends Fragment implements View.OnTouchListene
 
         Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(),
                 Bitmap.Config.ARGB_8888);
-        bitmap = bitmapZoom(bitmap,
-                (float) width,
-                (float) height);
+        // bitmap = bitmapZoom(bitmap, (float) width, (float) height);
 
         mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+        Log.d("test", "w:\t" + bitmap.getWidth() + "\n h:\t" + bitmap.getHeight());
+        Log.d("test", "W:\t" + width + "H:\t" + height);
 
         mImageView.setImageBitmap(bitmap);
 

@@ -19,6 +19,7 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
@@ -55,7 +56,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             }
             R.id.ll_read_item -> {
                 if (mBookInfoShred.getInfo(position - 2).type == "txt") {
-                    TxtReadActivity.jumpToTxtReadActivity(mContainerActivity, mBookInfoShred.getInfo(position - 2))
+                    TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
+                            mBookInfoShred.getInfo(position - 2))
+                }
+                if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
+                    PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
+                            mBookInfoShred.getInfo(position - 2))
                 }
             }
         }
@@ -120,8 +126,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
                 mBookInfoShred.getInfoS(), mMusicInfoShared.getInfoS())
 
-        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
-                inflate(R.layout.listheader_home, null))
+        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_home, null))
         mRecommendLv.adapter = mAdapter
         mRecommendLv.onItemClickListener = this
         mRecommendLv.setAlphaChangeListener(this)

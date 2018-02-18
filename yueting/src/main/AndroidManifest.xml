@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aqrlei.graduation.yueting">
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".YueTingApplication"
@@ -34,6 +34,9 @@
         </activity>
         <activity
             android:name=".ui.TxtReadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PdfReadActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CatalogActivity"

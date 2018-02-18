@@ -127,7 +127,7 @@ class TxtReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     override val mPresenter: ReadActivityPresenter
         get() = ReadActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_read
+        get() = R.layout.activity_txt_read
     private val pageFactory = PageFactory.PAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
