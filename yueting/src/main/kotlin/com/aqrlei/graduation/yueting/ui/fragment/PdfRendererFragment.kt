@@ -1,33 +1,21 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.PointF
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
-import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
-import android.util.Log
-import android.view.GestureDetector
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewConfiguration
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.BookInfo
-
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 /**
  * Author : AqrLei
@@ -48,7 +36,6 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
     private var mImageView: ImageView? = null
     private var mTvTop: TextView? = null
     private var mTvBottom: TextView? = null
-
     private var mPageIndex: Int = 0
     private var touchSlop: Int = 0
     private var width: Int = 0
@@ -56,6 +43,20 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
 
     private var path: String = ""
     private var begin: Int = 0
+    private var mode: Int = 0
+    private val MODE_DRAG = 1
+    private val MODE_ZOOM = 2
+    private var startPoint = PointF()
+    private var matrix = Matrix()
+    private var currentMatrix = Matrix()
+    /**
+     * 两个手指的开始距离
+     */
+    private var startDis: Float = 0.toFloat()
+    /**
+     * 两个手指的中间点
+     */
+    private var midPoint: PointF? = null
 
     private var gestureDetector: GestureDetector? = null
 
@@ -70,7 +71,6 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mImageView = view.findViewById(R.id.iv_pdf_read) as ImageView
         mTvBottom = view.findViewById(R.id.tv_pdf_bottom) as TextView
         mTvTop = view.findViewById(R.id.tv_pdf_top) as TextView
@@ -79,10 +79,8 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
         wm.defaultDisplay.getMetrics(dm)
         width = dm.widthPixels
         height = dm.heightPixels
-
         path = (arguments.getSerializable("bookInfo") as BookInfo).path
         begin = arguments.getInt("bPosition")
-
         mImageView!!.setOnTouchListener(this)
         mImageView!!.setOnClickListener(this)
         touchSlop = ViewConfiguration.get(this.activity).scaledTouchSlop
@@ -96,7 +94,7 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
     override fun onStart() {
         super.onStart()
         try {
-            openRenderer(activity)
+            openRenderer()
             showPage(mPageIndex)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -123,9 +121,7 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
     }
 
 
-    private fun openRenderer(context: Context) {
-        /*  val sd = Environment.getExternalStorageDirectory()
-          val path = sd.path + "/Android.pdf"*/
+    private fun openRenderer() {
 
         val file = File(path)
         mFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
@@ -158,12 +154,9 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
 
         val bitmap = Bitmap.createBitmap(mCurrentPage!!.width, mCurrentPage!!.height,
                 Bitmap.Config.ARGB_8888)
-        // bitmap = bitmapZoom(bitmap, (float) width, (float) height);
+
 
         mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-        Log.d("test", "w:\t" + bitmap.width + "\n h:\t" + bitmap.height)
-        Log.d("test", "W:\t" + width + "H:\t" + height)
-
         mImageView!!.setImageBitmap(bitmap)
 
         updateUi()
@@ -176,17 +169,59 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
 
     }
 
-    private fun bitmapZoom(bitmap: Bitmap, newWidth: Float, newHeight: Float): Bitmap {
-        val oldWidth = bitmap.width
-        val oldHeight = bitmap.height
-        val scaleWidth = newWidth / oldWidth
-        val scaleHeight = newHeight / oldHeight
-        val matrix = Matrix()
-        matrix.postScale(scaleWidth, scaleHeight)
-        return Bitmap.createBitmap(bitmap, 0, 0, oldWidth, oldHeight, matrix, true)
-    }
-
     override fun onTouch(v: View, event: MotionEvent): Boolean {
+        when (event.action and MotionEvent.ACTION_MASK) {
+        // 手指压下屏幕
+            MotionEvent.ACTION_DOWN -> {
+                mode = MODE_DRAG
+                // 记录ImageView当前的移动位置
+                currentMatrix.set(mImageView!!.imageMatrix)
+                startPoint.set(event.x, event.y)
+            }
+        // 手指在屏幕上移动，改事件会被不断触发
+            MotionEvent.ACTION_MOVE -> {
+
+                if (mode == MODE_DRAG) {
+                    val dx = event.x - startPoint.x // 得到x轴的移动距离
+                    val dy = event.y - startPoint.y // 得到x轴的移动距离
+                    // 在没有移动之前的位置上进行移动
+                    matrix.set(currentMatrix)
+                    matrix.postTranslate(dx, dy)
+                } else if (mode == MODE_ZOOM) {
+                    val endDis = distance(event)// 结束距离
+                    if (endDis > 10f) { // 两个手指并拢在一起的时候像素大于10
+                        val scale = endDis / startDis// 得到缩放倍数
+                        matrix.set(currentMatrix)
+                        matrix.postScale(scale, scale, midPoint!!.x, midPoint!!.y)
+                    }
+                }// 放大缩小图片
+
+            }
+            MotionEvent.ACTION_UP -> {
+
+            }
+        // 当触点离开屏幕，但是屏幕上还有触点(手指)
+            MotionEvent.ACTION_POINTER_UP -> {
+                mode = 0
+            }
+        // 当屏幕上已经有触点(手指)，再有一个触点压下屏幕
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                mode = MODE_ZOOM
+                /** 计算两个手指间的距离  */
+                startDis = distance(event)
+                /** 计算两个手指间的中间点  */
+                if (startDis > 10f) { // 两个手指并拢在一起的时候像素大于10
+                    midPoint = mid(event)
+                    //记录当前ImageView的缩放倍数
+                    currentMatrix.set(mImageView!!.imageMatrix)
+                }
+            }
+        }
+        mImageView?.imageMatrix = matrix
+
+
+        //  return true
+
         return gestureDetector!!.onTouchEvent(event)
     }
 
@@ -202,14 +237,13 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
         private var moveX: Float = 0.toFloat()
 
         override fun onDown(e: MotionEvent): Boolean {
-            //mImageView.performClick();
             moveX = e.x
             return true
         }
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             if (Math.abs(e.x - moveX) <= touchSlop) {
-                mImageView!!.performClick()
+                mImageView?.performClick()
             }
             return true
         }
@@ -227,6 +261,22 @@ class PdfRendererFragment : Fragment(), View.OnTouchListener, View.OnClickListen
             }
             return false
         }
+    }
+
+    private fun distance(event: MotionEvent): Float {
+        val dx = event.getX(1) - event.getX(0)
+        val dy = event.getY(1) - event.getY(0)
+        /** 使用勾股定理返回两点之间的距离  */
+        return Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+    }
+
+    /**
+     * 计算两个手指间的中间点
+     */
+    private fun mid(event: MotionEvent): PointF {
+        val midX = (event.getX(1) + event.getX(0)) / 2
+        val midY = (event.getY(1) + event.getY(0)) / 2
+        return PointF(midX, midY)
     }
 
     companion object {

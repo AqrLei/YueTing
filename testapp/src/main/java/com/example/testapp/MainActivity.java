@@ -1,9 +1,13 @@
 package com.example.testapp;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -20,9 +24,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_container);
+        setContentView(R.layout.activity_image);
+
+        BaseDragZoomImageView iv = findViewById(R.id.biv_test);
+        Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
+        int w = dr.getIntrinsicWidth();
+        int h = dr.getIntrinsicHeight();
+        //iv.setImageDrawable(dr);
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        Canvas canvas = new Canvas(bitmap);
+        dr.setBounds(0, 0, w, h);
+        dr.draw(canvas);
+        iv.setImageBitmap(bitmap);
+
         // BookMessage bookMessage = new BookMessage();
-        File sd = Environment.getExternalStorageDirectory();
+     /*   File sd = Environment.getExternalStorageDirectory();
         String path = sd.getPath() + "/Android.pdf";
 
         if (savedInstanceState == null) {
@@ -30,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fl_container, new PdfRendererFragment(),
                             FRAGMENT_PDF_RENDERER_BASIC)
                     .commit();
-        }
+        }*/
 
 
         // String path = sd.getPath() + "/太古神王.txt";
