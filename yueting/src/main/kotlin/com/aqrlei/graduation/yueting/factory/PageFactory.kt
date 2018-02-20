@@ -244,8 +244,6 @@ enum class PageFactory {
     fun setPageBackground(color: Int, position: Int) {
         bPosition = position
         bgColor = color
-        // mCanvas.drawColor(bgColor)
-        //mView.invalidate()
         refreshPage = false
         nextPage()
 

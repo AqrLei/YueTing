@@ -1,46 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_pdf_top"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#FF000000"
-        android:gravity="center"
-        android:text="顶部功能区"
-        android:textColor="#FFFFFFFF"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+    <include layout="@layout/read_item_top"
+
+        />
 
     <ImageView
         android:id="@+id/iv_pdf_read"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPageGreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_pdf_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#FF000000"
-        android:gravity="center"
-        android:text="底部功能区"
-        android:textColor="#FFFFFFFF"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:visibility="visible" />
+    <include layout="@layout/read_item_bottom" />
+
+    <include layout="@layout/read_item_progress" />
+
+    <include layout="@layout/read_item_setting" />
+
 
 </android.support.constraint.ConstraintLayout>

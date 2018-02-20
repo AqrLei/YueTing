@@ -47,19 +47,13 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
-        /* (0 until 4).filter { group?.getChildAt(it)?.id == checkedId }
-                .forEach {
-                    AppCache.APPCACHE.putInt("cIndex", it)
-                    AppCache.APPCACHE.commit()
-                    AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
-                }*/
 
         pageFactory.setPageBackground(bgColor, position)
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
-            // AppLog.logDebug("test", "onProgressChanged $progress")
+
             val percent = DecimalFormat("#00.0").format(progress * 1.0f / 10.0f)
             tv_done_percent.text = "$percent %"
 
@@ -72,11 +66,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        AppLog.logDebug("test", "onStartTrackingTouch ${seekBar?.progress}")
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        AppLog.logDebug("test", "onStopTrackingTouch ${seekBar?.progress}")
     }
 
     override fun onLongClick(v: View?): Boolean {
@@ -146,7 +138,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         super.initComponents(savedInstanceState)
         pageView = findViewById(R.id.pv_read) as PageView
         seekBar = findViewById(R.id.sb_rate) as SeekBar
-        topRelativeLayout = findViewById(R.id.fl_top_read) as RelativeLayout
+        topRelativeLayout = findViewById(R.id.rl_top_read) as RelativeLayout
         bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
         lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
@@ -166,19 +158,15 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 this@TxtReadActivity.finish()
             }
             R.id.tv_add_mark -> {
-                AppLog.logDebug("test", "add mark")
                 addBookMark(pageFactory.getCurrentBegin())
                 hideView()
-//TODO add bookmark to DB
             }
             R.id.tv_catalog -> {
-                AppLog.logDebug("test", "jump to catalog")
                 getCatalog()
                 hideView()
 
             }
             R.id.tv_rate -> {
-                AppLog.logDebug("test", "display progress control")
                 lLSeekBar.visibility = View.VISIBLE
                 lLSeekBar.bringToFront()
                 dProgress = true
@@ -189,7 +177,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 lLSetting.bringToFront()
                 dSetting = true
                 hideView()
-                AppLog.logDebug("test", "show setting")
             }
             R.id.tv_textSize_small -> {
                 pageFactory.changeFontSize(15f)

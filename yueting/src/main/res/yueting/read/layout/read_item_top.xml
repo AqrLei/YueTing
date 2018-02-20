@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_top_read"
+    android:id="@+id/rl_top_read"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_gravity="top"
     android:background="#ff3a454d"
     android:visibility="invisible"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:visibility="visible">
 
     <ImageView
@@ -17,6 +21,7 @@
 
     <TextView
         style="@style/TitleBarTextViewStyle"
+        android:id="@+id/tv_book_title"
         android:layout_centerInParent="true"
         android:text="文件名" />
 

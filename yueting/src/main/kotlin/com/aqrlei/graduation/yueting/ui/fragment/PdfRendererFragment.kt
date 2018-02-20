@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.PointF
+import android.graphics.drawable.ColorDrawable
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -11,13 +12,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.RadioGroup
+import android.widget.SeekBar
 import android.widget.Toast
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
+import kotlinx.android.synthetic.main.read_item_bottom.*
+import kotlinx.android.synthetic.main.read_item_progress.*
+import kotlinx.android.synthetic.main.read_item_setting.*
+import kotlinx.android.synthetic.main.read_item_top.*
 import java.io.File
 import java.io.IOException
 
@@ -29,7 +35,32 @@ import java.io.IOException
  */
 
 class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfReadActivity>(),
-        View.OnTouchListener, View.OnClickListener {
+        View.OnTouchListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener,
+        RadioGroup.OnCheckedChangeListener {
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        val bgColor = (mContainerActivity.findViewById(checkedId).background as ColorDrawable).color
+        val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
+                ?: 0
+        //TODO changeBGColor and save state
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        if (seekBar?.id == R.id.sb_rate) {
+            tv_done_percent.text = "$progress / $pageCount %"
+            //TODO nextPage
+
+        }
+        if (seekBar?.id == R.id.sb_light_degree) {
+            changeBright(progress)
+        }
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+    }
+
     override val layoutRes: Int
         get() = R.layout.fragment_pdf_renderer
     override val mPresenter: PdfRendererPresenter
@@ -42,8 +73,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var mCurrentPage: PdfRenderer.Page? = null
 
     private var mImageView: ImageView? = null
-    private var mTvTop: TextView? = null
-    private var mTvBottom: TextView? = null
     private var mPageIndex: Int = 0
     private var touchSlop: Int = 0
 
@@ -76,6 +105,11 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var gestureDetector: GestureDetector? = null
 
     private var isOriginal = true
+
+    private var display: Boolean = false
+    private var dProgress: Boolean = false
+    private var dSetting: Boolean = false
+    private var pageCount: Int = 0
 
 
     companion object {
@@ -156,19 +190,48 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override fun onClick(v: View) {
+        if (!display && !dProgress && !dSetting) {
+            displayView()
+        }
 
-        mTvTop!!.visibility = if (mTvTop!!.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
-        mTvTop!!.bringToFront()
-        mTvBottom!!.visibility = if (mTvBottom!!.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
-        mTvBottom!!.bringToFront()
+        when (v.id) {
+            R.id.iv_back -> {
+                this@PdfRendererFragment.finish()
+            }
+            R.id.tv_add_mark -> {
+                hideView()
+                //Todo addBookMark() and
+            }
+            R.id.tv_catalog -> {
+                hideView()
+                //Todo getCatalog() and
+            }
+            R.id.tv_rate -> {
+                ll_bottom_read_seekBar.visibility = View.VISIBLE
+                ll_bottom_read_seekBar.bringToFront()
+                dProgress = true
+                hideView()
+            }
+            R.id.tv_setting -> {
+                ll_bottom_read_setting.visibility = View.VISIBLE
+                ll_bottom_read_setting.bringToFront()
+                ll_bottom_font.visibility = View.INVISIBLE
+                dSetting = true
+                hideView()
+            }
+        }
     }
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
+        val bookInfo = arguments.getSerializable("bookInfo") as BookInfo
+
+        sb_rate.setOnSeekBarChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
+        rg_read_bg.setOnCheckedChangeListener(this)
+        tv_book_title.text = bookInfo.name
         mImageView = view?.findViewById(R.id.iv_pdf_read) as ImageView
-        mTvBottom = view.findViewById(R.id.tv_pdf_bottom) as TextView
-        mTvTop = view.findViewById(R.id.tv_pdf_top) as TextView
-        path = (arguments.getSerializable("bookInfo") as BookInfo).path
+        path = bookInfo.path
         begin = arguments.getInt("bPosition")
         mImageView!!.setOnTouchListener(this)
         mImageView!!.setOnClickListener(this)
@@ -219,6 +282,41 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
     }
 
+    fun onBackPressed(): Boolean {
+        return if (display || dSetting || dProgress) {
+            ll_bottom_read_seekBar.visibility = View.INVISIBLE
+            ll_bottom_read_setting.visibility = View.INVISIBLE
+            hideView()
+            display = false
+            dSetting = false
+            dProgress = false
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun changeBright(brightValue: Int) {
+        val lp = mContainerActivity.window.attributes
+        lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
+        mContainerActivity.window.attributes = lp
+    }
+
+    private fun displayView() {
+        ll_bottom_read.visibility = View.VISIBLE
+        rl_top_read.visibility = View.VISIBLE
+        ll_bottom_read.bringToFront()
+        rl_top_read.bringToFront()
+        display = true
+
+    }
+
+    private fun hideView() {
+        ll_bottom_read.visibility = View.INVISIBLE
+        rl_top_read.visibility = View.INVISIBLE
+        display = false
+    }
+
     private fun openRenderer() {
 
         val file = File(path)
@@ -251,6 +349,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
         mImageView!!.scaleType = ImageView.ScaleType.FIT_CENTER
         mImageView!!.setImageBitmap(bitmap)
+        pageCount = mPdfRenderer!!.pageCount
+        sb_rate.max = pageCount
 
         // updateUi()
     }
