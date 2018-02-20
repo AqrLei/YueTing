@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 

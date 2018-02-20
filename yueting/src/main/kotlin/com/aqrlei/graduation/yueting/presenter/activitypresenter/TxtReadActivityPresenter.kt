@@ -44,6 +44,7 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
             }
         }
     }
+
     fun getCatalog() {
         val disposables = CompositeDisposable()
         addDisposables(disposables)

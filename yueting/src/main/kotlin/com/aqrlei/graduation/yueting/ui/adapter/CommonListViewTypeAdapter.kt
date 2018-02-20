@@ -83,8 +83,7 @@ class CommonListViewTypeAdapter(private var mContext: Context, private var title
 
     }
 
-    override fun getItem(position: Int): Any
-            = when (getItemViewType(position)) {
+    override fun getItem(position: Int): Any = when (getItemViewType(position)) {
         TYPE_TITLE -> mTitleData[0]
         TYPE_CONTENT -> mContentData[position - position / 3 - 1]
         else -> {

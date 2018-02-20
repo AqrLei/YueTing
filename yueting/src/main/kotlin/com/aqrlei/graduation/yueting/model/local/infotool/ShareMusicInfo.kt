@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
+import com.aqrairsigns.aqrleilib.ui.view.RoundBar
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
-import com.aqrairsigns.aqrleilib.ui.view.RoundBar
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.PlayState

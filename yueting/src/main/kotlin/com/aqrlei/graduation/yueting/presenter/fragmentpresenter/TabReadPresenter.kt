@@ -25,7 +25,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabReadFragment
  * Description :
  * Date : 2017/8/26.
  */
-class TabReadPresenter(mMvpView : TabReadFragment):
+class TabReadPresenter(mMvpView: TabReadFragment) :
         MvpContract.FragmentPresenter<TabReadFragment>(mMvpView) {
     fun getTweenAnimation(context: Context): Animation {
         return AnimationUtils.loadAnimation(context, R.anim.anim_test)

@@ -12,10 +12,10 @@ import android.support.v4.app.FragmentStatePagerAdapter
  */
 class TestFragmentPagerAdapter(fm: FragmentManager,
                                private val mFragments: ArrayList<Fragment>,
-                               private val mTabs: ArrayList<String> ): FragmentStatePagerAdapter(fm){
-    override fun getItem(position: Int)= mFragments[position]
+                               private val mTabs: ArrayList<String>) : FragmentStatePagerAdapter(fm) {
+    override fun getItem(position: Int) = mFragments[position]
 
-    override fun getCount()= mFragments.size
-    override fun getPageTitle(position: Int)= mTabs[position]
+    override fun getCount() = mFragments.size
+    override fun getPageTitle(position: Int) = mTabs[position]
 
 }

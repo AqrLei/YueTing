@@ -1,7 +1,6 @@
 package com.aqrlei.graduation.yueting.factory
 
 import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.ReaderUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -54,7 +53,6 @@ enum class ChapterFactory {
                         YueTingConstant.MARK_TABLE_C[1], "="),
                 null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
     }
-
 
 
     fun getChapter(): Boolean {

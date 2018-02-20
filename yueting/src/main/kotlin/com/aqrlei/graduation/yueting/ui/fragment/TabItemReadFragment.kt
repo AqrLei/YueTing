@@ -2,8 +2,8 @@ package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.aqrlei.graduation.yueting.R
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabItemReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 

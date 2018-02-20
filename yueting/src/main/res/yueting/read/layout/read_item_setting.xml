@@ -4,9 +4,9 @@
     android:id="@+id/ll_bottom_read_setting"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:orientation="vertical"
     android:layout_gravity="bottom"
     android:background="#ff3a454d"
+    android:orientation="vertical"
     android:visibility="invisible"
     tools:visibility="visible">
 
@@ -28,30 +28,31 @@
             android:id="@+id/tv_textSize_small"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:onClick="onClick"
-            android:textSize="15sp"
-            android:text="小" />
+            android:text="小"
+            android:textSize="15sp" />
+
         <TextView
             android:id="@+id/tv_textSize_middle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:onClick="onClick"
-            android:textSize="22sp"
-            android:text="中" />
+            android:text="中"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/tv_textSize_big"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:onClick="onClick"
-            android:textSize="30sp"
-            android:text="大" />
+            android:text="大"
+            android:textSize="30sp" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/sp_textStyle_select"
@@ -63,12 +64,12 @@
     </LinearLayout>
 
     <RadioGroup
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal"
         android:id="@+id/rg_read_bg"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_gravity="center_vertical"
-        android:layout_height="40dp">
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_bg_green"

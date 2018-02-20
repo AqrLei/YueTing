@@ -28,7 +28,8 @@ import java.io.IOException
  * Date : 2018/2/12.
  */
 
-class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfReadActivity>(), View.OnTouchListener, View.OnClickListener {
+class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfReadActivity>(),
+        View.OnTouchListener, View.OnClickListener {
     override val layoutRes: Int
         get() = R.layout.fragment_pdf_renderer
     override val mPresenter: PdfRendererPresenter
@@ -39,13 +40,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var mFileDescriptor: ParcelFileDescriptor? = null
     private var mPdfRenderer: PdfRenderer? = null
     private var mCurrentPage: PdfRenderer.Page? = null
+
     private var mImageView: ImageView? = null
     private var mTvTop: TextView? = null
     private var mTvBottom: TextView? = null
     private var mPageIndex: Int = 0
     private var touchSlop: Int = 0
-    private var width: Int = 0
-    private var height: Int = 0
 
     private var path: String = ""
     private var begin: Int = 0
@@ -53,10 +53,13 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private val MODE_DRAG = 1
     private val MODE_ZOOM = 2
     private var startPoint = PointF()
+
     private var matrix = Matrix()
     private var currentMatrix = Matrix()
     private var originalMatrix = Matrix()
-    /*图片初始状态矩阵的值*/
+    /**
+     * 保存默认位置矩阵的值
+     */
     private var matrixValue: FloatArray = floatArrayOf(
             1.0F, 0.0F, 0.0F,
             0.0F, 1.0F, 0.0F,
@@ -242,15 +245,10 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         if (null != mCurrentPage) {
             mCurrentPage!!.close()
         }
-
         mCurrentPage = mPdfRenderer!!.openPage(index)
-
         val bitmap = Bitmap.createBitmap(mCurrentPage!!.width, mCurrentPage!!.height,
                 Bitmap.Config.ARGB_8888)
         mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-        width = bitmap.width
-        height = bitmap.height
-
         mImageView!!.scaleType = ImageView.ScaleType.FIT_CENTER
         mImageView!!.setImageBitmap(bitmap)
 

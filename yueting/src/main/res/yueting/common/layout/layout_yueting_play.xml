@@ -51,19 +51,19 @@
         android:text="上" />
 
     <FrameLayout
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <com.aqrairsigns.aqrleilib.ui.view.RoundBar
             android:id="@+id/rb_progress_play"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            yueting:useGradientGolor="true"
-            yueting:radius="12dp"
             yueting:progress="0"
+            yueting:radius="12dp"
+            yueting:rotateDegree="180"
             yueting:roundWidth="3dp"
-            yueting:rotateDegree="180" />
+            yueting:useGradientGolor="true" />
 
         <TextView
             android:id="@+id/tv_play_control"

@@ -1,54 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/ll_music_item"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="90dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_music_item"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:orientation="horizontal">
+
     <FrameLayout
-        android:layout_margin="12dp"
         android:layout_width="64dp"
-        android:layout_height="64dp">
+        android:layout_height="64dp"
+        android:layout_margin="12dp">
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_music_picture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </FrameLayout>
+
     <LinearLayout
-        android:layout_marginRight="15dp"
-        android:orientation="vertical"
-        android:layout_marginTop="25dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_music_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:maxLines="1"
             android:ellipsize="end"
-            tools:text="这是一首歌的名字"/>
+            android:maxLines="1"
+            android:textSize="20dp"
+            tools:text="这是一首歌的名字" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tv_singer_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="歌手名"/>
+                android:textSize="12dp"
+                tools:text="歌手名" />
+
             <TextView
                 android:id="@+id/tv_play_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:layout_gravity="right"
-                android:textSize="12dp"
-                android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="播放000次"/>
+                android:gravity="right"
+                android:maxLines="1"
+                android:textSize="12dp"
+                tools:text="播放000次" />
         </FrameLayout>
     </LinearLayout>
 

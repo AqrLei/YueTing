@@ -7,8 +7,8 @@ import android.widget.AdapterView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo

@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.factory.PageFactory
@@ -159,6 +159,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         setCheckedId()
 
     }
+
     fun onClick(v: View) {
         when (v.id) {
             R.id.iv_back -> {

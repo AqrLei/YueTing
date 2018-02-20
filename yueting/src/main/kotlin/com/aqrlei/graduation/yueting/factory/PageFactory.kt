@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.util.DisplayMetrics
+import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DensityUtil
-import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import java.io.File
 import java.io.RandomAccessFile
