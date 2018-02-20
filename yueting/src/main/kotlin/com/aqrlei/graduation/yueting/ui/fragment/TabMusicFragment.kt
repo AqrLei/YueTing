@@ -45,10 +45,9 @@ class TabMusicFragment : MvpContract.MvpFragment<TabMusicPresenter, YueTingActiv
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
-
     }
 
     private fun initView() {

@@ -104,11 +104,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
-
-
     }
 
     override fun onResume() {

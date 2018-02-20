@@ -1,6 +1,7 @@
 package com.aqrairsigns.aqrleilib.basemvp
 
 import android.os.Bundle
+import android.view.View
 
 
 /**
@@ -36,9 +37,8 @@ abstract class MvpContract {
         /*由具体实现类指定该Presenter*/
         protected abstract val mPresenter: T
 
-        override fun initComponents() {
-            super.initComponents()
-
+        override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+            super.initComponents(view, savedInstanceState)
         }
 
         override fun onDestroy() {

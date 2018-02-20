@@ -2,30 +2,20 @@ package com.example.testapp;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
 
     //private PageFactory pageFactory;
     public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-
         BaseDragZoomImageView iv = findViewById(R.id.biv_test);
         Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
         int w = dr.getIntrinsicWidth();

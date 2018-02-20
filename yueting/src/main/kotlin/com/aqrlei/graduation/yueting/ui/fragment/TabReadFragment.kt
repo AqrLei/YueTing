@@ -65,8 +65,8 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
     }
 

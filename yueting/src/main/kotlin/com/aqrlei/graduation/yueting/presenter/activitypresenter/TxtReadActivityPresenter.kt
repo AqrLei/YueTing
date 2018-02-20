@@ -19,8 +19,8 @@ import io.reactivex.schedulers.Schedulers
  * Description :
  * Date : 2017/11/17.
  */
-class ReadActivityPresenter(mMvpActivityTxt: TxtReadActivity) :
-        MvpContract.ActivityPresenter<TxtReadActivity>(mMvpActivityTxt) {
+class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
+        MvpContract.ActivityPresenter<TxtReadActivity>(mMvpActivity) {
     companion object {
         fun catalogsObservable(): Observable<Boolean> {
             return Observable.defer {
