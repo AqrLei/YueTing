@@ -11,11 +11,10 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.widget.ImageView
-import android.widget.RadioGroup
-import android.widget.SeekBar
-import android.widget.Toast
+import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppCache
+import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
@@ -35,19 +34,23 @@ import java.io.IOException
  */
 
 class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfReadActivity>(),
-        View.OnTouchListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener,
-        RadioGroup.OnCheckedChangeListener {
+        View.OnTouchListener, SeekBar.OnSeekBarChangeListener,
+        RadioGroup.OnCheckedChangeListener,
+        View.OnClickListener {
+
+
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         val bgColor = (mContainerActivity.findViewById(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
-        //TODO changeBGColor and save state
+        mImageView!!.setBackgroundColor(bgColor)
+        AppCache.APPCACHE.putInt("bPosition2", position)
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
-            tv_done_percent.text = "$progress / $pageCount %"
-            //TODO nextPage
+            tv_done_percent.text = "$progress / $pageCount "
+            showPage(progress)
 
         }
         if (seekBar?.id == R.id.sb_light_degree) {
@@ -56,6 +59,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
@@ -77,7 +81,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var touchSlop: Int = 0
 
     private var path: String = ""
-    private var begin: Int = 0
+    private var beginIndex: Int = 0
+    private var currentIndex: Int = 0
     private var mode: Int = 0
     private val MODE_DRAG = 1
     private val MODE_ZOOM = 2
@@ -116,7 +121,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         fun newInstance(bookInfo: BookInfo, bPosition: Int): PdfRendererFragment {
             val args = Bundle()
             args.putSerializable("bookInfo", bookInfo)
-            args.putInt("bPosition", bPosition)
+            args.putInt("indexPdf", bPosition)
             val fragment = PdfRendererFragment()
             fragment.arguments = args
             return fragment
@@ -190,10 +195,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override fun onClick(v: View) {
-        if (!display && !dProgress && !dSetting) {
-            displayView()
-        }
-
         when (v.id) {
             R.id.iv_back -> {
                 this@PdfRendererFragment.finish()
@@ -226,18 +227,25 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         super.initComponents(view, savedInstanceState)
         val bookInfo = arguments.getSerializable("bookInfo") as BookInfo
 
+        iv_back.setOnClickListener(this)
+        tv_add_mark.setOnClickListener(this)
+        tv_catalog.setOnClickListener(this)
+        tv_rate.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+
         sb_rate.setOnSeekBarChangeListener(this)
         sb_light_degree.setOnSeekBarChangeListener(this)
         rg_read_bg.setOnCheckedChangeListener(this)
         tv_book_title.text = bookInfo.name
         mImageView = view?.findViewById(R.id.iv_pdf_read) as ImageView
         path = bookInfo.path
-        begin = arguments.getInt("bPosition")
+        beginIndex = arguments.getInt("indexPdf")
         mImageView!!.setOnTouchListener(this)
-        mImageView!!.setOnClickListener(this)
+        //  mImageView!!.setOnLongClickListener(this)
         touchSlop = ViewConfiguration.get(this.activity).scaledTouchSlop
         gestureDetector = GestureDetector(this.activity, MoveGestureListener())
         mPageIndex = 0
+        setCheckedId()
         if (null != savedInstanceState) {
             mPageIndex = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0)
         }
@@ -266,6 +274,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override fun onStop() {
+        putCache()
         try {
             closeRenderer()
         } catch (e: IOException) {
@@ -293,6 +302,13 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             true
         } else {
             false
+        }
+    }
+
+    private fun setCheckedId() {
+        for (i in 0 until 4) {
+            (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
+                    i == AppCache.APPCACHE.getInt("bPosition2", 0)
         }
     }
 
@@ -324,6 +340,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
         if (mFileDescriptor != null) {
             mPdfRenderer = PdfRenderer(mFileDescriptor!!)
+            pageCount = mPdfRenderer!!.pageCount - 1
+            sb_rate.max = pageCount
         }
     }
 
@@ -344,21 +362,30 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             mCurrentPage!!.close()
         }
         mCurrentPage = mPdfRenderer!!.openPage(index)
+
+        currentIndex = index
         val bitmap = Bitmap.createBitmap(mCurrentPage!!.width, mCurrentPage!!.height,
                 Bitmap.Config.ARGB_8888)
         mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
         mImageView!!.scaleType = ImageView.ScaleType.FIT_CENTER
+        AppLog.logDebug("test", "${mCurrentPage!!.index} : \t$index")
         mImageView!!.setImageBitmap(bitmap)
-        pageCount = mPdfRenderer!!.pageCount
-        sb_rate.max = pageCount
 
-        // updateUi()
+
+        updateState()
     }
 
-    private fun updateUi() {
-        val index = mCurrentPage!!.index
-        val pageCount = mPdfRenderer!!.pageCount
 
+    private fun updateState() {
+        sb_rate.progress = currentIndex
+        tv_done_percent.text = "$currentIndex / $pageCount"
+
+    }
+
+    private fun putCache() {
+        beginIndex = currentIndex
+        AppCache.APPCACHE.putInt("indexPdf", beginIndex)
+        AppCache.APPCACHE.commit()
     }
 
     /**
@@ -381,9 +408,19 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             if (Math.abs(e.x - moveX) <= touchSlop) {
-                mImageView?.performClick()
+                //mImageView?.performClick()
             }
             return true
+        }
+
+        override fun onLongPress(e: MotionEvent?) {
+            if (display) {
+                hideView()
+            } else {
+                if (!dSetting && !dProgress) {
+                    displayView()
+                }
+            }
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {

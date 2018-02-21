@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -61,7 +62,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
                 if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
                     PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2))
+                            mBookInfoShred.getInfo(position - 2), AppCache.APPCACHE.getInt("indexPdf", 0))
                 }
             }
         }

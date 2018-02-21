@@ -34,7 +34,7 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         super.initComponents(savedInstanceState)
         fragment = PdfRendererFragment.newInstance(
                 intent.extras.getSerializable("bookInfo") as BookInfo,
-                intent.extras.getInt("bPosition"))
+                intent.extras.getInt("indexPdf"))
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
                     PDF_READ_TAG)
@@ -46,7 +46,7 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         fun jumpToPdfReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
             val intent = Intent(context, PdfReadActivity::class.java)
             intent.putExtra("bookInfo", data0)
-            intent.putExtra("bPosition", data1)
+            intent.putExtra("indexPdf", data1)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
 

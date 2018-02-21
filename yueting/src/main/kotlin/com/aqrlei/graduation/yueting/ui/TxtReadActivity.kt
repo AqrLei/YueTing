@@ -18,6 +18,7 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
 import kotlinx.android.synthetic.main.read_item_progress.*
 import kotlinx.android.synthetic.main.read_item_setting.*
+import kotlinx.android.synthetic.main.read_item_top.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -149,6 +150,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         rg_read_bg.setOnCheckedChangeListener(this)
         setPageFactory(pageView)
         setCheckedId()
+        tv_book_title.text = bookInfo.name
 
     }
 
