@@ -62,7 +62,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
                 if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
                     PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2), AppCache.APPCACHE.getInt("indexPdf", 0))
+                            mBookInfoShred.getInfo(position - 2))
                 }
             }
         }
@@ -131,7 +131,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mRecommendLv.setAlphaChangeListener(this)
 
     }
-
 
     private fun getMusicInfoFromDB() {
         mPresenter.getMusicInfoFromDB()

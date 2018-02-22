@@ -43,8 +43,54 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 Observable.just(DBManager.finish())
             }
         }
+
+        fun indexObservable(path: String, begin: Int, end: Int): Observable<Boolean> {
+            return Observable.defer {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.updateSqlFormat(
+                                YueTingConstant.BOOK_TABLE_NAME,
+                                "indexBegin", "path", "="),
+                        arrayOf(begin, path),
+                        null,
+                        DBManager.SqlType.UPDATE
+                )
+                DBManager.sqlData(
+                        DBManager.SqlFormat.updateSqlFormat(
+                                YueTingConstant.BOOK_TABLE_NAME,
+                                "indexEnd", "path", "="),
+                        arrayOf(end, path),
+                        null,
+                        DBManager.SqlType.UPDATE
+                )
+                Observable.just(DBManager.finish())
+            }
+        }
     }
 
+    fun addIndexToDB(path: String, begin: Int, end: Int) {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        disposables.add(
+                indexObservable(path, begin, end)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Boolean>() {
+                            override fun onComplete() {
+                            }
+
+                            override fun onError(e: Throwable) {
+
+                            }
+
+                            override fun onNext(t: Boolean) {
+
+                            }
+                        }
+
+
+                        ))
+
+    }
     fun getCatalog() {
         val disposables = CompositeDisposable()
         addDisposables(disposables)

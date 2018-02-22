@@ -79,9 +79,13 @@ enum class ChapterFactory {
             haveMark = true
             val markInfo = ChapterInfo()
             val tempP = c.getInt(c.getColumnIndex(YueTingConstant.MARK_TABLE_C[1]))
-            val tempName = String(
-                    PageFactory.PAGEFACTORY.getBookByteArray(tempP),
-                    Charset.forName(chapterBuffer.encoding))
+            val tempName = if (chapterBuffer.type == "txt") {
+                String(
+                        PageFactory.PAGEFACTORY.getBookByteArray(tempP),
+                        Charset.forName(chapterBuffer.encoding))
+            } else {
+                chapterBuffer.name + tempP
+            }
             markInfo.bPosition = tempP
             markInfo.chapterName = tempName
             markInfo.createTime = c.getString(c.getColumnIndex("createTime"))

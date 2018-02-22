@@ -24,25 +24,10 @@ class PdfReadActivityPresenter(mMvpActivity: PdfReadActivity) :
     companion object {
         fun catalogsObservable(): Observable<Boolean> {
             return Observable.defer {
-                ChapterFactory.CHAPTER.getBookMarkFromDB()
-                Observable.just(ChapterFactory.CHAPTER.getChapter())
+                Observable.just(ChapterFactory.CHAPTER.getBookMarkFromDB())
             }
         }
 
-        fun markObservable(path: String, currentBegin: Int): Observable<Boolean> {
-            return Observable.defer {
-                val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
-                DBManager.sqlData(
-                        DBManager.SqlFormat.insertSqlFormat(
-                                YueTingConstant.MARK_TABLE_NAME,
-                                arrayOf("path", "markPosition", "createTime")),
-                        arrayOf(path, currentBegin, dateTime),
-                        null,
-                        DBManager.SqlType.INSERT
-                )
-                Observable.just(DBManager.finish())
-            }
-        }
     }
 
     fun getCatalog() {
@@ -60,32 +45,12 @@ class PdfReadActivityPresenter(mMvpActivity: PdfReadActivity) :
                             }
 
                             override fun onNext(t: Boolean) {
-                                //mMvpActivity.jumpToCatalog(t)
+                                mMvpActivity.jumpToCatalog(t)
                             }
                         }
                         )
 
         )
-
-    }
-
-    fun addMarkToDB(path: String, currentBegin: Int) {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(markObservable(path, currentBegin)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                    }
-
-                    override fun onNext(t: Boolean) {
-                        AppToast.toastShow(mMvpActivity, if (t) "书签添加完毕" else "书签添加失败", 1000)
-                    }
-                }))
 
     }
 

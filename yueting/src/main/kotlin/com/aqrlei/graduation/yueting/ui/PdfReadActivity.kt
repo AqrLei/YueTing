@@ -18,6 +18,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
  */
 class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
     private val PDF_READ_TAG = "pdf_read_tag"
+    private val REQUESTCODE = 3
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
         get() = R.layout.activity_pdf_read
@@ -30,16 +31,38 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 2) {
+            if (requestCode == REQUESTCODE) {
+                val index = data?.extras?.getInt("bPosition") ?: 0
+                fragment.setCurrentIndex(index)
+                //todo addIndexToDB
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //todo getIndexFromDB
+    }
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         fragment = PdfRendererFragment.newInstance(
-                intent.extras.getSerializable("bookInfo") as BookInfo,
-                intent.extras.getInt("indexPdf"))
+                intent.extras.getSerializable("bookInfo") as BookInfo)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
                     PDF_READ_TAG)
                     .commit()
         }
+    }
+
+    fun getCatalog() {
+        mPresenter.getCatalog()
+    }
+
+    fun jumpToCatalog(flag: Boolean) {
+        startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
     }
 
     companion object {

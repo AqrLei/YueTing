@@ -16,6 +16,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
@@ -116,12 +117,14 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var dSetting: Boolean = false
     private var pageCount: Int = 0
 
+    private val bookInfo: BookInfo
+        get() = arguments.getSerializable("bookInfo") as BookInfo
+
 
     companion object {
-        fun newInstance(bookInfo: BookInfo, bPosition: Int): PdfRendererFragment {
+        fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
             val args = Bundle()
             args.putSerializable("bookInfo", bookInfo)
-            args.putInt("indexPdf", bPosition)
             val fragment = PdfRendererFragment()
             fragment.arguments = args
             return fragment
@@ -201,11 +204,11 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             }
             R.id.tv_add_mark -> {
                 hideView()
-                //Todo addBookMark() and
+                addBookMark(currentIndex)
             }
             R.id.tv_catalog -> {
                 hideView()
-                //Todo getCatalog() and
+                mContainerActivity.getCatalog()
             }
             R.id.tv_rate -> {
                 ll_bottom_read_seekBar.visibility = View.VISIBLE
@@ -225,7 +228,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
-        val bookInfo = arguments.getSerializable("bookInfo") as BookInfo
+        // val bookInfo = arguments.getSerializable("bookInfo") as BookInfo
 
         iv_back.setOnClickListener(this)
         tv_add_mark.setOnClickListener(this)
@@ -239,12 +242,13 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         tv_book_title.text = bookInfo.name
         mImageView = view?.findViewById(R.id.iv_pdf_read) as ImageView
         path = bookInfo.path
+        ChapterFactory.init(bookInfo)
         beginIndex = arguments.getInt("indexPdf")
         mImageView!!.setOnTouchListener(this)
         //  mImageView!!.setOnLongClickListener(this)
         touchSlop = ViewConfiguration.get(this.activity).scaledTouchSlop
         gestureDetector = GestureDetector(this.activity, MoveGestureListener())
-        mPageIndex = 0
+        mPageIndex = bookInfo.indexBegin
         setCheckedId()
         if (null != savedInstanceState) {
             mPageIndex = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0)
@@ -305,11 +309,19 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
     }
 
+    fun setCurrentIndex(index: Int) {
+        mPageIndex = index
+    }
+
     private fun setCheckedId() {
         for (i in 0 until 4) {
             (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
                     i == AppCache.APPCACHE.getInt("bPosition2", 0)
         }
+    }
+
+    private fun addBookMark(currentIndex: Int) {
+        mPresenter.addMarkToDB(bookInfo.path, currentIndex)
     }
 
     private fun changeBright(brightValue: Int) {
@@ -345,7 +357,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
     }
 
-    @Throws(IOException::class)
     private fun closeRenderer() {
         if (null != mCurrentPage) {
             mCurrentPage!!.close()
@@ -359,7 +370,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             return
         }
         if (null != mCurrentPage) {
-            mCurrentPage!!.close()
+            try {
+                mCurrentPage!!.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
         }
         mCurrentPage = mPdfRenderer!!.openPage(index)
 

@@ -19,7 +19,9 @@ open class BookInfo(
         var encoding: String = "GBK",
         var accessTime: Long = 0,
         var createTime: String = "",
-        var fileLength: Int = 0
+        var fileLength: Int = 0,
+        var indexBegin: Int = 0,
+        var indexEnd: Int = 0
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is BookInfo) {
@@ -39,6 +41,8 @@ open class BookInfo(
         result = result * 31 + accessTime.hashCode()
         result = result * 31 + createTime.hashCode()
         result = result * 31 + fileLength
+        result = result * 31 + indexBegin
+        result = result * 31 + indexEnd
         return result
     }
 }

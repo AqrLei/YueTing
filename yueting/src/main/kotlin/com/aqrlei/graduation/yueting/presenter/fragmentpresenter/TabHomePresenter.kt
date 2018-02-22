@@ -202,6 +202,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()
+                                    bookInfo.indexBegin = t.getInt(t.getColumnIndex("indexBegin"))
+                                    bookInfo.indexEnd = t.getInt(t.getColumnIndex("indexEnd"))
 
 
                                     bookInfoList.add(bookInfo)

@@ -9,7 +9,6 @@ import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
@@ -108,12 +107,15 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
+    /*在restart -> start -> resume之前调用， 在它pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 2) {
             if (requestCode == REQUESTCODE) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
+                mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
+                        pageFactory.getCurrentEnd())
             }
         }
     }
@@ -154,6 +156,17 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        PageFactory.PAGEFACTORY
+    }
+
+    override fun onPause() {
+        super.onPause()
+        addIndexToDB()
+    }
+
+
     fun onClick(v: View) {
         when (v.id) {
             R.id.iv_back -> {
@@ -193,6 +206,10 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
+    private fun addIndexToDB() {
+        mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(), pageFactory.getCurrentEnd())
+    }
+
     private fun setCheckedId() {
         for (i in 0 until 4) {
             (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
@@ -206,9 +223,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     fun jumpToCatalog(flag: Boolean) {
 
-        if (flag) AppLog.logDebug("test", "catalog load successful")
-        else AppLog.logDebug("test", "catalog load failure")
-        //CatalogActivity.jumpToCatalogActivity(this, " ")
 
         startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
     }
