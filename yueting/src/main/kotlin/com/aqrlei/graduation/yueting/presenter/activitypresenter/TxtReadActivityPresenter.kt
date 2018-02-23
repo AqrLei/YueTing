@@ -5,7 +5,6 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,13 +21,6 @@ import io.reactivex.schedulers.Schedulers
 class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
         MvpContract.ActivityPresenter<TxtReadActivity>(mMvpActivity) {
     companion object {
-        fun catalogsObservable(): Observable<Boolean> {
-            return Observable.defer {
-                ChapterFactory.CHAPTER.getBookMarkFromDB()
-                Observable.just(ChapterFactory.CHAPTER.getChapter())
-            }
-        }
-
         fun markObservable(path: String, currentBegin: Int): Observable<Boolean> {
             return Observable.defer {
                 val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
@@ -91,29 +83,6 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                         ))
 
     }
-    fun getCatalog() {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
-                catalogsObservable()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
-                            override fun onNext(t: Boolean) {
-                                mMvpActivity.jumpToCatalog(t)
-                            }
-                        }
-                        )
-
-        )
-
-    }
 
     fun addMarkToDB(path: String, currentBegin: Int) {
         val disposables = CompositeDisposable()
@@ -134,6 +103,5 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 }))
 
     }
-
 
 }

@@ -171,7 +171,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 hideView()
             }
             R.id.tv_catalog -> {
-                getCatalog()
+                jumpToCatalog()
                 hideView()
 
             }
@@ -215,7 +215,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         mPresenter.addMarkToDB(bookInfo.path, currentBegin)
     }
 
-    fun jumpToCatalog(flag: Boolean) {
+    private fun jumpToCatalog() {
 
 
         startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
@@ -248,10 +248,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         val lp = window.attributes
         lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
         window.attributes = lp
-    }
-
-    private fun getCatalog() {
-        mPresenter.getCatalog()
     }
 
     companion object {

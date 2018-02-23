@@ -59,11 +59,7 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         fragment.putIndexToDB(index)
     }
 
-    fun getCatalog() {
-        mPresenter.getCatalog()
-    }
-
-    fun jumpToCatalog(flag: Boolean) {
+    fun jumpToCatalog() {
         startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
     }
 

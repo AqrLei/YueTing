@@ -208,7 +208,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             }
             R.id.tv_catalog -> {
                 hideView()
-                mContainerActivity.getCatalog()
+                mContainerActivity.jumpToCatalog()
             }
             R.id.tv_rate -> {
                 ll_bottom_read_seekBar.visibility = View.VISIBLE

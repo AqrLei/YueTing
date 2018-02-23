@@ -1,5 +1,6 @@
 package com.aqrlei.graduation.yueting.ui
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -65,6 +66,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         get() = R.layout.activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
+    private lateinit var mProgressDialog: ProgressDialog
+
     override fun onStop() {
         super.onStop()
         /**
@@ -75,8 +78,29 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        setProgressDialog()
+        getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
+
+    }
+
+    fun loadCatalogDone(t: Boolean) {
+        mProgressDialog.dismiss()
         initView()
+    }
+
+    private fun setProgressDialog() {
+        mProgressDialog = ProgressDialog(this)
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        mProgressDialog.setCancelable(false)
+        mProgressDialog.setCanceledOnTouchOutside(false)
+        mProgressDialog.setTitle("提示")
+        mProgressDialog.setMessage("正在加载中~")
+        mProgressDialog.show()
+    }
+
+    private fun getData() {
+        mPresenter.getData()
     }
 
     private fun dataChange(data: ArrayList<ChapterInfo>) {

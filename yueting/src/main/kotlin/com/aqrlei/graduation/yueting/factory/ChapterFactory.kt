@@ -60,6 +60,9 @@ enum class ChapterFactory {
 
 
     fun getChapter(): Boolean {
+        if (chapterBuffer.type == "pdf") {
+            return isDone
+        }
         if (chapterList.size > 0) {
             return isDone
         }
