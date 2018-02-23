@@ -9,7 +9,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabItemReadFragment
  * Description :
  * Date : 2017/8/26.
  */
-class TabItemReadPresenter(mMvpView : TabItemReadFragment):
+class TabItemReadPresenter(mMvpView: TabItemReadFragment) :
         MvpContract.FragmentPresenter<TabItemReadFragment>(mMvpView) {
 
 }

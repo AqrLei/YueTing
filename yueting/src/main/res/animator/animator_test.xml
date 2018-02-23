@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 ordering 多个动画的执行方式:
 together 一起执行（默认）
 sequentially 顺序执行

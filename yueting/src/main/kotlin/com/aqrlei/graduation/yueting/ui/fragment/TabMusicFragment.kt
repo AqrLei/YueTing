@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.aqrairsigns.aqrleilib.adapter.CommonExpandListAdapter
-import com.aqrlei.graduation.yueting.R
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.ui.view.AlphaExpandListView
 import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.view.AlphaExpandListView
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.ExpandMusicMessage
 import com.aqrlei.graduation.yueting.model.local.MusicMessage
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabMusicPresenter
@@ -45,10 +45,9 @@ class TabMusicFragment : MvpContract.MvpFragment<TabMusicPresenter, YueTingActiv
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
-
     }
 
     private fun initView() {
@@ -59,8 +58,7 @@ class TabMusicFragment : MvpContract.MvpFragment<TabMusicPresenter, YueTingActiv
         mChildMusic.add(MusicMessage("", "这是歌单吧", "2017-08-31", 400))
         mGroupMusic.add(ExpandMusicMessage("我的歌单", mChildMusic))
         mGroupMusic.add(ExpandMusicMessage("最近播放"))
-        mMusicElv.addHeaderView(LayoutInflater.from(mContainerActivity).
-                inflate(R.layout.listheader_music, null))
+        mMusicElv.addHeaderView(LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_music, null))
         mMusicElv.setAdapter(YueTingMusicExpandListAdapter(
                 mContainerActivity, mGroupMusic, R.layout.listitem_child_music,
                 R.layout.listitem_group_music, this

@@ -53,8 +53,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         DBManager.sqlData(
                                 DBManager.SqlFormat.insertSqlFormat(
                                         YueTingConstant.BOOK_TABLE_NAME,
-                                        arrayOf("path", "fileInfo", "createTime")),
-                                arrayOf(tempData.path, byteData, dateTime),
+                                        arrayOf("path", "type", "fileInfo", "createTime")),
+                                arrayOf(tempData.path, suffix, byteData, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )

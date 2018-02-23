@@ -11,8 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.view.AlphaListView
+import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -20,7 +20,8 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
-import com.aqrlei.graduation.yueting.ui.ReadActivity
+import com.aqrlei.graduation.yueting.ui.PdfReadActivity
+import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
 import kotlinx.android.synthetic.main.layout_yueting_header.*
@@ -55,7 +56,14 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
             }
             R.id.ll_read_item -> {
-                ReadActivity.jumpToReadActivity(mContainerActivity, mBookInfoShred.getInfo(position - 2))
+                if (mBookInfoShred.getInfo(position - 2).type == "txt") {
+                    TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
+                            mBookInfoShred.getInfo(position - 2))
+                }
+                if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
+                    PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
+                            mBookInfoShred.getInfo(position - 2))
+                }
             }
         }
 
@@ -97,11 +105,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
-
-
     }
 
     override fun onResume() {
@@ -119,14 +125,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
                 mBookInfoShred.getInfoS(), mMusicInfoShared.getInfoS())
 
-        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).
-                inflate(R.layout.listheader_home, null))
+        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_home, null))
         mRecommendLv.adapter = mAdapter
         mRecommendLv.onItemClickListener = this
         mRecommendLv.setAlphaChangeListener(this)
 
     }
-
 
     private fun getMusicInfoFromDB() {
         mPresenter.getMusicInfoFromDB()

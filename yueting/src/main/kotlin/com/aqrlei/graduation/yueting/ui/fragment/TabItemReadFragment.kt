@@ -1,8 +1,9 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.os.Bundle
-import com.aqrlei.graduation.yueting.R
+import android.view.View
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabItemReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
@@ -28,9 +29,8 @@ class TabItemReadFragment : MvpContract.MvpFragment<TabItemReadPresenter, YueTin
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
-
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
     }
 
 }

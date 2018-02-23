@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.util.DisplayMetrics
+import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DensityUtil
-import com.aqrairsigns.aqrleilib.view.PageView
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import java.io.File
 import java.io.RandomAccessFile
@@ -49,6 +51,7 @@ enum class PageFactory {
     private var refreshPage: Boolean = true
     private var bgColor: Int = Color.parseColor("#c7eece")
     private var bPosition: Int = 0
+    private lateinit var mBookInfo: BookInfo
 
     private val content = ArrayList<String>()
 
@@ -108,6 +111,7 @@ enum class PageFactory {
     }
 
     fun getCurrentBegin() = begin
+    fun getCurrentEnd() = end
     fun getBookByteArray(position: Int) = readParagraphForward(position)
 
 
@@ -140,6 +144,7 @@ enum class PageFactory {
 
 
     private fun openBook(bookInfo: BookInfo) {
+        mBookInfo = bookInfo
         encoding = bookInfo.encoding
 
         val file = File(bookInfo.path)
@@ -244,9 +249,8 @@ enum class PageFactory {
     fun setPageBackground(color: Int, position: Int) {
         bPosition = position
         bgColor = color
-        // mCanvas.drawColor(bgColor)
-        //mView.invalidate()
         refreshPage = false
+        putCache()
         nextPage()
 
 
@@ -329,15 +333,25 @@ enum class PageFactory {
 
     private fun putCache() {
         AppCache.APPCACHE.putInt("bPosition", bPosition)
-        AppCache.APPCACHE.putInt("cBegin", begin)
-        AppCache.APPCACHE.putInt("cEnd", end)
         AppCache.APPCACHE.commit()
     }
 
     private fun getCache() {
         bPosition = AppCache.APPCACHE.getInt("bPosition", 0)
-        begin = AppCache.APPCACHE.getInt("cBegin", 0)
-        end = AppCache.APPCACHE.getInt("cEnd", 0)
+        getIndexFromDB()
+    }
+
+    private fun getIndexFromDB() {
+
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                "indexBegin, indexEnd", "path", "="),
+                null, arrayOf(mBookInfo.path), DBManager.SqlType.SELECT)
+                .getCursor()
+        while (c?.moveToNext() == true) {
+            begin = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[2]))
+            end = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[3]))
+        }
+
     }
 
 }

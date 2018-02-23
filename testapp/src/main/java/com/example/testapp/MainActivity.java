@@ -1,30 +1,48 @@
 package com.example.testapp;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity implements PageView.OnScrollListener {
-
-    private PageFactory pageFactory;
+    //private PageFactory pageFactory;
+    public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BookMessage bookMessage = new BookMessage();
-        File sd = Environment.getExternalStorageDirectory();
-        String path = sd.getPath() + "/太古神王.txt";
-        File file = new File(path);
+        setContentView(R.layout.activity_image);
+        BaseDragZoomImageView iv = findViewById(R.id.biv_test);
+        Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
+        int w = dr.getIntrinsicWidth();
+        int h = dr.getIntrinsicHeight();
+        //iv.setImageDrawable(dr);
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        Canvas canvas = new Canvas(bitmap);
+        dr.setBounds(0, 0, w, h);
+        dr.draw(canvas);
+        iv.setImageBitmap(bitmap);
+
+        // BookMessage bookMessage = new BookMessage();
+     /*   File sd = Environment.getExternalStorageDirectory();
+        String path = sd.getPath() + "/Android.pdf";
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fl_container, new PdfRendererFragment(),
+                            FRAGMENT_PDF_RENDERER_BASIC)
+                    .commit();
+        }*/
+
+
+        // String path = sd.getPath() + "/太古神王.txt";
+      /*  File file = new File(path);
         bookMessage.setName(file.getName());
         bookMessage.setPath(file.getPath());
         bookMessage.setEncoding("GBK");
@@ -33,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
         pageFactory = new PageFactory(mView, bookMessage);
         pageFactory.nextPage();
         mView.setOnScrollListener(this);
-        /*Test*/
+        *//*Test*//*
         InputStream inputStream = null;
         try {
             inputStream = getAssets().open("test.txt");
@@ -47,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
             tv.setText(str);
 
         }
-
+*/
     }
 
-    /*Test*/
+  /*  *//*Test*//*
     private String getString(InputStream inputStream) {
         InputStreamReader inputStreamReader = null;
         try {
@@ -81,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements PageView.OnScroll
     @Override
     public void onRightScroll() {
         pageFactory.prePage();
-    }
+    }*/
    /* public static String getString(InputStream inputStream) {
         InputStreamReader inputStreamReader = null;
         try {

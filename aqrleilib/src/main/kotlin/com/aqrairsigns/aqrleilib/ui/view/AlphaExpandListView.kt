@@ -1,19 +1,19 @@
-package com.aqrairsigns.aqrleilib.view
+package com.aqrairsigns.aqrleilib.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.ExpandableListView
 import com.aqrairsigns.aqrleilib.R
 import com.aqrairsigns.aqrleilib.util.DensityUtil
-
 
 /**
  * @Author: AqrLei
  * @Name MyLearning
  * @Description:
- * @Date: 2017/8/28
+ * @Date: 2017/8/30
  */
+
 /*
 * @param context 上下文
 * @param attrs 属性
@@ -23,12 +23,12 @@ import com.aqrairsigns.aqrleilib.util.DensityUtil
 * */
 
 /*等价与重写父类的四个构造方法*/
-class AlphaListView @JvmOverloads constructor(
+class AlphaExpandListView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0,
         defStyleRes: Int = 0) :
-        ListView(context, attrs, defStyleAttr, defStyleRes) {
+        ExpandableListView(context, attrs, defStyleAttr, defStyleRes) {
     private var mContext: Context = context
     private var mListener: OnAlphaChangeListener? = null
     private var mMinusHeight: Float = 0F
@@ -36,8 +36,8 @@ class AlphaListView @JvmOverloads constructor(
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-
         getScrollHeight()
+
     }
 
     init {
@@ -45,9 +45,9 @@ class AlphaListView @JvmOverloads constructor(
     }
 
     fun init(attrs: AttributeSet?) {
-        val typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.AlphaListView)
-        mMinusHeight = typedArray.getFloat(R.styleable.AlphaListView_listMinusHeight, 0F)
-        mMinHeight = typedArray.getFloat(R.styleable.AlphaListView_listMinHeight, 40F)
+        val typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.AlphaExpandListView)
+        mMinusHeight = typedArray.getFloat(R.styleable.AlphaExpandListView_expandMinusHeight, 0F)
+        mMinHeight = typedArray.getFloat(R.styleable.AlphaExpandListView_expandMinHeight, 40F)
         typedArray.recycle()
     }
 
@@ -62,9 +62,8 @@ class AlphaListView @JvmOverloads constructor(
             first.height
         }
         // height -= DensityUtil.dipToPx(mContext, 20F)
-        /*第一个item为40dp*/
+        /*第一个item为40dp,需要改进*/
         val top = first.top
-        /*需要改进*/
         height -= DensityUtil.dipToPx(mContext, mMinusHeight)
         if (height <= DensityUtil.dipToPx(mContext, mMinHeight)) return
 

@@ -1,4 +1,4 @@
-package com.aqrairsigns.aqrleilib.view
+package com.aqrairsigns.aqrleilib.ui.view
 
 import android.content.Context
 import android.support.v7.widget.AppCompatButton

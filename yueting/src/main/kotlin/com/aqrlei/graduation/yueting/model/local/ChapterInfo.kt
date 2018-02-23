@@ -8,6 +8,7 @@ import java.io.Serializable
  * Description :
  * Date : 2018/2/7.
  */
+
 class ChapterInfo(
         var chapterName: String = "",
         var bPosition: Int = 0,

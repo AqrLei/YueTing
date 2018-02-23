@@ -1,7 +1,6 @@
 package com.aqrlei.graduation.yueting.model.local.infotool
 
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 
 

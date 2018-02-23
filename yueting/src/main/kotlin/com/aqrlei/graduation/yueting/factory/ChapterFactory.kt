@@ -1,7 +1,6 @@
 package com.aqrlei.graduation.yueting.factory
 
 import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.ReaderUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -27,6 +26,7 @@ enum class ChapterFactory {
                 id = bookInfo.id
                 name = bookInfo.name
                 path = bookInfo.path
+                type = bookInfo.type
                 createTime = bookInfo.createTime
                 fileLength = bookInfo.fileLength
                 encoding = bookInfo.encoding
@@ -39,6 +39,10 @@ enum class ChapterFactory {
     private var isDone: Boolean = true
     fun getChapters() = chapterList
     fun getBookMarks() = bookMarkList
+    fun clearAllDatas() {
+        chapterList.clear()
+        bookMarkList.clear()
+    }
     fun removeBookMark(position: Int) {
         val markInfo = bookMarkList.removeAt(position)
         deleteFromDB(markInfo.bPosition)
@@ -53,7 +57,6 @@ enum class ChapterFactory {
                         YueTingConstant.MARK_TABLE_C[1], "="),
                 null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
     }
-
 
 
     fun getChapter(): Boolean {
@@ -80,9 +83,13 @@ enum class ChapterFactory {
             haveMark = true
             val markInfo = ChapterInfo()
             val tempP = c.getInt(c.getColumnIndex(YueTingConstant.MARK_TABLE_C[1]))
-            val tempName = String(
-                    PageFactory.PAGEFACTORY.getBookByteArray(tempP),
-                    Charset.forName(chapterBuffer.encoding))
+            val tempName = if (chapterBuffer.type == "txt") {
+                String(
+                        PageFactory.PAGEFACTORY.getBookByteArray(tempP),
+                        Charset.forName(chapterBuffer.encoding))
+            } else {
+                chapterBuffer.name + tempP
+            }
             markInfo.bPosition = tempP
             markInfo.chapterName = tempName
             markInfo.createTime = c.getString(c.getColumnIndex("createTime"))

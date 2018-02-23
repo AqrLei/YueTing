@@ -8,4 +8,4 @@ import android.graphics.drawable.Drawable
  * @Description:
  * @Date: 2017/8/25
  */
-data class ChildMessage(var name: String="",var childDrawable: Drawable)
+data class ChildMessage(var name: String = "", var childDrawable: Drawable)
