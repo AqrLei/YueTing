@@ -45,7 +45,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
         mImageView!!.setBackgroundColor(bgColor)
-        AppCache.APPCACHE.putInt("bPosition2", position)
+        AppCache.APPCACHE.putInt("bPosition2", position).commit()
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -269,6 +269,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         super.onStart()
         try {
             openRenderer()
+            getIndexFromDB()
             showPage(mPageIndex)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -278,7 +279,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override fun onStop() {
-        putCache()
+        putIndexToDB(currentIndex)
         try {
             closeRenderer()
         } catch (e: IOException) {
@@ -398,10 +399,9 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
-    private fun putCache() {
-        beginIndex = currentIndex
-        AppCache.APPCACHE.putInt("indexPdf", beginIndex)
-        AppCache.APPCACHE.commit()
+    fun putIndexToDB(index: Int) {
+        beginIndex = index
+        mPresenter.addIndexToDB(bookInfo.path, beginIndex)
     }
 
     /**
@@ -413,6 +413,9 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
      */
     private fun mid(event: MotionEvent): PointF = mPresenter.mid(event)
 
+    private fun getIndexFromDB() {
+        mPageIndex = mPresenter.getIndexFromDB(bookInfo.path)
+    }
 
     private inner class MoveGestureListener : GestureDetector.SimpleOnGestureListener() {
         private var moveX: Float = 0.toFloat()

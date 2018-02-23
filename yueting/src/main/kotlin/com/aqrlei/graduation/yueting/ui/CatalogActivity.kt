@@ -45,6 +45,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
+
                 dataChange(ChapterFactory.CHAPTER.getChapters())
                 AppLog.logDebug("test",
                         (findViewById(R.id.rb_catalog_title) as RadioButton).text.toString())
@@ -64,6 +65,13 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         get() = R.layout.activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
+    override fun onStop() {
+        super.onStop()
+        /**
+         * 退出目录,清除所有旧数据，避免与新数据混淆
+         */
+        ChapterFactory.CHAPTER.clearAllDatas()
+    }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)

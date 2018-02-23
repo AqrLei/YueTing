@@ -156,16 +156,10 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        PageFactory.PAGEFACTORY
-    }
-
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         addIndexToDB()
     }
-
 
     fun onClick(v: View) {
         when (v.id) {

@@ -19,6 +19,8 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
     private val PDF_READ_TAG = "pdf_read_tag"
     private val REQUESTCODE = 3
+    private val bookInfo: BookInfo
+        get() = intent.extras.getSerializable("bookInfo") as BookInfo
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
         get() = R.layout.activity_pdf_read
@@ -37,24 +39,24 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
             if (requestCode == REQUESTCODE) {
                 val index = data?.extras?.getInt("bPosition") ?: 0
                 fragment.setCurrentIndex(index)
-                //todo addIndexToDB
+                addIndexToDB(index)
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        //todo getIndexFromDB
-    }
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         fragment = PdfRendererFragment.newInstance(
-                intent.extras.getSerializable("bookInfo") as BookInfo)
+                bookInfo)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
                     PDF_READ_TAG)
                     .commit()
         }
+    }
+
+    private fun addIndexToDB(index: Int) {
+        fragment.putIndexToDB(index)
     }
 
     fun getCatalog() {

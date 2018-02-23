@@ -8,7 +8,6 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -43,6 +42,61 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 Observable.just(DBManager.finish())
             }
         }
+
+        fun indexObservable(path: String, begin: Int): Observable<Boolean> {
+            return Observable.defer {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.updateSqlFormat(
+                                YueTingConstant.BOOK_TABLE_NAME,
+                                "indexBegin", "path", "="),
+                        arrayOf(begin, path),
+                        null,
+                        DBManager.SqlType.UPDATE
+                )
+                Observable.just(DBManager.finish())
+            }
+        }
+    }
+
+    fun getIndexFromDB(path: String): Int {
+
+
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                "indexBegin, indexEnd", "path", "="),
+                null, arrayOf(path), DBManager.SqlType.SELECT)
+                .getCursor()
+        var begin: Int = 0
+        while (c?.moveToNext() == true) {
+            begin = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[2]))
+        }
+        return begin
+
+    }
+
+
+    fun addIndexToDB(path: String, begin: Int) {
+        val disposables = CompositeDisposable()
+        addDisposables(disposables)
+        disposables.add(
+                indexObservable(path, begin)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableObserver<Boolean>() {
+                            override fun onComplete() {
+                            }
+
+                            override fun onError(e: Throwable) {
+
+                            }
+
+                            override fun onNext(t: Boolean) {
+
+                            }
+                        }
+
+
+                        ))
+
     }
 
     fun addMarkToDB(path: String, currentBegin: Int) {

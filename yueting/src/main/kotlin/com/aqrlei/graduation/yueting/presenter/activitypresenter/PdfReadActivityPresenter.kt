@@ -27,7 +27,6 @@ class PdfReadActivityPresenter(mMvpActivity: PdfReadActivity) :
                 Observable.just(ChapterFactory.CHAPTER.getBookMarkFromDB())
             }
         }
-
     }
 
     fun getCatalog() {

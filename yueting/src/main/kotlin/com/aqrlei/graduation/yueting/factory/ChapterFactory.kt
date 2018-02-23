@@ -39,6 +39,10 @@ enum class ChapterFactory {
     private var isDone: Boolean = true
     fun getChapters() = chapterList
     fun getBookMarks() = bookMarkList
+    fun clearAllDatas() {
+        chapterList.clear()
+        bookMarkList.clear()
+    }
     fun removeBookMark(position: Int) {
         val markInfo = bookMarkList.removeAt(position)
         deleteFromDB(markInfo.bPosition)
