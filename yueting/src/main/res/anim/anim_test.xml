@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 interpolator设置动画速度的变化效果
 linear_interpolator 匀速变化
 accelerate_interpolator 加速变化

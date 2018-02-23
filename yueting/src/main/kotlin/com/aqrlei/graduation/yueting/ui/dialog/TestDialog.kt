@@ -4,7 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.view.dialog.BaseDialog
+import com.aqrairsigns.aqrleilib.ui.dialog.BaseDialog
 import com.aqrlei.graduation.yueting.R
 import kotlinx.android.synthetic.main.test_dialog.view.*
 

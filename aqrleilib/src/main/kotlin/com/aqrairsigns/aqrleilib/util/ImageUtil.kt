@@ -3,6 +3,7 @@ package com.aqrairsigns.aqrleilib.util
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 
@@ -13,6 +14,15 @@ import android.graphics.drawable.Drawable
  * @CreateTime: Date: 2017/9/14 Time: 14:50
  */
 object ImageUtil {
+    fun bitmapZoom(bitmap: Bitmap, newWidth: Float, newHeight: Float): Bitmap {
+        val oldWidth = bitmap.width
+        val oldHeight = bitmap.height
+        val scaleWidth = (newWidth / oldWidth)
+        val scaleHeight = (newHeight / oldHeight)
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+        return Bitmap.createBitmap(bitmap, 0, 0, oldWidth, oldHeight, matrix, true)
+    }
     fun byteArrayToBitmap(byte: ByteArray?, offset: Int = 0): Bitmap? =
             if (byte != null) {
                 BitmapFactory.decodeByteArray(byte, offset, byte.size)

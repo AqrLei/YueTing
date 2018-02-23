@@ -7,8 +7,8 @@ import android.widget.AdapterView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -35,7 +35,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // ReadActivity.jumpToReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
+        // TxtReadActivity.jumpToTxtReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
         setResult(2, intent)
         AppLog.logDebug("test", "catalog test")
@@ -45,6 +45,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
+
                 dataChange(ChapterFactory.CHAPTER.getChapters())
                 AppLog.logDebug("test",
                         (findViewById(R.id.rb_catalog_title) as RadioButton).text.toString())
@@ -64,6 +65,13 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         get() = R.layout.activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
+    override fun onStop() {
+        super.onStop()
+        /**
+         * 退出目录,清除所有旧数据，避免与新数据混淆
+         */
+        ChapterFactory.CHAPTER.clearAllDatas()
+    }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)

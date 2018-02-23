@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="40dp"
-              android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal">
+
     <LinearLayout
 
         android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginEnd="75dp"
         android:layout_marginRight="75dp"
         android:background="#4aacb7"
-        android:orientation="horizontal"
-        android:layout_height="40dp">
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/tv_title_name"
             android:layout_width="0dp"
@@ -19,7 +21,7 @@
             android:layout_weight="6"
             android:padding="5dp"
             android:textSize="20dp"
-            tools:text="我的歌单"/>
+            tools:text="我的歌单" />
 
         <ImageView
             android:id="@+id/iv_music_group_setting"
@@ -27,10 +29,9 @@
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
-            android:src="@mipmap/common_img_setting"/>
+            android:src="@mipmap/common_img_setting" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

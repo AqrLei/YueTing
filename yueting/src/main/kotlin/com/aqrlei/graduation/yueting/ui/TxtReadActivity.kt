@@ -7,17 +7,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.IntentUtil
-import com.aqrairsigns.aqrleilib.view.PageView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.ReadActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
 import kotlinx.android.synthetic.main.read_item_progress.*
 import kotlinx.android.synthetic.main.read_item_setting.*
+import kotlinx.android.synthetic.main.read_item_top.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -27,12 +27,13 @@ import java.text.DecimalFormat
  * Description :
  * Date : 2017/11/17.
  */
-class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
+class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         PageView.OnScrollListener,
         View.OnLongClickListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemSelectedListener {
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
@@ -46,19 +47,13 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
-        /* (0 until 4).filter { group?.getChildAt(it)?.id == checkedId }
-                .forEach {
-                    AppCache.APPCACHE.putInt("cIndex", it)
-                    AppCache.APPCACHE.commit()
-                    AppLog.logDebug("test", "${AppCache.APPCACHE.getInt("cIndex", 7)}")
-                }*/
 
         pageFactory.setPageBackground(bgColor, position)
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
-            // AppLog.logDebug("test", "onProgressChanged $progress")
+
             val percent = DecimalFormat("#00.0").format(progress * 1.0f / 10.0f)
             tv_done_percent.text = "$percent %"
 
@@ -71,11 +66,9 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        AppLog.logDebug("test", "onStartTrackingTouch ${seekBar?.progress}")
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        AppLog.logDebug("test", "onStopTrackingTouch ${seekBar?.progress}")
     }
 
     override fun onLongClick(v: View?): Boolean {
@@ -114,20 +107,23 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         }
     }
 
+    /*在restart -> start -> resume之前调用， 在它pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 2) {
             if (requestCode == REQUESTCODE) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
+                mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
+                        pageFactory.getCurrentEnd())
             }
         }
     }
 
-    override val mPresenter: ReadActivityPresenter
-        get() = ReadActivityPresenter(this)
+    override val mPresenter: TxtReadActivityPresenter
+        get() = TxtReadActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_read
+        get() = R.layout.activity_txt_read
     private val pageFactory = PageFactory.PAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
@@ -145,7 +141,7 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         super.initComponents(savedInstanceState)
         pageView = findViewById(R.id.pv_read) as PageView
         seekBar = findViewById(R.id.sb_rate) as SeekBar
-        topRelativeLayout = findViewById(R.id.fl_top_read) as RelativeLayout
+        topRelativeLayout = findViewById(R.id.rl_top_read) as RelativeLayout
         bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
         lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
@@ -156,27 +152,30 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
         rg_read_bg.setOnCheckedChangeListener(this)
         setPageFactory(pageView)
         setCheckedId()
+        tv_book_title.text = bookInfo.name
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        addIndexToDB()
+    }
+
     fun onClick(v: View) {
         when (v.id) {
             R.id.iv_back -> {
-                this@ReadActivity.finish()
+                this@TxtReadActivity.finish()
             }
             R.id.tv_add_mark -> {
-                AppLog.logDebug("test", "add mark")
                 addBookMark(pageFactory.getCurrentBegin())
                 hideView()
-//TODO add bookmark to DB
             }
             R.id.tv_catalog -> {
-                AppLog.logDebug("test", "jump to catalog")
                 getCatalog()
                 hideView()
 
             }
             R.id.tv_rate -> {
-                AppLog.logDebug("test", "display progress control")
                 lLSeekBar.visibility = View.VISIBLE
                 lLSeekBar.bringToFront()
                 dProgress = true
@@ -187,7 +186,6 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
                 lLSetting.bringToFront()
                 dSetting = true
                 hideView()
-                AppLog.logDebug("test", "show setting")
             }
             R.id.tv_textSize_small -> {
                 pageFactory.changeFontSize(15f)
@@ -200,6 +198,10 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
                 pageFactory.changeFontSize(30f)
             }
         }
+    }
+
+    private fun addIndexToDB() {
+        mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(), pageFactory.getCurrentEnd())
     }
 
     private fun setCheckedId() {
@@ -215,9 +217,6 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
 
     fun jumpToCatalog(flag: Boolean) {
 
-        if (flag) AppLog.logDebug("test", "catalog load successful")
-        else AppLog.logDebug("test", "catalog load failure")
-        //CatalogActivity.jumpToCatalogActivity(this, " ")
 
         startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
     }
@@ -256,8 +255,8 @@ class ReadActivity : MvpContract.MvpActivity<ReadActivityPresenter>(),
     }
 
     companion object {
-        fun jumpToReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
-            val intent = Intent(context, ReadActivity::class.java)
+        fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
+            val intent = Intent(context, TxtReadActivity::class.java)
             /* val bundle = Bundle()
              bundle.putSerializable("bookInfo",data)*/
             intent.putExtra("bookInfo", data0)

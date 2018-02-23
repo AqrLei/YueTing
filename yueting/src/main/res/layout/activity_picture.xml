@@ -58,7 +58,7 @@
         android:onClick="onClick"
         android:text="read" />
 
-    <com.aqrairsigns.aqrleilib.view.RippleButton
+    <com.aqrairsigns.aqrleilib.ui.view.RippleButton
         android:id="@+id/rb_test"
         android:layout_width="match_parent"
         android:layout_height="75dp"
@@ -69,7 +69,7 @@
         android:text="ripple"
         android:visibility="gone" />
 
-    <com.aqrairsigns.aqrleilib.view.FlowLayout
+    <com.aqrairsigns.aqrleilib.ui.view.FlowLayout
         android:id="@+id/aqr_tv_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
             android:text="write the code,change the world"
             android:textColor="#1b8fe6"
             android:textSize="12dp" />
-    </com.aqrairsigns.aqrleilib.view.FlowLayout>
+    </com.aqrairsigns.aqrleilib.ui.view.FlowLayout>
 
 
 </RelativeLayout>

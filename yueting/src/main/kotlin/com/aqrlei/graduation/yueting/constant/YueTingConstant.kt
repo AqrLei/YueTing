@@ -34,11 +34,15 @@ object YueTingConstant {
     val BOOK_TABLE_C = arrayOf(
             "path",
             "type",
+            "indexBegin",
+            "indexEnd",
             "fileInfo"
     )
     val BOOK_TABLE_C_TYPE = arrayOf(
             "varchar unique not null",
-            "integer ",
+            "varchar ",
+            "integer default 0",
+            "integer default 0",
             "text"
     )
     val MARK_TABLE_NAME = "markInfo"

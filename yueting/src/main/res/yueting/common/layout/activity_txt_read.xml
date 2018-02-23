@@ -6,7 +6,7 @@
 
     <include layout="@layout/read_item_top" />
 
-    <com.aqrairsigns.aqrleilib.view.PageView
+    <com.aqrairsigns.aqrleilib.ui.view.PageView
         android:id="@+id/pv_read"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

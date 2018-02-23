@@ -8,5 +8,5 @@ import android.graphics.drawable.Drawable
  * @Description:
  * @Date: 2017/8/25
  */
-data class ChatMessage(var content: String?="", var type: Int = 0, var avatar: Drawable,
+data class ChatMessage(var content: String? = "", var type: Int = 0, var avatar: Drawable,
                        var child: List<ChildMessage>?)

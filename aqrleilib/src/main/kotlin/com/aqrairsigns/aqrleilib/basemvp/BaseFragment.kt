@@ -21,7 +21,7 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
 
 
     protected abstract val layoutRes: Int
-    protected open fun initComponents() {
+    protected open fun initComponents(view: View?, savedInstanceState: Bundle?) {
 
     }
 
@@ -37,10 +37,15 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater!!.inflate(layoutRes, container, false)
-        initComponents()
+        //initComponents()
         AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onCreateView----" +
                 mContainerActivity.javaClass.simpleName)
         return mView
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initComponents(view, savedInstanceState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

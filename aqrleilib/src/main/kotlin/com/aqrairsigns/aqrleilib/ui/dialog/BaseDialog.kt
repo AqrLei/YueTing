@@ -1,4 +1,4 @@
-package com.aqrairsigns.aqrleilib.view.dialog
+package com.aqrairsigns.aqrleilib.ui.dialog
 
 import android.app.Dialog
 import android.content.Context

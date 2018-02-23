@@ -9,7 +9,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabMusicFragment
  * @Description:
  * @Date: 2017/8/24
  */
-class TabMusicPresenter(mMvpView: TabMusicFragment):
-        MvpContract.FragmentPresenter<TabMusicFragment>(mMvpView){
+class TabMusicPresenter(mMvpView: TabMusicFragment) :
+        MvpContract.FragmentPresenter<TabMusicFragment>(mMvpView) {
 
 }

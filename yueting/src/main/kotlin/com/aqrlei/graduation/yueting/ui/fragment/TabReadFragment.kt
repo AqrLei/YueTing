@@ -6,8 +6,8 @@ import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.view.AlphaListView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
@@ -65,8 +65,8 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         }
     }
 
-    override fun initComponents() {
-        super.initComponents()
+    override fun initComponents(view: View?, savedInstanceState: Bundle?) {
+        super.initComponents(view, savedInstanceState)
         initView()
     }
 
