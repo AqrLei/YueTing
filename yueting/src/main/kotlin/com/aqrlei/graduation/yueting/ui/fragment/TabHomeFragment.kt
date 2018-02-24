@@ -3,16 +3,13 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
-import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -23,8 +20,8 @@ import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresente
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
-import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
-import kotlinx.android.synthetic.main.layout_yueting_header.*
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
+import kotlinx.android.synthetic.main.home_top_layout.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 
 /**
@@ -39,47 +36,57 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 * @param mContainerActivity 访问对应的Activity
 * */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
-        AlphaListView.OnAlphaChangeListener, AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener,
+        View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tv_right_listen -> {
+                tv_right_listen.visibility = View.INVISIBLE
+                mListView.adapter = mMusicAdapter
+                tv_left_read.visibility = View.VISIBLE
+                tv_title_name.text = "欣听"
+            }
+            R.id.tv_left_read -> {
+                tv_left_read.visibility = View.INVISIBLE
+                mListView.adapter = mBookAdapter
+                tv_right_listen.visibility = View.VISIBLE
+                tv_title_name.text = "悦读"
+            }
+        }
+    }
+
     override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
         when (convertView.id) {
-            R.id.ll_title_item -> {
-                return
-            }
             R.id.ll_music_item -> {
-                val realPosition = position - 3 - mBookInfoShred.getSize()
                 isServiceStart = mMusicInfoShared.isStartService()
                 if (!isServiceStart) {
-                    startMusicService(realPosition)
+                    startMusicService(position)
                     isServiceStart = true
                 } else {
-                    sendPlayBroadcast(realPosition)
+                    sendPlayBroadcast(position)
                 }
             }
             R.id.ll_read_item -> {
-                if (mBookInfoShred.getInfo(position - 2).type == "txt") {
+                if (mBookInfoShared.getInfo(position).type == "txt") {
                     TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2))
+                            mBookInfoShared.getInfo(position))
                 }
-                if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
+                if (mBookInfoShared.getInfo(position).type == "pdf") {
                     PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2))
+                            mBookInfoShared.getInfo(position))
                 }
             }
         }
 
     }
 
-    override fun onAlphaChanged(percent: Float) {
-        mContainerActivity.ll_tab_title.setBackgroundColor(
-                Color.argb((175 * percent).toInt(), 113, 204, 180)
-        )
-    }
-
-    private var mReadData = ArrayList<BookInfo>()
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
-    private var mBookInfoShred = ShareBookInfo.BookInfoTool
-    private lateinit var mAdapter: YueTingHomeListAdapter
+    private var mBookInfoShared = ShareBookInfo.BookInfoTool
+    private lateinit var mBookAdapter: YueTingListAdapter
+    private lateinit var mMusicAdapter: YueTingListAdapter
+    private val mListView: AlphaListView
+        get() = mView.lv_fragment_home as AlphaListView
 
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -119,16 +126,15 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun initView() {
 
-        val mRecommendLv = mView.lv_fragment_home as AlphaListView
+        mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_read, 0)
+        mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_music, 1)
 
-        mAdapter = YueTingHomeListAdapter(mContainerActivity,
-                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mBookInfoShred.getInfoS(), mMusicInfoShared.getInfoS())
-
-        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_home, null))
-        mRecommendLv.adapter = mAdapter
-        mRecommendLv.onItemClickListener = this
-        mRecommendLv.setAlphaChangeListener(this)
+        mListView.adapter = mBookAdapter
+        mListView.onItemClickListener = this
+        tv_left_read.visibility = View.INVISIBLE
+        tv_title_name.text = "悦读"
+        tv_left_read.setOnClickListener(this)
+        tv_right_listen.setOnClickListener(this)
 
     }
 
@@ -164,12 +170,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mMusicAdapter.notifyDataSetChanged()
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
-        mBookInfoShred.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mBookInfoShared.setInfoS(data)
+        mBookAdapter.notifyDataSetChanged()
 
     }
 

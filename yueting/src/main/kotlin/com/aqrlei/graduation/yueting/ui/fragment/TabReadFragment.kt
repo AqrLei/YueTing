@@ -12,7 +12,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabReadPresenter
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
-import com.aqrlei.graduation.yueting.ui.adapter.YueTingReadListAdapter
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.listheader_read_tab.view.*
 import kotlinx.android.synthetic.main.yueting_fragment_read.view.*
@@ -95,8 +95,8 @@ class TabReadFragment : MvpContract.MvpFragment<TabReadPresenter, YueTingActivit
         mReadData.add(BookInfo("这是书名吧7", null))
         mReadData.add(BookInfo("这是书名吧7", null))
         mReadData.add(BookInfo("这是书名吧7", null))
-        mReadLv.adapter = YueTingReadListAdapter(mReadData, mContainerActivity,
-                R.layout.listitem_read)
+        mReadLv.adapter = YueTingListAdapter(mReadData, mContainerActivity,
+                R.layout.listitem_read, 0)
         mReadLv.setAlphaChangeListener(this)
 
 

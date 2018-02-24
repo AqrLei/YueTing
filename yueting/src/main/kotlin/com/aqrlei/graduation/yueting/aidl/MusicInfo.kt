@@ -13,6 +13,7 @@ import java.util.*
 data class MusicInfo(
         var id: Int = 0,
         var albumUrl: String = "",
+        var type: Int = 3,
         var album: String = "",
         var picture: ByteArray? = null,
         var title: String = "",
@@ -24,6 +25,7 @@ data class MusicInfo(
             /*String属性值不为null，但readString()可能为null, 许StrictMode*/
             parcel.readInt(),
             parcel.readString() ?: " ",
+            parcel.readInt(),
             parcel.readString() ?: " ",
             parcel.createByteArray(),
             parcel.readString() ?: " ",
@@ -35,6 +37,7 @@ data class MusicInfo(
     override fun writeToParcel(out: Parcel?, flags: Int) {
         out?.writeInt(id)
         out?.writeString(albumUrl)
+        out?.writeInt(type)
         out?.writeString(album)
         out?.writeByteArray(picture)
         out?.writeString(title)
@@ -89,6 +92,7 @@ data class MusicInfo(
         result = 31 * result + title.hashCode()
         result = 31 * result + artist.hashCode()
         result = 31 * result + duration
+        result = 31 * result + type
         result = 31 * result + createTime.hashCode()
         return result
     }
