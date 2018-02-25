@@ -2,12 +2,16 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!--是否允许多点Touch-->
         <item name="android:windowEnableSplitTouch">false</item>
+        <!--是否传递Touch事件到子布局-->
         <item name="android:splitMotionEvents">false</item>
+        <!--状态栏半透明-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--Activity跳转动画-->
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
     </style>
 

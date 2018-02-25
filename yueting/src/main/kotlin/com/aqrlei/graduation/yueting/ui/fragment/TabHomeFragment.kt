@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -17,11 +18,13 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.FileActivity
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import kotlinx.android.synthetic.main.home_top_layout.*
+import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 
 /**
@@ -51,6 +54,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mListView.adapter = mBookAdapter
                 tv_right_listen.visibility = View.VISIBLE
                 tv_title_name.text = "悦读"
+            }
+            R.id.tv_setting -> {
+                AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
+            }
+            R.id.tv_file_local -> {
+                FileActivity.jumpToFileActivity(mContainerActivity)
             }
         }
     }
@@ -135,6 +144,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         tv_title_name.text = "悦读"
         tv_left_read.setOnClickListener(this)
         tv_right_listen.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+        tv_file_local.setOnClickListener(this)
 
     }
 

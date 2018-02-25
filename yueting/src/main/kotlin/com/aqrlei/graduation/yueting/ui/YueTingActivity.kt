@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -18,7 +16,10 @@ import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
-import kotlinx.android.synthetic.main.layout_yueting_header.*
+import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
+import android.os.Build.VERSION.SDK_INT
+
+
 
 
 /**
@@ -31,16 +32,7 @@ import kotlinx.android.synthetic.main.layout_yueting_header.*
 * @param mPresenter 访问对应的Presenter
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
-        , RadioGroup.OnCheckedChangeListener
         , View.OnClickListener {
-    override fun onCheckedChanged(radioGroup: RadioGroup?, checkedId: Int) {
-        (0 until radioGroup!!.childCount)
-                .filter { radioGroup.getChildAt(it).id == checkedId }
-                .forEach {
-                    changeFragment(it)
-                    titleName = (radioGroup.getChildAt(it) as RadioButton).text.toString()
-                }
-    }
 
     override fun onClick(v: View) {
         when (v.id) {
@@ -57,9 +49,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             R.id.tv_music_info -> {
                 PlayActivity.jumpToPlayActivity(this@YueTingActivity)
             }
-            R.id.tv_file_local -> {
-                FileActivity.jumpToFileActivity(this@YueTingActivity)
-            }
         }
     }
 
@@ -68,18 +57,14 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override val layoutRes: Int
         get() = R.layout.activity_yueting
 
-
-    private var mFragments = ArrayList<Fragment>()
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
-    private var titleName: String = ""
     private lateinit var mHandler: Handler
     private lateinit var mPlayView: LinearLayout
-    private lateinit var mFragmentManager: FragmentManager
+    private lateinit var mTabHomeFragment: TabHomeFragment
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mHandler = mMusicShareInfo.getHandler(this)
-        mFragmentManager = supportFragmentManager
         mPlayView = this.window.decorView
                 .findViewById(R.id.ll_play_control) as LinearLayout
         initFragments(savedInstanceState)
@@ -89,38 +74,26 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             }
             initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
-        rg_anim_tab.setOnCheckedChangeListener(this)
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
-        mPresenter.initFragments(savedInstanceState, mFragmentManager)
-        changeFragment(YueTingConstant.TAG_FRAGMENT_HOME)
-    }
-
-    private fun changeFragment(position: Int) {
-        for (i in mFragments.indices) {
-            val currentFragment = mFragments[i]
-            val ft = mFragmentManager.beginTransaction()
-            if (i == position) {
-                if (!currentFragment.isAdded) {
-                    ft.add(R.id.fl_fragment, currentFragment, YueTingConstant.TAB_FRAGMENT_TAGS[i])
-                }
-                ft.show(currentFragment)
-            } else {
-                ft.hide(currentFragment)
-            }
-            ft.commit()
+        mTabHomeFragment = if (savedInstanceState != null) {
+            (supportFragmentManager
+                    .findFragmentByTag(
+                            YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                    ?: TabHomeFragment.newInstance()) as TabHomeFragment
+        } else {
+            TabHomeFragment.newInstance()
         }
+        supportFragmentManager.beginTransaction().add(
+                R.id.fl_fragment,
+                mTabHomeFragment,
+                YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                .commit()
     }
-
     private fun sendMusicBroadcast(type: SendType) {
         ShareMusicInfo.MusicInfoTool.sendBroadcast(this, type)
     }
-
-    fun setFragments(fragments: ArrayList<Fragment>) {
-        mFragments = fragments
-    }
-
 
     private fun initPlayView(position: Int, duration: Int = 0) {
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
