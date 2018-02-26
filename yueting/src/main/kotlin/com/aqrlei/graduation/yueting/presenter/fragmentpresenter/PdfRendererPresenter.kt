@@ -43,13 +43,21 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
             }
         }
 
-        fun indexObservable(path: String, begin: Int): Observable<Boolean> {
+        fun indexObservable(path: String, begin: Int, end: Int): Observable<Boolean> {
             return Observable.defer {
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 YueTingConstant.BOOK_TABLE_NAME,
                                 "indexBegin", "path", "="),
                         arrayOf(begin, path),
+                        null,
+                        DBManager.SqlType.UPDATE
+                )
+                DBManager.sqlData(
+                        DBManager.SqlFormat.updateSqlFormat(
+                                YueTingConstant.BOOK_TABLE_NAME,
+                                "indexEnd", "path", "="),
+                        arrayOf(end, path),
                         null,
                         DBManager.SqlType.UPDATE
                 )
@@ -74,11 +82,11 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
     }
 
 
-    fun addIndexToDB(path: String, begin: Int) {
+    fun addIndexToDB(path: String, begin: Int, end: Int) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         disposables.add(
-                indexObservable(path, begin)
+                indexObservable(path, begin, end)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {

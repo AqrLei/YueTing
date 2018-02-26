@@ -57,6 +57,7 @@ enum class BookPageFactory {
     private var bPosition: Int = 0
     private lateinit var mBookInfo: BookInfo
     private var isNext = true
+    private var progress: Int = 0
 
     private val content = ArrayList<String>()
     private val tempContent = ArrayList<String>()
@@ -71,7 +72,7 @@ enum class BookPageFactory {
         screenWidth = metrics.widthPixels
         pageHeight = screenHeight - 2 * margin
         pageWidth = screenWidth - 2 * margin
-        lineNumber = pageHeight / (fontSize + lineSpace)
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
 
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint.textSize = fontSize.toFloat()
@@ -90,13 +91,14 @@ enum class BookPageFactory {
         mCanvasA.drawColor(bgColor)
         mCanvasB.drawColor(bgColor)
         mCanvasC.drawColor(bgColor)
+        mCanvasC.drawFilter
         openBook(bookInfo)
     }
 
     fun changeFontSize(dpSize: Float) {
         fontSize = DensityUtil.dipToPx(mContext, dpSize)
         mPaint.textSize = fontSize.toFloat()
-        lineNumber = pageHeight / (fontSize + lineSpace)
+        lineNumber = pageHeight / (fontSize + lineSpace) - 3
         refreshPage = false
         nextPage()
     }
@@ -127,6 +129,7 @@ enum class BookPageFactory {
 
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
         isNext = true
+        progress = isProgress
         if (isProgress == 1) {
             refreshPage = false
             begin = pBegin
@@ -339,35 +342,43 @@ enum class BookPageFactory {
         mCanvasC.drawColor(bgColor)
         content.forEachIndexed { index, s ->
             y += fontSize + lineSpace
-            if (isNext) {
-                mCanvasB.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
-                if (tempContent.isNotEmpty() && (index < tempContent.size)) {
-                    mCanvasA.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
-                    mCanvasC.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
-                }
-            } else {
+            if (progress == 1) {
                 mCanvasA.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
-                mCanvasC.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
-                if (tempContent.isNotEmpty() && (index < tempContent.size)) {
-                    mCanvasB.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+            } else {
+                if (isNext) {
+                    mCanvasB.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                    if (tempContent.isNotEmpty() && (index < tempContent.size)) {
+                        mCanvasA.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                        mCanvasC.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                    }
+                } else {
+                    mCanvasA.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                    mCanvasC.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                    if (tempContent.isNotEmpty() && (index < tempContent.size)) {
+                        mCanvasB.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                    }
                 }
             }
 
         }
-        /* for (line in content) {
-             y += fontSize + lineSpace
-             if(isNext) {
-                 mCanvasB.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
-             } else {
-                 mCanvasA.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
-                 mCanvasC.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
-             }
-         }*/
+
         putCache()
-        mView.invalidate()
+        mView.postInvalidate()
         tempContent.clear()
         tempContent.addAll(content)
 
+    }
+
+    fun setMCanvasAContent() {
+        var y = margin
+        if (isNext) {
+            mCanvasA.drawColor(bgColor)
+            for (line in content) {
+                y += fontSize + lineSpace
+                mCanvasA.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
+            }
+            mView.postInvalidate()
+        }
     }
 
     private fun putCache() {

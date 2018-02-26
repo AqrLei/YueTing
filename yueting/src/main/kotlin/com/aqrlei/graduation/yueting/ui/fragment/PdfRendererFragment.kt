@@ -355,6 +355,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             mPdfRenderer = PdfRenderer(mFileDescriptor!!)
             pageCount = mPdfRenderer!!.pageCount - 1
             sb_rate.max = pageCount
+
         }
     }
 
@@ -410,7 +411,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
     fun putIndexToDB(index: Int) {
         beginIndex = index
-        mPresenter.addIndexToDB(bookInfo.path, beginIndex)
+        mPresenter.addIndexToDB(bookInfo.path, beginIndex, pageCount)
     }
 
     /**

@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
-import com.aqrairsigns.aqrleilib.R;
-
 public class BookPageView extends View {
 
     private MyPoint a, f, g, e, h, c, j, b, k, d, i;
@@ -174,6 +172,7 @@ public class BookPageView extends View {
                 setTouchPoint(x, y, STYLE_LOWER_RIGHT);
             }
             if (mScroller.getFinalX() == x && mScroller.getFinalY() == y) {
+                mPageTouchListener.onFinalScroll();
                 setDefaultPath();
             }
         }
@@ -189,26 +188,26 @@ public class BookPageView extends View {
                 if (x <= viewWidth / 3) {//左
                     style = STYLE_LEFT;
                     setTouchPoint(x, y, style);
-                    mScrollListener.onLeftScroll();
+                    mPageTouchListener.onLeftScroll();
 
                 } else if (x > viewWidth / 3 && y <= viewHeight / 3) {//上
                     style = STYLE_TOP_RIGHT;
                     setTouchPoint(x, y, style);
-                    mScrollListener.onRightScroll();
+                    mPageTouchListener.onRightScroll();
 
                 } else if (x > viewWidth * 2 / 3 && y > viewHeight / 3 && y <= viewHeight * 2 / 3) {//右
                     style = STYLE_RIGHT;
                     setTouchPoint(x, y, style);
-                    mScrollListener.onRightScroll();
+                    mPageTouchListener.onRightScroll();
 
                 } else if (x > viewWidth / 3 && y > viewHeight * 2 / 3) {//下
                     style = STYLE_LOWER_RIGHT;
                     setTouchPoint(x, y, style);
-                    mScrollListener.onRightScroll();
+                    mPageTouchListener.onRightScroll();
 
                 } else if (x > viewWidth / 3 && x < viewWidth * 2 / 3 && y > viewHeight / 3 && y < viewHeight * 2 / 3) {//中
                     style = STYLE_MIDDLE;
-                    mScrollListener.onRightScroll();
+                    mPageTouchListener.onMiddleClick();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -779,7 +778,7 @@ public class BookPageView extends View {
         this.bgColor = bgColor;
     }
 
-    private OnScrollListener mScrollListener;
+    private OnPageTouchListener mPageTouchListener;
 
     public void setBitmap(Bitmap bitmapA, Bitmap bitmapB, Bitmap bitmapC) {
         pathAContentBitmap = bitmapA;
@@ -787,8 +786,8 @@ public class BookPageView extends View {
         pathCContentBitmap = bitmapC;
     }
 
-    public void setOnScrollListener(OnScrollListener listener) {
-        mScrollListener = listener;
+    public void setOnPageTouchListener(OnPageTouchListener listener) {
+        mPageTouchListener = listener;
     }
 
     private class MyPoint {
@@ -803,9 +802,12 @@ public class BookPageView extends View {
         }
     }
 
-    public interface OnScrollListener {
+    public interface OnPageTouchListener {
         void onLeftScroll();
 
+        void onMiddleClick();
         void onRightScroll();
+
+        void onFinalScroll();
     }
 }

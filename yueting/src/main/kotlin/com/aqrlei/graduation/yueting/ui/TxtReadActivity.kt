@@ -10,13 +10,11 @@ import android.view.View
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
-import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
 import kotlinx.android.synthetic.main.read_item_progress.*
@@ -32,10 +30,11 @@ import java.text.DecimalFormat
  * Date : 2017/11/17.
  */
 class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
-        BookPageView.OnScrollListener,
+        BookPageView.OnPageTouchListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemSelectedListener {
+
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -57,7 +56,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
 
-            val percent = DecimalFormat("#00.0").format(progress * 1.0f / 10.0f)
+            val percent = DecimalFormat("#00.00").format(progress * 1.00f / 10.00f)
             tv_done_percent.text = "$percent %"
 
             val pBegin = (bookInfo.fileLength * ((BigDecimal(percent).div(BigDecimal(100))).toDouble())).toInt()
@@ -72,6 +71,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onMiddleClick() {
+        showMenu()
+    }
+
+    override fun onFinalScroll() {
+        pageFactory.setMCanvasAContent()
     }
 
     override fun onLeftScroll() {
@@ -269,14 +276,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
          pageFactory.setBookInfo(pageView, bookInfo)
          pageFactory.nextPage()
          pageView.setOnLongClickListener(this)
-        // pageView.setOnScrollListener(this)
+        // pageView.setOnPageTouchListener(this)
      }*/
     private fun setBookPageFactory(bookPageView: BookPageView) {
         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
         ChapterFactory.init(bookInfo)
         pageFactory.setBookInfo(bookPageView, bookInfo)
         pageFactory.nextPage()
-        bookPageView.setOnScrollListener(this)
+        bookPageView.setOnPageTouchListener(this)
     }
 
     private fun changeBright(brightValue: Int) {
