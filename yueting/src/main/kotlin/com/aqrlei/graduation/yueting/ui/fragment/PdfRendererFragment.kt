@@ -399,6 +399,15 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
+    fun showMenu() {
+        if (display) {
+            hideView()
+        } else {
+            if (!dSetting && !dProgress) {
+                displayView()
+            }
+        }
+    }
     fun putIndexToDB(index: Int) {
         beginIndex = index
         mPresenter.addIndexToDB(bookInfo.path, beginIndex)
@@ -433,13 +442,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
 
         override fun onLongPress(e: MotionEvent?) {
-            if (display) {
-                hideView()
-            } else {
-                if (!dSetting && !dProgress) {
-                    displayView()
-                }
-            }
+
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -33,6 +34,15 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         if (!fragment.onBackPressed()) {
             super.onBackPressed()
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_MENU -> {
+                fragment.showMenu()
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

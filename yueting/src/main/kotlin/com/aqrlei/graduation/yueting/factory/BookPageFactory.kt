@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.util.DisplayMetrics
+import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
@@ -18,6 +19,7 @@ import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Author : AqrLei
@@ -26,8 +28,8 @@ import java.util.*
  * Date : 2017/11/9.
  */
 
-enum class PageFactory {
-    PAGEFACTORY;
+enum class BookPageFactory {
+    BOOKPAGEFACTORY;
 
     private var screenHeight: Int = 0
     private var screenWidth: Int = 0
@@ -38,8 +40,10 @@ enum class PageFactory {
     private lateinit var mContext: Context
     private var margin: Int = 0
     private var lineSpace: Int = 0
-    private lateinit var mCanvas: Canvas
-    private lateinit var mView: PageView
+    private lateinit var mCanvasA: Canvas
+    private lateinit var mCanvasB: Canvas
+    private lateinit var mCanvasC: Canvas
+    private lateinit var mView: BookPageView
     private var fileLength: Int = 0
     private var end: Int = 0
     private var begin: Int = 0
@@ -52,10 +56,12 @@ enum class PageFactory {
     private var bgColor: Int = Color.parseColor("#c7eece")
     private var bPosition: Int = 0
     private lateinit var mBookInfo: BookInfo
+    private var isNext = true
 
     private val content = ArrayList<String>()
+    private val tempContent = ArrayList<String>()
 
-    fun setBookInfo(view: PageView, bookInfo: BookInfo) {
+    fun setBookInfo(view: BookPageView, bookInfo: BookInfo) {
         val metrics = DisplayMetrics()
         mView = view
 
@@ -74,10 +80,16 @@ enum class PageFactory {
         margin = DensityUtil.pxToDip(mContext, 5f)
         lineSpace = DensityUtil.pxToDip(mContext, 5F)
 
-        val bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
-        mView.setBitmap(bitmap)
-        mCanvas = Canvas(bitmap)
-        mCanvas.drawColor(bgColor)
+        val bitmapA = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
+        val bitmapB = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
+        val bitmapC = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
+        mView.setBitmap(bitmapA, bitmapB, bitmapC)
+        mCanvasA = Canvas(bitmapA)
+        mCanvasB = Canvas(bitmapB)
+        mCanvasC = Canvas(bitmapC)
+        mCanvasA.drawColor(bgColor)
+        mCanvasB.drawColor(bgColor)
+        mCanvasC.drawColor(bgColor)
         openBook(bookInfo)
     }
 
@@ -114,6 +126,7 @@ enum class PageFactory {
 
 
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
+        isNext = true
         if (isProgress == 1) {
             refreshPage = false
             begin = pBegin
@@ -231,6 +244,7 @@ enum class PageFactory {
     }
 
     fun prePage() {
+        isNext = false
         end = begin
         if (begin <= 0) {
             return
@@ -247,6 +261,7 @@ enum class PageFactory {
     fun setPageBackground(color: Int, position: Int) {
         bPosition = position
         bgColor = color
+        mView.setBgColor(bgColor)
         refreshPage = false
         putCache()
         nextPage()
@@ -319,14 +334,40 @@ enum class PageFactory {
 
     private fun printPage() {
         var y = margin
-        mCanvas.drawColor(bgColor)
-        for (line in content) {
+        mCanvasA.drawColor(bgColor)
+        mCanvasB.drawColor(bgColor)
+        mCanvasC.drawColor(bgColor)
+        content.forEachIndexed { index, s ->
             y += fontSize + lineSpace
-            mCanvas.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
-            // Log.d("text",line);
+            if (isNext) {
+                mCanvasB.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                if (tempContent.isNotEmpty() && (index < tempContent.size)) {
+                    mCanvasA.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                    mCanvasC.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                }
+            } else {
+                mCanvasA.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                mCanvasC.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                if (tempContent.isNotEmpty() && (index < tempContent.size)) {
+                    mCanvasB.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                }
+            }
+
         }
+        /* for (line in content) {
+             y += fontSize + lineSpace
+             if(isNext) {
+                 mCanvasB.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
+             } else {
+                 mCanvasA.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
+                 mCanvasC.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
+             }
+         }*/
         putCache()
         mView.invalidate()
+        tempContent.clear()
+        tempContent.addAll(content)
+
     }
 
     private fun putCache() {
