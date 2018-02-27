@@ -80,9 +80,17 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         } else {
             PdfRendererFragment.newInstance(bookInfo)
         }
-        supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
-                YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
-                .commit()
+        /**
+         * 避免重复添加的错误
+         */
+        if (!fragment.isAdded &&
+                supportFragmentManager.findFragmentByTag(
+                        YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
+                == null) {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
+                    YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
+                    .commit()
+        }
     }
 
     private fun addIndexToDB(index: Int) {

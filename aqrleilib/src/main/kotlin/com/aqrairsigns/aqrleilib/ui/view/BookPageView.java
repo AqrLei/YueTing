@@ -166,10 +166,14 @@ public class BookPageView extends View {
         if (mScroller.computeScrollOffset()) {
             float x = mScroller.getCurrX();
             float y = mScroller.getCurrY();
-            if (style.equals(STYLE_TOP_RIGHT)) {
-                setTouchPoint(x, y, STYLE_TOP_RIGHT);
-            } else {
+            /**
+             * @param STYLE_LEFT 回到右下的f点
+             *  其它则按照各自方式继续
+             */
+            if (style.equals(STYLE_LEFT)) {
                 setTouchPoint(x, y, STYLE_LOWER_RIGHT);
+            } else {
+                setTouchPoint(x, y, style);
             }
             if (mScroller.getFinalX() == x && mScroller.getFinalY() == y) {
                 mPageTouchListener.onFinalScroll();
@@ -225,15 +229,29 @@ public class BookPageView extends View {
      */
     public void startCancelAnim() {
         int dx, dy;
-        //让a滑动到f点所在位置，留出1像素是为了防止当a和f重叠时出现View闪烁的情况
-        if (style.equals(STYLE_TOP_RIGHT)) {
-            dx = (int) (viewWidth - 1 - a.x);
-            dy = (int) (1 - a.y);
-        } else {
-            dx = (int) (viewWidth - 1 - a.x);
-            dy = (int) (viewHeight - 1 - a.y);
+        /**
+         * 触摸区在左边时，让a点到达f点
+         * 触摸区在右边时，则继续翻页动画
+         */
+        switch (style) {
+            case STYLE_LEFT:
+                dx = (int) (viewWidth - 1 - a.x);
+                dy = (int) (viewHeight - 1 - a.y);
+                mScroller.startScroll((int) a.x, (int) a.y, dx, dy, 400);
+                break;
+            case STYLE_RIGHT:
+                dx = (int) -(viewWidth + a.x);
+                dy = 0;
+                mScroller.startScroll((int) a.x, (int) a.y, dx, dy, 400);
+                break;
+            case STYLE_LOWER_RIGHT:
+            case STYLE_TOP_RIGHT:
+                dx = (int) -(a.x);
+                dy = 0;
+                mScroller.startScroll((int) a.x, (int) a.y, dx, dy, 200);
+                break;
         }
-        mScroller.startScroll((int) a.x, (int) a.y, dx, dy, 400);
+
     }
 
     /**
@@ -366,8 +384,13 @@ public class BookPageView extends View {
         if (style.equals(STYLE_LEFT) || style.equals(STYLE_RIGHT)) {
             drawPathAHorizontalShadow(canvas, pathA);
         } else {
-            drawPathALeftShadow(canvas, pathA);
-            drawPathARightShadow(canvas, pathA);
+            /**
+             * 动画结束时，阴影也不需要了
+             */
+            if (a.x != -1) {
+                drawPathALeftShadow(canvas, pathA);
+                drawPathARightShadow(canvas, pathA);
+            }
         }
         canvas.restore();
     }

@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.LinearLayout
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
@@ -17,9 +15,6 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
-import android.os.Build.VERSION.SDK_INT
-
-
 
 
 /**
@@ -85,12 +80,20 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         } else {
             TabHomeFragment.newInstance()
         }
-        supportFragmentManager.beginTransaction().add(
-                R.id.fl_fragment,
-                mTabHomeFragment,
-                YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
-                .commit()
+
+        if (!mTabHomeFragment.isAdded &&
+                supportFragmentManager.findFragmentByTag(
+                        YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                == null) {
+
+            supportFragmentManager.beginTransaction().add(
+                    R.id.fl_fragment,
+                    mTabHomeFragment,
+                    YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                    .commit()
+        }
     }
+
     private fun sendMusicBroadcast(type: SendType) {
         ShareMusicInfo.MusicInfoTool.sendBroadcast(this, type)
     }

@@ -278,8 +278,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
-    override fun onStop() {
+    override fun onPause() {
+        super.onPause()
         putIndexToDB(currentIndex)
+    }
+    override fun onStop() {
+
         try {
             closeRenderer()
         } catch (e: IOException) {

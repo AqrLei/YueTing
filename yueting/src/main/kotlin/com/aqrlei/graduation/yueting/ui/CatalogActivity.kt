@@ -1,8 +1,12 @@
 package com.aqrlei.graduation.yueting.ui
 
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioButton
@@ -10,6 +14,7 @@ import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppLog
+import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -24,19 +29,28 @@ import kotlinx.android.synthetic.main.activity_catalog.*
  * Date : 2017/11/17.
  */
 class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
+        View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tv_remove_items -> {
+
+            }
+        }
+
+    }
+
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         if (!mDataInfoS[position].flag) {
-            ChapterFactory.CHAPTER.removeBookMark(position)
-            dataChange(ChapterFactory.CHAPTER.getBookMarks())
+            markPosition = position
+            showDialog()
         }
         return true
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // TxtReadActivity.jumpToTxtReadActivity(this,ShareBookInfo.BookInfoTool.getInfo())
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
         setResult(2, intent)
         AppLog.logDebug("test", "catalog test")
@@ -48,13 +62,9 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
             R.id.rb_catalog_title -> {
 
                 dataChange(ChapterFactory.CHAPTER.getChapters())
-                AppLog.logDebug("test",
-                        (findViewById(R.id.rb_catalog_title) as RadioButton).text.toString())
             }
             R.id.rb_bookMark_title -> {
                 dataChange(ChapterFactory.CHAPTER.getBookMarks())
-                AppLog.logDebug("test",
-                        (findViewById(R.id.rb_bookMark_title) as RadioButton).text.toString())
             }
         }
     }
@@ -67,6 +77,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
     private lateinit var mProgressDialog: ProgressDialog
+    private var markPosition: Int = 0
 
     override fun onStop() {
         super.onStop()
@@ -118,6 +129,22 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         mView.onItemClickListener = this
         mView.onItemLongClickListener = this
 
+    }
+
+
+    private fun showDialog() {
+        val dialog = Dialog(this, R.style.BottomDialog)
+        dialog.setContentView(R.layout.layout_bottom_dialog)
+        dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
+            ChapterFactory.CHAPTER.removeBookMark(markPosition)
+            dataChange(ChapterFactory.CHAPTER.getBookMarks())
+            dialog.dismiss()
+        })
+        dialog.window.setGravity(Gravity.BOTTOM)
+        dialog.window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
+                DensityUtil.dipToPx(this, 50f))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
     }
 
 

@@ -1,19 +1,24 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
+import android.app.Dialog
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
+import android.support.constraint.ConstraintLayout
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -40,7 +45,23 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 * */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener,
         View.OnClickListener {
+    override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        removePosition = position
+        when (view?.id) {
+            R.id.ll_read_item -> {
+                showDialog(true)
+            }
+            R.id.ll_music_item -> {
+                showDialog(false)
+            }
+        }
+
+
+        return true
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_right_listen -> {
@@ -89,6 +110,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     }
 
+    private var removePosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
@@ -140,6 +162,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this
+        mListView.onItemLongClickListener = this
         tv_left_read.visibility = View.INVISIBLE
         tv_title_name.text = "悦读"
         tv_left_read.setOnClickListener(this)
@@ -156,6 +179,36 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun getBookInfoFromDB() {
         mPresenter.getBookInfoFromDB()
 
+    }
+
+    private fun removeInfo(flag: Boolean) {
+        if (flag) {
+            val path = mBookInfoShared.getInfo(removePosition).path
+            mBookInfoShared.removeInfo(removePosition)
+            mBookAdapter.notifyDataSetInvalidated()
+            mPresenter.deleteBookItemFromDB(path)
+
+        } else {
+            val path = mMusicInfoShared.getInfo(removePosition).albumUrl
+            mMusicInfoShared.removeInfo(removePosition)
+            mMusicAdapter.notifyDataSetInvalidated()
+            mPresenter.deleteMusicItemFromDB(path)
+        }
+
+    }
+
+    private fun showDialog(isBook: Boolean) {
+        val dialog = Dialog(mContainerActivity, R.style.BottomDialog)
+        dialog.setContentView(R.layout.layout_bottom_dialog)
+        dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
+            removeInfo(isBook)
+            dialog.dismiss()
+        })
+        dialog.window.setGravity(Gravity.BOTTOM)
+        dialog.window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
+                DensityUtil.dipToPx(mContainerActivity, 50f))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
     }
 
     private fun startMusicService(position: Int) {
