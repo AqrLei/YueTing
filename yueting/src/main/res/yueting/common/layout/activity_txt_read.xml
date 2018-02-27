@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_read_txt"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <include layout="@layout/read_item_top" />
 
-    <com.aqrairsigns.aqrleilib.ui.view.PageView
-        android:id="@+id/pv_read"
+    <com.aqrairsigns.aqrleilib.ui.view.BookPageView
+        android:id="@+id/bpv_read"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true" />

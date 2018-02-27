@@ -1,29 +1,34 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
+import android.app.Dialog
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
-import android.view.LayoutInflater
+import android.support.constraint.ConstraintLayout
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
-import com.aqrairsigns.aqrleilib.util.AppCache
+import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.FileActivity
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
-import com.aqrlei.graduation.yueting.ui.adapter.YueTingHomeListAdapter
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
+import kotlinx.android.synthetic.main.home_top_layout.*
 import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 
@@ -39,47 +44,80 @@ import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
 * @param mContainerActivity 访问对应的Activity
 * */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
-        AlphaListView.OnAlphaChangeListener, AdapterView.OnItemClickListener {
-    override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
-        when (convertView.id) {
-            R.id.ll_title_item -> {
-                return
+        AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener,
+        View.OnClickListener {
+    override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        removePosition = position
+        when (view?.id) {
+            R.id.ll_read_item -> {
+                showDialog(true)
             }
             R.id.ll_music_item -> {
-                val realPosition = position - 3 - mBookInfoShred.getSize()
+                showDialog(false)
+            }
+        }
+
+
+        return true
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tv_right_listen -> {
+                tv_right_listen.visibility = View.INVISIBLE
+                mListView.adapter = mMusicAdapter
+                tv_left_read.visibility = View.VISIBLE
+                tv_title_name.text = "欣听"
+            }
+            R.id.tv_left_read -> {
+                tv_left_read.visibility = View.INVISIBLE
+                mListView.adapter = mBookAdapter
+                tv_right_listen.visibility = View.VISIBLE
+                tv_title_name.text = "悦读"
+            }
+            R.id.tv_setting -> {
+                AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
+            }
+            R.id.tv_file_local -> {
+                FileActivity.jumpToFileActivity(mContainerActivity)
+            }
+        }
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
+        when (convertView.id) {
+            R.id.ll_music_item -> {
                 isServiceStart = mMusicInfoShared.isStartService()
                 if (!isServiceStart) {
-                    startMusicService(realPosition)
+                    startMusicService(position)
                     isServiceStart = true
                 } else {
-                    sendPlayBroadcast(realPosition)
+                    sendPlayBroadcast(position)
                 }
             }
             R.id.ll_read_item -> {
-                if (mBookInfoShred.getInfo(position - 2).type == "txt") {
+                if (mBookInfoShared.getInfo(position).type == "txt") {
                     TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2))
+                            mBookInfoShared.getInfo(position))
                 }
-                if (mBookInfoShred.getInfo(position - 2).type == "pdf") {
+                if (mBookInfoShared.getInfo(position).type == "pdf") {
                     PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
-                            mBookInfoShred.getInfo(position - 2))
+                            mBookInfoShared.getInfo(position))
                 }
             }
         }
 
     }
 
-    override fun onAlphaChanged(percent: Float) {
-        mContainerActivity.ll_tab_title.setBackgroundColor(
-                Color.argb((175 * percent).toInt(), 113, 204, 180)
-        )
-    }
-
-    private var mReadData = ArrayList<BookInfo>()
+    private var removePosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
-    private var mBookInfoShred = ShareBookInfo.BookInfoTool
-    private lateinit var mAdapter: YueTingHomeListAdapter
+    private var mBookInfoShared = ShareBookInfo.BookInfoTool
+    private lateinit var mBookAdapter: YueTingListAdapter
+    private lateinit var mMusicAdapter: YueTingListAdapter
+    private val mListView: AlphaListView
+        get() = mView.lv_fragment_home as AlphaListView
 
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -119,16 +157,18 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun initView() {
 
-        val mRecommendLv = mView.lv_fragment_home as AlphaListView
+        mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_read, 0)
+        mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_music, 1)
 
-        mAdapter = YueTingHomeListAdapter(mContainerActivity,
-                R.layout.listitem_title, R.layout.listitem_read, R.layout.listitem_music,
-                mBookInfoShred.getInfoS(), mMusicInfoShared.getInfoS())
-
-        mRecommendLv.addHeaderView(LayoutInflater.from(mContainerActivity).inflate(R.layout.listheader_home, null))
-        mRecommendLv.adapter = mAdapter
-        mRecommendLv.onItemClickListener = this
-        mRecommendLv.setAlphaChangeListener(this)
+        mListView.adapter = mBookAdapter
+        mListView.onItemClickListener = this
+        mListView.onItemLongClickListener = this
+        tv_left_read.visibility = View.INVISIBLE
+        tv_title_name.text = "悦读"
+        tv_left_read.setOnClickListener(this)
+        tv_right_listen.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+        tv_file_local.setOnClickListener(this)
 
     }
 
@@ -139,6 +179,36 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun getBookInfoFromDB() {
         mPresenter.getBookInfoFromDB()
 
+    }
+
+    private fun removeInfo(flag: Boolean) {
+        if (flag) {
+            val path = mBookInfoShared.getInfo(removePosition).path
+            mBookInfoShared.removeInfo(removePosition)
+            mBookAdapter.notifyDataSetInvalidated()
+            mPresenter.deleteBookItemFromDB(path)
+
+        } else {
+            val path = mMusicInfoShared.getInfo(removePosition).albumUrl
+            mMusicInfoShared.removeInfo(removePosition)
+            mMusicAdapter.notifyDataSetInvalidated()
+            mPresenter.deleteMusicItemFromDB(path)
+        }
+
+    }
+
+    private fun showDialog(isBook: Boolean) {
+        val dialog = Dialog(mContainerActivity, R.style.BottomDialog)
+        dialog.setContentView(R.layout.layout_bottom_dialog)
+        dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
+            removeInfo(isBook)
+            dialog.dismiss()
+        })
+        dialog.window.setGravity(Gravity.BOTTOM)
+        dialog.window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
+                DensityUtil.dipToPx(mContainerActivity, 50f))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
     }
 
     private fun startMusicService(position: Int) {
@@ -164,12 +234,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mMusicAdapter.notifyDataSetChanged()
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
-        mBookInfoShred.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mBookInfoShared.setInfoS(data)
+        mBookAdapter.notifyDataSetChanged()
 
     }
 

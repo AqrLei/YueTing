@@ -21,37 +21,5 @@ import io.reactivex.schedulers.Schedulers
  */
 class PdfReadActivityPresenter(mMvpActivity: PdfReadActivity) :
         MvpContract.ActivityPresenter<PdfReadActivity>(mMvpActivity) {
-    companion object {
-        fun catalogsObservable(): Observable<Boolean> {
-            return Observable.defer {
-                Observable.just(ChapterFactory.CHAPTER.getBookMarkFromDB())
-            }
-        }
-    }
-
-    fun getCatalog() {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
-                catalogsObservable()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
-                            override fun onNext(t: Boolean) {
-                                mMvpActivity.jumpToCatalog(t)
-                            }
-                        }
-                        )
-
-        )
-
-    }
-
 
 }

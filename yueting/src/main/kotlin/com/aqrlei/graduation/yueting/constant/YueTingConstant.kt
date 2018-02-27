@@ -12,11 +12,13 @@ object YueTingConstant {
     val TAB_FRAGMENT_TAGS = arrayOf(
             "tag_fragment_home",
             "tag_fragment_read",
-            "tag_fragment_music"
+            "tag_fragment_music",
+            "tag_fragment_read1"
     )
     val TAG_FRAGMENT_HOME: Int = 0
     val TAG_FRAGMENT_READ: Int = 1
     val TAG_FRAGMENT_MUSIC: Int = 2
+    val TAG_FRAGMENT_READ1: Int = 3
     /*database*/
     val DB_NAME = "yueting.db"
     val MUSIC_TABLE_NAME = "musicInfo"

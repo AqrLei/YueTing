@@ -208,7 +208,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             }
             R.id.tv_catalog -> {
                 hideView()
-                mContainerActivity.getCatalog()
+                mContainerActivity.jumpToCatalog()
             }
             R.id.tv_rate -> {
                 ll_bottom_read_seekBar.visibility = View.VISIBLE
@@ -278,8 +278,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
-    override fun onStop() {
+    override fun onPause() {
+        super.onPause()
         putIndexToDB(currentIndex)
+    }
+    override fun onStop() {
+
         try {
             closeRenderer()
         } catch (e: IOException) {
@@ -355,6 +359,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             mPdfRenderer = PdfRenderer(mFileDescriptor!!)
             pageCount = mPdfRenderer!!.pageCount - 1
             sb_rate.max = pageCount
+
         }
     }
 
@@ -399,9 +404,18 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
+    fun showMenu() {
+        if (display) {
+            hideView()
+        } else {
+            if (!dSetting && !dProgress) {
+                displayView()
+            }
+        }
+    }
     fun putIndexToDB(index: Int) {
         beginIndex = index
-        mPresenter.addIndexToDB(bookInfo.path, beginIndex)
+        mPresenter.addIndexToDB(bookInfo.path, beginIndex, pageCount)
     }
 
     /**
@@ -433,13 +447,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
 
         override fun onLongPress(e: MotionEvent?) {
-            if (display) {
-                hideView()
-            } else {
-                if (!dSetting && !dProgress) {
-                    displayView()
-                }
-            }
+
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {

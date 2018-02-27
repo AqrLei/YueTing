@@ -15,8 +15,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image);
-        BaseDragZoomImageView iv = findViewById(R.id.biv_test);
+        setContentView(R.layout.activity_bookpage);
+
+       /* BaseDragZoomImageView iv = findViewById(R.id.biv_test);
         Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
         int w = dr.getIntrinsicWidth();
         int h = dr.getIntrinsicHeight();
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         dr.setBounds(0, 0, w, h);
         dr.draw(canvas);
-        iv.setImageBitmap(bitmap);
+        iv.setImageBitmap(bitmap);*/
 
         // BookMessage bookMessage = new BookMessage();
      /*   File sd = Environment.getExternalStorageDirectory();
