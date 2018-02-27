@@ -60,6 +60,9 @@ enum class ChapterFactory {
 
 
     fun getChapter(): Boolean {
+        if (chapterBuffer.type == "pdf") {
+            return isDone
+        }
         if (chapterList.size > 0) {
             return isDone
         }
@@ -85,7 +88,7 @@ enum class ChapterFactory {
             val tempP = c.getInt(c.getColumnIndex(YueTingConstant.MARK_TABLE_C[1]))
             val tempName = if (chapterBuffer.type == "txt") {
                 String(
-                        PageFactory.PAGEFACTORY.getBookByteArray(tempP),
+                        BookPageFactory.BOOKPAGEFACTORY.getBookByteArray(tempP),
                         Charset.forName(chapterBuffer.encoding))
             } else {
                 chapterBuffer.name + tempP
@@ -102,7 +105,7 @@ enum class ChapterFactory {
     private fun getChapterFromBook(): Boolean {//需要在线程中执行
         var position = 0
         while (position < chapterBuffer.fileLength) {
-            val bookByteArray = PageFactory.PAGEFACTORY.getBookByteArray(position)
+            val bookByteArray = BookPageFactory.BOOKPAGEFACTORY.getBookByteArray(position)
             position += bookByteArray.size
             try {
                 val strLine = String(bookByteArray, Charset.forName(chapterBuffer.encoding))

@@ -3,16 +3,18 @@ package com.aqrlei.graduation.yueting.ui
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.ui.view.PageView
+import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.factory.PageFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
 import kotlinx.android.synthetic.main.read_item_progress.*
@@ -28,11 +30,11 @@ import java.text.DecimalFormat
  * Date : 2017/11/17.
  */
 class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
-        PageView.OnScrollListener,
-        View.OnLongClickListener,
+        BookPageView.OnPageTouchListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemSelectedListener {
+
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -40,6 +42,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         pageFactory.changeFontStyle(position)
+        // bookPageFactory.changeFontStyle(position)
     }
 
 
@@ -47,14 +50,13 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
-
         pageFactory.setPageBackground(bgColor, position)
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
 
-            val percent = DecimalFormat("#00.0").format(progress * 1.0f / 10.0f)
+            val percent = DecimalFormat("#00.00").format(progress * 1.00f / 10.00f)
             tv_done_percent.text = "$percent %"
 
             val pBegin = (bookInfo.fileLength * ((BigDecimal(percent).div(BigDecimal(100))).toDouble())).toInt()
@@ -71,26 +73,23 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 
-    override fun onLongClick(v: View?): Boolean {
-        if (display) {
-            hideView()
-        } else {
-            if (!dSetting && !dProgress) {
-                displayView()
-            }
-        }
-        return true
+    override fun onMiddleClick() {
+        showMenu()
+    }
+
+    override fun onFinalScroll() {
+        pageFactory.setMCanvasAContent()
     }
 
     override fun onLeftScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.nextPage()
+            pageFactory.prePage()
         }
     }
 
     override fun onRightScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.prePage()
+            pageFactory.nextPage()
         }
     }
 
@@ -105,6 +104,15 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_MENU -> {
+                showMenu()
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     /*在restart -> start -> resume之前调用， 在它pause之后调用*/
@@ -124,22 +132,39 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         get() = TxtReadActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_txt_read
-    private val pageFactory = PageFactory.PAGEFACTORY
+    private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
+    // private val bookPageFactory = BookPageFactory.BOOKPAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
     private lateinit var bottomLinearLayout: LinearLayout
     private lateinit var lLSetting: LinearLayout
     private lateinit var lLSeekBar: LinearLayout
-    private lateinit var pageView: PageView
+    // private lateinit var pageView: PageView
+    private lateinit var bookPageView: BookPageView
     private var display: Boolean = false
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private lateinit var bookInfo: BookInfo
     private val REQUESTCODE = 1
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }
+
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        pageView = findViewById(R.id.pv_read) as PageView
+        // pageView = findViewById(R.id.pv_read) as PageView
+        bookPageView = findViewById(R.id.bpv_read) as BookPageView
         seekBar = findViewById(R.id.sb_rate) as SeekBar
         topRelativeLayout = findViewById(R.id.rl_top_read) as RelativeLayout
         bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
@@ -150,14 +175,15 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         sb_light_degree.setOnSeekBarChangeListener(this)
         sb_light_degree.progress = (window.attributes.screenBrightness * 100).toInt()
         rg_read_bg.setOnCheckedChangeListener(this)
-        setPageFactory(pageView)
+        // setPageFactory(pageView)
+        setBookPageFactory(bookPageView)
         setCheckedId()
         tv_book_title.text = bookInfo.name
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         addIndexToDB()
     }
 
@@ -171,7 +197,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 hideView()
             }
             R.id.tv_catalog -> {
-                getCatalog()
+                jumpToCatalog()
                 hideView()
 
             }
@@ -200,6 +226,15 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
+    private fun showMenu() {
+        if (display) {
+            hideView()
+        } else {
+            if (!dSetting && !dProgress) {
+                displayView()
+            }
+        }
+    }
     private fun addIndexToDB() {
         mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(), pageFactory.getCurrentEnd())
     }
@@ -215,7 +250,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         mPresenter.addMarkToDB(bookInfo.path, currentBegin)
     }
 
-    fun jumpToCatalog(flag: Boolean) {
+    private fun jumpToCatalog() {
 
 
         startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
@@ -235,23 +270,26 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         display = false
     }
 
-    private fun setPageFactory(pageView: PageView) {
+    /* private fun setPageFactory(pageView: PageView) {
+         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
+         ChapterFactory.init(bookInfo)
+         pageFactory.setBookInfo(pageView, bookInfo)
+         pageFactory.nextPage()
+         pageView.setOnLongClickListener(this)
+        // pageView.setOnPageTouchListener(this)
+     }*/
+    private fun setBookPageFactory(bookPageView: BookPageView) {
         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
         ChapterFactory.init(bookInfo)
-        pageFactory.setBookInfo(pageView, bookInfo)
+        pageFactory.setBookInfo(bookPageView, bookInfo)
         pageFactory.nextPage()
-        pageView.setOnLongClickListener(this)
-        pageView.setOnScrollListener(this)
+        bookPageView.setOnPageTouchListener(this)
     }
 
     private fun changeBright(brightValue: Int) {
         val lp = window.attributes
         lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
         window.attributes = lp
-    }
-
-    private fun getCatalog() {
-        mPresenter.getCatalog()
     }
 
     companion object {

@@ -216,6 +216,29 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
+    fun deleteMusicItemFromDB(path: String) {
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,
+                        YueTingConstant.MUSIC_TABLE_C[0], "="),
+                null, arrayOf(path), DBManager.SqlType.DELETE)
+    }
+
+    fun deleteBookItemFromDB(path: String) {
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+                        YueTingConstant.BOOK_TABLE_C[0], "="),
+                null, arrayOf(path), DBManager.SqlType.DELETE)
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MARK_TABLE_NAME,
+                        YueTingConstant.MARK_TABLE_C[0], "="),
+                null, arrayOf(path), DBManager.SqlType.DELETE)
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.CATALOG_TABLE_NAME,
+                        YueTingConstant.CATALOG_TABLE_C[0], "="),
+                null, arrayOf(path), DBManager.SqlType.DELETE)
+    }
+
+
     fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication
         val musicIntent = mContext.getServiceIntent()

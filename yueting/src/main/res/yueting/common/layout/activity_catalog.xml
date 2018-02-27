@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="60px" />
+
     <RadioGroup
         android:id="@+id/rg_read_catalog"
         android:layout_width="match_parent"

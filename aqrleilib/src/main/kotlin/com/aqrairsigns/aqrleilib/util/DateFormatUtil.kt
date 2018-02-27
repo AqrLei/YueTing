@@ -10,8 +10,15 @@ import java.util.*
  * Date : 2017/9/16.
  */
 object DateFormatUtil {
-    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private var dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
     fun simpleDateFormat(time: Long): String =
         dateFormatter.format(Date(time))
+
+    fun simpleTimeFormat(time: Long): String {
+        dateFormatter.applyPattern("mm:ss")
+        return dateFormatter.format(Date(time))
+    }
+
 
 }
