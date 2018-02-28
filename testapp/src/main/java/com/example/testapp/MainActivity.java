@@ -12,6 +12,9 @@ public class MainActivity extends AppCompatActivity {
     //private PageFactory pageFactory;
     public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
 
+    private void test(String... name) {
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.*
 import android.util.DisplayMetrics
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
-import com.aqrairsigns.aqrleilib.ui.view.PageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DBManager
@@ -18,8 +17,6 @@ import java.io.UnsupportedEncodingException
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.charset.Charset
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Author : AqrLei
@@ -37,6 +34,7 @@ enum class BookPageFactory {
     private var pageWidth: Int = 0
     private var lineNumber: Int = 0
     private lateinit var mPaint: Paint
+    private lateinit var mPaintC: Paint
     private lateinit var mContext: Context
     private var margin: Int = 0
     private var lineSpace: Int = 0
@@ -61,6 +59,11 @@ enum class BookPageFactory {
 
     private val content = ArrayList<String>()
     private val tempContent = ArrayList<String>()
+    private val colorFilter = ColorMatrixColorFilter(floatArrayOf(
+            1F, 0F, 0F, 0F, 0F,
+            0F, 1F, 0F, 0F, 0F,
+            0F, 0F, 1F, 0F, 0F,
+            0F, 0F, 0F, 0.5F, 0F))
 
     fun setBookInfo(view: BookPageView, bookInfo: BookInfo) {
         val metrics = DisplayMetrics()
@@ -75,9 +78,14 @@ enum class BookPageFactory {
         lineNumber = pageHeight / (fontSize + lineSpace) - 3
 
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mPaintC = Paint(Paint.ANTI_ALIAS_FLAG)
+        mPaintC.colorFilter = colorFilter
         mPaint.textSize = fontSize.toFloat()
+        mPaintC.textSize = fontSize.toFloat()
         mPaint.color = Color.BLACK
+        mPaintC.color = Color.BLACK
         mPaint.typeface = Typeface.DEFAULT
+        mPaintC.typeface = Typeface.DEFAULT
         margin = DensityUtil.pxToDip(mContext, 5f)
         lineSpace = DensityUtil.pxToDip(mContext, 5F)
 
@@ -107,15 +115,19 @@ enum class BookPageFactory {
         when (style) {
             0 -> {
                 mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+                mPaintC.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
             }
             1 -> {
                 mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+                mPaintC.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
             }
             2 -> {
                 mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                mPaintC.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
             3 -> {
                 mPaint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC)
+                mPaintC.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC)
             }
         }
         refreshPage = false
@@ -349,11 +361,11 @@ enum class BookPageFactory {
                     mCanvasB.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
                     if (tempContent.isNotEmpty() && (index < tempContent.size)) {
                         mCanvasA.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
-                        mCanvasC.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
+                        mCanvasC.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaintC)
                     }
                 } else {
                     mCanvasA.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
-                    mCanvasC.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
+                    mCanvasC.drawText(s, margin.toFloat(), y.toFloat(), mPaintC)
                     if (tempContent.isNotEmpty() && (index < tempContent.size)) {
                         mCanvasB.drawText(tempContent[index], margin.toFloat(), y.toFloat(), mPaint)
                     }

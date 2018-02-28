@@ -81,7 +81,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
-        getFileInfo(AppCache.APPCACHE.getString("path", "/storage"))
+        getFileInfo(AppCache.APPCACHE.getString("path", "/storage/emulated/0"))
     }
 
     private fun getFileInfo(path: String) {
