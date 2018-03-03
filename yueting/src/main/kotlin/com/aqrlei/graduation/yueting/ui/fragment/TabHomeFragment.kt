@@ -18,7 +18,6 @@ import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -58,8 +57,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 showDialog(false)
             }
         }
-
-
         return true
     }
 
@@ -81,7 +78,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
             }
             R.id.tv_file_local -> {
-                FileActivity.jumpToFileActivity(mContainerActivity)
+                jumpToFileActivity()
             }
         }
     }
@@ -113,7 +110,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     if (mBookInfoShared.getInfo(position).type == "pdf") {
                         PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
                                 mBookInfoShared.getInfo(position))
-
                     }
                 } else {
                     AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
@@ -121,7 +117,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
             }
         }
-
     }
 
     private var removePosition: Int = 0
@@ -132,17 +127,14 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private lateinit var mMusicAdapter: YueTingListAdapter
     private val mListView: AlphaListView
         get() = mView.lv_fragment_home as AlphaListView
-
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-
         }
     }
-
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
@@ -159,21 +151,18 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
+        initData()
         initView()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun initData() {
         getMusicInfoFromDB()
         getBookInfoFromDB()
-
     }
 
     private fun initView() {
-
         mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_read, 0)
         mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_music, 1)
-
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this
         mListView.onItemLongClickListener = this
@@ -183,7 +172,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         tv_right_listen.setOnClickListener(this)
         tv_setting.setOnClickListener(this)
         tv_file_local.setOnClickListener(this)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        changeBookAdapter()
     }
 
     private fun getMusicInfoFromDB() {
@@ -192,7 +185,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun getBookInfoFromDB() {
         mPresenter.getBookInfoFromDB()
-
     }
 
     private fun removeInfo(flag: Boolean) {
@@ -201,14 +193,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             mBookInfoShared.removeInfo(removePosition)
             mBookAdapter.notifyDataSetInvalidated()
             mPresenter.deleteBookItemFromDB(path)
-
         } else {
             val path = mMusicInfoShared.getInfo(removePosition).albumUrl
             mMusicInfoShared.removeInfo(removePosition)
             mMusicAdapter.notifyDataSetInvalidated()
             mPresenter.deleteMusicItemFromDB(path)
         }
-
     }
 
     private fun showDialog(isBook: Boolean) {
@@ -255,6 +245,19 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mBookInfoShared.setInfoS(data)
         mBookAdapter.notifyDataSetChanged()
 
+    }
+
+    fun changeMusicAdapter() {
+        mMusicAdapter.notifyDataSetInvalidated()
+    }
+
+    fun changeBookAdapter() {
+        mBookAdapter.notifyDataSetInvalidated()
+    }
+
+    private fun jumpToFileActivity() {
+        startActivityForResult(Intent(mContainerActivity, FileActivity::class.java),
+                YueTingConstant.YUETINGRQCODE)
     }
 
 

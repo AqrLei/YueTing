@@ -388,7 +388,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         currentIndex = index
         val bitmap = Bitmap.createBitmap(mCurrentPage!!.width, mCurrentPage!!.height,
                 Bitmap.Config.ARGB_8888)
-        mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+        mCurrentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_PRINT)
         mImageView!!.scaleType = ImageView.ScaleType.FIT_CENTER
         AppLog.logDebug("test", "${mCurrentPage!!.index} : \t$index")
         mImageView!!.setImageBitmap(bitmap)

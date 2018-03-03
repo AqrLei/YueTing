@@ -12,6 +12,7 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
 import kotlinx.android.synthetic.main.activity_file.*
@@ -103,8 +104,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         mAdapter.notifyDataSetChanged()
     }
 
-    fun finishActivity(result: Boolean) {
+    fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
+        val intent = Intent().putExtra("bookChange", bookChange).putExtra("musicChange", musicChange)
+        setResult(YueTingConstant.FILERECODE, intent)
         this@FileActivity.finish()
     }
 

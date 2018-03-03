@@ -6,10 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
@@ -18,6 +16,7 @@ import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOGRECODE
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.activity_catalog.*
@@ -52,7 +51,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
-        setResult(2, intent)
+        setResult(CATALOGRECODE, intent)
         AppLog.logDebug("test", "catalog test")
         finish()
     }

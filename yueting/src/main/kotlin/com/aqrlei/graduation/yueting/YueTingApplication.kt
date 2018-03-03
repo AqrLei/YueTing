@@ -68,7 +68,8 @@ class YueTingApplication : BaseApplication() {
         if (isSameProcess) {
             DBManager.closeDB()
             ShareMusicInfo.MusicInfoTool.clear()
-            ShareBookInfo.BookInfoTool.clear()
+            ShareMusicInfo.MusicInfoTool.clearMusicInfo()
+            ShareBookInfo.BookInfoTool.clearBookInfo()
         }
         super.onTerminate()
     }

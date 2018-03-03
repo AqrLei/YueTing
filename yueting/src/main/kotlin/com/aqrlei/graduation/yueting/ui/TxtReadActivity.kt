@@ -13,6 +13,7 @@ import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
@@ -115,11 +116,11 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         return super.onKeyDown(keyCode, event)
     }
 
-    /*在restart -> start -> resume之前调用， 在它pause之后调用*/
+    /*在restart -> start -> resume之前调用， 在其跳转的Activity的pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 2) {
-            if (requestCode == REQUESTCODE) {
+            if (requestCode == YueTingConstant.TXTRQCODE) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
                 mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
@@ -235,6 +236,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
             }
         }
     }
+
     private fun addIndexToDB() {
         mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(), pageFactory.getCurrentEnd())
     }
@@ -251,9 +253,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     private fun jumpToCatalog() {
-
-
-        startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
+        startActivityForResult(Intent(this, CatalogActivity::class.java), YueTingConstant.TXTRQCODE)
     }
 
     private fun displayView() {

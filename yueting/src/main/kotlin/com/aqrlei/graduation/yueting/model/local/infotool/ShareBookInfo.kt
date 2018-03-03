@@ -1,6 +1,5 @@
 package com.aqrlei.graduation.yueting.model.local.infotool
 
-import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 
 
@@ -45,12 +44,49 @@ enum class ShareBookInfo {
 
     fun getSize() = bookInfoList.size
 
-    private fun clearBookInfo() {
+    fun clearBookInfo() {
         bookInfoList.clear()
     }
 
-    fun clear() {
-        mContext.clear()
+    fun has(other: BookInfo): Boolean {
+        if (bookInfoList.isNotEmpty()) {
+            bookInfoList.forEachIndexed { _, bookInfo ->
+                if (bookInfo == other) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun has(path: String): Int {
+        if (bookInfoList.isNotEmpty()) {
+            bookInfoList.forEachIndexed { intex, bookInfo ->
+                if (bookInfo.path == path) {
+                    return intex
+                }
+            }
+        }
+        return -1
+    }
+
+    fun same(path: String): Boolean {
+        if (bookInfoList.isNotEmpty()) {
+            bookInfoList.forEachIndexed { _, bookInfo ->
+                if (bookInfo.path == path) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun setBookInfoIndex(path: String, begin: Int, end: Int) {
+        if (has(path) != -1) {
+            val p = has(path)
+            bookInfoList[p].indexBegin = begin
+            bookInfoList[p].indexEnd = end
+        }
     }
 
     private var position: Int = 0
@@ -61,7 +97,6 @@ enum class ShareBookInfo {
 
     companion object {
         private var bookInfoList = ArrayList<BookInfo>()
-        private var mContext = ArrayList<BaseActivity>()
     }
 
 }
