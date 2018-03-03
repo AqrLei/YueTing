@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llNotice"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
+    android:background="#37383D"
     android:orientation="horizontal">
-    <!--作为notification的布局文件，不能在组件中设置onClick事件，否则在通知栏上会无法显示-->
+
     <ImageView
         android:id="@+id/iv_album_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher_round" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_default_pink" />
 
     <TextView
         android:id="@+id/tv_music_info"
-        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:lineSpacingExtra="2dp"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="2"
+        android:layout_width="0dp"
         android:scrollHorizontally="true"
+        android:lineSpacingExtra="4dp"
         android:text="这是歌的名字"
         android:textSize="18dp" />
 
@@ -58,4 +52,5 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="结" />
+
 </LinearLayout>

@@ -1,24 +1,51 @@
 package com.example.testapp;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //private PageFactory pageFactory;
     public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
 
+    private RemoteViews remoteView;
+    private Notification notification;
+    private NotificationManager nm;
+
     private void test(String... name) {
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bookpage);
+        setContentView(R.layout.notification_activity_test);
+        remoteView = new RemoteViews(this.getPackageName(), R.layout.notification_foreground);
+        notification = new NotificationCompat.Builder(this)
+                //.setContent(remoteView)
+
+
+                // .setContentTitle("标题")
+                // .setContentText("新消息来了")
+                .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
+                .setTicker("新消息来了")
+                .setOngoing(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
+                .setDefaults(Notification.DEFAULT_ALL)
+                //.setCustomBigContentView(remoteView)
+                .setContent(remoteView)
+                // .setWhen(System.currentTimeMillis())
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .build();
+        nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        findViewById(R.id.tvShowNotification).setOnClickListener(this);
 
        /* BaseDragZoomImageView iv = findViewById(R.id.biv_test);
         Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
@@ -70,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
 
         }
 */
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        nm.notify(1, notification);
+        Log.d("test", "NotificationEnabled:\t " + nm.areNotificationsEnabled());
     }
 
   /*  *//*Test*//*

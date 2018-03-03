@@ -31,6 +31,7 @@ import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import kotlinx.android.synthetic.main.home_top_layout.*
 import kotlinx.android.synthetic.main.layout_yueting_header.*
 import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
+import java.io.File
 
 /**
  * @Author: AqrLei
@@ -88,22 +89,35 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override fun onItemClick(parent: AdapterView<*>?, convertView: View, position: Int, id: Long) {
         when (convertView.id) {
             R.id.ll_music_item -> {
-                isServiceStart = mMusicInfoShared.isStartService()
-                if (!isServiceStart) {
-                    startMusicService(position)
-                    isServiceStart = true
+                val file = File(mMusicInfoShared.getInfo(position).albumUrl)
+                if (file.exists()) {
+                    isServiceStart = mMusicInfoShared.isStartService()
+                    if (!isServiceStart) {
+                        startMusicService(position)
+                        isServiceStart = true
+                    } else {
+                        sendPlayBroadcast(position)
+                    }
                 } else {
-                    sendPlayBroadcast(position)
+                    AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
+                    removeInfo(false)
                 }
             }
             R.id.ll_read_item -> {
-                if (mBookInfoShared.getInfo(position).type == "txt") {
-                    TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
-                            mBookInfoShared.getInfo(position))
-                }
-                if (mBookInfoShared.getInfo(position).type == "pdf") {
-                    PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
-                            mBookInfoShared.getInfo(position))
+                val file = File(mBookInfoShared.getInfo(position).path)
+                if (file.exists()) {
+                    if (mBookInfoShared.getInfo(position).type == "txt") {
+                        TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
+                                mBookInfoShared.getInfo(position))
+                    }
+                    if (mBookInfoShared.getInfo(position).type == "pdf") {
+                        PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,
+                                mBookInfoShared.getInfo(position))
+
+                    }
+                } else {
+                    AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
+                    removeInfo(true)
                 }
             }
         }
