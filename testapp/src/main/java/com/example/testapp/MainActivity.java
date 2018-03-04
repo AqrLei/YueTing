@@ -4,15 +4,29 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.link.DefaultLinkHandler;
+import com.github.barteksc.pdfviewer.listener.OnErrorListener;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
+import com.github.barteksc.pdfviewer.listener.OnPageScrollListener;
+import com.github.barteksc.pdfviewer.listener.OnRenderListener;
+import com.github.barteksc.pdfviewer.listener.OnTapListener;
+import com.github.barteksc.pdfviewer.util.FitPolicy;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import java.io.File;
+
+
+public class MainActivity extends AppCompatActivity {
 
     //private PageFactory pageFactory;
     public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
@@ -20,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RemoteViews remoteView;
     private Notification notification;
     private NotificationManager nm;
+    private PDFView pdfView;
 
     private void test(String... name) {
 
@@ -28,9 +43,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_activity_test);
-        PDFView pdfView;
-        remoteView = new RemoteViews(this.getPackageName(), R.layout.notification_foreground);
+        setContentView(R.layout.activity_bookpage);
+        File sd = Environment.getExternalStorageDirectory();
+        String path = sd.getPath() + "/test.pdf";
+        pdfView = findViewById(R.id.pdfView);
+
+        pdfView.fromFile(new File(path))
+                //  .pages(0, 2, 1, 3, 3, 3) // all pages are displayed by default
+                .enableSwipe(true) // allows to block changing pages using swipe
+                .swipeHorizontal(true)
+                .enableDoubletap(true)
+                .defaultPage(0)
+                // allows to draw something on the current page, usually visible in the middle of the screen
+                // .onDraw(onDrawListener)
+                // allows to draw something on all pages, separately for every page. Called only for visible pages
+                // .onDrawAll(onDrawListener)
+                .onLoad(new OnLoadCompleteListener() {
+                    @Override
+                    public void loadComplete(int nbPages) {
+                        Log.d("test", "loadComplete");
+
+                    }
+                }) // called after document is loaded and starts to be rendered
+                .onPageChange(new OnPageChangeListener() {
+                    @Override
+                    public void onPageChanged(int page, int pageCount) {
+                        Log.d("test", "onPageChanged");
+
+                    }
+                })
+                .onPageScroll(new OnPageScrollListener() {
+                    @Override
+                    public void onPageScrolled(int page, float positionOffset) {
+                        Log.d("test", "onPageScrolled");
+
+                    }
+                })
+                .onError(new OnErrorListener() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d("test", "onError");
+
+                    }
+                })
+                .onPageError(new OnPageErrorListener() {
+                    @Override
+                    public void onPageError(int page, Throwable t) {
+                        Log.d("test", "onPageError");
+
+                    }
+                })
+                .onRender(new OnRenderListener() {
+                    @Override
+                    public void onInitiallyRendered(int nbPages) {
+                        Log.d("test", "onInitiallyRendered:\t" + nbPages);
+
+                    }
+                }) // called after document is rendered for the first time
+                // called on single tap, return true if handled, false to toggle scroll handle visibility
+                .onTap(new OnTapListener() {
+                    @Override
+                    public boolean onTap(MotionEvent e) {
+                        Log.d("test", "OnTap");
+                        return false;
+                    }
+                })
+                .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
+                .password(null)
+                .scrollHandle(null)
+                .enableAntialiasing(true) // improve rendering a little bit on low-res screens
+                // spacing between pages in dp. To define spacing color, set view background
+                .spacing(0)
+                //.linkHandler(new DefaultLinkHandler(this.pdfView))
+                .pageFitPolicy(FitPolicy.BOTH)
+                .onLoad(new OnLoadCompleteListener() {
+                    @Override
+                    public void loadComplete(int nbPages) {
+                        Log.d("test",
+                                pdfView.getDocumentMeta().getAuthor() +
+                                        pdfView.getDocumentMeta().getCreationDate() +
+                                        pdfView.getDocumentMeta().getCreator() +
+                                        pdfView.getDocumentMeta().getProducer() +
+                                        pdfView.getDocumentMeta().getTitle() +
+                                        pdfView.getDocumentMeta().getSubject() +
+                                        pdfView.getDocumentMeta().getKeywords() +
+                                        pdfView.getDocumentMeta().getModDate() + ":\t" + nbPages
+                        );
+                    }
+                })
+                .load();
+
+      /*  remoteView = new RemoteViews(this.getPackageName(), R.layout.notification_foreground);
         notification = new NotificationCompat.Builder(this)
                 //.setContent(remoteView)
 
@@ -49,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         findViewById(R.id.tvShowNotification).setOnClickListener(this);
-
+*/
        /* BaseDragZoomImageView iv = findViewById(R.id.biv_test);
         Drawable dr = getResources().getDrawable(R.mipmap.ic_launcher, null);
         int w = dr.getIntrinsicWidth();
@@ -100,13 +203,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 */
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        nm.notify(1, notification);
-        Log.d("test", "NotificationEnabled:\t " + nm.areNotificationsEnabled());
     }
 
   /*  *//*Test*//*

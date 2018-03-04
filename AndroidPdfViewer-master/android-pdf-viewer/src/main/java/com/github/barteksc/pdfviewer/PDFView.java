@@ -86,7 +86,7 @@ import java.util.List;
  * using {@link #load(DocumentSource, String, int[])}. In this
  * particular case, a userPage of 5 can refer to a documentPage of 17.
  */
-public class 0PDFView extends RelativeLayout{
+public class PDFView extends RelativeLayout {
 
 private static final String TAG=PDFView.class.getSimpleName();
 

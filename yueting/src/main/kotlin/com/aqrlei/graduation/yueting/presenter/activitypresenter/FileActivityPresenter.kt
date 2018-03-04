@@ -50,6 +50,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     if (suffix == "mp3" || suffix == "ape") {
                         val musicInfo = MusicInfo()
                         val mmr = MediaMetadataRetriever()
+                        mmr.setDataSource(tempData.path)
                         musicInfo.albumUrl = tempData.path
                         musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                 ?: name
@@ -57,8 +58,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                 ?: "未知"
                         musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                                 ?: "未知"
-                        musicInfo.duration = mmr.extractMetadata(
-                                MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                        musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
                         musicInfo.picture = mmr.embeddedPicture
                         if (!ShareMusicInfo.MusicInfoTool.has(musicInfo)) {
                             ShareMusicInfo.MusicInfoTool.addInfo(musicInfo)
