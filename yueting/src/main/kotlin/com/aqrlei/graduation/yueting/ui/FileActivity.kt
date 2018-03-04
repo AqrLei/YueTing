@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.ui
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
@@ -35,6 +36,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
                 getFileInfo(fileInfoList[0].parentPath)
             }
             R.id.tv_add_file -> {
+                setProgressDialog()
                 addToDatabase()
             }
         }
@@ -51,6 +53,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     private lateinit var fileInfoList: ArrayList<FileInfo>
     private lateinit var mData: ArrayList<FileInfo>
     private lateinit var mAdapter: FileListAdapter
+    private lateinit var mProgressDialog: ProgressDialog
 
     override val mPresenter: FileActivityPresenter
         get() = FileActivityPresenter(this)
@@ -85,6 +88,16 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         getFileInfo(AppCache.APPCACHE.getString("path", "/storage/emulated/0"))
     }
 
+    private fun setProgressDialog() {
+        mProgressDialog = ProgressDialog(this)
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        mProgressDialog.setCanceledOnTouchOutside(false)
+        mProgressDialog.setCancelable(false)
+        mProgressDialog.setTitle("提示")
+        mProgressDialog.setMessage("正在添加中...")
+        mProgressDialog.show()
+    }
+
     private fun getFileInfo(path: String) {
         mPresenter.getFileInfo(path)
     }
@@ -105,6 +118,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     }
 
     fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
+        mProgressDialog.dismiss()
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
         val intent = Intent().putExtra("bookChange", bookChange).putExtra("musicChange", musicChange)
         setResult(YueTingConstant.FILERECODE, intent)

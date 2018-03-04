@@ -52,7 +52,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
         setResult(CATALOGRECODE, intent)
-        AppLog.logDebug("test", "catalog test")
         finish()
     }
 

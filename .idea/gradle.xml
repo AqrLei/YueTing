@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AndroidPdfViewer-master/android-pdf-viewer" />
             <option value="$PROJECT_DIR$/aqrleilib" />
             <option value="$PROJECT_DIR$/testapp" />
             <option value="$PROJECT_DIR$/yueting" />

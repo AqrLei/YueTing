@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.github.barteksc.pdfviewer.PDFView;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //private PageFactory pageFactory;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_activity_test);
+        PDFView pdfView;
         remoteView = new RemoteViews(this.getPackageName(), R.layout.notification_foreground);
         notification = new NotificationCompat.Builder(this)
                 //.setContent(remoteView)
