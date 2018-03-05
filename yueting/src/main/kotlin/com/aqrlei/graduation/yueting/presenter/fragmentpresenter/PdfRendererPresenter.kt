@@ -8,6 +8,7 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,6 +46,9 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
 
         fun indexObservable(path: String, begin: Int, end: Int): Observable<Boolean> {
             return Observable.defer {
+                if (ShareBookInfo.BookInfoTool.same(path)) {
+                    ShareBookInfo.BookInfoTool.setBookInfoIndex(path, begin, end)
+                }
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 YueTingConstant.BOOK_TABLE_NAME,
@@ -126,6 +130,7 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 }))
 
     }
+
     fun distance(event: MotionEvent): Float {
         val dx = event.getX(1) - event.getX(0)
         val dy = event.getY(1) - event.getY(0)

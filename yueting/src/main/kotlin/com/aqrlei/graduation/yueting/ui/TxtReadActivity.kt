@@ -5,14 +5,19 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
@@ -83,13 +88,21 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun onLeftScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.prePage()
+            if (pageFactory.getCurrentBegin() <= 0) {
+                AppToast.toastShow(this, "已经是第一页了", 1000, Gravity.TOP)
+            } else {
+                pageFactory.prePage()
+            }
         }
     }
 
     override fun onRightScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.nextPage()
+            if (pageFactory.getCurrentEnd() >= bookInfo.fileLength) {
+                AppToast.toastShow(this, "已经是最后一页了", 1000, Gravity.BOTTOM)
+            } else {
+                pageFactory.nextPage()
+            }
         }
     }
 
@@ -115,11 +128,11 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         return super.onKeyDown(keyCode, event)
     }
 
-    /*在restart -> start -> resume之前调用， 在它pause之后调用*/
+    /*在restart -> start -> resume之前调用， 在其跳转的Activity的pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == 2) {
-            if (requestCode == REQUESTCODE) {
+        if (resultCode == YueTingConstant.CATALOGRECODE) {
+            if (requestCode == YueTingConstant.TXTRQCODE) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
                 mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
@@ -145,7 +158,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private lateinit var bookInfo: BookInfo
-    private val REQUESTCODE = 1
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -172,9 +184,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
         seekBar.setOnSeekBarChangeListener(this)
         sp_textStyle_select.onItemSelectedListener = this
-        sb_light_degree.setOnSeekBarChangeListener(this)
-        sb_light_degree.progress = (window.attributes.screenBrightness * 100).toInt()
+        try {
+            sb_light_degree.progress =
+                    Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        } catch (e: Settings.SettingNotFoundException) {
+            e.printStackTrace()
+        }
         rg_read_bg.setOnCheckedChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
         // setPageFactory(pageView)
         setBookPageFactory(bookPageView)
         setCheckedId()
@@ -202,6 +219,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
             }
             R.id.tv_rate -> {
+                val percent = DecimalFormat("#00.00").format(pageFactory.getCurrentBegin() * 100.00f / bookInfo.fileLength * 1.00f)
+                tv_done_percent.text = "$percent %"
+                seekBar.progress = pageFactory.getCurrentBegin() / bookInfo.fileLength * 100
                 lLSeekBar.visibility = View.VISIBLE
                 lLSeekBar.bringToFront()
                 dProgress = true
@@ -235,6 +255,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
             }
         }
     }
+
     private fun addIndexToDB() {
         mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(), pageFactory.getCurrentEnd())
     }
@@ -251,9 +272,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     private fun jumpToCatalog() {
-
-
-        startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
+        startActivityForResult(Intent(this, CatalogActivity::class.java), YueTingConstant.TXTRQCODE)
     }
 
     private fun displayView() {
@@ -286,9 +305,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         bookPageView.setOnPageTouchListener(this)
     }
 
-    private fun changeBright(brightValue: Int) {
+    private fun changeBright(brightness: Int) {
+        val window = this.window
         val lp = window.attributes
-        lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
+        if (brightness == -1) {
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+        } else {
+            lp.screenBrightness = (if (brightness <= 0) 1 else brightness) / 255f
+        }
         window.attributes = lp
     }
 

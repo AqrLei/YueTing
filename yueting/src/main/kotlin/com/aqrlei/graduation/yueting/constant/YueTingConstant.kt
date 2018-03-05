@@ -97,4 +97,10 @@ object YueTingConstant {
     /*Book Chapter keyWord*/
     // val  ="(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)"
     val CHAPTER_KEY_WORD = "(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)(\n|\r|\r\n)"
+    /*Activity RequestCode*/
+    val TXTRQCODE = 10
+    val YUETINGRQCODE = 11
+    /*Activity ResultCode*/
+    val CATALOGRECODE = 20
+    val FILERECODE = 21
 }

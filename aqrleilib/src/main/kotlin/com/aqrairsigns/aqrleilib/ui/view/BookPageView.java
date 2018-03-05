@@ -69,8 +69,8 @@ public class BookPageView extends View {
     }
 
     private void init(Context context, @Nullable AttributeSet attrs) {
-        defaultWidth = 600;
-        defaultHeight = 1000;
+        defaultWidth = 540;
+        defaultHeight = 960;
 
         a = new MyPoint();
         f = new MyPoint();
