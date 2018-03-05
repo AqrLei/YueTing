@@ -53,10 +53,22 @@ enum class ShareMusicInfo {
         }
     }
 
+
     fun removeInfo(position: Int) {
         if (!musicInfoList.isEmpty()) {
             musicInfoList.removeAt(position)
         }
+    }
+
+    fun has(other: MusicInfo): Boolean {
+        if (musicInfoList.isNotEmpty()) {
+            musicInfoList.forEachIndexed { _, musicInfo ->
+                if (musicInfo == other) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
 
@@ -96,7 +108,7 @@ enum class ShareMusicInfo {
 
     fun getSize() = musicInfoList.size
 
-    private fun clearMusicInfo() {
+    fun clearMusicInfo() {
         musicInfoList.clear()
     }
 

@@ -1,23 +1,17 @@
 package com.aqrairsigns.aqrleilib.basemvp
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.util.PermissionUtil
+
 
 abstract class
 BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        beforeSetContentView()
+
         setContentView(layoutRes)
         initComponents(savedInstanceState)
         AppLog.logDebug(AppLog.LOG_TAG_ACTIVITY, "onCreate：" + this.javaClass.simpleName)
@@ -60,27 +54,7 @@ BaseActivity : AppCompatActivity() {
     }
 
     protected abstract val layoutRes: Int
-    protected open fun beforeSetContentView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!permissionCheck(this, Manifest.permission_group.STORAGE, 1)) {
-                AppToast.toastShow(this, "Permission Denied !", 1000)
-            }
-        }
-    }
 
-    fun permissionCheck(context: Context, permission: String, mRequestCode: Int): Boolean {
-        var result = PermissionUtil.selfPermissionGranted(context, permission)
-        if (!result) {
-            ActivityCompat.OnRequestPermissionsResultCallback { requestCode, _, grantResults ->
-                if (requestCode == mRequestCode) {
-                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        result = true
-                    }
-                }
-            }
-        }
-        return result
-    }
 
     protected open fun initComponents(savedInstanceState: Bundle?) {
         ActivityCollector.add(this)

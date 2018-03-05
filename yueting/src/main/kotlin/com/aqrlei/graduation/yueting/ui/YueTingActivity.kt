@@ -28,12 +28,10 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener {
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.tv_play_control -> {
                 sendMusicBroadcast(SendType.PLAY)
-
             }
             R.id.tv_next -> {
                 sendMusicBroadcast(SendType.NEXT)
@@ -51,11 +49,25 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
         get() = R.layout.activity_yueting
-
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
     private lateinit var mHandler: Handler
     private lateinit var mPlayView: LinearLayout
     private lateinit var mTabHomeFragment: TabHomeFragment
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == YueTingConstant.FILERECODE) {
+            if (requestCode == YueTingConstant.YUETINGRQCODE) {
+                if (data?.extras?.getBoolean("bookChange") == true) {
+                    mTabHomeFragment.changeBookAdapter()
+                }
+                if (data?.extras?.getBoolean("musicChange") == true) {
+                    mTabHomeFragment.changeMusicAdapter()
+                }
+            }
+        }
+
+    }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -85,7 +97,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 supportFragmentManager.findFragmentByTag(
                         YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
                 == null) {
-
             supportFragmentManager.beginTransaction().add(
                     R.id.fl_fragment,
                     mTabHomeFragment,

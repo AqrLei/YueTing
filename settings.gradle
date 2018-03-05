@@ -1,1 +1,2 @@
-include ':yueting', ':aqrleilib', ':testapp'
+include ':yueting', ':aqrleilib', ':testapp', ':android-pdf-viewer'
+project(':android-pdf-viewer').projectDir = new File('AndroidPdfViewer-master/android-pdf-viewer')

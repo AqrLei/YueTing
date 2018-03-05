@@ -26,7 +26,7 @@ open class BookInfo(
     override fun equals(other: Any?): Boolean {
         if (other is BookInfo) {
 
-            return other.name == this.name && other.path == this.path
+            return other.path == this.path
         }
         return super.equals(other)
     }

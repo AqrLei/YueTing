@@ -5,6 +5,7 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,6 +39,9 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
 
         fun indexObservable(path: String, begin: Int, end: Int): Observable<Boolean> {
             return Observable.defer {
+                if (ShareBookInfo.BookInfoTool.same(path)) {
+                    ShareBookInfo.BookInfoTool.setBookInfoIndex(path, begin, end)
+                }
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 YueTingConstant.BOOK_TABLE_NAME,

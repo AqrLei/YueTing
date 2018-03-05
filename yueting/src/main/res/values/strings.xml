@@ -3,8 +3,12 @@
     <string-array name="read_textStyle_SP">
         <item>正常</item>
         <item>斜体</item>
-        <item>粗体</item>
+        <item>粗体</item>0
         <item>粗斜体</item>
+    </string-array>
+    <string-array name="pdf_read_mode">
+        <item>竖直</item>
+        <item>横向</item>
     </string-array>
 </resources>
 

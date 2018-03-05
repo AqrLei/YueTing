@@ -69,19 +69,11 @@ data class MusicInfo(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other is MusicInfo) {
 
-        other as MusicInfo
-
-        if (id != other.id) return false
-        /*if (albumUrl != other.albumUrl) return false
-        if (!Arrays.equals(album, other.album)) return false
-        if (title != other.title) return false
-        if (artist != other.artist) return false
-        if (duration != other.duration) return false
-        if (createTime != other.createTime) return false*/
-        return true
+            return other.albumUrl == this.albumUrl
+        }
+        return super.equals(other)
     }
 
     override fun hashCode(): Int {
