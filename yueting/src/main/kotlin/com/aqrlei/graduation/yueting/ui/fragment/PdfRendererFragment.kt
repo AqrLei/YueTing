@@ -1,8 +1,11 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.RadioButton
 import android.widget.SeekBar
@@ -66,6 +69,13 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun onPageChanged(page: Int, pageCount: Int) {
         currentIndex = page
+        if (page == 0) {
+            AppToast.toastShow(mContainerActivity, "已经是第一页了", 1000, Gravity.TOP)
+        }
+        if (page + 1 == pageCount) {
+            AppToast.toastShow(mContainerActivity, "已经是最后一页了", 1000, Gravity.BOTTOM)
+
+        }
     }
 
     override fun onTap(e: MotionEvent?): Boolean {
@@ -165,6 +175,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         tv_rate.setOnClickListener(this)
         tv_setting.setOnClickListener(this)
         sb_rate.setOnSeekBarChangeListener(this)
+        try {
+            sb_light_degree.progress =
+                    Settings.System.getInt(mContainerActivity.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        } catch (e: Settings.SettingNotFoundException) {
+            e.printStackTrace()
+        }
         sb_light_degree.setOnSeekBarChangeListener(this)
         spPdfReadMode.onItemSelectedListener = this
 
@@ -249,10 +265,15 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         mPresenter.addMarkToDB(bookInfo.path, currentIndex)
     }
 
-    private fun changeBright(brightValue: Int) {
-        val lp = mContainerActivity.window.attributes
-        lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
-        mContainerActivity.window.attributes = lp
+    private fun changeBright(brightness: Int) {
+        val window = mContainerActivity.window
+        val lp = window.attributes
+        if (brightness == -1) {
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+        } else {
+            lp.screenBrightness = (if (brightness <= 0) 1 else brightness) / 255f
+        }
+        window.attributes = lp
     }
 
     private fun displayView() {

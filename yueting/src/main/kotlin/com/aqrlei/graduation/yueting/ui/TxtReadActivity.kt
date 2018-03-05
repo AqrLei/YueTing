@@ -5,12 +5,16 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -84,13 +88,21 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun onLeftScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.prePage()
+            if (pageFactory.getCurrentBegin() <= 0) {
+                AppToast.toastShow(this, "已经是第一页了", 1000, Gravity.TOP)
+            } else {
+                pageFactory.prePage()
+            }
         }
     }
 
     override fun onRightScroll() {
         if (!display && !dSetting && !dProgress) {
-            pageFactory.nextPage()
+            if (pageFactory.getCurrentEnd() >= bookInfo.fileLength) {
+                AppToast.toastShow(this, "已经是最后一页了", 1000, Gravity.BOTTOM)
+            } else {
+                pageFactory.nextPage()
+            }
         }
     }
 
@@ -172,9 +184,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
         seekBar.setOnSeekBarChangeListener(this)
         sp_textStyle_select.onItemSelectedListener = this
-        sb_light_degree.setOnSeekBarChangeListener(this)
-        sb_light_degree.progress = (window.attributes.screenBrightness * 100).toInt()
+        try {
+            sb_light_degree.progress =
+                    Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        } catch (e: Settings.SettingNotFoundException) {
+            e.printStackTrace()
+        }
         rg_read_bg.setOnCheckedChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
         // setPageFactory(pageView)
         setBookPageFactory(bookPageView)
         setCheckedId()
@@ -288,9 +305,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         bookPageView.setOnPageTouchListener(this)
     }
 
-    private fun changeBright(brightValue: Int) {
+    private fun changeBright(brightness: Int) {
+        val window = this.window
         val lp = window.attributes
-        lp.screenBrightness = if (brightValue <= 0) -1f else brightValue / 100f
+        if (brightness == -1) {
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+        } else {
+            lp.screenBrightness = (if (brightness <= 0) 1 else brightness) / 255f
+        }
         window.attributes = lp
     }
 
