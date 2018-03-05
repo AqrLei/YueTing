@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.widget.AdapterView
 import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.Toast
@@ -33,12 +34,21 @@ import java.io.IOException
 
 class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfReadActivity>(),
         SeekBar.OnSeekBarChangeListener,
+        AdapterView.OnItemSelectedListener,
         View.OnClickListener,
         OnPageChangeListener,
         OnPageErrorListener,
         OnLoadCompleteListener,
         OnErrorListener,
         OnTapListener {
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        changeReadMode(position == 1)
+    }
+
     override fun onError(t: Throwable?) {
         AppToast.toastShow(mContainerActivity, "出错了~", 1000)
         mContainerActivity.finish()
@@ -90,6 +100,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
 
     private val STATE_CURRENT_PAGE_INDEX = "current_page_index"
+    private val PDF_READ_MODE_KEY = "pdf_read_mode"
 
     private var mPageIndex: Int = 0
     private var currentIndex: Int = 0
@@ -97,6 +108,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private var pageCount: Int = 0
+    private var pdfReadMode: Boolean = false
 
     private val bookInfo: BookInfo
         get() = arguments.getSerializable("bookInfo") as BookInfo
@@ -125,8 +137,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
                 mContainerActivity.jumpToCatalog()
             }
             R.id.tv_rate -> {
-                sb_rate.progress = currentIndex
-                tv_done_percent.text = "$currentIndex / $pageCount"
+                sb_rate.progress = if (currentIndex == 0) currentIndex + 1 else currentIndex
+                tv_done_percent.text = "${if (currentIndex == 0) currentIndex + 1 else currentIndex}/ $pageCount"
                 ll_bottom_read_seekBar.visibility = View.VISIBLE
                 ll_bottom_read_seekBar.bringToFront()
                 dProgress = true
@@ -135,8 +147,9 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             R.id.tv_setting -> {
                 ll_bottom_read_setting.visibility = View.VISIBLE
                 ll_bottom_read_setting.bringToFront()
-                ll_bottom_font.visibility = View.INVISIBLE
-                rg_read_bg.visibility = View.INVISIBLE
+                spPdfReadMode.visibility = View.VISIBLE
+                ll_bottom_font.visibility = View.GONE
+                rg_read_bg.visibility = View.GONE
                 dSetting = true
                 hideView()
             }
@@ -153,6 +166,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         tv_setting.setOnClickListener(this)
         sb_rate.setOnSeekBarChangeListener(this)
         sb_light_degree.setOnSeekBarChangeListener(this)
+        spPdfReadMode.onItemSelectedListener = this
+
         tv_book_title.text = bookInfo.name
         ChapterFactory.init(bookInfo)
         mPageIndex = bookInfo.indexBegin
@@ -165,8 +180,10 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     override fun onStart() {
         super.onStart()
         try {
+            getCache()
+            spPdfReadMode.setSelection(if (pdfReadMode) 1 else 0)
             getIndexFromDB()
-            loadPdfFile(mPageIndex)
+            loadPdfFile(mPageIndex, pdfReadMode)
         } catch (e: IOException) {
             e.printStackTrace()
             Toast.makeText(activity, "Error! " + e.message, Toast.LENGTH_SHORT).show()
@@ -175,6 +192,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun onPause() {
         super.onPause()
+        putCache()
         putIndexToDB(currentIndex)
     }
 
@@ -199,6 +217,25 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     fun setCurrentIndex(index: Int) {
         mPageIndex = index
+    }
+
+    fun showMenu() {
+        if (display) {
+            hideView()
+        } else {
+            if (!dSetting && !dProgress) {
+                displayView()
+            }
+        }
+    }
+
+    fun putIndexToDB(index: Int) {
+        mPresenter.addIndexToDB(bookInfo.path, index, pageCount)
+    }
+
+    private fun putCache() {
+        AppCache.APPCACHE.putBoolean(PDF_READ_MODE_KEY, pdfReadMode)
+                .commit()
     }
 
     private fun setCheckedId() {
@@ -233,10 +270,10 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         display = false
     }
 
-    private fun loadPdfFile(page: Int) {
+    private fun loadPdfFile(page: Int, swipeMode: Boolean = false) {
         pv_pdf_read.fromFile(File(bookInfo.path))
                 .enableSwipe(true) // allows to block changing pages using swipe
-                .swipeHorizontal(false)
+                .swipeHorizontal(swipeMode)
                 .enableDoubletap(true)
                 .defaultPage(page)
                 .onPageChange(this)
@@ -256,18 +293,15 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     }
 
-    fun showMenu() {
-        if (display) {
-            hideView()
-        } else {
-            if (!dSetting && !dProgress) {
-                displayView()
-            }
+    private fun changeReadMode(type: Boolean) {
+        if (pdfReadMode != type) {
+            loadPdfFile(currentIndex, type)
+            pdfReadMode = type
         }
     }
 
-    fun putIndexToDB(index: Int) {
-        mPresenter.addIndexToDB(bookInfo.path, index, pageCount)
+    private fun getCache() {
+        pdfReadMode = AppCache.APPCACHE.getBoolean(PDF_READ_MODE_KEY, pdfReadMode)
     }
 
     private fun getIndexFromDB() {

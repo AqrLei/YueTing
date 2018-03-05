@@ -119,7 +119,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     /*在restart -> start -> resume之前调用， 在其跳转的Activity的pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == 2) {
+        if (resultCode == YueTingConstant.CATALOGRECODE) {
             if (requestCode == YueTingConstant.TXTRQCODE) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
@@ -146,7 +146,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private lateinit var bookInfo: BookInfo
-    private val REQUESTCODE = 1
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -203,6 +202,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
             }
             R.id.tv_rate -> {
+                val percent = DecimalFormat("#00.00").format(pageFactory.getCurrentBegin() * 100.00f / bookInfo.fileLength * 1.00f)
+                tv_done_percent.text = "$percent %"
+                seekBar.progress = pageFactory.getCurrentBegin() / bookInfo.fileLength * 100
                 lLSeekBar.visibility = View.VISIBLE
                 lLSeekBar.bringToFront()
                 dProgress = true

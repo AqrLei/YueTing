@@ -33,7 +33,8 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, type:
 
                 val percent =
                         if (bookInfo.type == "pdf") {
-                            "${bookInfo.indexBegin + 1}/ ${bookInfo.indexEnd}"
+                            if (bookInfo.indexEnd == 0) "" else
+                                "${bookInfo.indexBegin + 1}/ ${bookInfo.indexEnd}"
                         } else {
                             "${DecimalFormat("#00.00").format(
                                     bookInfo.indexBegin.toFloat()

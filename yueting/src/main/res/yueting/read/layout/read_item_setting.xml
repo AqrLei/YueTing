@@ -4,30 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_bottom_read_setting"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="#ff3a454d"
     android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
     android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     tools:visibility="visible">
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/sb_light_degree"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        android:max="100"
-        android:progress="70" />
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/sb_light_degree"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="70" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spPdfReadMode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:entries="@array/pdf_read_mode"
+            android:gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_bottom_font"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:id="@+id/tv_textSize_small"
@@ -61,9 +83,8 @@
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/sp_textStyle_select"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:entries="@array/read_textStyle_SP"
             android:gravity="center" />
     </LinearLayout>

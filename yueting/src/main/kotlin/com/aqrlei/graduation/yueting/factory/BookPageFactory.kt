@@ -355,6 +355,7 @@ enum class BookPageFactory {
         content.forEachIndexed { index, s ->
             y += fontSize + lineSpace
             if (progress == 1) {
+                mView.setDefaultPath()
                 mCanvasA.drawText(s, margin.toFloat(), y.toFloat(), mPaint)
             } else {
                 if (isNext) {
