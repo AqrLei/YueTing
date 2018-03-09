@@ -22,9 +22,9 @@ import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
-import kotlinx.android.synthetic.main.read_include_read_progress.*
-import kotlinx.android.synthetic.main.read_include_read_setting.*
-import kotlinx.android.synthetic.main.read_include_read_top.*
+import kotlinx.android.synthetic.main.read_include_progress.*
+import kotlinx.android.synthetic.main.read_include_setting.*
+import kotlinx.android.synthetic.main.read_include_top.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 

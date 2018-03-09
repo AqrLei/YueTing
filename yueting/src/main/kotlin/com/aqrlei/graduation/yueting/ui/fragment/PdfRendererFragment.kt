@@ -21,10 +21,10 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.github.barteksc.pdfviewer.listener.*
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import kotlinx.android.synthetic.main.read_fragment_pdf.*
-import kotlinx.android.synthetic.main.read_include_read_bottom.*
-import kotlinx.android.synthetic.main.read_include_read_progress.*
-import kotlinx.android.synthetic.main.read_include_read_setting.*
-import kotlinx.android.synthetic.main.read_include_read_top.*
+import kotlinx.android.synthetic.main.read_include_bottom.*
+import kotlinx.android.synthetic.main.read_include_progress.*
+import kotlinx.android.synthetic.main.read_include_setting.*
+import kotlinx.android.synthetic.main.read_include_top.*
 import java.io.File
 import java.io.IOException
 
