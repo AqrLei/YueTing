@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/read_item_top" />
+    <include layout="@layout/read_include_read_top" />
 
     <com.aqrairsigns.aqrleilib.ui.view.BookPageView
         android:id="@+id/bpv_read"
@@ -13,11 +13,11 @@
         android:layout_height="match_parent"
         android:clickable="true" />
 
-    <include layout="@layout/read_item_bottom" />
+    <include layout="@layout/read_include_read_bottom" />
 
-    <include layout="@layout/read_item_progress" />
+    <include layout="@layout/read_include_read_progress" />
 
-    <include layout="@layout/read_item_setting" />
+    <include layout="@layout/read_include_read_setting" />
 
 
 </FrameLayout>

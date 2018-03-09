@@ -20,8 +20,8 @@
         android:onClick="onClick" />
 
     <TextView
-        style="@style/TitleBarTextViewStyle"
         android:id="@+id/tv_book_title"
+        style="@style/TitleBarTextViewStyle"
         android:layout_centerInParent="true"
         android:text="文件名" />
 

@@ -16,7 +16,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
-import kotlinx.android.synthetic.main.activity_file.*
+import kotlinx.android.synthetic.main.file_activity_file.*
 
 /**
  * @Author: AqrLei
@@ -58,7 +58,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     override val mPresenter: FileActivityPresenter
         get() = FileActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_file
+        get() = R.layout.file_activity_file
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -82,7 +82,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     private fun init() {
         mData = ArrayList()
-        mAdapter = FileListAdapter(mData, this, R.layout.listitem_read)
+        mAdapter = FileListAdapter(mData, this, R.layout.read_module_list_item)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString("path", "/storage/emulated/0"))
