@@ -11,15 +11,14 @@ import android.widget.AdapterView
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOGRECODE
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
-import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOGRECODE
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
-import kotlinx.android.synthetic.main.activity_catalog.*
+import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
  * Author : AqrLei
@@ -71,7 +70,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override val mPresenter: CatalogActivityPresenter
         get() = CatalogActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_catalog
+        get() = R.layout.read_activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
     private lateinit var mProgressDialog: ProgressDialog
@@ -122,7 +121,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         val mView = findViewById(R.id.lv_catalog) as AlphaListView
         mDataInfoS.addAll(ChapterFactory.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
-                R.layout.catelog_bookmark_item)
+                R.layout.read_list_item_catelog)
         mView.adapter = mAdapter
         mView.onItemClickListener = this
         mView.onItemLongClickListener = this
@@ -132,7 +131,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     private fun showDialog() {
         val dialog = Dialog(this, R.style.BottomDialog)
-        dialog.setContentView(R.layout.layout_bottom_dialog)
+        dialog.setContentView(R.layout.manage_dialog_bottom)
         dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
             ChapterFactory.CHAPTER.removeBookMark(markPosition)
             dataChange(ChapterFactory.CHAPTER.getBookMarks())

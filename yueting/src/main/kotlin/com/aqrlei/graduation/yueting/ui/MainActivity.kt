@@ -11,7 +11,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPresenter
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.welcome_activity_main.*
 
 
 /**
@@ -39,7 +39,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     }
 
     override val layoutRes: Int
-        get() = R.layout.activity_main
+        get() = R.layout.welcome_activity_main
     override val mPresenter: MainActivityPresenter
         get() = MainActivityPresenter(this)
     private val RQ_PERMISSION_CODE = 1

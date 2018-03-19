@@ -15,7 +15,8 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.PlayActivityPresenter
-import kotlinx.android.synthetic.main.activity_play.*
+import kotlinx.android.synthetic.main.music_activity_play.*
+import kotlinx.android.synthetic.main.music_include_yueting_play.*
 
 /**
  * Author : AqrLei
@@ -71,7 +72,7 @@ class PlayActivity :
     override val mPresenter: PlayActivityPresenter
         get() = PlayActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_play
+        get() = R.layout.music_activity_play
 
     private lateinit var mHandler: Handler
     private var mVisualizer: Visualizer? = null
@@ -113,6 +114,8 @@ class PlayActivity :
     }
 
     private fun init() {
+        ll_play_control.visibility = View.VISIBLE
+        tv_play_type.visibility = View.VISIBLE
         mHandler = mMusicShareInfo.getHandler(this)
         val mBundle = intent.getBundleExtra("init_bundle")
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as LinearLayout

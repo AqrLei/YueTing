@@ -8,10 +8,10 @@
     app:layout_constraintRight_toRightOf="parent">
 
     <TextView
-        android:background="@color/colorPageGreen"
         android:id="@+id/tv_remove_items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPageGreen"
         android:gravity="center"
         android:text="删除"
         android:textSize="20sp"

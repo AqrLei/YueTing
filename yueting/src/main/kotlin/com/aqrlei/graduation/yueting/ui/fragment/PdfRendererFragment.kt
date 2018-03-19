@@ -20,11 +20,11 @@ import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPres
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.github.barteksc.pdfviewer.listener.*
 import com.github.barteksc.pdfviewer.util.FitPolicy
-import kotlinx.android.synthetic.main.fragment_pdf_renderer.*
-import kotlinx.android.synthetic.main.read_item_bottom.*
-import kotlinx.android.synthetic.main.read_item_progress.*
-import kotlinx.android.synthetic.main.read_item_setting.*
-import kotlinx.android.synthetic.main.read_item_top.*
+import kotlinx.android.synthetic.main.read_fragment_pdf.*
+import kotlinx.android.synthetic.main.read_include_bottom.*
+import kotlinx.android.synthetic.main.read_include_progress.*
+import kotlinx.android.synthetic.main.read_include_setting.*
+import kotlinx.android.synthetic.main.read_include_top.*
 import java.io.File
 import java.io.IOException
 
@@ -104,7 +104,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     override val layoutRes: Int
-        get() = R.layout.fragment_pdf_renderer
+        get() = R.layout.read_fragment_pdf
     override val mPresenter: PdfRendererPresenter
         get() = PdfRendererPresenter(this)
 

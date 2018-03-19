@@ -245,7 +245,7 @@ class MusicService : BaseService(),
     private fun buildNotification() {
 
         pi = makeTaskStack()
-        remoteViews = RemoteViews(this.packageName, R.layout.notification_foreground)
+        remoteViews = RemoteViews(this.packageName, R.layout.music_notification_foreground)
         /*
         * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
         * 黑屏 且结束后为锁屏界面

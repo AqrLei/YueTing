@@ -22,9 +22,9 @@ import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
-import kotlinx.android.synthetic.main.read_item_progress.*
-import kotlinx.android.synthetic.main.read_item_setting.*
-import kotlinx.android.synthetic.main.read_item_top.*
+import kotlinx.android.synthetic.main.read_include_progress.*
+import kotlinx.android.synthetic.main.read_include_setting.*
+import kotlinx.android.synthetic.main.read_include_top.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -144,7 +144,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     override val mPresenter: TxtReadActivityPresenter
         get() = TxtReadActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_txt_read
+        get() = R.layout.read_activity_txt
     private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
     // private val bookPageFactory = BookPageFactory.BOOKPAGEFACTORY
     private lateinit var seekBar: SeekBar
