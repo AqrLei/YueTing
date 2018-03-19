@@ -26,7 +26,7 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         get() = intent.extras.getSerializable("bookInfo") as BookInfo
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
-        get() = R.layout.activity_pdf_read
+        get() = R.layout.read_activity_pdf
     override val mPresenter: PdfReadActivityPresenter
         get() = PdfReadActivityPresenter(this)
 

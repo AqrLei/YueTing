@@ -27,9 +27,9 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import kotlinx.android.synthetic.main.home_top_layout.*
-import kotlinx.android.synthetic.main.layout_yueting_header.*
-import kotlinx.android.synthetic.main.yueting_fragment_home.view.*
+import kotlinx.android.synthetic.main.welcome_fragment_home.view.*
+import kotlinx.android.synthetic.main.welcome_include_home_top.*
+import kotlinx.android.synthetic.main.welcome_include_yueting_top.*
 import java.io.File
 
 /**
@@ -138,7 +138,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.yueting_fragment_home //activity_yueting
+        get() = R.layout.welcome_fragment_home //welcome_activity_yueting
 
     companion object {
         fun newInstance(): TabHomeFragment {
@@ -161,8 +161,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initView() {
-        mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_read, 0)
-        mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.listitem_music, 1)
+        mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.read_module_list_item, 0)
+        mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.music_list_item, 1)
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this
         mListView.onItemLongClickListener = this
@@ -203,7 +203,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun showDialog(isBook: Boolean) {
         val dialog = Dialog(mContainerActivity, R.style.BottomDialog)
-        dialog.setContentView(R.layout.layout_bottom_dialog)
+        dialog.setContentView(R.layout.manage_dialog_bottom)
         dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
             removeInfo(isBook)
             dialog.dismiss()

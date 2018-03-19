@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/read_item_top"
+    <include layout="@layout/read_include_top"
 
         />
 
@@ -17,11 +17,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/read_item_bottom" />
+    <include layout="@layout/read_include_bottom" />
 
-    <include layout="@layout/read_item_progress" />
+    <include layout="@layout/read_include_progress" />
 
-    <include layout="@layout/read_item_setting" />
+    <include layout="@layout/read_include_setting" />
 
 
 </android.support.constraint.ConstraintLayout>

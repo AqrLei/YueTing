@@ -48,7 +48,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.activity_yueting
+        get() = R.layout.welcome_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
     private lateinit var mHandler: Handler
     private lateinit var mPlayView: LinearLayout
