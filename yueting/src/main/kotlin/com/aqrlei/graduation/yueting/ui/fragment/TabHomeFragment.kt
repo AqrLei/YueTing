@@ -31,7 +31,7 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import kotlinx.android.synthetic.main.main_include_home_top.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
-import kotlinx.android.synthetic.main.welcome_include_yueting_top.*
+import kotlinx.android.synthetic.main.main_include_yueting_top.*
 import java.io.File
 
 /**
@@ -152,7 +152,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.main_fragment_home //welcome_activity_yueting
+        get() = R.layout.main_fragment_home //main_activity_yueting
 
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
@@ -268,11 +268,13 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun createPopWindow(): PopupWindow {
 
-        return PopupWindow(
+        val p = PopupWindow(
                 LayoutInflater.from(mContainerActivity).inflate(R.layout.main_test_popwindow, null),
                 resources.displayMetrics.widthPixels,
                 resources.displayMetrics.widthPixels
         )
+        p.animationStyle = R.style.PopupWindowAnimation
+        return p
     }
 
 

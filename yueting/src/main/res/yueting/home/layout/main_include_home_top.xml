@@ -5,7 +5,7 @@
     android:layout_height="200dp"
     android:background="@color/colorPageGreen">
 
-    <include layout="@layout/welcome_include_yueting_top" />
+    <include layout="@layout/main_include_yueting_top" />
 
     <TextView
         android:id="@+id/tv_center_time"

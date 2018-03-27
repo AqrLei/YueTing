@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.PopupWindow
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -64,7 +62,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.welcome_activity_yueting
+        get() = R.layout.main_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
     private lateinit var mHandler: Handler
     private lateinit var mPlayView: LinearLayout
@@ -135,8 +133,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     private fun initPlayView(position: Int, duration: Int = 0) {
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
     }
-
-
 
 
     fun getMPlayView() = mPlayView
