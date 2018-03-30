@@ -9,8 +9,10 @@ import android.os.IBinder
 import android.os.Messenger
 import android.support.constraint.ConstraintLayout
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
+import android.widget.PopupWindow
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
@@ -27,9 +29,9 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import kotlinx.android.synthetic.main.welcome_fragment_home.view.*
-import kotlinx.android.synthetic.main.welcome_include_home_top.*
-import kotlinx.android.synthetic.main.welcome_include_yueting_top.*
+import kotlinx.android.synthetic.main.main_include_home_top.*
+import kotlinx.android.synthetic.main.main_include_lv_content.view.*
+import kotlinx.android.synthetic.main.main_include_yueting_top.*
 import java.io.File
 
 /**
@@ -47,6 +49,16 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener,
         View.OnClickListener {
+
+    companion object {
+        fun newInstance(): TabHomeFragment {
+            val args = Bundle()
+            val fragment = TabHomeFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         removePosition = position
         when (view?.id) {
@@ -76,6 +88,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             }
             R.id.tv_setting -> {
                 AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
+                showPopWindow()
             }
             R.id.tv_file_local -> {
                 jumpToFileActivity()
@@ -125,6 +138,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
     private lateinit var mBookAdapter: YueTingListAdapter
     private lateinit var mMusicAdapter: YueTingListAdapter
+    private val mPopupWindow: PopupWindow  by lazy { createPopWindow() }
     private val mListView: AlphaListView
         get() = mView.lv_fragment_home as AlphaListView
     private val serviceConn = object : ServiceConnection {
@@ -138,16 +152,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.welcome_fragment_home //welcome_activity_yueting
+        get() = R.layout.main_fragment_home //main_activity_yueting
 
-    companion object {
-        fun newInstance(): TabHomeFragment {
-            val args = Bundle()
-            val fragment = TabHomeFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
@@ -258,6 +264,27 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun jumpToFileActivity() {
         startActivityForResult(Intent(mContainerActivity, FileActivity::class.java),
                 YueTingConstant.YUETINGRQCODE)
+    }
+
+    private fun createPopWindow(): PopupWindow {
+
+        val p = PopupWindow(
+                LayoutInflater.from(mContainerActivity).inflate(R.layout.main_test_popwindow, null),
+                resources.displayMetrics.widthPixels,
+                resources.displayMetrics.widthPixels
+        )
+        p.animationStyle = R.style.PopupWindowAnimation
+        return p
+    }
+
+
+    private fun showPopWindow() {
+        if (mPopupWindow.isShowing) {
+            mPopupWindow.dismiss()
+        } else {
+            mPopupWindow.showAsDropDown(tv_setting)
+        }
+
     }
 
 

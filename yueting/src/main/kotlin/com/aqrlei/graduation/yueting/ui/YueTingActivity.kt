@@ -15,6 +15,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
+import kotlinx.android.synthetic.main.music_include_yueting_play.*
 
 
 /**
@@ -28,6 +29,16 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener {
+
+    companion object {
+        fun jumpToYueTingActivity(context: Context, data: Int) {
+            val intent = Intent(context, YueTingActivity::class.java)
+            val bundle = Bundle()
+            bundle.putInt("code", data)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.tv_play_control -> {
@@ -42,17 +53,21 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             R.id.tv_music_info -> {
                 PlayActivity.jumpToPlayActivity(this@YueTingActivity)
             }
+            R.id.popUpWinTv -> {
+
+            }
         }
     }
 
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
     override val layoutRes: Int
-        get() = R.layout.welcome_activity_yueting
+        get() = R.layout.main_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
     private lateinit var mHandler: Handler
     private lateinit var mPlayView: LinearLayout
     private lateinit var mTabHomeFragment: TabHomeFragment
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -71,6 +86,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        popUpWinTv.setOnClickListener(this)
         mHandler = mMusicShareInfo.getHandler(this)
         mPlayView = this.window.decorView
                 .findViewById(R.id.ll_play_control) as LinearLayout
@@ -81,6 +97,11 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             }
             initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DBManager.releaseCursor()
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
@@ -113,19 +134,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         mMusicShareInfo.shareViewInit(mPlayView, position, duration)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        DBManager.releaseCursor()
-    }
 
     fun getMPlayView() = mPlayView
 
-    companion object {
-        fun jumpToYueTingActivity(context: Context, data: Int) {
-            val intent = Intent(context, YueTingActivity::class.java)
-            val bundle = Bundle()
-            bundle.putInt("code", data)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
-        }
-    }
+
 }
