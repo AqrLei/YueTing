@@ -32,6 +32,7 @@ import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import kotlinx.android.synthetic.main.main_include_home_top.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
 import kotlinx.android.synthetic.main.main_include_yueting_top.*
+import kotlinx.android.synthetic.main.main_music_popwindow.view.*
 import java.io.File
 
 /**
@@ -138,9 +139,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
     private lateinit var mBookAdapter: YueTingListAdapter
     private lateinit var mMusicAdapter: YueTingListAdapter
-    private val mPopupWindow: PopupWindow  by lazy { createPopWindow() }
-    private val mListView: AlphaListView
-        get() = mView.lv_fragment_home as AlphaListView
+    private val mPopupWindow: PopupWindow  by lazy { createPopWindow(popView) }
+    private val popView: View by lazy { createPopView() }
+    private val mListView: AlphaListView by lazy { mView.lv_fragment_home as AlphaListView }
+
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
@@ -169,6 +171,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun initView() {
         mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.read_module_list_item, 0)
         mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.music_list_item, 1)
+        popView.playListLv.adapter = mMusicAdapter
+        popView.playListLv.onItemClickListener = this
+        popView.playListLv.onItemLongClickListener = this
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this
         mListView.onItemLongClickListener = this
@@ -266,15 +271,19 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 YueTingConstant.YUETINGRQCODE)
     }
 
-    private fun createPopWindow(): PopupWindow {
+    private fun createPopWindow(v: View): PopupWindow {
 
         val p = PopupWindow(
-                LayoutInflater.from(mContainerActivity).inflate(R.layout.main_test_popwindow, null),
+                v,
                 resources.displayMetrics.widthPixels,
                 resources.displayMetrics.widthPixels
         )
         p.animationStyle = R.style.PopupWindowAnimation
         return p
+    }
+
+    private fun createPopView(): View {
+        return LayoutInflater.from(mContainerActivity).inflate(R.layout.main_music_popwindow, null)
     }
 
 

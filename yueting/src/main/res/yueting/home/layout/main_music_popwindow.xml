@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background=" @color/colorPageYellow">
+
+    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+        android:id="@+id/playListLv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:listMinHeight="90" />
+
+</android.support.constraint.ConstraintLayout>
