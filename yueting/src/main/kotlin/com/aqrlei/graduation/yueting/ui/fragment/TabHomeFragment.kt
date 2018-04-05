@@ -295,6 +295,4 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
 
     }
-
-
 }
