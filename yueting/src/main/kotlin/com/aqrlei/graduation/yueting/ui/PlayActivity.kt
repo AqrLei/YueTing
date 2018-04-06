@@ -7,7 +7,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -15,6 +16,10 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.PlayActivityPresenter
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
+import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
+import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
+import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.music_activity_play.*
 import kotlinx.android.synthetic.main.music_include_yueting_play.*
 
@@ -27,7 +32,17 @@ import kotlinx.android.synthetic.main.music_include_yueting_play.*
 class PlayActivity :
         MvpContract.MvpActivity<PlayActivityPresenter>(),
         View.OnClickListener,
+        AdapterView.OnItemClickListener,
         Visualizer.OnDataCaptureListener {
+    companion object {
+        fun jumpToPlayActivity(context: Context) {
+            val bundle = Bundle()
+            val intent = Intent(context, PlayActivity::class.java)
+            intent.putExtra("init_bundle", bundle)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
+    }
+
     override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {
 
     }
@@ -42,31 +57,37 @@ class PlayActivity :
                 this.finish()
             }
             R.id.tv_play_control -> {
-                sendMusicBroadcast(SendType.PLAY)
+                sendMusicBroadcast(SendType.PLAY, this)
 
             }
             R.id.tv_next -> {
-                sendMusicBroadcast(SendType.NEXT)
+                sendMusicBroadcast(SendType.NEXT, this)
             }
             R.id.tv_previous -> {
-                sendMusicBroadcast(SendType.PREVIOUS)
+                sendMusicBroadcast(SendType.PREVIOUS, this)
             }
             R.id.tv_play_type -> {
                 val tv = tv_play_type as TextView
                 when (tv.text.toString()) {
                     "单" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, 1)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 1)
                     }
                     "表" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, 2)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 2)
                     }
                     "变" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, 0)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 0)
                     }
                 }
-
+            }
+            R.id.popUpWinTv -> {
+                playListLv.visibility = if (playListLv.visibility == View.GONE) View.VISIBLE else View.GONE
             }
         }
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        sendPlayBroadcast(position, this)
     }
 
     override val mPresenter: PlayActivityPresenter
@@ -76,7 +97,7 @@ class PlayActivity :
 
     private lateinit var mHandler: Handler
     private var mVisualizer: Visualizer? = null
-    private lateinit var mPlayView: LinearLayout
+    private lateinit var mPlayView: ViewGroup
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
 
     override fun initComponents(savedInstanceState: Bundle?) {
@@ -92,7 +113,6 @@ class PlayActivity :
     }
 
     private fun setVisualizer(audioSessionId: Int) {
-
         mVisualizer = Visualizer(audioSessionId)
         if (mVisualizer!!.enabled) {
             mVisualizer?.enabled = false
@@ -109,7 +129,6 @@ class PlayActivity :
         * 20000
         * */
         mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
-
         mVisualizer?.enabled = true
     }
 
@@ -118,7 +137,7 @@ class PlayActivity :
         tv_play_type.visibility = View.VISIBLE
         mHandler = mMusicShareInfo.getHandler(this)
         val mBundle = intent.getBundleExtra("init_bundle")
-        mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as LinearLayout
+        mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as ViewGroup
         if (mBundle.getIntArray("init") != null) {//PlayActivity privately-owned
             val initArray = mBundle.getIntArray("init")
             mMusicShareInfo.isStartService(true)
@@ -129,12 +148,16 @@ class PlayActivity :
         }
         (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
                 mMusicShareInfo.getPlayType()// can be shared
-        initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
+        initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
+        initPopView()
         setVisualizer(mMusicShareInfo.getAudioSessionId())
     }
 
-    private fun initPlayView(position: Int, duration: Int = 0) {
-        mMusicShareInfo.shareViewInit(mPlayView, position, duration)
+    private fun initPopView() {
+        popUpWinTv.setOnClickListener(this)
+        playListLv.adapter = YueTingListAdapter(ShareMusicInfo.MusicInfoTool.getInfoS(), this, R.layout.music_list_item, 1)
+        playListLv.onItemClickListener = this
+
     }
 
     private fun changePlayType(type: Int) {
@@ -146,19 +169,5 @@ class PlayActivity :
         mMusicShareInfo.changePlayState(state, mPlayView)
     }
 
-
     fun getMPlayView() = mPlayView
-
-    private fun sendMusicBroadcast(type: SendType, code: Int = 1) {
-        mMusicShareInfo.sendBroadcast(this, type, code)
-    }
-
-    companion object {
-        fun jumpToPlayActivity(context: Context) {
-            val bundle = Bundle()
-            val intent = Intent(context, PlayActivity::class.java)
-            intent.putExtra("init_bundle", bundle)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
-        }
-    }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:yueting="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_play_control"
@@ -15,16 +15,29 @@
         android:id="@+id/popUpWinTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPageWhite"
+        android:background="@color/colorPageGrey"
         android:gravity="center"
         android:text="^"
         android:textSize="20dp"
         android:textStyle="bold" />
 
+    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+        android:id="@+id/playListLv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#ffffff"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone"
+        tools:visibility="visible"
+        yueting:layout_constraintTop_toBottomOf="@+id/popUpWinTv"
+        yueting:listMinHeight="90" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        yueting:layout_constraintTop_toBottomOf="@+id/playListLv">
 
         <ImageView
             android:id="@+id/iv_album_picture"
@@ -119,5 +132,5 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
 

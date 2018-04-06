@@ -27,6 +27,15 @@ import kotlinx.android.synthetic.main.file_activity_file.*
 class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         AdapterView.OnItemClickListener,
         View.OnClickListener {
+    companion object {
+        fun jumpToFileActivity(context: Activity, reqCode: Int) {
+            val intent = Intent(context, FileActivity::class.java)
+            if (IntentUtil.queryActivities(context, intent)) {
+                context.startActivityForResult(intent, reqCode)
+            }
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_back -> {
@@ -123,17 +132,5 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         val intent = Intent().putExtra("bookChange", bookChange).putExtra("musicChange", musicChange)
         setResult(YueTingConstant.FILERECODE, intent)
         this@FileActivity.finish()
-    }
-
-    companion object {
-        fun jumpToFileActivity(context: Activity) {
-            val intent = Intent(context, FileActivity::class.java)
-            val bundle = Bundle()
-            intent.putExtras(bundle)
-            if (IntentUtil.queryActivities(context, intent)) {
-                context.startActivity(intent)
-            }
-
-        }
     }
 }

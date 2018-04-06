@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Message
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -158,7 +159,7 @@ enum class ShareMusicInfo {
         return mHandler ?: Handler()
     }
 
-    fun shareViewInit(view: LinearLayout, position: Int, duration: Int) {
+    fun shareViewInit(view: ViewGroup, position: Int, duration: Int) {
         val musicInfo = getInfo(position)
         val roundBar = view.findViewById(R.id.rb_progress_play) as RoundBar
         val playState = playState
@@ -182,7 +183,7 @@ enum class ShareMusicInfo {
         isStartService = isStart
     }
 
-    private fun refreshPlayView(mPlayView: LinearLayout, msg: Message) {
+    private fun refreshPlayView(mPlayView: ViewGroup, msg: Message) {
 
         if (msg.what == YueTingConstant.CURRENT_DURATION) {
             (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
@@ -217,7 +218,7 @@ enum class ShareMusicInfo {
         }
     }
 
-    fun changePlayState(state: Int = 0, mPlayView: LinearLayout, msg: Message = Message()) {
+    fun changePlayState(state: Int = 0, mPlayView: ViewGroup, msg: Message = Message()) {
         when (state) {
             0 -> {//PAUSE
                 (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
