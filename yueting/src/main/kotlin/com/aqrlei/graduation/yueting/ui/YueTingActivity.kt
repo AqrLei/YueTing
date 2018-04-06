@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
+import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
@@ -14,7 +15,11 @@ import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
+import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
+import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
+import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
+import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.music_include_yueting_play.*
 
 
@@ -28,7 +33,7 @@ import kotlinx.android.synthetic.main.music_include_yueting_play.*
 * @param mPresenter 访问对应的Presenter
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
-        , View.OnClickListener {
+        , View.OnClickListener, AdapterView.OnItemClickListener {
 
     companion object {
         fun jumpToYueTingActivity(context: Context, data: Int) {
@@ -39,22 +44,27 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        sendPlayBroadcast(position, this)
+
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.tv_play_control -> {
-                sendMusicBroadcast(SendType.PLAY)
+                sendMusicBroadcast(SendType.PLAY, this)
             }
             R.id.tv_next -> {
-                sendMusicBroadcast(SendType.NEXT)
+                sendMusicBroadcast(SendType.NEXT, this)
             }
             R.id.tv_previous -> {
-                sendMusicBroadcast(SendType.PREVIOUS)
+                sendMusicBroadcast(SendType.PREVIOUS, this)
             }
             R.id.tv_music_info -> {
                 PlayActivity.jumpToPlayActivity(this@YueTingActivity)
             }
             R.id.popUpWinTv -> {
-
+                playListLv.visibility = if (playListLv.visibility == View.GONE) View.VISIBLE else View.GONE
             }
         }
     }
@@ -65,7 +75,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         get() = R.layout.main_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
     private lateinit var mHandler: Handler
-    private lateinit var mPlayView: LinearLayout
+    private lateinit var mPlayView: ViewGroup
     private lateinit var mTabHomeFragment: TabHomeFragment
 
 
@@ -81,7 +91,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 }
             }
         }
-
     }
 
     override fun initComponents(savedInstanceState: Bundle?) {
@@ -89,13 +98,14 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         popUpWinTv.setOnClickListener(this)
         mHandler = mMusicShareInfo.getHandler(this)
         mPlayView = this.window.decorView
-                .findViewById(R.id.ll_play_control) as LinearLayout
+                .findViewById(R.id.ll_play_control) as ViewGroup
         initFragments(savedInstanceState)
         if (mMusicShareInfo.getSize() > 0) {
             if (mMusicShareInfo.isStartService()) {
                 mPlayView.visibility = View.VISIBLE
             }
-            initPlayView(mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
+
+            initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
     }
 
@@ -126,16 +136,10 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    private fun sendMusicBroadcast(type: SendType) {
-        ShareMusicInfo.MusicInfoTool.sendBroadcast(this, type)
+    fun initPlayListView(adapter: YueTingListAdapter) {
+        playListLv.adapter = adapter
+        playListLv.onItemClickListener = this
     }
-
-    private fun initPlayView(position: Int, duration: Int = 0) {
-        mMusicShareInfo.shareViewInit(mPlayView, position, duration)
-    }
-
 
     fun getMPlayView() = mPlayView
-
-
 }
