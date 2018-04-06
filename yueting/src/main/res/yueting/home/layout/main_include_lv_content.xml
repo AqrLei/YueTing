@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aqrlib="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/main_fragment_home">
+
+    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+        android:id="@+id/lv_fragment_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        aqrlib:listMinHeight="90" />
+</merge>

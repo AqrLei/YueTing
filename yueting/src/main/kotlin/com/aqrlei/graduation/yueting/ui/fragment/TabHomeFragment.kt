@@ -2,7 +2,6 @@ package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.app.Dialog
 import android.content.ComponentName
-import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
@@ -27,9 +26,11 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import kotlinx.android.synthetic.main.welcome_fragment_home.view.*
-import kotlinx.android.synthetic.main.welcome_include_home_top.*
-import kotlinx.android.synthetic.main.welcome_include_yueting_top.*
+import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
+import kotlinx.android.synthetic.main.main_include_home_top.*
+import kotlinx.android.synthetic.main.main_include_lv_content.view.*
+import kotlinx.android.synthetic.main.main_include_yueting_top.*
+import kotlinx.android.synthetic.main.music_include_yueting_play.view.*
 import java.io.File
 
 /**
@@ -47,6 +48,16 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener,
         View.OnClickListener {
+
+    companion object {
+        fun newInstance(): TabHomeFragment {
+            val args = Bundle()
+            val fragment = TabHomeFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         removePosition = position
         when (view?.id) {
@@ -67,18 +78,20 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mListView.adapter = mMusicAdapter
                 tv_left_read.visibility = View.VISIBLE
                 tv_title_name.text = "欣听"
+                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.GONE
             }
             R.id.tv_left_read -> {
                 tv_left_read.visibility = View.INVISIBLE
                 mListView.adapter = mBookAdapter
                 tv_right_listen.visibility = View.VISIBLE
                 tv_title_name.text = "悦读"
+                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.VISIBLE
             }
             R.id.tv_setting -> {
                 AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
             }
             R.id.tv_file_local -> {
-                jumpToFileActivity()
+                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUETINGRQCODE)
             }
         }
     }
@@ -93,7 +106,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         startMusicService(position)
                         isServiceStart = true
                     } else {
-                        sendPlayBroadcast(position)
+                        sendPlayBroadcast(position, mContainerActivity)
                     }
                 } else {
                     AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
@@ -125,8 +138,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
     private lateinit var mBookAdapter: YueTingListAdapter
     private lateinit var mMusicAdapter: YueTingListAdapter
-    private val mListView: AlphaListView
-        get() = mView.lv_fragment_home as AlphaListView
+    private val mListView: AlphaListView by lazy { mView.lv_fragment_home as AlphaListView }
+
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
@@ -138,16 +151,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.welcome_fragment_home //welcome_activity_yueting
-
-    companion object {
-        fun newInstance(): TabHomeFragment {
-            val args = Bundle()
-            val fragment = TabHomeFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
+        get() = R.layout.main_fragment_home //main_activity_yueting
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
@@ -163,6 +167,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun initView() {
         mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.read_module_list_item, 0)
         mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.music_list_item, 1)
+        mContainerActivity.initPlayListView(mMusicAdapter)
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this
         mListView.onItemLongClickListener = this
@@ -219,13 +224,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mPresenter.startMusicService(mContainerActivity, position, Messenger(mMusicInfoShared.getHandler(mContainerActivity)), serviceConn)
     }
 
-    private fun sendPlayBroadcast(position: Int) {
-        val ACTION_PLAY = YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY]
-        val playIntent = Intent(ACTION_PLAY)
-        playIntent.putExtra("position", position)
-        mContainerActivity.sendOrderedBroadcast(playIntent, null)
-    }
-
     private fun sendMusicInfoS(binder: IBinder?) {
         if (binder != null) {
             mPresenter.sendMusicInfo(binder)
@@ -254,11 +252,4 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     fun changeBookAdapter() {
         mBookAdapter.notifyDataSetInvalidated()
     }
-
-    private fun jumpToFileActivity() {
-        startActivityForResult(Intent(mContainerActivity, FileActivity::class.java),
-                YueTingConstant.YUETINGRQCODE)
-    }
-
-
 }
