@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.factory
 
 import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
@@ -43,6 +44,7 @@ enum class ChapterFactory {
         chapterList.clear()
         bookMarkList.clear()
     }
+
     fun removeBookMark(position: Int) {
         val markInfo = bookMarkList.removeAt(position)
         deleteFromDB(markInfo.bPosition)
@@ -53,8 +55,8 @@ enum class ChapterFactory {
 
     private fun deleteFromDB(bPosition: Int) {
         DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MARK_TABLE_NAME,
-                        YueTingConstant.MARK_TABLE_C[1], "="),
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
+                        DataConstant.MARK_TABLE_C1_MARK_POSITION, "="),
                 null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
     }
 
@@ -78,14 +80,14 @@ enum class ChapterFactory {
         var haveMark = false
         bookMarkList.clear()//书签数可能改变，故每次都要清空后重新从数据库获取，章节数固定不变故不必
         val c = DBManager.sqlData(
-                DBManager.SqlFormat.selectSqlFormat(YueTingConstant.MARK_TABLE_NAME,
-                        "", YueTingConstant.MARK_TABLE_C[0], "="),
+                DBManager.SqlFormat.selectSqlFormat(DataConstant.MARK_TABLE_NAME,
+                        "", DataConstant.MARK_TABLE_C0_PATH, "="),
                 null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
         while (c?.moveToNext() == true) {
             haveMark = true
             val markInfo = ChapterInfo()
-            val tempP = c.getInt(c.getColumnIndex(YueTingConstant.MARK_TABLE_C[1]))
+            val tempP = c.getInt(c.getColumnIndex(DataConstant.MARK_TABLE_C1_MARK_POSITION))
             val tempName = if (chapterBuffer.type == "txt") {
                 String(
                         BookPageFactory.BOOKPAGEFACTORY.getBookByteArray(tempP),
@@ -129,19 +131,23 @@ enum class ChapterFactory {
         for (i in 0 until chapterList.size) {
             DBManager.sqlData(
                     DBManager.SqlFormat.insertSqlFormat(
-                            YueTingConstant.CATALOG_TABLE_NAME,
-                            YueTingConstant.CATALOG_TABLE_C),
+                            DataConstant.CATALOG_TABLE_NAME,
+                            arrayOf(
+                                    DataConstant.CATALOG_TABLE_C0_PATH,
+                                    DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
+                                    DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION
+                            )
+                    ),
                     arrayOf(chapterBuffer.path, chapterList[i].chapterName, chapterList[i].bPosition),
                     null,
                     DBManager.SqlType.INSERT
             )
         }
-
     }
 
     private fun getChapterFromDB(): Boolean {
-        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.CATALOG_TABLE_NAME,
-                "", YueTingConstant.CATALOG_TABLE_C[0], "="),
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.CATALOG_TABLE_NAME,
+                "", DataConstant.CATALOG_TABLE_C0_PATH, "="),
                 null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
         isDone = (c?.moveToNext() == true)
@@ -149,8 +155,8 @@ enum class ChapterFactory {
         while (c?.moveToNext() == true) {
             try {
                 val chapterTemp = ChapterInfo()
-                chapterTemp.chapterName = c.getString(c.getColumnIndex(YueTingConstant.CATALOG_TABLE_C[1]))
-                chapterTemp.bPosition = c.getInt(c.getColumnIndex(YueTingConstant.CATALOG_TABLE_C[2]))
+                chapterTemp.chapterName = c.getString(c.getColumnIndex(DataConstant.CATALOG_TABLE_C1_CATALOG_NAME))
+                chapterTemp.bPosition = c.getInt(c.getColumnIndex(DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION))
                 chapterList.add(chapterTemp)
             } catch (e: Exception) {
                 e.printStackTrace()

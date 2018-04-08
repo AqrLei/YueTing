@@ -4,7 +4,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import io.reactivex.Observable
@@ -27,7 +27,7 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
-                                YueTingConstant.MARK_TABLE_NAME,
+                                DataConstant.MARK_TABLE_NAME,
                                 arrayOf("path", "markPosition", "createTime")),
                         arrayOf(path, currentBegin, dateTime),
                         null,
@@ -44,7 +44,7 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 }
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
-                                YueTingConstant.BOOK_TABLE_NAME,
+                                DataConstant.BOOK_TABLE_NAME,
                                 "indexBegin", "path", "="),
                         arrayOf(begin, path),
                         null,
@@ -52,7 +52,7 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 )
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
-                                YueTingConstant.BOOK_TABLE_NAME,
+                                DataConstant.BOOK_TABLE_NAME,
                                 "indexEnd", "path", "="),
                         arrayOf(end, path),
                         null,

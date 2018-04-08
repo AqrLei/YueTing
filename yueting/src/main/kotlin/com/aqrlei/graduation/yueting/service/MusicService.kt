@@ -20,8 +20,9 @@ import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.constant.PlayState
+import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.enumtype.PlayState
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import java.io.IOException
@@ -143,6 +144,7 @@ class MusicService : BaseService(),
         }
     }
 
+
     override fun onBind(p0: Intent?): IBinder? {
         super.onBind(p0)
         return MusicBinder()
@@ -190,7 +192,16 @@ class MusicService : BaseService(),
     private fun regReceiver() {
         playerReceiver = PlayerReceiver()
         val filter = IntentFilter()
-        YueTingConstant.ACTION_BROADCAST.forEach {
+        val actionArray = arrayOf(
+                ActionConstant.ACTION_PLAY,
+                ActionConstant.ACTION_NEXT,
+                ActionConstant.ACTION_PREVIOUS,
+                ActionConstant.ACTION_FINISH,
+                ActionConstant.ACTION_SINGLE,
+                ActionConstant.ACTION_LIST,
+                ActionConstant.ACTION_RANDOM
+        )
+        actionArray.forEach {
             filter.addAction(it)
         }
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
@@ -246,34 +257,17 @@ class MusicService : BaseService(),
 
         pi = makeTaskStack()
         remoteViews = RemoteViews(this.packageName, R.layout.music_notification_foreground)
-        /*
-        * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
-        * 黑屏 且结束后为锁屏界面
-        * */
+        val playIntent = bindListener(ActionConstant.ACTION_PLAY, ActionConstant.ACTION_PLAY_REQ)
+        val nextIntent = bindListener(ActionConstant.ACTION_NEXT, ActionConstant.ACTION_NEXT_REQ)
+        val finishIntent = bindListener(ActionConstant.ACTION_FINISH, ActionConstant.ACTION_FINISH_REQ)
+        /**
+         * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
+         * 黑屏 且结束后为锁屏界面,
+         * */
         remoteViews.setOnClickPendingIntent(R.id.tv_music_info, pi)
-        for (i in 0 until YueTingConstant.ACTION_BROADCAST.size) {
-
-            if (i == 2) continue
-
-            val pIntent = bindListener(
-                    YueTingConstant.ACTION_BROADCAST[i],
-                    YueTingConstant.ACTION_REQ_CODE[i])
-
-            when (i) {
-                0 -> {
-                    remoteViews.setOnClickPendingIntent(R.id.tv_play_control, pIntent)
-                }
-                1 -> {
-                    remoteViews.setOnClickPendingIntent(R.id.tv_next, pIntent)
-                }
-                3 -> {
-                    remoteViews.setOnClickPendingIntent(R.id.tv_finish, pIntent)
-                }
-            }
-
-            if (i == 3) break
-        }
-
+        remoteViews.setOnClickPendingIntent(R.id.tv_play_control, playIntent)
+        remoteViews.setOnClickPendingIntent(R.id.tv_next, nextIntent)
+        remoteViews.setOnClickPendingIntent(R.id.tv_finish, finishIntent)
         notification = NotificationCompat.Builder(this.applicationContext)
                 .setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
@@ -375,13 +369,13 @@ class MusicService : BaseService(),
         msg.what = YueTingConstant.PLAY_TYPE
         when (playType) {
             PlayType.SINGLE -> {
-                msg.arg1 = YueTingConstant.ACTION_SINGLE
+                msg.arg1 = ActionConstant.ACTION_SINGLE_REQ
             }
             PlayType.LIST -> {
-                msg.arg1 = YueTingConstant.ACTION_LIST
+                msg.arg1 = ActionConstant.ACTION_LIST_REQ
             }
             PlayType.RANDOM -> {
-                msg.arg1 = YueTingConstant.ACTION_RANDOM
+                msg.arg1 = ActionConstant.ACTION_RANDOM_REQ
             }
         }
         sendMessenger.send(msg)
@@ -464,24 +458,22 @@ class MusicService : BaseService(),
     }
 
     private fun changePlayType(action: String?) {
-        val ACTION = YueTingConstant.ACTION_BROADCAST
         when (action) {
-            ACTION[YueTingConstant.ACTION_SINGLE] -> {
+            ActionConstant.ACTION_SINGLE -> {
                 playType = PlayType.SINGLE
             }
-            ACTION[YueTingConstant.ACTION_LIST] -> {
+            ActionConstant.ACTION_LIST -> {
                 playType = PlayType.LIST
             }
-            ACTION[YueTingConstant.ACTION_RANDOM] -> {
+            ActionConstant.ACTION_RANDOM -> {
                 playType = PlayType.RANDOM
             }
         }
     }
 
     private fun changePlayState(action: String?, intent: Intent?) {
-        val ACTION = YueTingConstant.ACTION_BROADCAST
         when (action) {
-            ACTION[YueTingConstant.ACTION_PLAY] -> {
+            ActionConstant.ACTION_PLAY -> {
                 cPosition = intent?.getIntExtra("position", cPosition) ?: cPosition
                 if (cPosition == pPosition) {
                     pauseOrPlay()
@@ -489,15 +481,14 @@ class MusicService : BaseService(),
                     play()
                 }
             }
-            ACTION[YueTingConstant.ACTION_NEXT] -> {
+            ActionConstant.ACTION_NEXT -> {
                 next()
-
             }
-            ACTION[YueTingConstant.ACTION_PREVIOUS] -> {
+            ActionConstant.ACTION_PREVIOUS -> {
                 previous()
             }
 
-            ACTION[YueTingConstant.ACTION_FINISH] -> {
+            ActionConstant.ACTION_FINISH -> {
                 ActivityCollector.removeAll()
                 stopSelf()
             }

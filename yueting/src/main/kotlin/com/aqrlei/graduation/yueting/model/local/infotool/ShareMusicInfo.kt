@@ -7,7 +7,6 @@ import android.os.Message
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
 import com.aqrairsigns.aqrleilib.ui.view.RoundBar
@@ -15,8 +14,9 @@ import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.constant.PlayState
-import com.aqrlei.graduation.yueting.constant.SendType
+import com.aqrlei.graduation.yueting.constant.ActionConstant
+import com.aqrlei.graduation.yueting.enumtype.PlayState
+import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
@@ -77,27 +77,27 @@ enum class ShareMusicInfo {
         val intent = Intent()
         val action = when (type) {
             SendType.PLAY -> {
-                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY]
+                ActionConstant.ACTION_PLAY
             }
             SendType.NEXT -> {
-                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_NEXT]
+                ActionConstant.ACTION_NEXT
             }
             SendType.PREVIOUS -> {
-                YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PREVIOUS]
+                ActionConstant.ACTION_PREVIOUS
             }
             SendType.PLAY_TYPE -> {
                 when (code) {
                     0 -> {
-                        YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_SINGLE]
+                        ActionConstant.ACTION_SINGLE
                     }
                     1 -> {
-                        YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_LIST]
+                        ActionConstant.ACTION_LIST
                     }
                     2 -> {
-                        YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_RANDOM]
+                        ActionConstant.ACTION_RANDOM
                     }
                     else -> {
-                        YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_LIST]
+                        ActionConstant.ACTION_LIST
                     }
                 }
             }
@@ -202,16 +202,16 @@ enum class ShareMusicInfo {
 
     fun changePlayType(type: Int, tv: TextView) {
         when (type) {
-            YueTingConstant.ACTION_SINGLE -> {
+            ActionConstant.ACTION_SINGLE_REQ -> {
                 tv.text = "单"
                 playType = "单"
             }
-            YueTingConstant.ACTION_LIST -> {
+            ActionConstant.ACTION_LIST_REQ -> {
                 tv.text = "表"
                 playType = "表"
 
             }
-            YueTingConstant.ACTION_RANDOM -> {
+            ActionConstant.ACTION_RANDOM_REQ -> {
                 tv.text = "变"
                 playType = "变"
             }

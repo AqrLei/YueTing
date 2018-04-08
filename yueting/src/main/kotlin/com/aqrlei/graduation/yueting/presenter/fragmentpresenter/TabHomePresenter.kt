@@ -14,7 +14,7 @@ import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
@@ -41,7 +41,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         fun selectMusicObservable(): Observable<Cursor?> {
             return Observable.defer {
                 val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
-                        YueTingConstant.MUSIC_TABLE_NAME),
+                        DataConstant.MUSIC_TABLE_NAME),
                         null, null, DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
@@ -51,7 +51,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         fun selectBookObservable(): Observable<Cursor?> {
             return Observable.defer {
                 val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
-                        YueTingConstant.BOOK_TABLE_NAME),
+                        DataConstant.BOOK_TABLE_NAME),
                         null, null, DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
@@ -218,23 +218,23 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
     fun deleteMusicItemFromDB(path: String) {
         DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MUSIC_TABLE_NAME,
-                        YueTingConstant.MUSIC_TABLE_C[0], "="),
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MUSIC_TABLE_NAME,
+                        DataConstant.MUSIC_TABLE_C0_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
     }
 
     fun deleteBookItemFromDB(path: String) {
         DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
-                        YueTingConstant.BOOK_TABLE_C[0], "="),
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.BOOK_TABLE_NAME,
+                        DataConstant.BOOK_TABLE_C0_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
         DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.MARK_TABLE_NAME,
-                        YueTingConstant.MARK_TABLE_C[0], "="),
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
+                        DataConstant.MARK_TABLE_C0_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
         DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(YueTingConstant.CATALOG_TABLE_NAME,
-                        YueTingConstant.CATALOG_TABLE_C[0], "="),
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.CATALOG_TABLE_NAME,
+                        DataConstant.CATALOG_TABLE_C0_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
     }
 
