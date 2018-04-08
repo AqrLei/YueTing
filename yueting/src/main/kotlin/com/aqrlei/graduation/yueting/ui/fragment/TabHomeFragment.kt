@@ -79,6 +79,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 tv_left_read.visibility = View.VISIBLE
                 tv_title_name.text = "欣听"
                 mContainerActivity.getMPlayView().popUpWinTv.visibility = View.GONE
+                val playV = mContainerActivity.getMPlayView().playListLv
+                if (playV.visibility == View.VISIBLE) playV.visibility = View.GONE
             }
             R.id.tv_left_read -> {
                 tv_left_read.visibility = View.INVISIBLE
