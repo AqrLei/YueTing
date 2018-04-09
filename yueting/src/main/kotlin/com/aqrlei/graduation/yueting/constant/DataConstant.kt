@@ -5,13 +5,14 @@ package com.aqrlei.graduation.yueting.constant
  */
 object DataConstant {
     /**
-     * sharedPreference's name
-     */
-    const val SF_NAME = "yueTing"
-    /**
      * database's name
      */
     const val DB_NAME = "yueTing.db"
+    /**
+     * common column
+     */
+    const val COMMON_COLUMN_ID = "id"
+    const val COMMON_COLUNM_CREATE_TIME ="createTime"
     /**
      * music's table
      */

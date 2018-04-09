@@ -233,7 +233,7 @@ enum class ShareMusicInfo {
             }
             3 -> {//PREPARE
                 val position = msg.arg2
-                val audioSessionId = msg.data["audioSessionId"] as Int
+                val audioSessionId = msg.data[YueTingConstant.SERVICE_PLAY_AUDIO_SESSION] as Int
                 val tv = mPlayView.findViewById(R.id.tv_play_type)
                 if (tv != null) {
                     (tv as TextView).text = getPlayType()

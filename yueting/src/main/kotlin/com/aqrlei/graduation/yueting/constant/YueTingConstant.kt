@@ -7,7 +7,26 @@ package com.aqrlei.graduation.yueting.constant
  * @Date: 2017/8/25
  */
 object YueTingConstant {
+    /**
+     * service key word
+     */
+    const val SERVICE_MUSIC_ITEM_POSITION = "music_item_position"
+    const val SERVICE_MUSIC_MESSENGER = "music_messenger"
+    const val SERVICE_NOTIFICATION_ID = 1
+    const val SERVICE_PENDING_INTENT_ID = 0
+    const val SERVICE_PLAY_STATUS = "play_status"
+    const val SERVICE_PLAY_STATUS_B = "play_status_bundle"
+    const val SERVICE_PLAY_AUDIO_SESSION = "play_audio_session"
+    /**
+     * adapter type
+     */
+    const val ADAPTER_TYPE_BOOK = 0
+    const val ADAPTER_TYPE_MUSIC = 1
 
+    /**
+     * permission code
+     */
+    const val RQ_PERMISSION_CODE = 1
     /**
      * fragment tag
      * */

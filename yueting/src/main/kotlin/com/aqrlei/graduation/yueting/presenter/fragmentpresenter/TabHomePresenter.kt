@@ -15,6 +15,7 @@ import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
@@ -146,10 +147,10 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                             as FileInfo
 
                                     val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
-                                    val path = t.getString(t.getColumnIndex("path"))
+                                    val path = t.getString(t.getColumnIndex(DataConstant.MUSIC_TABLE_C0_PATH))
                                     mmr.setDataSource(path)
-                                    musicInfo.id = t.getInt(t.getColumnIndex("id"))
-                                    musicInfo.createTime = t.getString(t.getColumnIndex("createTime"))
+                                    musicInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                                    musicInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUNM_CREATE_TIME))
                                     musicInfo.albumUrl = path ?: " "
                                     musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                             ?: name
@@ -192,18 +193,18 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             override fun onNext(t: Cursor) {
                                 while (t.moveToNext()) {
                                     val bookInfo = BookInfo()
-                                    val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex("fileInfo")))
+                                    val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex(DataConstant.BOOK_TABLE_C4_FILE_INFO)))
                                             as FileInfo
                                     val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))
-                                    val path = t.getString(t.getColumnIndex("path"))
-                                    bookInfo.id = t.getInt(t.getColumnIndex("id"))
-                                    bookInfo.createTime = t.getString(t.getColumnIndex("createTime"))
-                                    bookInfo.type = t.getString(t.getColumnIndex("type"))
+                                    val path = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C0_PATH))
+                                    bookInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                                    bookInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUNM_CREATE_TIME))
+                                    bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()
-                                    bookInfo.indexBegin = t.getInt(t.getColumnIndex("indexBegin"))
-                                    bookInfo.indexEnd = t.getInt(t.getColumnIndex("indexEnd"))
+                                    bookInfo.indexBegin = t.getInt(t.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+                                    bookInfo.indexEnd = t.getInt(t.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
 
 
                                     bookInfoList.add(bookInfo)
@@ -242,8 +243,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
     fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication
         val musicIntent = mContext.getServiceIntent()
-        musicIntent?.putExtra("position", position)
-        musicIntent?.putExtra("messenger", messenger)
+        musicIntent?.putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
+        musicIntent?.putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
         context.startService(musicIntent)
         context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
     }

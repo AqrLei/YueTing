@@ -39,11 +39,6 @@ import java.io.File
  * @Description:
  * @Date: 2017/8/23
  */
-/*
-* @param mPresenter 访问Presenter
-* @param mView 访问对应的布局
-* @param mContainerActivity 访问对应的Activity
-* */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener,
@@ -153,7 +148,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
-        get() = R.layout.main_fragment_home //main_activity_yueting
+        get() = R.layout.main_fragment_home
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
@@ -167,8 +162,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initView() {
-        mBookAdapter = YueTingListAdapter(mBookInfoShared.getInfoS(), mContainerActivity, R.layout.read_module_list_item, 0)
-        mMusicAdapter = YueTingListAdapter(mMusicInfoShared.getInfoS(), mContainerActivity, R.layout.music_list_item, 1)
+        mBookAdapter = YueTingListAdapter(
+                mBookInfoShared.getInfoS(), mContainerActivity,
+                R.layout.read_module_list_item, YueTingConstant.ADAPTER_TYPE_BOOK)
+        mMusicAdapter = YueTingListAdapter(
+                mMusicInfoShared.getInfoS(), mContainerActivity,
+                R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
         mContainerActivity.initPlayListView(mMusicAdapter)
         mListView.adapter = mBookAdapter
         mListView.onItemClickListener = this

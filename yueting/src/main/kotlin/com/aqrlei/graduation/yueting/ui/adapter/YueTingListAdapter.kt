@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
+import android.os.Build
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
@@ -22,11 +23,10 @@ import java.text.DecimalFormat
 /**
  * @param type 0 book, 1 music.
  */
-class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, type: Int) :
+class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val type: Int) :
         CommonListAdapter<Any>(mData, mContext, mResId) {
-    private val mType = type
     override fun bindData(holderList: CommonListViewHolder, data: Any) {
-        when (mType) {
+        when (type) {
             0 -> {
                 StringChangeUtil.SPANNABLE.clear()
                 val bookInfo = data as BookInfo
@@ -53,7 +53,11 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, type:
                 (holderList.get(R.id.tv_play_time) as TextView).text =
                         DateFormatUtil.simpleTimeFormat(data.duration.toLong())
                 (holderList.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
-                        ImageUtil.byteArrayToDrawable(data.picture) ?: mContext.getDrawable(R.mipmap.ic_launcher_round)
+                        ImageUtil.byteArrayToDrawable(data.picture) ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mContext.getDrawable(R.mipmap.ic_launcher_round)
+                } else {
+                    mContext.resources.getDrawable(R.mipmap.ic_launcher_round)
+                }
             }
         }
     }

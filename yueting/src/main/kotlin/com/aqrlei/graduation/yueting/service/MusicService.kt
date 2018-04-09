@@ -129,8 +129,8 @@ class MusicService : BaseService(),
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
     private lateinit var sendMessenger: Messenger
-    private val NOTIFICATION_ID = 1
-    private val PENDING_INTENT_ID = 0
+    private val notificationId = YueTingConstant.SERVICE_NOTIFICATION_ID
+    private val pendingIntentId = YueTingConstant.SERVICE_PENDING_INTENT_ID
     private val sendCDurationR = object : Runnable {
         override fun run() {
             cDuration = mPlayer?.currentPosition ?: 0
@@ -166,8 +166,8 @@ class MusicService : BaseService(),
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        cPosition = intent.extras.get("position") as Int
-        sendMessenger = intent.extras.get("messenger") as Messenger
+        cPosition = intent.extras.get(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION) as Int
+        sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
         sendPlayState(PlayState.START)
         return START_REDELIVER_INTENT
     }
@@ -231,16 +231,19 @@ class MusicService : BaseService(),
         val playType = sendPlayType()
         val playState = if (mPlayer!!.isPlaying) 1 else 0
         val initArray = intArrayOf(cPosition, mPlayer?.audioSessionId ?: 0, playType, playState)
-        bundle.putIntArray("init", initArray)
-        intent?.putExtra("init_bundle", bundle)
+        /**
+         *add necessary data in order to jump to PlayActivity
+         */
+        bundle.putIntArray(YueTingConstant.SERVICE_PLAY_STATUS, initArray)
+        intent?.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
         /*
         * stackBuilder?.addNextIntent(intent)
         * after the first addition will always exist, do not repeat the add
         */
         pi = stackBuilder?.getPendingIntent(
-                PENDING_INTENT_ID,
+                pendingIntentId,
                 PendingIntent.FLAG_UPDATE_CURRENT)
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(notificationId, notification)
     }
 
     private fun makeTaskStack(): PendingIntent? {
@@ -249,7 +252,7 @@ class MusicService : BaseService(),
         stackBuilder?.addParentStack(PlayActivity::class.java)
         stackBuilder?.addNextIntent(intent)
         return stackBuilder?.getPendingIntent(
-                PENDING_INTENT_ID,
+                pendingIntentId,
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
@@ -274,7 +277,7 @@ class MusicService : BaseService(),
                 .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
                 .build()
 
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(notificationId, notification)
     }
 
     private fun refreshNotification() {
@@ -286,12 +289,12 @@ class MusicService : BaseService(),
         remoteViews.setTextViewText(R.id.tv_music_info, musicString)
         val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
         remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(notificationId, notification)
     }
 
     private fun refreshPlayView(playState: String) {
         remoteViews.setTextViewText(R.id.tv_play_control, playState)
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(notificationId, notification)
     }
 
     private fun bindListener(action: String, requestCode: Int): PendingIntent {
@@ -350,7 +353,8 @@ class MusicService : BaseService(),
             PlayState.PREPARE -> {
                 message.arg1 = 3
                 val bundle = Bundle()
-                bundle.putInt("audioSessionId", mPlayer?.audioSessionId ?: 0)
+                bundle.putInt(YueTingConstant.SERVICE_PLAY_AUDIO_SESSION, mPlayer?.audioSessionId
+                        ?: 0)
                 message.data = bundle
             }
             PlayState.FINISH -> {
@@ -474,7 +478,7 @@ class MusicService : BaseService(),
     private fun changePlayState(action: String?, intent: Intent?) {
         when (action) {
             ActionConstant.ACTION_PLAY -> {
-                cPosition = intent?.getIntExtra("position", cPosition) ?: cPosition
+                cPosition = intent?.getIntExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, cPosition) ?: cPosition
                 if (cPosition == pPosition) {
                     pauseOrPlay()
                 } else {
