@@ -11,8 +11,8 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.constant.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
@@ -81,8 +81,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == YueTingConstant.FILERECODE) {
-            if (requestCode == YueTingConstant.YUETINGRQCODE) {
+        if (resultCode == YueTingConstant.FILE_REQ) {
+            if (requestCode == YueTingConstant.YUE_TING_REQ) {
                 if (data?.extras?.getBoolean("bookChange") == true) {
                     mTabHomeFragment.changeBookAdapter()
                 }
@@ -118,7 +118,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(
-                            YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                            YueTingConstant.TAB_FRAGMENT_HOME)
                     ?: TabHomeFragment.newInstance()) as TabHomeFragment
         } else {
             TabHomeFragment.newInstance()
@@ -126,12 +126,12 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
         if (!mTabHomeFragment.isAdded &&
                 supportFragmentManager.findFragmentByTag(
-                        YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                        YueTingConstant.TAB_FRAGMENT_HOME)
                 == null) {
             supportFragmentManager.beginTransaction().add(
                     R.id.fl_fragment,
                     mTabHomeFragment,
-                    YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_HOME])
+                    YueTingConstant.TAB_FRAGMENT_HOME)
                     .commit()
         }
     }

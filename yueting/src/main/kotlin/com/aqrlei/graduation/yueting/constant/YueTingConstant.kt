@@ -8,99 +8,28 @@ package com.aqrlei.graduation.yueting.constant
  */
 object YueTingConstant {
 
-    /*fragment tag*/
-    val TAB_FRAGMENT_TAGS = arrayOf(
-            "tag_fragment_home",
-            "tag_fragment_read",
-            "tag_fragment_music",
-            "tag_fragment_read1"
-    )
-    val TAG_FRAGMENT_HOME: Int = 0
-    val TAG_FRAGMENT_READ: Int = 1
-    val TAG_FRAGMENT_MUSIC: Int = 2
-    val TAG_FRAGMENT_READ1: Int = 3
-    /*database*/
-    val DB_NAME = "yueting.db"
-    val MUSIC_TABLE_NAME = "musicInfo"
-    val MUSIC_TABLE_C = arrayOf(
-            "path",
-            "type",
-            "fileInfo"
-    )
-    val MUSIC_TABLE_C_TYPE = arrayOf(
-            "varchar unique not null",
-            "integer default 0",
-            "text"
-    )
-    val BOOK_TABLE_NAME = "bookInfo"
-    val BOOK_TABLE_C = arrayOf(
-            "path",
-            "type",
-            "indexBegin",
-            "indexEnd",
-            "fileInfo"
-    )
-    val BOOK_TABLE_C_TYPE = arrayOf(
-            "varchar unique not null",
-            "varchar ",
-            "integer default 0",
-            "integer default 0",
-            "text"
-    )
-    val MARK_TABLE_NAME = "markInfo"
-    val MARK_TABLE_C = arrayOf(
-            "path",
-            "markPosition"
-    )
-    val MARK_TABLE_C_TYPE = arrayOf(
-            "varchar",
-            "integer unique"
-    )
-    val CATALOG_TABLE_NAME = "catalogInfo"
-    val CATALOG_TABLE_C = arrayOf(
-            "path",
-            "catalogName",
-            "catalogPosition"
-    )
-    val CATALOG_TABLE_C_TYPE = arrayOf(
-            "varchar not null",
-            "varchar",
-            "integer unique"
-    )
-    /*sharedpreference*/
-    val SF_NAME = "yueting"
+    /**
+     * fragment tag
+     * */
+    const val TAB_FRAGMENT_HOME = "tag_fragment_home"
+    const val TAB_FRAGMENT_READ_PDF = "tag_fragment_read_pdf"
 
-    /*BroadcastReceiverAction*/
-    val ACTION_BROADCAST = arrayOf(
-            "play",
-            "next",
-            "previous",
-            "finish",
-            "single",
-            "list",
-            "random"
-    )
-    val ACTION_PLAY = 0
-    val ACTION_NEXT = 1
-    val ACTION_PREVIOUS = 2
-    val ACTION_FINISH = 3
-    val ACTION_SINGLE = 4
-    val ACTION_LIST = 5
-    val ACTION_RANDOM = 6
-    val ACTION_REQ_CODE = arrayOf(
-            1, 2, 3, 4, 5, 6, 7
-    )
-    /*HandlerMessageWhat*/
-    val CURRENT_DURATION = 1
-    val PLAY_STATE = 2
-    val PLAY_TYPE = 3
-    /*Book Chapter keyWord*/
-    // val  ="(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)"
-    val CHAPTER_KEY_WORD = "(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)(\n|\r|\r\n)"
+    /**
+     * HandlerMessageWhat
+     * */
+    const val CURRENT_DURATION = 1
+    const val PLAY_STATE = 2
+    const val PLAY_TYPE = 3
+    /**
+     * Book Chapter keyWord
+     * */
+    const val CHAPTER_KEY_WORD = "(^\\s*第)(.{1,9})[章节卷集部篇回](\\s*)(.*)(\n|\r|\r\n)"
+
+
     /*Activity RequestCode*/
-    val TXTRQCODE = 10
-    val YUETINGRQCODE = 11
+    const val TXT_REQ = 10
+    const val YUE_TING_REQ = 11
     /*Activity ResultCode*/
-    val CATALOGRECODE = 20
-    val FILERECODE = 21
+    const val CATALOG_REQ = 20
+    const val FILE_REQ = 21
 }

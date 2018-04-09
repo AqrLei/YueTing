@@ -13,7 +13,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOGRECODE
+import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_REQ
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
@@ -50,7 +50,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
-        setResult(CATALOGRECODE, intent)
+        setResult(CATALOG_REQ, intent)
         finish()
     }
 

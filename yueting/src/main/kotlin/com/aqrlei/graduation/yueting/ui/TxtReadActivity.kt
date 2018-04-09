@@ -131,8 +131,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     /*在restart -> start -> resume之前调用， 在其跳转的Activity的pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == YueTingConstant.CATALOGRECODE) {
-            if (requestCode == YueTingConstant.TXTRQCODE) {
+        if (resultCode == YueTingConstant.CATALOG_REQ) {
+            if (requestCode == YueTingConstant.TXT_REQ) {
                 val bPosition = data?.extras?.getInt("bPosition") ?: 0
                 pageFactory.nextPage(1, bPosition)
                 mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
@@ -272,7 +272,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     private fun jumpToCatalog() {
-        startActivityForResult(Intent(this, CatalogActivity::class.java), YueTingConstant.TXTRQCODE)
+        startActivityForResult(Intent(this, CatalogActivity::class.java), YueTingConstant.TXT_REQ)
     }
 
     private fun displayView() {

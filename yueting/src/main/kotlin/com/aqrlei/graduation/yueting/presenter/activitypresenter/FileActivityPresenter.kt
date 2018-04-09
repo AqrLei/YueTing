@@ -8,7 +8,7 @@ import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -66,7 +66,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
 
                         DBManager.sqlData(
                                 DBManager.SqlFormat.insertSqlFormat(
-                                        YueTingConstant.MUSIC_TABLE_NAME,
+                                        DataConstant.MUSIC_TABLE_NAME,
                                         arrayOf("path", "fileInfo", "createTime")),
                                 arrayOf(tempData.path, byteData, dateTime),
                                 null,
@@ -81,7 +81,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         bookInfo.fileLength = File(tempData.path).length().toInt()
                         DBManager.sqlData(
                                 DBManager.SqlFormat.insertSqlFormat(
-                                        YueTingConstant.BOOK_TABLE_NAME,
+                                        DataConstant.BOOK_TABLE_NAME,
                                         arrayOf("path", "type", "fileInfo", "createTime")),
                                 arrayOf(tempData.path, suffix, byteData, dateTime),
                                 null,

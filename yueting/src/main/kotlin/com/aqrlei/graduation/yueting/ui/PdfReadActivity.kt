@@ -75,7 +75,7 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         fragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(
-                            YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
+                            YueTingConstant.TAB_FRAGMENT_READ_PDF)
                     ?: PdfRendererFragment.newInstance(bookInfo)) as PdfRendererFragment
         } else {
             PdfRendererFragment.newInstance(bookInfo)
@@ -85,10 +85,10 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
          */
         if (!fragment.isAdded &&
                 supportFragmentManager.findFragmentByTag(
-                        YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
+                        YueTingConstant.TAB_FRAGMENT_READ_PDF)
                 == null) {
             supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment,
-                    YueTingConstant.TAB_FRAGMENT_TAGS[YueTingConstant.TAG_FRAGMENT_READ1])
+                    YueTingConstant.TAB_FRAGMENT_READ_PDF)
                     .commit()
         }
     }

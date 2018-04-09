@@ -3,7 +3,8 @@ package com.aqrlei.graduation.yueting.ui.uiEt
 import android.content.Context
 import android.content.Intent
 import android.view.ViewGroup
-import com.aqrlei.graduation.yueting.constant.SendType
+import com.aqrlei.graduation.yueting.constant.ActionConstant
+import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 
@@ -11,7 +12,7 @@ import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
  * created by AqrLei on 2018/4/6
  */
 fun sendPlayBroadcast(position: Int, context: Context) {
-    val playIntent = Intent(YueTingConstant.ACTION_BROADCAST[YueTingConstant.ACTION_PLAY])
+    val playIntent = Intent(ActionConstant.ACTION_PLAY)
     playIntent.putExtra("position", position)
     context.sendOrderedBroadcast(playIntent, null)
 }
