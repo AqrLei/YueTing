@@ -6,6 +6,7 @@ import android.text.TextUtils
 import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -34,7 +35,7 @@ class YueTingApplication : BaseApplication() {
         val processName = getProcessName(this)
         isSameProcess = !TextUtils.isEmpty(processName) && processName == this.packageName
         if (isSameProcess) {
-            AppCache.init(this, DataConstant.SF_NAME)
+            AppCache.init(this, CacheConstant.SF_NAME)
             DBManager
                     .initDBHelper(this, DataConstant.DB_NAME, 1)
                     .addTable(DataConstant.MUSIC_TABLE_NAME,

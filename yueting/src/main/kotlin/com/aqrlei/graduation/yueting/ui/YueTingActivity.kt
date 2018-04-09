@@ -36,10 +36,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
 
     companion object {
-        fun jumpToYueTingActivity(context: Context, data: Int) {
+        fun jumpToYueTingActivity(context: Context) {
             val intent = Intent(context, YueTingActivity::class.java)
-            val bundle = Bundle()
-            bundle.putInt("code", data)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
