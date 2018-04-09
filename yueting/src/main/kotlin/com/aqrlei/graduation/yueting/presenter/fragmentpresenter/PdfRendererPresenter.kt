@@ -7,7 +7,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 import io.reactivex.Observable
@@ -34,7 +34,7 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
-                                YueTingConstant.MARK_TABLE_NAME,
+                                DataConstant.MARK_TABLE_NAME,
                                 arrayOf("path", "markPosition", "createTime")),
                         arrayOf(path, currentBegin, dateTime),
                         null,
@@ -51,7 +51,7 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 }
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
-                                YueTingConstant.BOOK_TABLE_NAME,
+                                DataConstant.BOOK_TABLE_NAME,
                                 "indexBegin", "path", "="),
                         arrayOf(begin, path),
                         null,
@@ -59,7 +59,7 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 )
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
-                                YueTingConstant.BOOK_TABLE_NAME,
+                                DataConstant.BOOK_TABLE_NAME,
                                 "indexEnd", "path", "="),
                         arrayOf(end, path),
                         null,
@@ -73,13 +73,13 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
     fun getIndexFromDB(path: String): Int {
 
 
-        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
                 "indexBegin, indexEnd", "path", "="),
                 null, arrayOf(path), DBManager.SqlType.SELECT)
                 .getCursor()
         var begin: Int = 0
         while (c?.moveToNext() == true) {
-            begin = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[2]))
+            begin = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
         }
         return begin
 

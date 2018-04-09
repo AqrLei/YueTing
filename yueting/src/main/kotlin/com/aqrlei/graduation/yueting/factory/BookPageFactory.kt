@@ -9,7 +9,7 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DensityUtil
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import java.io.File
 import java.io.RandomAccessFile
@@ -406,13 +406,13 @@ enum class BookPageFactory {
 
     private fun getIndexFromDB() {
 
-        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(YueTingConstant.BOOK_TABLE_NAME,
+        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
                 "indexBegin, indexEnd", "path", "="),
                 null, arrayOf(mBookInfo.path), DBManager.SqlType.SELECT)
                 .getCursor()
         while (c?.moveToNext() == true) {
-            begin = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[2]))
-            end = c.getInt(c.getColumnIndex(YueTingConstant.BOOK_TABLE_C[3]))
+            begin = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+            end = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
         }
 
     }

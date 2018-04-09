@@ -130,7 +130,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         mProgressDialog.dismiss()
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
         val intent = Intent().putExtra("bookChange", bookChange).putExtra("musicChange", musicChange)
-        setResult(YueTingConstant.FILERECODE, intent)
+        setResult(YueTingConstant.FILE_REQ, intent)
         this@FileActivity.finish()
     }
 }

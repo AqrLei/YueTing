@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.constant
+package com.aqrlei.graduation.yueting.enumtype
 
 /**
  * Author : AqrLei
