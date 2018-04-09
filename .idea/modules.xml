@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyLearning.iml" filepath="$PROJECT_DIR$/MyLearning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/YueTing.iml" filepath="$PROJECT_DIR$/YueTing.iml" />
       <module fileurl="file://$PROJECT_DIR$/AndroidPdfViewer-master/android-pdf-viewer/android-pdf-viewer.iml" filepath="$PROJECT_DIR$/AndroidPdfViewer-master/android-pdf-viewer/android-pdf-viewer.iml" />
       <module fileurl="file://$PROJECT_DIR$/aqrleilib/aqrleilib.iml" filepath="$PROJECT_DIR$/aqrleilib/aqrleilib.iml" />
       <module fileurl="file://$PROJECT_DIR$/testapp/testapp.iml" filepath="$PROJECT_DIR$/testapp/testapp.iml" />
