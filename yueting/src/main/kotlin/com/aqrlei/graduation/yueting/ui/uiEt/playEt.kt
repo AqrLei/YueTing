@@ -13,7 +13,7 @@ import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
  */
 fun sendPlayBroadcast(position: Int, context: Context) {
     val playIntent = Intent(ActionConstant.ACTION_PLAY)
-    playIntent.putExtra("position", position)
+    playIntent.putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
     context.sendOrderedBroadcast(playIntent, null)
 }
 
