@@ -56,13 +56,13 @@ class CommonPagerAdapter<T : View>(private val view: List<T>)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, any: Any) {
-        var position = position
+        var tempP = position
         /*同理，销毁view的时候也要对position进行处理*/
-        position %= view.size
-        if (position < 0) {
-            position += view.size
+        tempP %= view.size
+        if (tempP < 0) {
+            tempP += view.size
         }
-        container.removeView(view[position])
+        container.removeView(view[tempP])
     }
 
 }
