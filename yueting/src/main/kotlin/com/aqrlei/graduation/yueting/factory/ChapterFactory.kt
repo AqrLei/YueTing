@@ -81,7 +81,7 @@ enum class ChapterFactory {
         bookMarkList.clear()//书签数可能改变，故每次都要清空后重新从数据库获取，章节数固定不变故不必
         val c = DBManager.sqlData(
                 DBManager.SqlFormat.selectSqlFormat(DataConstant.MARK_TABLE_NAME,
-                        "", DataConstant.MARK_TABLE_C0_PATH, "="),
+                        "", DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
         while (c?.moveToNext() == true) {
@@ -133,7 +133,7 @@ enum class ChapterFactory {
                     DBManager.SqlFormat.insertSqlFormat(
                             DataConstant.CATALOG_TABLE_NAME,
                             arrayOf(
-                                    DataConstant.CATALOG_TABLE_C0_PATH,
+                                    DataConstant.COMMON_COLUMN_PATH,
                                     DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
                                     DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION
                             )
@@ -147,7 +147,7 @@ enum class ChapterFactory {
 
     private fun getChapterFromDB(): Boolean {
         val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.CATALOG_TABLE_NAME,
-                "", DataConstant.CATALOG_TABLE_C0_PATH, "="),
+                "", DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
                 .getCursor()
         isDone = (c?.moveToNext() == true)

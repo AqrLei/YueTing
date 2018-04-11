@@ -1,5 +1,6 @@
 package com.aqrlei.graduation.yueting.ui
 
+import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
@@ -12,8 +13,10 @@ import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.DensityUtil
+import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_REQ
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
@@ -31,13 +34,20 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
+    companion object {
+        fun jumpToCatalogActivity(context: Activity, reqCode: Int) {
+            val intent = Intent(context, CatalogActivity::class.java)
+            if (IntentUtil.queryActivities(context, intent))
+                context.startActivityForResult(intent, reqCode)
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_remove_items -> {
 
             }
         }
-
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
@@ -49,8 +59,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent().putExtra("bPosition", mDataInfoS[position].bPosition)
-        setResult(CATALOG_REQ, intent)
+        val intent = Intent().putExtra(YueTingConstant.READ_BOOK_POSITION, mDataInfoS[position].bPosition)
+        setResult(CATALOG_RES, intent)
         finish()
     }
 
@@ -66,7 +76,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
-
     override val mPresenter: CatalogActivityPresenter
         get() = CatalogActivityPresenter(this)
     override val layoutRes: Int
@@ -75,7 +84,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     private lateinit var mAdapter: YueTingCatalogListAdapter
     private lateinit var mProgressDialog: ProgressDialog
     private var markPosition: Int = 0
-
     override fun onStop() {
         super.onStop()
         /**
@@ -89,7 +97,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         setProgressDialog()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
-
     }
 
     fun loadCatalogDone(t: Boolean) {
@@ -125,9 +132,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         mView.adapter = mAdapter
         mView.onItemClickListener = this
         mView.onItemLongClickListener = this
-
     }
-
 
     private fun showDialog() {
         val dialog = Dialog(this, R.style.BottomDialog)
@@ -143,6 +148,4 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
     }
-
-
 }

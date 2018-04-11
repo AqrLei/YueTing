@@ -17,7 +17,7 @@ fun sendPlayBroadcast(position: Int, context: Context) {
     context.sendOrderedBroadcast(playIntent, null)
 }
 
-fun sendMusicBroadcast(type: SendType, context: Context, code: Int = 1) {
+fun sendMusicBroadcast(type: SendType, context: Context, code: Int = YueTingConstant.PLAY_LIST) {
     ShareMusicInfo.MusicInfoTool.sendBroadcast(context, type, code)
 }
 

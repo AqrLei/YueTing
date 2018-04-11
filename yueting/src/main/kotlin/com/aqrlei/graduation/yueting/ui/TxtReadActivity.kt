@@ -17,6 +17,7 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
@@ -39,17 +40,20 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemSelectedListener {
-
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
+    companion object {
+        fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
+            val intent = Intent(context, TxtReadActivity::class.java)
+            intent.putExtra(YueTingConstant.READ_BOOK_INFO, data0)
+            intent.putExtra(YueTingConstant.READ_BOOK_POSITION, data1)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
     }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         pageFactory.changeFontStyle(position)
-        // bookPageFactory.changeFontStyle(position)
     }
-
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         val bgColor = (findViewById(checkedId).background as ColorDrawable).color
@@ -60,10 +64,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (seekBar?.id == R.id.sb_rate) {
-
             val percent = DecimalFormat("#00.00").format(progress * 1.00f / 10.00f)
             tv_done_percent.text = "$percent %"
-
             val pBegin = (bookInfo.fileLength * ((BigDecimal(percent).div(BigDecimal(100))).toDouble())).toInt()
             pageFactory.nextPage(1, pBegin)
         }
@@ -131,9 +133,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     /*在restart -> start -> resume之前调用， 在其跳转的Activity的pause之后调用*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == YueTingConstant.CATALOG_REQ) {
-            if (requestCode == YueTingConstant.TXT_REQ) {
-                val bPosition = data?.extras?.getInt("bPosition") ?: 0
+        if (resultCode == YueTingConstant.CATALOG_RES) {
+            if (requestCode == YueTingConstant.TXT_CATALOG_REQ) {
+                val bPosition = data?.extras?.getInt(YueTingConstant.READ_BOOK_POSITION) ?: 0
                 pageFactory.nextPage(1, bPosition)
                 mPresenter.addIndexToDB(bookInfo.path, pageFactory.getCurrentBegin(),
                         pageFactory.getCurrentEnd())
@@ -146,13 +148,11 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     override val layoutRes: Int
         get() = R.layout.read_activity_txt
     private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
-    // private val bookPageFactory = BookPageFactory.BOOKPAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: RelativeLayout
     private lateinit var bottomLinearLayout: LinearLayout
     private lateinit var lLSetting: LinearLayout
     private lateinit var lLSeekBar: LinearLayout
-    // private lateinit var pageView: PageView
     private lateinit var bookPageView: BookPageView
     private var display: Boolean = false
     private var dProgress: Boolean = false
@@ -175,7 +175,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        // pageView = findViewById(R.id.pv_read) as PageView
         bookPageView = findViewById(R.id.bpv_read) as BookPageView
         seekBar = findViewById(R.id.sb_rate) as SeekBar
         topRelativeLayout = findViewById(R.id.rl_top_read) as RelativeLayout
@@ -192,11 +191,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
         rg_read_bg.setOnCheckedChangeListener(this)
         sb_light_degree.setOnSeekBarChangeListener(this)
-        // setPageFactory(pageView)
         setBookPageFactory(bookPageView)
         setCheckedId()
         tv_book_title.text = bookInfo.name
-
     }
 
     override fun onPause() {
@@ -263,7 +260,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     private fun setCheckedId() {
         for (i in 0 until 4) {
             (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
-                    i == AppCache.APPCACHE.getInt("bPosition", 0)
+                    i == AppCache.APPCACHE.getInt(CacheConstant.READ_CHECK_KEY, CacheConstant.READ_CHECK_DEFAULT)
         }
     }
 
@@ -272,7 +269,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     private fun jumpToCatalog() {
-        startActivityForResult(Intent(this, CatalogActivity::class.java), YueTingConstant.TXT_REQ)
+        CatalogActivity.jumpToCatalogActivity(this, YueTingConstant.TXT_CATALOG_REQ)
     }
 
     private fun displayView() {
@@ -289,16 +286,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         display = false
     }
 
-    /* private fun setPageFactory(pageView: PageView) {
-         bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
-         ChapterFactory.init(bookInfo)
-         pageFactory.setBookInfo(pageView, bookInfo)
-         pageFactory.nextPage()
-         pageView.setOnLongClickListener(this)
-        // pageView.setOnPageTouchListener(this)
-     }*/
     private fun setBookPageFactory(bookPageView: BookPageView) {
-        bookInfo = intent.extras.getSerializable("bookInfo") as BookInfo
+        bookInfo = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
         ChapterFactory.init(bookInfo)
         pageFactory.setBookInfo(bookPageView, bookInfo)
         pageFactory.nextPage()
@@ -314,17 +303,5 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
             lp.screenBrightness = (if (brightness <= 0) 1 else brightness) / 255f
         }
         window.attributes = lp
-    }
-
-    companion object {
-        fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
-            val intent = Intent(context, TxtReadActivity::class.java)
-            /* val bundle = Bundle()
-             bundle.putSerializable("bookInfo",data)*/
-            intent.putExtra("bookInfo", data0)
-            intent.putExtra("bPosition", data1)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
-        }
-
     }
 }

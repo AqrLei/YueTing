@@ -145,12 +145,11 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val mmr = MediaMetadataRetriever()
                                     val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex("fileInfo")))
                                             as FileInfo
-
                                     val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
-                                    val path = t.getString(t.getColumnIndex(DataConstant.MUSIC_TABLE_C0_PATH))
+                                    val path = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
                                     mmr.setDataSource(path)
                                     musicInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
-                                    musicInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUNM_CREATE_TIME))
+                                    musicInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
                                     musicInfo.albumUrl = path ?: " "
                                     musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                             ?: name
@@ -170,7 +169,6 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                 //  DBManager.releaseCursor()
                                 mMvpView.setMusicInfo(musicInfoList)
                             }
-
                         })
         )
     }
@@ -196,17 +194,15 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val fileInfo = DataSerializationUtil.byteArrayToSequence(t.getBlob(t.getColumnIndex(DataConstant.BOOK_TABLE_C4_FILE_INFO)))
                                             as FileInfo
                                     val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))
-                                    val path = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C0_PATH))
+                                    val path = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
                                     bookInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
-                                    bookInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUNM_CREATE_TIME))
+                                    bookInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
                                     bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()
                                     bookInfo.indexBegin = t.getInt(t.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
                                     bookInfo.indexEnd = t.getInt(t.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
-
-
                                     bookInfoList.add(bookInfo)
                                 }
                                 //  DBManager.releaseCursor()
@@ -220,25 +216,24 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
     fun deleteMusicItemFromDB(path: String) {
         DBManager.sqlData(
                 DBManager.SqlFormat.deleteSqlFormat(DataConstant.MUSIC_TABLE_NAME,
-                        DataConstant.MUSIC_TABLE_C0_PATH, "="),
+                        DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
     }
 
     fun deleteBookItemFromDB(path: String) {
         DBManager.sqlData(
                 DBManager.SqlFormat.deleteSqlFormat(DataConstant.BOOK_TABLE_NAME,
-                        DataConstant.BOOK_TABLE_C0_PATH, "="),
+                        DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
         DBManager.sqlData(
                 DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
-                        DataConstant.MARK_TABLE_C0_PATH, "="),
+                        DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
         DBManager.sqlData(
                 DBManager.SqlFormat.deleteSqlFormat(DataConstant.CATALOG_TABLE_NAME,
-                        DataConstant.CATALOG_TABLE_C0_PATH, "="),
+                        DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.DELETE)
     }
-
 
     fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication

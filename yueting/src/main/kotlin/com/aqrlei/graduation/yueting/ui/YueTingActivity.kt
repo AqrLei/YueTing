@@ -79,12 +79,12 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == YueTingConstant.FILE_REQ) {
-            if (requestCode == YueTingConstant.YUE_TING_REQ) {
-                if (data?.extras?.getBoolean("bookChange") == true) {
+        if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
+            if (requestCode == YueTingConstant.YUE_TING_FILE_REQ) {
+                if (data?.extras?.getBoolean(YueTingConstant.FILE_BOOK_CHANGE) == true) {
                     mTabHomeFragment.changeBookAdapter()
                 }
-                if (data?.extras?.getBoolean("musicChange") == true) {
+                if (data?.extras?.getBoolean(YueTingConstant.FILE_MUSIC_CHANGE) == true) {
                     mTabHomeFragment.changeMusicAdapter()
                 }
             }
