@@ -10,6 +10,7 @@ import android.view.View
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPresenter
 import kotlinx.android.synthetic.main.welcome_activity_main.*
 
@@ -29,10 +30,10 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             R.id.bt_enjoy -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (permissionCheck(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
-                        YueTingActivity.jumpToYueTingActivity(this, 0)
+                        YueTingActivity.jumpToYueTingActivity(this)
                     }
                 } else {
-                    YueTingActivity.jumpToYueTingActivity(this, 0)
+                    YueTingActivity.jumpToYueTingActivity(this)
                 }
             }
         }
@@ -42,7 +43,6 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         get() = R.layout.welcome_activity_main
     override val mPresenter: MainActivityPresenter
         get() = MainActivityPresenter(this)
-    private val RQ_PERMISSION_CODE = 1
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -64,9 +64,9 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == RQ_PERMISSION_CODE) {
+        if (requestCode == YueTingConstant.RQ_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                YueTingActivity.jumpToYueTingActivity(this, 0)
+                YueTingActivity.jumpToYueTingActivity(this)
             } else {
                 AppToast.toastShow(this, "Permission Denied!", 1000)
             }
@@ -87,7 +87,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             return true
         }
 
-        ActivityCompat.requestPermissions(this, tempPermission, RQ_PERMISSION_CODE)
+        ActivityCompat.requestPermissions(this, tempPermission, YueTingConstant.RQ_PERMISSION_CODE)
         return false
 
     }

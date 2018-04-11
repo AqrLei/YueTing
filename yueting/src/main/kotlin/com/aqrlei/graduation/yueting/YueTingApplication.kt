@@ -6,6 +6,7 @@ import android.text.TextUtils
 import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -34,12 +35,12 @@ class YueTingApplication : BaseApplication() {
         val processName = getProcessName(this)
         isSameProcess = !TextUtils.isEmpty(processName) && processName == this.packageName
         if (isSameProcess) {
-            AppCache.init(this, DataConstant.SF_NAME)
+            AppCache.init(this, CacheConstant.SF_NAME)
             DBManager
                     .initDBHelper(this, DataConstant.DB_NAME, 1)
                     .addTable(DataConstant.MUSIC_TABLE_NAME,
                             arrayOf(
-                                    DataConstant.MUSIC_TABLE_C0_PATH,
+                                    DataConstant.COMMON_COLUMN_PATH,
                                     DataConstant.MUSIC_TABLE_C1_TYPE,
                                     DataConstant.MUSIC_TABLE_C2_FILE_INFO
                             ),
@@ -51,7 +52,7 @@ class YueTingApplication : BaseApplication() {
                     )
                     .addTable(DataConstant.BOOK_TABLE_NAME,
                             arrayOf(
-                                    DataConstant.BOOK_TABLE_C0_PATH,
+                                    DataConstant.COMMON_COLUMN_PATH,
                                     DataConstant.BOOK_TABLE_C1_TYPE,
                                     DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
                                     DataConstant.BOOK_TABLE_C3_INDEX_END,
@@ -67,7 +68,7 @@ class YueTingApplication : BaseApplication() {
                     )
                     .addTable(DataConstant.CATALOG_TABLE_NAME,
                             arrayOf(
-                                    DataConstant.CATALOG_TABLE_C0_PATH,
+                                    DataConstant.COMMON_COLUMN_PATH,
                                     DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
                                     DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION
                             ),
@@ -79,7 +80,7 @@ class YueTingApplication : BaseApplication() {
                     )
                     .addTable(DataConstant.MARK_TABLE_NAME,
                             arrayOf(
-                                    DataConstant.MARK_TABLE_C0_PATH,
+                                    DataConstant.COMMON_COLUMN_PATH,
                                     DataConstant.MARK_TABLE_C1_MARK_POSITION
                             ),
                             arrayOf(

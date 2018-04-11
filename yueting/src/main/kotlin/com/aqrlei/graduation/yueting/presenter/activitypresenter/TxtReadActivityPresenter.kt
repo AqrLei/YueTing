@@ -28,7 +28,9 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
                                 DataConstant.MARK_TABLE_NAME,
-                                arrayOf("path", "markPosition", "createTime")),
+                                arrayOf(DataConstant.COMMON_COLUMN_PATH,
+                                        DataConstant.MARK_TABLE_C1_MARK_POSITION,
+                                        DataConstant.COMMON_COLUMN_CREATE_TIME)),
                         arrayOf(path, currentBegin, dateTime),
                         null,
                         DBManager.SqlType.INSERT
@@ -45,7 +47,8 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
-                                "indexBegin", "path", "="),
+                                DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
+                                DataConstant.COMMON_COLUMN_PATH, "="),
                         arrayOf(begin, path),
                         null,
                         DBManager.SqlType.UPDATE
@@ -53,7 +56,8 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
-                                "indexEnd", "path", "="),
+                                DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
+                                DataConstant.COMMON_COLUMN_PATH, "="),
                         arrayOf(end, path),
                         null,
                         DBManager.SqlType.UPDATE
@@ -71,19 +75,10 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-
-                            }
-
-                            override fun onNext(t: Boolean) {
-
-                            }
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
+                            override fun onNext(t: Boolean) {}
                         }
-
-
                         ))
 
     }
@@ -105,7 +100,5 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                         AppToast.toastShow(mMvpActivity, if (t) "书签添加完毕" else "书签添加失败", 1000)
                     }
                 }))
-
     }
-
 }

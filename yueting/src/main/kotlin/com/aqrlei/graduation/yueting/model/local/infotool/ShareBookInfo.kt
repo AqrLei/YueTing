@@ -10,7 +10,7 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
  * @CreateTime: Date: 2017/9/20 Time: 9:06
  */
 /*
-* 音乐信息共享单例
+* 书籍信息共享单例
 * */
 enum class ShareBookInfo {
 

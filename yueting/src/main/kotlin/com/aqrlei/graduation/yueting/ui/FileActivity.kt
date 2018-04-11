@@ -13,6 +13,7 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
@@ -84,7 +85,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     override fun onDestroy() {
         super.onDestroy()
-        AppCache.APPCACHE.putString("path", fileInfoList[0].path)
+        AppCache.APPCACHE.putString(CacheConstant.FILE_PATH_KEY, fileInfoList[0].path)
                 .commit()
         fileInfoList.clear()
     }
@@ -94,7 +95,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         mAdapter = FileListAdapter(mData, this, R.layout.read_module_list_item)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
-        getFileInfo(AppCache.APPCACHE.getString("path", "/storage/emulated/0"))
+        getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
     }
 
     private fun setProgressDialog() {
@@ -129,8 +130,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
         mProgressDialog.dismiss()
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
-        val intent = Intent().putExtra("bookChange", bookChange).putExtra("musicChange", musicChange)
-        setResult(YueTingConstant.FILE_REQ, intent)
+        val intent = Intent()
+                .putExtra(YueTingConstant.FILE_BOOK_CHANGE, bookChange)
+                .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
+        setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
         this@FileActivity.finish()
     }
 }

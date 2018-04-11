@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.PlayActivityPresenter
@@ -38,7 +39,7 @@ class PlayActivity :
         fun jumpToPlayActivity(context: Context) {
             val bundle = Bundle()
             val intent = Intent(context, PlayActivity::class.java)
-            intent.putExtra("init_bundle", bundle)
+            intent.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
@@ -70,13 +71,13 @@ class PlayActivity :
                 val tv = tv_play_type as TextView
                 when (tv.text.toString()) {
                     "单" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 1)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_LIST)
                     }
                     "表" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 2)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_RANDOM)
                     }
                     "变" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 0)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_SINGLE)
                     }
                 }
             }
@@ -136,10 +137,10 @@ class PlayActivity :
         ll_play_control.visibility = View.VISIBLE
         tv_play_type.visibility = View.VISIBLE
         mHandler = mMusicShareInfo.getHandler(this)
-        val mBundle = intent.getBundleExtra("init_bundle")
+        val mBundle = intent.getBundleExtra(YueTingConstant.SERVICE_PLAY_STATUS_B)
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as ViewGroup
-        if (mBundle.getIntArray("init") != null) {//PlayActivity privately-owned
-            val initArray = mBundle.getIntArray("init")
+        if (mBundle.getIntArray(YueTingConstant.SERVICE_PLAY_STATUS) != null) {//PlayActivity privately-owned
+            val initArray = mBundle.getIntArray(YueTingConstant.SERVICE_PLAY_STATUS)
             mMusicShareInfo.isStartService(true)
             mMusicShareInfo.setPosition(initArray[0])
             mMusicShareInfo.setAudioSessionId(initArray[1])

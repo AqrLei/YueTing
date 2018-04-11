@@ -21,9 +21,17 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
  * Date : 2018/2/18.
  */
 class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
-    private val REQUESTCODE = 3
+
+    companion object {
+        fun jumpToPdfReadActivity(context: Context, data0: BookInfo) {
+            val intent = Intent(context, PdfReadActivity::class.java)
+            intent.putExtra(YueTingConstant.READ_BOOK_INFO, data0)
+            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
+        }
+    }
+
     private val bookInfo: BookInfo
-        get() = intent.extras.getSerializable("bookInfo") as BookInfo
+        get() = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
         get() = R.layout.read_activity_pdf
@@ -47,9 +55,9 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == 2) {
-            if (requestCode == REQUESTCODE) {
-                val index = data?.extras?.getInt("bPosition") ?: 0
+        if (resultCode == YueTingConstant.CATALOG_RES) {
+            if (requestCode == YueTingConstant.PDF_CATALOG_REQ) {
+                val index = data?.extras?.getInt(YueTingConstant.READ_BOOK_POSITION) ?: 0
                 fragment.setCurrentIndex(index)
                 addIndexToDB(index)
             }
@@ -98,17 +106,6 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
     }
 
     fun jumpToCatalog() {
-        startActivityForResult(Intent(this, CatalogActivity::class.java), REQUESTCODE)
+        CatalogActivity.jumpToCatalogActivity(this, YueTingConstant.PDF_CATALOG_REQ)
     }
-
-    companion object {
-        fun jumpToPdfReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
-            val intent = Intent(context, PdfReadActivity::class.java)
-            intent.putExtra("bookInfo", data0)
-            intent.putExtra("indexPdf", data1)
-            if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
-        }
-
-    }
-
 }
