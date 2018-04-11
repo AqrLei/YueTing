@@ -15,9 +15,9 @@ import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
 import com.aqrlei.graduation.yueting.enumtype.SendType
-import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
@@ -73,7 +73,7 @@ enum class ShareMusicInfo {
     }
 
 
-    fun sendBroadcast(context: Context, type: SendType, code: Int = 1) {
+    fun sendBroadcast(context: Context, type: SendType, code: Int = YueTingConstant.PLAY_LIST) {
         val intent = Intent()
         val action = when (type) {
             SendType.PLAY -> {
@@ -87,13 +87,13 @@ enum class ShareMusicInfo {
             }
             SendType.PLAY_TYPE -> {
                 when (code) {
-                    0 -> {
+                    YueTingConstant.PLAY_SINGLE -> {
                         ActionConstant.ACTION_SINGLE
                     }
-                    1 -> {
+                    YueTingConstant.PLAY_LIST -> {
                         ActionConstant.ACTION_LIST
                     }
-                    2 -> {
+                    YueTingConstant.PLAY_RANDOM -> {
                         ActionConstant.ACTION_RANDOM
                     }
                     else -> {

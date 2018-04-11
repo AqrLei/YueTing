@@ -9,7 +9,9 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DensityUtil
+import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import java.io.File
 import java.io.RandomAccessFile
@@ -46,7 +48,6 @@ enum class BookPageFactory {
     private var end: Int = 0
     private var begin: Int = 0
     private var fontSize = 45
-    private var fontStyle = 0
     private lateinit var encoding: String
     private var mappedFile: MappedByteBuffer? = null
     private var randomFile: RandomAccessFile? = null
@@ -133,12 +134,9 @@ enum class BookPageFactory {
         refreshPage = false
         nextPage()
     }
-
     fun getCurrentBegin() = begin
     fun getCurrentEnd() = end
     fun getBookByteArray(position: Int) = readParagraphForward(position)
-
-
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
         isNext = true
         progress = isProgress
@@ -184,16 +182,12 @@ enum class BookPageFactory {
             mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
         } catch (e: Exception) {
             e.printStackTrace()
-            AppLog.logDebug("readTest", "打开失败")
         }
-
-        // Log.d("testApp", bookInfo.getName());
     }
 
 
     private fun pageDown() {
         var strParagraph = ""
-        //int i = 0;
         while (content.size < lineNumber && end < fileLength) {
             val byteTemp = readParagraphForward(end)
             end += byteTemp.size
@@ -202,11 +196,9 @@ enum class BookPageFactory {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
             strParagraph = strParagraph.replace("\r\n".toRegex(), "  ")
             strParagraph = strParagraph.replace("\n".toRegex(), " ")
             while (strParagraph.isNotEmpty()) {
-                //i++;
                 val size = mPaint.breakText(strParagraph, true, pageWidth.toFloat(), null)
                 content.add(strParagraph.substring(0, size))
                 strParagraph = strParagraph.substring(size)
@@ -223,10 +215,6 @@ enum class BookPageFactory {
 
             }
         }
-        /* Log.d("testHeight", "Height: " + pageHeight + "I: " + i + "LineNumber: " + lineNumber +
-                "Height: " + (lineNumber * (fontSize + lineSpace)) +
-                "Margin: " + margin+"Size:" +content.size());*/
-
     }
 
     private fun readParagraphForward(end: Int): ByteArray {
@@ -235,7 +223,7 @@ enum class BookPageFactory {
         var i = end
         while (i < fileLength) {
             b0 = mappedFile!!.get(i)
-            if (encoding == "UTF-16LE") {
+            if (encoding == YueTingConstant.ENCODING) {
                 if (b0.toInt() == 0 && before == 10) {
                     break
                 }
@@ -324,7 +312,7 @@ enum class BookPageFactory {
         var i = begin - 1
         while (i > 0) {
             b0 = mappedFile!!.get(i)
-            if (encoding == "UTF-16LE") {
+            if (encoding == YueTingConstant.ENCODING) {
                 if (b0.toInt() == 10 && before.toInt() == 0 && i != begin - 2) {
                     i += 2
                     break
@@ -395,19 +383,21 @@ enum class BookPageFactory {
     }
 
     private fun putCache() {
-        AppCache.APPCACHE.putInt("bPosition", bPosition)
+        AppCache.APPCACHE.putInt(CacheConstant.READ_CHECK_KEY, bPosition)
         AppCache.APPCACHE.commit()
     }
 
     private fun getCache() {
-        bPosition = AppCache.APPCACHE.getInt("bPosition", 0)
+        bPosition = AppCache.APPCACHE.getInt(CacheConstant.READ_CHECK_KEY, CacheConstant.READ_CHECK_DEFAULT)
         getIndexFromDB()
     }
 
     private fun getIndexFromDB() {
 
         val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
-                "indexBegin, indexEnd", "path", "="),
+                "${DataConstant.BOOK_TABLE_C2_INDEX_BEGIN}, ${DataConstant.BOOK_TABLE_C3_INDEX_END}",
+                DataConstant.COMMON_COLUMN_PATH,
+                "="),
                 null, arrayOf(mBookInfo.path), DBManager.SqlType.SELECT)
                 .getCursor()
         while (c?.moveToNext() == true) {

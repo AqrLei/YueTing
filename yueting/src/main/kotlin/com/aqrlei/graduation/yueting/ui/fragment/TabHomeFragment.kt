@@ -88,7 +88,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
             }
             R.id.tv_file_local -> {
-                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_REQ)
+                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ)
             }
         }
     }

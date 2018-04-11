@@ -7,13 +7,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
-import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.Toast
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.CacheConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
@@ -109,9 +110,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         get() = PdfRendererPresenter(this)
 
 
-    private val STATE_CURRENT_PAGE_INDEX = "current_page_index"
-    private val PDF_READ_MODE_KEY = "pdf_read_mode"
-
+    private val currentPageIndex = "current_page_index"
     private var mPageIndex: Int = 0
     private var currentIndex: Int = 0
     private var display: Boolean = false
@@ -119,14 +118,13 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var dSetting: Boolean = false
     private var pageCount: Int = 0
     private var pdfReadMode: Boolean = false
-
     private val bookInfo: BookInfo
-        get() = arguments.getSerializable("bookInfo") as BookInfo
+        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
 
     companion object {
         fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
             val args = Bundle()
-            args.putSerializable("bookInfo", bookInfo)
+            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
             val fragment = PdfRendererFragment()
             fragment.arguments = args
             return fragment
@@ -187,9 +185,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         tv_book_title.text = bookInfo.name
         ChapterFactory.init(bookInfo)
         mPageIndex = bookInfo.indexBegin
-        setCheckedId()
         if (null != savedInstanceState) {
-            mPageIndex = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0)
+            mPageIndex = savedInstanceState.getInt(currentPageIndex, 0)
         }
     }
 
@@ -214,7 +211,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(STATE_CURRENT_PAGE_INDEX, currentIndex)
+        outState.putInt(currentPageIndex, currentIndex)
     }
 
     fun onBackPressed(): Boolean {
@@ -250,15 +247,8 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     private fun putCache() {
-        AppCache.APPCACHE.putBoolean(PDF_READ_MODE_KEY, pdfReadMode)
+        AppCache.APPCACHE.putBoolean(CacheConstant.READ_PDF_MODE, pdfReadMode)
                 .commit()
-    }
-
-    private fun setCheckedId() {
-        for (i in 0 until 4) {
-            (rg_read_bg.getChildAt(i) as RadioButton).isChecked =
-                    i == AppCache.APPCACHE.getInt("bPosition2", 0)
-        }
     }
 
     private fun addBookMark(currentIndex: Int) {
@@ -282,7 +272,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         ll_bottom_read.bringToFront()
         rl_top_read.bringToFront()
         display = true
-
     }
 
     private fun hideView() {
@@ -322,7 +311,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     private fun getCache() {
-        pdfReadMode = AppCache.APPCACHE.getBoolean(PDF_READ_MODE_KEY, pdfReadMode)
+        pdfReadMode = AppCache.APPCACHE.getBoolean(CacheConstant.READ_PDF_MODE, pdfReadMode)
     }
 
     private fun getIndexFromDB() {

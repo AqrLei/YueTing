@@ -10,7 +10,7 @@ object ActionConstant {
     const val ACTION_PLAY = "action_play"
     const val ACTION_NEXT = "action_next"
     const val ACTION_PREVIOUS = "action_previous"
-    const val ACTION_FINISH = "action_previous"
+    const val ACTION_FINISH = "action_finish"
     const val ACTION_SINGLE = "action_single"
     const val ACTION_LIST = "action_list"
     const val ACTION_RANDOM = "action_random"

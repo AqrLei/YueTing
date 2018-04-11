@@ -1,8 +1,6 @@
 package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
 
 
-import android.graphics.PointF
-import android.view.MotionEvent
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DBManager
@@ -35,7 +33,10 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
                                 DataConstant.MARK_TABLE_NAME,
-                                arrayOf("path", "markPosition", "createTime")),
+                                arrayOf(
+                                        DataConstant.COMMON_COLUMN_PATH,
+                                        DataConstant.MARK_TABLE_C1_MARK_POSITION,
+                                        DataConstant.COMMON_COLUMN_CREATE_TIME)),
                         arrayOf(path, currentBegin, dateTime),
                         null,
                         DBManager.SqlType.INSERT
@@ -52,7 +53,8 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
-                                "indexBegin", "path", "="),
+                                DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
+                                DataConstant.COMMON_COLUMN_PATH, "="),
                         arrayOf(begin, path),
                         null,
                         DBManager.SqlType.UPDATE
@@ -60,7 +62,8 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 DBManager.sqlData(
                         DBManager.SqlFormat.updateSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
-                                "indexEnd", "path", "="),
+                                DataConstant.BOOK_TABLE_C3_INDEX_END,
+                                DataConstant.COMMON_COLUMN_PATH, "="),
                         arrayOf(end, path),
                         null,
                         DBManager.SqlType.UPDATE
@@ -71,20 +74,18 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
     }
 
     fun getIndexFromDB(path: String): Int {
-
-
         val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
-                "indexBegin, indexEnd", "path", "="),
+                "${DataConstant.BOOK_TABLE_C2_INDEX_BEGIN}, ${DataConstant.BOOK_TABLE_C3_INDEX_END}",
+                DataConstant.COMMON_COLUMN_PATH, "="),
                 null, arrayOf(path), DBManager.SqlType.SELECT)
                 .getCursor()
-        var begin: Int = 0
+        var begin = 0
         while (c?.moveToNext() == true) {
             begin = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
         }
         return begin
 
     }
-
 
     fun addIndexToDB(path: String, begin: Int, end: Int) {
         val disposables = CompositeDisposable()
@@ -105,8 +106,6 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
 
                             }
                         }
-
-
                         ))
 
     }
@@ -130,21 +129,4 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 }))
 
     }
-
-    fun distance(event: MotionEvent): Float {
-        val dx = event.getX(1) - event.getX(0)
-        val dy = event.getY(1) - event.getY(0)
-        return Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-    }
-
-    /**
-     * 计算两个手指间的中间点
-     */
-    fun mid(event: MotionEvent): PointF {
-        val midX = (event.getX(1) + event.getX(0)) / 2
-        val midY = (event.getY(1) + event.getY(0)) / 2
-        return PointF(midX, midY)
-    }
-
-
 }

@@ -71,13 +71,13 @@ class PlayActivity :
                 val tv = tv_play_type as TextView
                 when (tv.text.toString()) {
                     "单" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 1)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_LIST)
                     }
                     "表" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 2)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_RANDOM)
                     }
                     "变" -> {
-                        sendMusicBroadcast(SendType.PLAY_TYPE, this, 0)
+                        sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_SINGLE)
                     }
                 }
             }

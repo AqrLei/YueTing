@@ -129,8 +129,6 @@ class MusicService : BaseService(),
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
     private lateinit var sendMessenger: Messenger
-    private val notificationId = YueTingConstant.SERVICE_NOTIFICATION_ID
-    private val pendingIntentId = YueTingConstant.SERVICE_PENDING_INTENT_ID
     private val sendCDurationR = object : Runnable {
         override fun run() {
             cDuration = mPlayer?.currentPosition ?: 0
@@ -241,9 +239,9 @@ class MusicService : BaseService(),
         * after the first addition will always exist, do not repeat the add
         */
         pi = stackBuilder?.getPendingIntent(
-                pendingIntentId,
+                YueTingConstant.SERVICE_PENDING_INTENT_ID,
                 PendingIntent.FLAG_UPDATE_CURRENT)
-        startForeground(notificationId, notification)
+        startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
     private fun makeTaskStack(): PendingIntent? {
@@ -252,7 +250,7 @@ class MusicService : BaseService(),
         stackBuilder?.addParentStack(PlayActivity::class.java)
         stackBuilder?.addNextIntent(intent)
         return stackBuilder?.getPendingIntent(
-                pendingIntentId,
+                YueTingConstant.SERVICE_PENDING_INTENT_ID,
                 PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
@@ -277,7 +275,7 @@ class MusicService : BaseService(),
                 .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
                 .build()
 
-        startForeground(notificationId, notification)
+        startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
     private fun refreshNotification() {
@@ -289,12 +287,12 @@ class MusicService : BaseService(),
         remoteViews.setTextViewText(R.id.tv_music_info, musicString)
         val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
         remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
-        startForeground(notificationId, notification)
+        startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
     private fun refreshPlayView(playState: String) {
         remoteViews.setTextViewText(R.id.tv_play_control, playState)
-        startForeground(notificationId, notification)
+        startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
     private fun bindListener(action: String, requestCode: Int): PendingIntent {

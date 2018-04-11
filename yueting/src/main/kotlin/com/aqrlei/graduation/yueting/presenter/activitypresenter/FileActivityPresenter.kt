@@ -28,7 +28,6 @@ import java.io.File
  */
 class FileActivityPresenter(mMvpActivity: FileActivity) :
         MvpContract.ActivityPresenter<FileActivity>(mMvpActivity) {
-
     companion object {
         fun createFileInfo(path: String): Observable<ArrayList<FileInfo>> {
             return Observable.defer {
@@ -40,7 +39,6 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
         fun addDataToDB(data: ArrayList<FileInfo>): Observable<Boolean> {
             return Observable.defer {
                 for (i in 0 until data.size) {
-
                     val suffix = FileUtil.getFileSuffix(data[i])
                     if (suffix != "mp3" && suffix != "ape" && suffix != "txt" && suffix != "pdf") continue
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
@@ -63,16 +61,16 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         if (!ShareMusicInfo.MusicInfoTool.has(musicInfo)) {
                             ShareMusicInfo.MusicInfoTool.addInfo(musicInfo)
                         }
-
                         DBManager.sqlData(
                                 DBManager.SqlFormat.insertSqlFormat(
                                         DataConstant.MUSIC_TABLE_NAME,
-                                        arrayOf("path", "fileInfo", "createTime")),
+                                        arrayOf(DataConstant.COMMON_COLUMN_PATH,
+                                                DataConstant.MUSIC_TABLE_C2_FILE_INFO,
+                                                DataConstant.COMMON_COLUMN_CREATE_TIME)),
                                 arrayOf(tempData.path, byteData, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )
-
                     } else {
                         val bookInfo = BookInfo()
                         bookInfo.type = suffix
@@ -82,7 +80,11 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         DBManager.sqlData(
                                 DBManager.SqlFormat.insertSqlFormat(
                                         DataConstant.BOOK_TABLE_NAME,
-                                        arrayOf("path", "type", "fileInfo", "createTime")),
+                                        arrayOf(
+                                                DataConstant.COMMON_COLUMN_PATH,
+                                                DataConstant.BOOK_TABLE_C1_TYPE,
+                                                DataConstant.BOOK_TABLE_C4_FILE_INFO,
+                                                DataConstant.COMMON_COLUMN_CREATE_TIME)),
                                 arrayOf(tempData.path, suffix, byteData, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
@@ -100,7 +102,6 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
     }
 
     fun getFileInfo(path: String) {
-
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         disposables.add(createFileInfo(path)
@@ -120,8 +121,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
     }
 
     fun addToDataBase(data: ArrayList<FileInfo>) {// True: music/ False: book
-        var musicSize = ShareMusicInfo.MusicInfoTool.getSize()
-        var bookSize = ShareBookInfo.BookInfoTool.getSize()
+        val musicSize = ShareMusicInfo.MusicInfoTool.getSize()
+        val bookSize = ShareBookInfo.BookInfoTool.getSize()
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         disposables.add(addDataToDB(data)
