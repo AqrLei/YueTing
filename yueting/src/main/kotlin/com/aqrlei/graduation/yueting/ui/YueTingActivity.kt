@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
@@ -42,6 +44,17 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
+
+    override val mPresenter: YueTingActivityPresenter
+        get() = YueTingActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.main_activity_yueting
+    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
+    private lateinit var mHandler: Handler
+    private lateinit var mPlayView: ViewGroup
+    private lateinit var mTabHomeFragment: TabHomeFragment
+
+
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         sendPlayBroadcast(position, this)
 
@@ -67,15 +80,13 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    override val mPresenter: YueTingActivityPresenter
-        get() = YueTingActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.main_activity_yueting
-    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
-    private lateinit var mHandler: Handler
-    private lateinit var mPlayView: ViewGroup
-    private lateinit var mTabHomeFragment: TabHomeFragment
-
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            ActivityCollector.killApp()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

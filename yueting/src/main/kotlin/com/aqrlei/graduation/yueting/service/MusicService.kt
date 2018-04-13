@@ -491,7 +491,7 @@ class MusicService : BaseService(),
             }
 
             ActionConstant.ACTION_FINISH -> {
-                ActivityCollector.removeAll()
+                ActivityCollector.killApp()
                 stopSelf()
             }
             AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
