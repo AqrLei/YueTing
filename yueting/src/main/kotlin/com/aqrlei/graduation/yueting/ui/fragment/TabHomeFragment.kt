@@ -83,7 +83,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mListView.adapter = mBookAdapter
                 tv_right_listen.visibility = View.VISIBLE
                 tv_title_name.text = "悦读"
-                tv_title_name.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
+                tv_title_name.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_BOOK
                 mContainerActivity.getMPlayView().expandListIv.visibility = View.VISIBLE
             }
             R.id.addFileIv -> {
