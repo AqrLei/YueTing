@@ -45,7 +45,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
             R.id.tv_file_parent -> {
                 getFileInfo(fileInfoList[0].parentPath)
             }
-            R.id.tv_add_file -> {
+            R.id.addFileIv-> {
                 setProgressDialog()
                 addToDatabase()
             }

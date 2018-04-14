@@ -29,8 +29,8 @@ import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_include_home_top.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
-import kotlinx.android.synthetic.main.main_include_yueting_top.*
-import kotlinx.android.synthetic.main.music_include_yueting_play.view.*
+import kotlinx.android.synthetic.main.main_include_yue_ting_top.*
+import kotlinx.android.synthetic.main.music_include_yue_ting_play.view.*
 import java.io.File
 
 /**
@@ -73,7 +73,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mListView.adapter = mMusicAdapter
                 tv_left_read.visibility = View.VISIBLE
                 tv_title_name.text = "欣听"
-                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.GONE
+                tv_title_name.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
+                mContainerActivity.getMPlayView().expandListIv.visibility = View.GONE
                 val playV = mContainerActivity.getMPlayView().playListLv
                 if (playV.visibility == View.VISIBLE) playV.visibility = View.GONE
             }
@@ -82,12 +83,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mListView.adapter = mBookAdapter
                 tv_right_listen.visibility = View.VISIBLE
                 tv_title_name.text = "悦读"
-                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.VISIBLE
+                tv_title_name.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
+                mContainerActivity.getMPlayView().expandListIv.visibility = View.VISIBLE
             }
-            R.id.tv_setting -> {
-                AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
-            }
-            R.id.tv_file_local -> {
+            R.id.addFileIv -> {
                 FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ)
             }
         }
@@ -176,8 +175,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         tv_title_name.text = "悦读"
         tv_left_read.setOnClickListener(this)
         tv_right_listen.setOnClickListener(this)
-        tv_setting.setOnClickListener(this)
-        tv_file_local.setOnClickListener(this)
+        addFileIv.setOnClickListener(this)
     }
 
     override fun onResume() {

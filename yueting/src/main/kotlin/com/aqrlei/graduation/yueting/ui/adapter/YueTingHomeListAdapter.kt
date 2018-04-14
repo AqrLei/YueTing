@@ -105,7 +105,7 @@ class YueTingHomeListAdapter(private var mContext: Context,
                 (holder.get(R.id.tv_play_time) as TextView).text =
                         data.duration.toString()
                 (holder.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
-                        ImageUtil.byteArrayToDrawable(data.picture) ?: mContext.getDrawable(R.mipmap.ic_launcher_round)
+                        ImageUtil.byteArrayToDrawable(data.picture) ?: mContext.getDrawable(R.drawable.music_selector_note)
             }
         }
     }

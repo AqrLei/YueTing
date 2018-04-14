@@ -58,7 +58,7 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:src">@mipmap/common_img_back</item>
+        <item name="android:src">@drawable/common_selector_back</item>
     </style>
 
     <style name="DividerStyle">

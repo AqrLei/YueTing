@@ -40,7 +40,7 @@
 
         yueting:vRadius="100dp" />
 
-    <include layout="@layout/music_include_yueting_play" />
+    <include layout="@layout/music_include_yue_ting_play" />
 
 
 </LinearLayout>

@@ -68,9 +68,19 @@ object YueTingConstant {
     const val PLAY_SINGLE = 0
     const val PLAY_LIST = 1
     const val PLAY_RANDOM = 2
+    const val PLAY_STATUS_PAUSE = 0
+    const val PLAY_STATUS_PLAY = 1
+    const val PLAY_TYPE_REPEAT = 0
+    const val PLAY_TYPE_RANDOM = 1
+    const val PLAY_TYPE_REPEAT_ONE = 2
+    const val PLAY_EXPAND = 0
+    const val PLAY_EXPAND_CLOSE = 1
     /**
      * other
      */
     const val ENCODING = "UTF-16LE"
+    const val TITLE_TYPE_MUSIC = 1
+    const val TITLE_TYPE_BOOK = 0
+
 
 }

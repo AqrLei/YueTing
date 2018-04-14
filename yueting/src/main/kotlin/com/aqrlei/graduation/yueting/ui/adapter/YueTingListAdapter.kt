@@ -1,7 +1,6 @@
 package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
-import android.os.Build
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
@@ -53,11 +52,8 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
                 (holderList.get(R.id.tv_play_time) as TextView).text =
                         DateFormatUtil.simpleTimeFormat(data.duration.toLong())
                 (holderList.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
-                        ImageUtil.byteArrayToDrawable(data.picture) ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mContext.getDrawable(R.mipmap.ic_launcher_round)
-                } else {
-                    mContext.resources.getDrawable(R.mipmap.ic_launcher_round)
-                }
+                        ImageUtil.byteArrayToDrawable(data.picture) ?: mContext.getDrawable(R.drawable.music_selector_note)
+
             }
         }
     }

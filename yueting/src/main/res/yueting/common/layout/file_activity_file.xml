@@ -25,18 +25,13 @@
             style="@style/TitleBarTextViewStyle"
             android:text="我的文件" />
 
-        <TextView
-            android:id="@+id/tv_add_file"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/addFileIv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="+"
-            android:textSize="30dp"
-            android:textStyle="normal" />
+            android:src="@drawable/common_selector_add"
+            android:onClick="onClick" />
     </FrameLayout>
 
     <View style="@style/DividerStyle" />

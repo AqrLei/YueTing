@@ -11,15 +11,13 @@
     android:visibility="gone"
     tools:visibility="visible">
 
-    <TextView
-        android:id="@+id/popUpWinTv"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/expandListIv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPageGrey"
-        android:gravity="center"
-        android:text="^"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:src="@drawable/music_level_list_expend"
+        yueting:layout_constraintLeft_toLeftOf="parent"
+        yueting:layout_constraintRight_toRightOf="parent" />
 
     <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
         android:id="@+id/playListLv"
@@ -30,7 +28,7 @@
         android:scrollbars="none"
         android:visibility="gone"
         tools:visibility="visible"
-        yueting:layout_constraintTop_toBottomOf="@+id/popUpWinTv"
+        yueting:layout_constraintTop_toBottomOf="@+id/expandListIv"
         yueting:listMinHeight="90" />
 
     <LinearLayout
@@ -46,50 +44,64 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher_round" />
+            android:background="@drawable/music_selector_note"
+            android:scaleType="fitCenter" />
 
-        <TextView
-            android:id="@+id/tv_music_info"
+        <LinearLayout
+            android:id="@+id/musicInfoLl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:ellipsize="marquee"
-            android:gravity="center_vertical"
-            android:lineSpacingExtra="4dp"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="2"
-            android:onClick="onClick"
-            android:scrollHorizontally="true"
-            android:text="这是歌的名字"
-            android:textSize="18dp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_play_type"
+            <TextView
+                android:id="@+id/musicInfoTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="这是歌的名字"
+                android:textColor="#1c4243"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/musicInfoDetailTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="这是歌的名字"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/playTypeIv"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="表"
+            android:src="@drawable/music_level_list_type"
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/tv_previous"
+        <ImageView
+            android:id="@+id/previousIv"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="上" />
+            android:src="@drawable/music_selector_previous" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -106,28 +118,26 @@
                 yueting:roundWidth="3dp"
                 yueting:useGradientGolor="true" />
 
-            <TextView
-                android:id="@+id/tv_play_control"
+            <ImageView
+                android:id="@+id/playControlIv"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:onClick="onClick"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="播" />
+                android:src="@drawable/music_level_list_play" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/tv_next"
+        <ImageView
+            android:id="@+id/nextIv"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:onClick="onClick"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="下" />
+            android:src="@drawable/music_selector_next" />
 
     </LinearLayout>
 
