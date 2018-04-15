@@ -9,6 +9,7 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
@@ -32,7 +33,20 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
         fun createFileInfo(path: String): Observable<ArrayList<FileInfo>> {
             return Observable.defer {
                 val fileInfoList = FileUtil.createFileInfoS(path)
-                Observable.just(fileInfoList)
+                val data = ArrayList<FileInfo>()
+                fileInfoList.filter {
+                    val suffix = FileUtil.getFileSuffix(it)
+                    it.isDir
+                            || suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                            || suffix == YueTingConstant.PLAY_SUFFIX_APE
+                            || suffix == YueTingConstant.READ_SUFFIX_TXT
+                            || suffix == YueTingConstant.READ_SUFFIX_PDF
+                }.forEach {
+                    data.add(it)
+                }
+
+
+                Observable.just(data)
             }
         }
 
@@ -40,7 +54,10 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
             return Observable.defer {
                 for (i in 0 until data.size) {
                     val suffix = FileUtil.getFileSuffix(data[i])
-                    if (suffix != "mp3" && suffix != "ape" && suffix != "txt" && suffix != "pdf") continue
+                    if (suffix != YueTingConstant.PLAY_SUFFIX_MP3
+                            && suffix != YueTingConstant.PLAY_SUFFIX_APE
+                            && suffix != YueTingConstant.READ_SUFFIX_TXT
+                            && suffix != YueTingConstant.READ_SUFFIX_PDF) continue
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                     val tempData = data[i]
                     val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
@@ -53,9 +70,9 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                         musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                 ?: name
                         musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                                ?: "未知"
+                                ?: YueTingConstant.INFO_UNKNOWN
                         musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                                ?: "未知"
+                                ?: YueTingConstant.INFO_UNKNOWN
                         musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
                         musicInfo.picture = mmr.embeddedPicture
                         if (!ShareMusicInfo.MusicInfoTool.has(musicInfo)) {

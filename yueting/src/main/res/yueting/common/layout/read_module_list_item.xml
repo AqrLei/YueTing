@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/ic_launcher"
+            android:drawableLeft="@drawable/common_level_list_file"
             android:drawablePadding="15dp"
             android:ellipsize="end"
             android:gravity="center_vertical|left"

@@ -39,7 +39,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this@FileActivity.finish()
             }
             R.id.tv_file_parent -> {
@@ -73,7 +73,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         init()
-
+        initListener()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -96,6 +96,11 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
+    }
+    private fun initListener(){
+        backIv.setOnClickListener(this)
+        tv_file_parent.setOnClickListener(this)
+        addFileIv.setOnClickListener(this)
     }
 
     private fun setProgressDialog() {

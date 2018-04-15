@@ -11,6 +11,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
+import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
@@ -154,11 +155,11 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                             ?: name
                                     musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                                            ?: "未知"
+                                            ?: YueTingConstant.INFO_UNKNOWN
                                     musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                                            ?: "未知"
-                                    musicInfo.duration = mmr.extractMetadata(
-                                            MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                                            ?: YueTingConstant.INFO_UNKNOWN
+                                    musicInfo.duration =mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+
                                     musicInfo.picture = mmr.embeddedPicture
 
 

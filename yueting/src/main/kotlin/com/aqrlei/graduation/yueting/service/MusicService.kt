@@ -488,11 +488,6 @@ class MusicService : BaseService(),
             ActionConstant.ACTION_PREVIOUS -> {
                 previous()
             }
-
-            ActionConstant.ACTION_FINISH -> {
-                ActivityCollector.killApp()
-                stopSelf()
-            }
             AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
                 pause()
             }
@@ -502,6 +497,13 @@ class MusicService : BaseService(),
     inner class PlayerReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
+            if (action == ActionConstant.ACTION_FINISH) {
+                val msg = Message()
+                msg.what = ActionConstant.ACTION_FINISH_REQ
+                sendMessenger.send(msg)
+                ActivityCollector.killApp()
+                stopSelf()
+            }
             changePlayType(action)
             changePlayState(action, intent)
             sendPlayType()

@@ -133,10 +133,10 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this@PdfRendererFragment.finish()
             }
-            R.id.tv_add_mark -> {
+            R.id.addMarkIv -> {
                 hideView()
                 addBookMark(currentIndex)
             }
@@ -166,23 +166,14 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
-
-        iv_back.setOnClickListener(this)
-        tv_add_mark.setOnClickListener(this)
-        tv_catalog.setOnClickListener(this)
-        tv_rate.setOnClickListener(this)
-        tv_setting.setOnClickListener(this)
-        sb_rate.setOnSeekBarChangeListener(this)
+        initListener()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(mContainerActivity.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-        sb_light_degree.setOnSeekBarChangeListener(this)
-        spPdfReadMode.onItemSelectedListener = this
-
-        tv_book_title.text = bookInfo.name
+        bookTitleTv.text = bookInfo.name
         ChapterFactory.init(bookInfo)
         mPageIndex = bookInfo.indexBegin
         if (null != savedInstanceState) {
@@ -244,6 +235,17 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     fun putIndexToDB(index: Int) {
         mPresenter.addIndexToDB(bookInfo.path, index, pageCount)
+    }
+
+    private fun initListener(){
+        backIv.setOnClickListener(this)
+        addMarkIv.setOnClickListener(this)
+        tv_catalog.setOnClickListener(this)
+        tv_rate.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+        sb_rate.setOnSeekBarChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
+        spPdfReadMode.onItemSelectedListener = this
     }
 
     private fun putCache() {

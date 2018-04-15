@@ -17,7 +17,7 @@
         android:background="#ffffffff">
 
         <ImageView
-            android:id="@+id/iv_back"
+            android:id="@+id/backIv"
             style="@style/TitleBarImageViewStyle"
             android:onClick="onClick" />
 

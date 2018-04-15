@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.support.constraint.ConstraintLayout
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -23,6 +24,7 @@ import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
+import kotlinx.android.synthetic.main.read_include_bottom.*
 import kotlinx.android.synthetic.main.read_include_progress.*
 import kotlinx.android.synthetic.main.read_include_setting.*
 import kotlinx.android.synthetic.main.read_include_top.*
@@ -39,7 +41,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         BookPageView.OnPageTouchListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener,
+        View.OnClickListener {
     companion object {
         fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
             val intent = Intent(context, TxtReadActivity::class.java)
@@ -49,6 +52,21 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
+    override val mPresenter: TxtReadActivityPresenter
+        get() = TxtReadActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.read_activity_txt
+    private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
+    private lateinit var seekBar: SeekBar
+    private lateinit var topRelativeLayout: ConstraintLayout
+    private lateinit var bottomLinearLayout: LinearLayout
+    private lateinit var lLSetting: LinearLayout
+    private lateinit var lLSeekBar: LinearLayout
+    private lateinit var bookPageView: BookPageView
+    private var display: Boolean = false
+    private var dProgress: Boolean = false
+    private var dSetting: Boolean = false
+    private lateinit var bookInfo: BookInfo
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -143,22 +161,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
-    override val mPresenter: TxtReadActivityPresenter
-        get() = TxtReadActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.read_activity_txt
-    private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
-    private lateinit var seekBar: SeekBar
-    private lateinit var topRelativeLayout: RelativeLayout
-    private lateinit var bottomLinearLayout: LinearLayout
-    private lateinit var lLSetting: LinearLayout
-    private lateinit var lLSeekBar: LinearLayout
-    private lateinit var bookPageView: BookPageView
-    private var display: Boolean = false
-    private var dProgress: Boolean = false
-    private var dSetting: Boolean = false
-    private lateinit var bookInfo: BookInfo
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && Build.VERSION.SDK_INT >= 19) {
@@ -177,23 +179,21 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         super.initComponents(savedInstanceState)
         bookPageView = findViewById(R.id.bpv_read) as BookPageView
         seekBar = findViewById(R.id.sb_rate) as SeekBar
-        topRelativeLayout = findViewById(R.id.rl_top_read) as RelativeLayout
+        topRelativeLayout = findViewById(R.id.rl_top_read) as ConstraintLayout
         bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
         lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
         lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
-        seekBar.setOnSeekBarChangeListener(this)
-        sp_textStyle_select.onItemSelectedListener = this
+        initListener()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-        rg_read_bg.setOnCheckedChangeListener(this)
-        sb_light_degree.setOnSeekBarChangeListener(this)
+
         setBookPageFactory(bookPageView)
         setCheckedId()
-        tv_book_title.text = bookInfo.name
+        bookTitleTv.text = bookInfo.name
     }
 
     override fun onPause() {
@@ -201,12 +201,12 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         addIndexToDB()
     }
 
-    fun onClick(v: View) {
+    override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this@TxtReadActivity.finish()
             }
-            R.id.tv_add_mark -> {
+            R.id.addMarkIv -> {
                 addBookMark(pageFactory.getCurrentBegin())
                 hideView()
             }
@@ -241,6 +241,22 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 pageFactory.changeFontSize(30f)
             }
         }
+    }
+
+    private fun initListener() {
+        backIv.setOnClickListener(this)
+        addMarkIv.setOnClickListener(this)
+        tv_catalog.setOnClickListener(this)
+        tv_rate.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+        tv_textSize_small.setOnClickListener(this)
+        tv_textSize_middle.setOnClickListener(this)
+        tv_textSize_big.setOnClickListener(this)
+        seekBar.setOnSeekBarChangeListener(this)
+        sp_textStyle_select.onItemSelectedListener = this
+        rg_read_bg.setOnCheckedChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
+
     }
 
     private fun showMenu() {

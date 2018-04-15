@@ -54,7 +54,7 @@ class PlayActivity :
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this.finish()
             }
             R.id.playControlIv -> {
@@ -169,7 +169,7 @@ class PlayActivity :
 
     }
     private fun initListener(){
-        iv_back.setOnClickListener(this)
+        backIv.setOnClickListener(this)
         playControlIv.setOnClickListener(this)
         nextIv.setOnClickListener(this)
         previousIv.setOnClickListener(this)

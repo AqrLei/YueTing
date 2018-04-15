@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_top_read"
@@ -14,29 +14,32 @@
     tools:visibility="visible">
 
     <ImageView
-        android:id="@+id/iv_back"
+        android:id="@+id/backIv"
         style="@style/TitleBarImageViewStyle"
         android:layout_alignParentLeft="true"
-        android:onClick="onClick" />
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bookTitleTv" />
 
     <TextView
-        android:id="@+id/tv_book_title"
+        android:id="@+id/bookTitleTv"
         style="@style/TitleBarTextViewStyle"
-        android:layout_centerInParent="true"
-        android:text="文件名" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@+id/backIv"
+        app:layout_constraintRight_toLeftOf="@+id/addMarkIv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="文件名" />
 
-    <TextView
-        android:id="@+id/tv_add_mark"
+    <ImageView
+        android:id="@+id/addMarkIv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right|center_vertical"
-        android:gravity="center"
-        android:onClick="onClick"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="+"
-        android:textSize="30dp"
-        android:textStyle="normal" />
+        android:background="@drawable/common_selector_add"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toRightOf="@+id/bookTitleTv"
+        app:layout_constraintRight_toRightOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

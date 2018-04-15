@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
 import com.aqrairsigns.aqrleilib.ui.view.RoundBar
+import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
@@ -142,6 +143,9 @@ enum class ShareMusicInfo {
         if (mHandler == null) {
             mHandler = object : Handler() {
                 override fun handleMessage(msg: Message) {
+                    if(msg.what == ActionConstant.ACTION_FINISH_REQ){
+                        ActivityCollector.killApp()
+                    }
                     mContext.forEach {
                         if (!it.isFinishing) {
                             if (it is PlayActivity) {
