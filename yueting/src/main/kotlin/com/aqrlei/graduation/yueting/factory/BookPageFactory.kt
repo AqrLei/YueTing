@@ -56,7 +56,6 @@ enum class BookPageFactory {
     private lateinit var mBookInfo: BookInfo
     private var isNext = true
     private var progress: Int = 0
-
     private val content = ArrayList<String>()
     private val tempContent = ArrayList<String>()
     private val colorFilter = ColorMatrixColorFilter(floatArrayOf(
@@ -64,6 +63,11 @@ enum class BookPageFactory {
             0F, 1F, 0F, 0F, 0F,
             0F, 0F, 1F, 0F, 0F,
             0F, 0F, 0F, 0.5F, 0F))
+
+
+    fun getCurrentBegin() = begin
+    fun getCurrentEnd() = end
+    fun getBookByteArray(position: Int) = readParagraphForward(position)
 
     fun setBookInfo(view: BookPageView, bookInfo: BookInfo) {
         val metrics = DisplayMetrics()
@@ -134,9 +138,6 @@ enum class BookPageFactory {
         nextPage()
     }
 
-    fun getCurrentBegin() = begin
-    fun getCurrentEnd() = end
-    fun getBookByteArray(position: Int) = readParagraphForward(position)
     fun nextPage(isProgress: Int = 0, pBegin: Int = 0) {//进度条或目录跳转控制参数：isProgress:标志；pBegin:起始位
         isNext = true
         progress = isProgress
@@ -166,6 +167,43 @@ enum class BookPageFactory {
 
     }
 
+    fun prePage() {
+        isNext = false
+        end = begin
+        if (begin <= 0) {
+            return
+        } else {
+            content.clear()
+            pageUp()
+            end = begin
+            pageDown()
+        }
+        printPage()
+
+    }
+
+    fun setMCanvasAContent() {
+        var y = margin
+        if (isNext) {
+            mCanvasA.drawColor(bgColor)
+            for (line in content) {
+                y += fontSize + lineSpace
+                mCanvasA.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
+            }
+            mView.postInvalidate()
+        }
+    }
+
+    fun setPageBackground(color: Int, position: Int) {
+        bPosition = position
+        bgColor = color
+        mView.setBgColor(bgColor)
+        refreshPage = false
+        putCache()
+        nextPage()
+
+
+    }
 
     private fun openBook(bookInfo: BookInfo) {
         mBookInfo = bookInfo
@@ -184,7 +222,6 @@ enum class BookPageFactory {
             e.printStackTrace()
         }
     }
-
 
     private fun pageDown() {
         var strParagraph = ""
@@ -244,32 +281,6 @@ enum class BookPageFactory {
             i++
         }
         return buf
-    }
-
-    fun prePage() {
-        isNext = false
-        end = begin
-        if (begin <= 0) {
-            return
-        } else {
-            content.clear()
-            pageUp()
-            end = begin
-            pageDown()
-        }
-        printPage()
-
-    }
-
-    fun setPageBackground(color: Int, position: Int) {
-        bPosition = position
-        bgColor = color
-        mView.setBgColor(bgColor)
-        refreshPage = false
-        putCache()
-        nextPage()
-
-
     }
 
     private fun pageUp() {
@@ -334,7 +345,6 @@ enum class BookPageFactory {
         return buf
     }
 
-
     private fun printPage() {
         var y = margin
         mCanvasA.drawColor(bgColor)
@@ -368,18 +378,6 @@ enum class BookPageFactory {
         tempContent.clear()
         tempContent.addAll(content)
 
-    }
-
-    fun setMCanvasAContent() {
-        var y = margin
-        if (isNext) {
-            mCanvasA.drawColor(bgColor)
-            for (line in content) {
-                y += fontSize + lineSpace
-                mCanvasA.drawText(line, margin.toFloat(), y.toFloat(), mPaint)
-            }
-            mView.postInvalidate()
-        }
     }
 
     private fun putCache() {

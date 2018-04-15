@@ -93,6 +93,4 @@ object YueTingConstant {
     const val READ_BIG_FONT = 30F
     const val READ_SMALL_FONT = 15F
     const val READ_MIDDLE_FONT = 22F
-
-
 }

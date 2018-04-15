@@ -92,11 +92,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-    }
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-    }
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
     override fun onMiddleClick() {
         showMenu()

@@ -37,6 +37,16 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         }
     }
 
+    private lateinit var fileInfoList: ArrayList<FileInfo>
+    private lateinit var mData: ArrayList<FileInfo>
+    private lateinit var mAdapter: FileListAdapter
+    private lateinit var mProgressDialog: ProgressDialog
+
+    override val mPresenter: FileActivityPresenter
+        get() = FileActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.file_activity_file
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.backIv -> {
@@ -45,7 +55,7 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
             R.id.tv_file_parent -> {
                 getFileInfo(fileInfoList[0].parentPath)
             }
-            R.id.addFileIv-> {
+            R.id.addFileIv -> {
                 setProgressDialog()
                 addToDatabase()
             }
@@ -59,16 +69,6 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
             getFileInfo(mData[position].path)
         }
     }
-
-    private lateinit var fileInfoList: ArrayList<FileInfo>
-    private lateinit var mData: ArrayList<FileInfo>
-    private lateinit var mAdapter: FileListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
-
-    override val mPresenter: FileActivityPresenter
-        get() = FileActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.file_activity_file
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
@@ -90,14 +90,35 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         fileInfoList.clear()
     }
 
+    fun changeFileInfo(data: ArrayList<FileInfo>) {
+        mData.clear()
+        fileInfoList = data
+        if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
+            mData.addAll(fileInfoList.subList(1, fileInfoList.size))
+        }
+        tv_file_parent.text = fileInfoList[0].path
+        mAdapter.notifyDataSetChanged()
+    }
+
+    fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
+        mProgressDialog.dismiss()
+        AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
+        val intent = Intent()
+                .putExtra(YueTingConstant.FILE_BOOK_CHANGE, bookChange)
+                .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
+        setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
+        this@FileActivity.finish()
+    }
+
     private fun init() {
         mData = ArrayList()
-        mAdapter = FileListAdapter(mData, this, R.layout.read_module_list_item)
+        mAdapter = FileListAdapter(mData, this, R.layout.read_list_item)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
     }
-    private fun initListener(){
+
+    private fun initListener() {
         backIv.setOnClickListener(this)
         tv_file_parent.setOnClickListener(this)
         addFileIv.setOnClickListener(this)
@@ -119,26 +140,5 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     private fun addToDatabase() {
         mPresenter.addToDataBase(mData)
-    }
-
-
-    fun changeFileInfo(data: ArrayList<FileInfo>) {
-        mData.clear()
-        fileInfoList = data
-        if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
-            mData.addAll(fileInfoList.subList(1, fileInfoList.size))
-        }
-        tv_file_parent.text = fileInfoList[0].path
-        mAdapter.notifyDataSetChanged()
-    }
-
-    fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
-        mProgressDialog.dismiss()
-        AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
-        val intent = Intent()
-                .putExtra(YueTingConstant.FILE_BOOK_CHANGE, bookChange)
-                .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
-        setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
-        this@FileActivity.finish()
     }
 }

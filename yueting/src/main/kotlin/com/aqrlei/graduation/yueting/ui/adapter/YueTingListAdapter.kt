@@ -30,7 +30,6 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
             YueTingConstant.ADAPTER_TYPE_BOOK -> {
                 StringChangeUtil.SPANNABLE.clear()
                 val bookInfo = data as BookInfo
-
                 val percent =
                         if (bookInfo.type == YueTingConstant.READ_SUFFIX_PDF) {
                             if (bookInfo.indexEnd == 0) "" else
@@ -42,24 +41,21 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
                         }
                 (holderList.get(R.id.tv_book_name) as TextView).text = bookInfo.name
                 (holderList.get(R.id.tv_book_progress) as TextView).text = percent
-
-
             }
             YueTingConstant.ADAPTER_TYPE_MUSIC -> {
                 (holderList.get(R.id.tv_music_name) as TextView).text =
                         (data as MusicInfo).title
                 (holderList.get(R.id.tv_singer_name) as TextView).text =
                         data.artist
-                (holderList.get(R.id.tv_play_time) as TextView).text = DateFormatUtil.simpleTimeFormat(data.duration.toLong())
+                (holderList.get(R.id.tv_play_time) as TextView).text =
+                        DateFormatUtil.simpleTimeFormat(data.duration.toLong())
 
                 (holderList.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
-                        ImageUtil.byteArrayToDrawable(data.picture) ?: mContext.getDrawable(R.drawable.music_selector_note)
-
+                        ImageUtil.byteArrayToDrawable(data.picture)
+                        ?: mContext.getDrawable(R.drawable.music_selector_note)
             }
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-
-    }
+    override fun setInternalClick(holder: CommonListViewHolder) {}
 }

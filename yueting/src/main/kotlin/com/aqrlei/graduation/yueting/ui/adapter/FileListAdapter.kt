@@ -21,9 +21,9 @@ class FileListAdapter(mData: List<FileInfo>, mContext: Context, mResId: Int) :
         val mNameTv = holderList.get(R.id.tv_book_name) as TextView
         mNameTv.text = data.name
         if (!data.isDir) {
-
             val suffix = FileUtil.getFileSuffix(data)
-            val flag = suffix == YueTingConstant.PLAY_SUFFIX_MP3 || suffix == YueTingConstant.PLAY_SUFFIX_APE
+            val flag = suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                    || suffix == YueTingConstant.PLAY_SUFFIX_APE
             mNameTv.compoundDrawables[0].level =
                     if (flag) YueTingConstant.FILE_TYPE_MUSIC
                     else YueTingConstant.FILE_TYPE_BOOK
@@ -32,7 +32,5 @@ class FileListAdapter(mData: List<FileInfo>, mContext: Context, mResId: Int) :
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-
-    }
+    override fun setInternalClick(holder: CommonListViewHolder) {}
 }

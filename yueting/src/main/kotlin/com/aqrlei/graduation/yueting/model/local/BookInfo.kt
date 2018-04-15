@@ -10,7 +10,6 @@ import java.io.Serializable
  * @Date: 2017/8/28
  */
 open class BookInfo(
-
         var name: String = "",
         var bookIcon: Drawable? = null,
         var type: String = "txt",//0 : txt; 1 : pdf
@@ -25,7 +24,6 @@ open class BookInfo(
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is BookInfo) {
-
             return other.path == this.path
         }
         return super.equals(other)

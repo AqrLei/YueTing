@@ -45,6 +45,32 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         OnLoadCompleteListener,
         OnErrorListener,
         OnTapListener {
+
+    companion object {
+        fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
+            val args = Bundle()
+            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
+            val fragment = PdfRendererFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override val layoutRes: Int
+        get() = R.layout.read_fragment_pdf
+    override val mPresenter: PdfRendererPresenter
+        get() = PdfRendererPresenter(this)
+    private val currentPageIndex = "current_page_index"
+    private var mPageIndex: Int = 0
+    private var currentIndex: Int = 0
+    private var display: Boolean = false
+    private var dProgress: Boolean = false
+    private var dSetting: Boolean = false
+    private var pageCount: Int = 0
+    private var pdfReadMode: Boolean = false
+    private val bookInfo: BookInfo
+        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
@@ -101,33 +127,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         if (seekBar?.id == R.id.sb_rate) {
             loadPdfFile(if (seekBar.progress - 1 < 0) 0 else seekBar.progress - 1)
-        }
-    }
-
-    override val layoutRes: Int
-        get() = R.layout.read_fragment_pdf
-    override val mPresenter: PdfRendererPresenter
-        get() = PdfRendererPresenter(this)
-
-
-    private val currentPageIndex = "current_page_index"
-    private var mPageIndex: Int = 0
-    private var currentIndex: Int = 0
-    private var display: Boolean = false
-    private var dProgress: Boolean = false
-    private var dSetting: Boolean = false
-    private var pageCount: Int = 0
-    private var pdfReadMode: Boolean = false
-    private val bookInfo: BookInfo
-        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
-
-    companion object {
-        fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
-            val args = Bundle()
-            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
-            val fragment = PdfRendererFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 
@@ -237,7 +236,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         mPresenter.addIndexToDB(bookInfo.path, index, pageCount)
     }
 
-    private fun initListener(){
+    private fun initListener() {
         backIv.setOnClickListener(this)
         addMarkIv.setOnClickListener(this)
         tv_catalog.setOnClickListener(this)

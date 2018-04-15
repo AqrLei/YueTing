@@ -44,9 +44,15 @@ class PlayActivity :
         }
     }
 
-    override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {
-
-    }
+    override val mPresenter: PlayActivityPresenter
+        get() = PlayActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.music_activity_play
+    private lateinit var mHandler: Handler
+    private var mVisualizer: Visualizer? = null
+    private lateinit var mPlayView: ViewGroup
+    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
+    override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {}
 
     override fun onWaveFormDataCapture(visualizer: Visualizer?, waveform: ByteArray?, samplingRate: Int) {
         vv_play.bytes = waveform
@@ -68,7 +74,6 @@ class PlayActivity :
                 sendMusicBroadcast(SendType.PREVIOUS, this)
             }
             R.id.playTypeIv -> {
-
                 when (playTypeIv.drawable.level) {
                     YueTingConstant.PLAY_TYPE_REPEAT_ONE -> {
                         sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_LIST)
@@ -98,27 +103,19 @@ class PlayActivity :
         sendPlayBroadcast(position, this)
     }
 
-    override val mPresenter: PlayActivityPresenter
-        get() = PlayActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.music_activity_play
-
-    private lateinit var mHandler: Handler
-    private var mVisualizer: Visualizer? = null
-    private lateinit var mPlayView: ViewGroup
-    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
-
-    override fun initComponents(savedInstanceState: Bundle?) {
-        super.initComponents(savedInstanceState)
-        init()
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             this.finish()
         }
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun initComponents(savedInstanceState: Bundle?) {
+        super.initComponents(savedInstanceState)
+        init()
+    }
+
+    fun getMPlayView() = mPlayView
 
     private fun setVisualizer(audioSessionId: Int) {
         mVisualizer = Visualizer(audioSessionId)
@@ -155,8 +152,6 @@ class PlayActivity :
             changePlayState(initArray[3])//0 or 1
         }
         (mPlayView.findViewById(R.id.playTypeIv) as ImageView).setImageLevel(mMusicShareInfo.getPlayType())
-        // can be shared
-
         initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         initPopView()
         initListener()
@@ -168,7 +163,8 @@ class PlayActivity :
         playListLv.onItemClickListener = this
 
     }
-    private fun initListener(){
+
+    private fun initListener() {
         backIv.setOnClickListener(this)
         playControlIv.setOnClickListener(this)
         nextIv.setOnClickListener(this)
@@ -185,6 +181,4 @@ class PlayActivity :
     private fun changePlayState(state: Int = 0) {
         mMusicShareInfo.changePlayState(state, mPlayView)
     }
-
-    fun getMPlayView() = mPlayView
 }

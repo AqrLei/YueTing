@@ -101,11 +101,11 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
         }
     }
 
-    private fun addIndexToDB(index: Int) {
-        fragment.putIndexToDB(index)
-    }
-
     fun jumpToCatalog() {
         CatalogActivity.jumpToCatalogActivity(this, YueTingConstant.PDF_CATALOG_REQ)
+    }
+
+    private fun addIndexToDB(index: Int) {
+        fragment.putIndexToDB(index)
     }
 }

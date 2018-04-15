@@ -6,15 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="@color/colorPlayView"
+    android:background="@color/colorTitleBarGrey"
     android:orientation="vertical"
     android:visibility="gone"
     tools:visibility="visible">
 
     <ImageView
         android:id="@+id/expandListIv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:background="@drawable/music_selector_expend_color"
         android:src="@drawable/music_level_list_expend"
         yueting:layout_constraintLeft_toLeftOf="parent"
         yueting:layout_constraintRight_toRightOf="parent" />
@@ -50,16 +52,15 @@
             android:id="@+id/musicInfoLl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimenMargin"
             android:layout_marginLeft="@dimen/dimenMargin"
-            android:layout_marginTop="@dimen/dimenMargin"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/musicInfoTv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
@@ -70,7 +71,8 @@
             <TextView
                 android:id="@+id/musicInfoDetailTv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"

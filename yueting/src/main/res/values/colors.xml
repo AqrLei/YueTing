@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#3F76B5</color>
     <color name="colorPrimaryDark">#00303F9F</color>
+    <color name="colorBlue">#B9DFFC</color>
+    <color name="colorTranslucent">#60000000</color>
     <color name="colorAccent">#AA4053FF</color>
     <color name="colorTabBackground">#E727E90E</color>
     <color name="colorPageGreen">#C7EECE</color>
@@ -13,9 +15,10 @@
     <color name="colorFileParentWhite">#FFFFEE</color>
     <color name="colorVisualizerView">#76A1D4</color>
     <color name="colorPlayView">#9EEC8484</color>
-    <color name="colorMusicName">#1C4243</color>
+    <color name="colorMusicName">#44B9BC</color>
     <color name="colorTitleBarGrey">#3A454D</color>
     <color name="colorReadProgress">#A6CC10</color>
     <color name="colorDividerLine">#33666666</color>
     <color name="colorTitle">#333333</color>
+    <color name="colorItem">#EE999999</color>
 </resources>

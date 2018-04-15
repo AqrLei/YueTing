@@ -24,7 +24,6 @@ class YueTingApplication : BaseApplication() {
     private var isSameProcess = false
 
     override fun onCreate() {
-
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                     .detectAll().penaltyLog().build())
@@ -94,13 +93,6 @@ class YueTingApplication : BaseApplication() {
 
     }
 
-    fun getServiceIntent(): Intent? {
-        if (musicIntent == null) {
-            musicIntent = Intent(this, MusicService::class.java)
-        }
-        return musicIntent
-    }
-
     override fun onTerminate() {
         if (isSameProcess) {
             DBManager.closeDB()
@@ -110,4 +102,13 @@ class YueTingApplication : BaseApplication() {
         }
         super.onTerminate()
     }
+
+    fun getServiceIntent(): Intent? {
+        if (musicIntent == null) {
+            musicIntent = Intent(this, MusicService::class.java)
+        }
+        return musicIntent
+    }
+
+
 }

@@ -44,8 +44,6 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 }.forEach {
                     data.add(it)
                 }
-
-
                 Observable.just(data)
             }
         }
@@ -61,19 +59,24 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                     val tempData = data[i]
                     val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
-                    val name = tempData.name.substring(0, tempData.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
+                    //(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
+                    val name = tempData.name.substring(0, tempData.name.lastIndexOf("."))
                     if (suffix == "mp3" || suffix == "ape") {
                         val musicInfo = MusicInfo()
                         val mmr = MediaMetadataRetriever()
                         mmr.setDataSource(tempData.path)
                         musicInfo.albumUrl = tempData.path
-                        musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+                        musicInfo.title =
+                                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                 ?: name
-                        musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                        musicInfo.album =
+                                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
                                 ?: YueTingConstant.INFO_UNKNOWN
-                        musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                        musicInfo.artist =
+                                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                                 ?: YueTingConstant.INFO_UNKNOWN
-                        musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                        musicInfo.duration =
+                                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
                         musicInfo.picture = mmr.embeddedPicture
                         if (!ShareMusicInfo.MusicInfoTool.has(musicInfo)) {
                             ShareMusicInfo.MusicInfoTool.addInfo(musicInfo)
@@ -125,12 +128,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<ArrayList<FileInfo>>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                    }
-
+                    override fun onComplete() {}
+                    override fun onError(e: Throwable) {}
                     override fun onNext(t: ArrayList<FileInfo>) {
                         mMvpActivity.changeFileInfo(t)
                     }
@@ -146,20 +145,14 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                    }
-
+                    override fun onComplete() {}
+                    override fun onError(e: Throwable) {}
                     override fun onNext(t: Boolean) {
                         mMvpActivity.finishActivity(t,
                                 musicSize != ShareMusicInfo.MusicInfoTool.getSize(),
                                 bookSize != ShareBookInfo.BookInfoTool.getSize())
                     }
                 }))
-
-
     }
 
 }

@@ -11,7 +11,6 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
-import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
@@ -106,15 +105,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-
-
-                            }
-
-                            override fun onError(e: Throwable) {
-
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Boolean) {
                                 if (t) {
                                     mMvpView.unbindMusicService()
@@ -122,7 +114,6 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             }
                         })
         )
-
     }
 
     fun getMusicInfoFromDB() {
@@ -134,12 +125,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Cursor) {
                                 while (t.moveToNext()) {
                                     val musicInfo = MusicInfo()
@@ -158,12 +145,9 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                             ?: YueTingConstant.INFO_UNKNOWN
                                     musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                                             ?: YueTingConstant.INFO_UNKNOWN
-                                    musicInfo.duration =mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                                    musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
                                     musicInfo.picture = mmr.embeddedPicture
-
-
-
                                     musicInfoList.add(musicInfo)
                                     mmr.release()
                                 }
@@ -183,12 +167,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Cursor) {
                                 while (t.moveToNext()) {
                                     val bookInfo = BookInfo()

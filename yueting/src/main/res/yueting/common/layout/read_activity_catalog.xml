@@ -1,57 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <View
+        android:id="@+id/topV"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenViewHeight" />
+        android:layout_height="@dimen/dimenViewHeight"
+        app:layout_constraintBottom_toTopOf="@+id/headerTopCl"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/rg_read_catalog"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/headerTopCl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenButtonH"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:background="@color/colorTitleBarGrey"
+        app:layout_constraintBottom_toTopOf="@+id/lv_catalog"
+        app:layout_constraintTop_toBottomOf="@+id/topV">
 
-        <RadioButton
-            android:id="@+id/rb_catalog_title"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:button="@null"
-            android:checked="true"
-            android:drawablePadding="@dimen/dimenPadding"
-            android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
-            android:text="目录"
-            android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenNameTextSize" />
+        <ImageView
+            android:id="@+id/backIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_selector_back"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/rg_read_catalog" />
 
-        <RadioButton
-            android:id="@+id/rb_bookMark_title"
+        <RadioGroup
+            android:id="@+id/rg_read_catalog"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:button="@null"
-            android:checked="false"
-            android:drawablePadding="@dimen/dimenPadding"
-            android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
-            android:text="书签"
-            android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenNameTextSize" />
-    </RadioGroup>
+            android:layout_height="@dimen/dimenButtonH"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/backIv"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <RadioButton
+                android:id="@+id/rb_catalog_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:checked="true"
+                android:drawablePadding="@dimen/dimenPadding"
+                android:gravity="center"
+                android:paddingTop="@dimen/dimenPadding"
+                android:text="目录"
+                android:textColor="@color/main_selector_tab_text"
+                android:textSize="@dimen/dimenNameTextSize" />
+
+            <RadioButton
+                android:id="@+id/rb_bookMark_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:button="@null"
+                android:checked="false"
+                android:drawablePadding="@dimen/dimenPadding"
+                android:gravity="center"
+                android:paddingTop="@dimen/dimenPadding"
+                android:text="书签"
+                android:textColor="@color/main_selector_tab_text"
+                android:textSize="@dimen/dimenNameTextSize" />
+        </RadioGroup>
+    </android.support.constraint.ConstraintLayout>
 
     <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
         android:id="@+id/lv_catalog"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerTopCl"
+        app:layout_constraintVertical_weight="1" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

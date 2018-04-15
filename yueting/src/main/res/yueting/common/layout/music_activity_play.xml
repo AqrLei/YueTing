@@ -16,7 +16,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenTitleHeight"
-        android:background="@color/colorWhite">
+        android:background="@color/colorTitleBarGrey">
 
         <ImageView
             android:id="@+id/backIv"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorVisualizerView"
+        android:background="@mipmap/ic_play_bg"
         yueting:offSetX="64"
         yueting:scaleStyle="center"
         yueting:scaleTime="3"

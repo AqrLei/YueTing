@@ -36,14 +36,12 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
-
     companion object {
         fun jumpToYueTingActivity(context: Context) {
             val intent = Intent(context, YueTingActivity::class.java)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
-
 
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
@@ -57,7 +55,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         sendPlayBroadcast(position, this)
-
     }
 
     override fun onClick(v: View) {
@@ -120,7 +117,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
             if (mMusicShareInfo.isStartService()) {
                 mPlayView.visibility = View.VISIBLE
             }
-
             initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
     }
@@ -130,13 +126,19 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         DBManager.releaseCursor()
     }
 
+    fun initPlayListView(adapter: YueTingListAdapter) {
+        playListLv.adapter = adapter
+        playListLv.onItemClickListener = this
+    }
+
+    fun getMPlayView() = mPlayView
+
     private fun initListener() {
         nextIv.setOnClickListener(this)
         previousIv.setOnClickListener(this)
         playControlIv.setOnClickListener(this)
         musicInfoLl.setOnClickListener(this)
         expandListIv.setOnClickListener(this)
-
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
@@ -161,10 +163,5 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    fun initPlayListView(adapter: YueTingListAdapter) {
-        playListLv.adapter = adapter
-        playListLv.onItemClickListener = this
-    }
 
-    fun getMPlayView() = mPlayView
 }

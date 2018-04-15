@@ -10,5 +10,4 @@ import com.aqrlei.graduation.yueting.ui.PlayActivity
  * Date : 2017/9/24.
  */
 class PlayActivityPresenter(mMvpActivity: PlayActivity) :
-        MvpContract.ActivityPresenter<PlayActivity>(mMvpActivity) {
-}
+        MvpContract.ActivityPresenter<PlayActivity>(mMvpActivity)

@@ -3,19 +3,16 @@
     android:id="@+id/ll_music_item"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimenListItem"
+    android:background="@drawable/common_ripple_item"
     android:orientation="horizontal">
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-
         <FrameLayout
             android:layout_width="@dimen/dimenListItemFL"
             android:layout_height="@dimen/dimenListItemFL"
             android:layout_margin="@dimen/dimenListItemFLM">
-
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sdv_music_picture"
                 android:layout_width="match_parent"
@@ -64,6 +61,5 @@
     </LinearLayout>
 
     <View style="@style/DividerStyle" />
-
 
 </LinearLayout>
