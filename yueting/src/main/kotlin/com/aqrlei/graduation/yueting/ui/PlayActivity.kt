@@ -9,7 +9,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.TextView
+import android.widget.ImageView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
@@ -22,7 +22,7 @@ import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
 import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.music_activity_play.*
-import kotlinx.android.synthetic.main.music_include_yueting_play.*
+import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 
 /**
  * Author : AqrLei
@@ -44,9 +44,15 @@ class PlayActivity :
         }
     }
 
-    override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {
-
-    }
+    override val mPresenter: PlayActivityPresenter
+        get() = PlayActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.music_activity_play
+    private lateinit var mHandler: Handler
+    private var mVisualizer: Visualizer? = null
+    private lateinit var mPlayView: ViewGroup
+    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
+    override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {}
 
     override fun onWaveFormDataCapture(visualizer: Visualizer?, waveform: ByteArray?, samplingRate: Int) {
         vv_play.bytes = waveform
@@ -54,35 +60,41 @@ class PlayActivity :
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this.finish()
             }
-            R.id.tv_play_control -> {
+            R.id.playControlIv -> {
                 sendMusicBroadcast(SendType.PLAY, this)
 
             }
-            R.id.tv_next -> {
+            R.id.nextIv -> {
                 sendMusicBroadcast(SendType.NEXT, this)
             }
-            R.id.tv_previous -> {
+            R.id.previousIv -> {
                 sendMusicBroadcast(SendType.PREVIOUS, this)
             }
-            R.id.tv_play_type -> {
-                val tv = tv_play_type as TextView
-                when (tv.text.toString()) {
-                    "单" -> {
+            R.id.playTypeIv -> {
+                when (playTypeIv.drawable.level) {
+                    YueTingConstant.PLAY_TYPE_REPEAT_ONE -> {
                         sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_LIST)
                     }
-                    "表" -> {
+                    YueTingConstant.PLAY_TYPE_REPEAT -> {
                         sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_RANDOM)
                     }
-                    "变" -> {
+                    YueTingConstant.PLAY_TYPE_RANDOM -> {
                         sendMusicBroadcast(SendType.PLAY_TYPE, this, YueTingConstant.PLAY_SINGLE)
                     }
                 }
             }
-            R.id.popUpWinTv -> {
-                playListLv.visibility = if (playListLv.visibility == View.GONE) View.VISIBLE else View.GONE
+            R.id.expandListIv -> {
+                playListLv.visibility =
+                        if (playListLv.visibility == View.GONE) {
+                            expandListIv.setImageLevel(YueTingConstant.PLAY_EXPAND_CLOSE)
+                            View.VISIBLE
+                        } else {
+                            expandListIv.setImageLevel(YueTingConstant.PLAY_EXPAND)
+                            View.GONE
+                        }
             }
         }
     }
@@ -91,27 +103,19 @@ class PlayActivity :
         sendPlayBroadcast(position, this)
     }
 
-    override val mPresenter: PlayActivityPresenter
-        get() = PlayActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.music_activity_play
-
-    private lateinit var mHandler: Handler
-    private var mVisualizer: Visualizer? = null
-    private lateinit var mPlayView: ViewGroup
-    private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
-
-    override fun initComponents(savedInstanceState: Bundle?) {
-        super.initComponents(savedInstanceState)
-        init()
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             this.finish()
         }
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun initComponents(savedInstanceState: Bundle?) {
+        super.initComponents(savedInstanceState)
+        init()
+    }
+
+    fun getMPlayView() = mPlayView
 
     private fun setVisualizer(audioSessionId: Int) {
         mVisualizer = Visualizer(audioSessionId)
@@ -135,7 +139,7 @@ class PlayActivity :
 
     private fun init() {
         ll_play_control.visibility = View.VISIBLE
-        tv_play_type.visibility = View.VISIBLE
+        playTypeIv.visibility = View.VISIBLE
         mHandler = mMusicShareInfo.getHandler(this)
         val mBundle = intent.getBundleExtra(YueTingConstant.SERVICE_PLAY_STATUS_B)
         mPlayView = this.window.decorView.findViewById(R.id.ll_play_control) as ViewGroup
@@ -147,28 +151,34 @@ class PlayActivity :
             changePlayType(initArray[2])
             changePlayState(initArray[3])//0 or 1
         }
-        (mPlayView.findViewById(R.id.tv_play_type) as TextView).text =
-                mMusicShareInfo.getPlayType()// can be shared
+        (mPlayView.findViewById(R.id.playTypeIv) as ImageView).setImageLevel(mMusicShareInfo.getPlayType())
         initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         initPopView()
+        initListener()
         setVisualizer(mMusicShareInfo.getAudioSessionId())
     }
 
     private fun initPopView() {
-        popUpWinTv.setOnClickListener(this)
         playListLv.adapter = YueTingListAdapter(ShareMusicInfo.MusicInfoTool.getInfoS(), this, R.layout.music_list_item, 1)
         playListLv.onItemClickListener = this
 
     }
 
+    private fun initListener() {
+        backIv.setOnClickListener(this)
+        playControlIv.setOnClickListener(this)
+        nextIv.setOnClickListener(this)
+        previousIv.setOnClickListener(this)
+        playTypeIv.setOnClickListener(this)
+        expandListIv.setOnClickListener(this)
+    }
+
     private fun changePlayType(type: Int) {
-        val tv = (mPlayView.findViewById(R.id.tv_play_type) as TextView)
-        mMusicShareInfo.changePlayType(type, tv)
+        val iv = (mPlayView.findViewById(R.id.playTypeIv) as ImageView)
+        mMusicShareInfo.changePlayType(type, iv)
     }
 
     private fun changePlayState(state: Int = 0) {
         mMusicShareInfo.changePlayState(state, mPlayView)
     }
-
-    fun getMPlayView() = mPlayView
 }

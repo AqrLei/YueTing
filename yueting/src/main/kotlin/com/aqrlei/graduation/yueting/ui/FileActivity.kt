@@ -37,15 +37,25 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         }
     }
 
+    private lateinit var fileInfoList: ArrayList<FileInfo>
+    private lateinit var mData: ArrayList<FileInfo>
+    private lateinit var mAdapter: FileListAdapter
+    private lateinit var mProgressDialog: ProgressDialog
+
+    override val mPresenter: FileActivityPresenter
+        get() = FileActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.file_activity_file
+
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this@FileActivity.finish()
             }
             R.id.tv_file_parent -> {
                 getFileInfo(fileInfoList[0].parentPath)
             }
-            R.id.tv_add_file -> {
+            R.id.addFileIv -> {
                 setProgressDialog()
                 addToDatabase()
             }
@@ -60,20 +70,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         }
     }
 
-    private lateinit var fileInfoList: ArrayList<FileInfo>
-    private lateinit var mData: ArrayList<FileInfo>
-    private lateinit var mAdapter: FileListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
-
-    override val mPresenter: FileActivityPresenter
-        get() = FileActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.file_activity_file
-
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         init()
-
+        initListener()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -89,33 +89,6 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
                 .commit()
         fileInfoList.clear()
     }
-
-    private fun init() {
-        mData = ArrayList()
-        mAdapter = FileListAdapter(mData, this, R.layout.read_module_list_item)
-        lv_file.adapter = mAdapter
-        lv_file.onItemClickListener = this
-        getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
-    }
-
-    private fun setProgressDialog() {
-        mProgressDialog = ProgressDialog(this)
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        mProgressDialog.setCanceledOnTouchOutside(false)
-        mProgressDialog.setCancelable(false)
-        mProgressDialog.setTitle("提示")
-        mProgressDialog.setMessage("正在添加中...")
-        mProgressDialog.show()
-    }
-
-    private fun getFileInfo(path: String) {
-        mPresenter.getFileInfo(path)
-    }
-
-    private fun addToDatabase() {
-        mPresenter.addToDataBase(mData)
-    }
-
 
     fun changeFileInfo(data: ArrayList<FileInfo>) {
         mData.clear()
@@ -135,5 +108,37 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
                 .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
         setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
         this@FileActivity.finish()
+    }
+
+    private fun init() {
+        mData = ArrayList()
+        mAdapter = FileListAdapter(mData, this, R.layout.read_list_item)
+        lv_file.adapter = mAdapter
+        lv_file.onItemClickListener = this
+        getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
+    }
+
+    private fun initListener() {
+        backIv.setOnClickListener(this)
+        tv_file_parent.setOnClickListener(this)
+        addFileIv.setOnClickListener(this)
+    }
+
+    private fun setProgressDialog() {
+        mProgressDialog = ProgressDialog(this)
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        mProgressDialog.setCanceledOnTouchOutside(false)
+        mProgressDialog.setCancelable(false)
+        mProgressDialog.setTitle("提示")
+        mProgressDialog.setMessage("正在添加中...")
+        mProgressDialog.show()
+    }
+
+    private fun getFileInfo(path: String) {
+        mPresenter.getFileInfo(path)
+    }
+
+    private fun addToDatabase() {
+        mPresenter.addToDataBase(mData)
     }
 }

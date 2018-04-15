@@ -22,7 +22,6 @@ enum class ChapterFactory {
         private var bookMarkList = ArrayList<ChapterInfo>()
         private var chapterBuffer = ChapterInfo()
         fun init(bookInfo: BookInfo) {
-
             chapterBuffer.apply {
                 id = bookInfo.id
                 name = bookInfo.name
@@ -32,7 +31,6 @@ enum class ChapterFactory {
                 fileLength = bookInfo.fileLength
                 encoding = bookInfo.encoding
                 accessTime = bookInfo.accessTime
-
             }
         }
     }
@@ -52,14 +50,6 @@ enum class ChapterFactory {
             getBookMarkFromDB()
         }
     }
-
-    private fun deleteFromDB(bPosition: Int) {
-        DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
-                        DataConstant.MARK_TABLE_C1_MARK_POSITION, "="),
-                null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
-    }
-
 
     fun getChapter(): Boolean {
         if (chapterBuffer.type == "pdf") {
@@ -102,6 +92,13 @@ enum class ChapterFactory {
             bookMarkList.add(markInfo)
         }
         return haveMark
+    }
+
+    private fun deleteFromDB(bPosition: Int) {
+        DBManager.sqlData(
+                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
+                        DataConstant.MARK_TABLE_C1_MARK_POSITION, "="),
+                null, arrayOf(bPosition.toString()), DBManager.SqlType.DELETE)
     }
 
     private fun getChapterFromBook(): Boolean {//需要在线程中执行

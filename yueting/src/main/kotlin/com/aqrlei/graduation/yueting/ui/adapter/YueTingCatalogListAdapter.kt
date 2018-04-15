@@ -30,12 +30,8 @@ class YueTingCatalogListAdapter(
             catalogView.ellipsize = TextUtils.TruncateAt.END
             catalogView.textSize = 12f
             catalogView.text = data.chapterName
-
-
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-
-    }
+    override fun setInternalClick(holder: CommonListViewHolder) {}
 }

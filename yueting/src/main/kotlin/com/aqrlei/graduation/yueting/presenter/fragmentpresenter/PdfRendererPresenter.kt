@@ -84,7 +84,6 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
             begin = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
         }
         return begin
-
     }
 
     fun addIndexToDB(path: String, begin: Int, end: Int) {
@@ -95,19 +94,11 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-
-                            }
-
-                            override fun onNext(t: Boolean) {
-
-                            }
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
+                            override fun onNext(t: Boolean) {}
                         }
                         ))
-
     }
 
     fun addMarkToDB(path: String, currentBegin: Int) {
@@ -117,16 +108,11 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                    }
-
+                    override fun onComplete() {}
+                    override fun onError(e: Throwable) {}
                     override fun onNext(t: Boolean) {
                         AppToast.toastShow(mMvpView.activity, if (t) "书签添加完毕" else "书签添加失败", 1000)
                     }
                 }))
-
     }
 }

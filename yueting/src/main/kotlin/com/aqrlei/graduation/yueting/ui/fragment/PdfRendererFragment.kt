@@ -45,6 +45,32 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         OnLoadCompleteListener,
         OnErrorListener,
         OnTapListener {
+
+    companion object {
+        fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
+            val args = Bundle()
+            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
+            val fragment = PdfRendererFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override val layoutRes: Int
+        get() = R.layout.read_fragment_pdf
+    override val mPresenter: PdfRendererPresenter
+        get() = PdfRendererPresenter(this)
+    private val currentPageIndex = "current_page_index"
+    private var mPageIndex: Int = 0
+    private var currentIndex: Int = 0
+    private var display: Boolean = false
+    private var dProgress: Boolean = false
+    private var dSetting: Boolean = false
+    private var pageCount: Int = 0
+    private var pdfReadMode: Boolean = false
+    private val bookInfo: BookInfo
+        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
@@ -104,39 +130,12 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         }
     }
 
-    override val layoutRes: Int
-        get() = R.layout.read_fragment_pdf
-    override val mPresenter: PdfRendererPresenter
-        get() = PdfRendererPresenter(this)
-
-
-    private val currentPageIndex = "current_page_index"
-    private var mPageIndex: Int = 0
-    private var currentIndex: Int = 0
-    private var display: Boolean = false
-    private var dProgress: Boolean = false
-    private var dSetting: Boolean = false
-    private var pageCount: Int = 0
-    private var pdfReadMode: Boolean = false
-    private val bookInfo: BookInfo
-        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
-
-    companion object {
-        fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
-            val args = Bundle()
-            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
-            val fragment = PdfRendererFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_back -> {
+            R.id.backIv -> {
                 this@PdfRendererFragment.finish()
             }
-            R.id.tv_add_mark -> {
+            R.id.addMarkIv -> {
                 hideView()
                 addBookMark(currentIndex)
             }
@@ -166,23 +165,14 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
-
-        iv_back.setOnClickListener(this)
-        tv_add_mark.setOnClickListener(this)
-        tv_catalog.setOnClickListener(this)
-        tv_rate.setOnClickListener(this)
-        tv_setting.setOnClickListener(this)
-        sb_rate.setOnSeekBarChangeListener(this)
+        initListener()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(mContainerActivity.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-        sb_light_degree.setOnSeekBarChangeListener(this)
-        spPdfReadMode.onItemSelectedListener = this
-
-        tv_book_title.text = bookInfo.name
+        bookTitleTv.text = bookInfo.name
         ChapterFactory.init(bookInfo)
         mPageIndex = bookInfo.indexBegin
         if (null != savedInstanceState) {
@@ -244,6 +234,17 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     fun putIndexToDB(index: Int) {
         mPresenter.addIndexToDB(bookInfo.path, index, pageCount)
+    }
+
+    private fun initListener() {
+        backIv.setOnClickListener(this)
+        addMarkIv.setOnClickListener(this)
+        tv_catalog.setOnClickListener(this)
+        tv_rate.setOnClickListener(this)
+        tv_setting.setOnClickListener(this)
+        sb_rate.setOnSeekBarChangeListener(this)
+        sb_light_degree.setOnSeekBarChangeListener(this)
+        spPdfReadMode.onItemSelectedListener = this
     }
 
     private fun putCache() {

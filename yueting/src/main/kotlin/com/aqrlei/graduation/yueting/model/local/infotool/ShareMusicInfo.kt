@@ -10,8 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
 import com.aqrairsigns.aqrleilib.ui.view.RoundBar
+import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
@@ -35,15 +35,28 @@ enum class ShareMusicInfo {
 
     MusicInfoTool;
 
-
-    fun setInfoS(infoS: ArrayList<MusicInfo>) {
-        clearMusicInfo()
-        musicInfoList.addAll(infoS)
+    companion object {
+        private var musicInfoList = ArrayList<MusicInfo>()
+        private var mContext = ArrayList<BaseActivity>()
     }
 
-    fun getInfo(position: Int) = musicInfoList[position]
+    private var duration: Int = 0
+    private var position: Int = 0
+    private var audioSessionId: Int = 0
+    private var playType: Int = YueTingConstant.PLAY_TYPE_REPEAT
+    private var playState: PlayState = PlayState.PAUSE
+    private var mHandler: Handler? = null
+    private var isStartService: Boolean = false
 
+    fun getInfo(position: Int) = musicInfoList[position]
     fun getInfoS() = musicInfoList
+    fun getSize() = musicInfoList.size
+    fun getPosition() = position
+    fun getDuration() = duration
+    fun getAudioSessionId() = audioSessionId
+    fun getPlayType() = playType
+    fun isStartService() = isStartService
+
     fun addInfo(musicInfo: MusicInfo) {
         musicInfoList.add(musicInfo)
     }
@@ -54,6 +67,10 @@ enum class ShareMusicInfo {
         }
     }
 
+    fun setInfoS(infoS: ArrayList<MusicInfo>) {
+        clearMusicInfo()
+        musicInfoList.addAll(infoS)
+    }
 
     fun removeInfo(position: Int) {
         if (!musicInfoList.isEmpty()) {
@@ -71,7 +88,6 @@ enum class ShareMusicInfo {
         }
         return false
     }
-
 
     fun sendBroadcast(context: Context, type: SendType, code: Int = YueTingConstant.PLAY_LIST) {
         val intent = Intent()
@@ -107,8 +123,6 @@ enum class ShareMusicInfo {
         context.sendOrderedBroadcast(intent, null)
     }
 
-    fun getSize() = musicInfoList.size
-
     fun clearMusicInfo() {
         musicInfoList.clear()
     }
@@ -117,13 +131,6 @@ enum class ShareMusicInfo {
         mContext.clear()
     }
 
-    private var duration: Int = 0
-    private var position: Int = 0
-    private var audioSessionId: Int = 0
-    private var playType: String = "表"
-    private var playState: PlayState = PlayState.PAUSE
-    private var mHandler: Handler? = null
-    private var isStartService: Boolean = false
     fun setPosition(p: Int) {
         position = p
     }
@@ -132,10 +139,6 @@ enum class ShareMusicInfo {
         audioSessionId = id
     }
 
-    fun getPosition() = position
-    fun getDuration() = duration
-    fun getAudioSessionId() = audioSessionId
-    fun getPlayType() = playType
     fun getHandler(context: BaseActivity? = null): Handler {
         if (context != null) {
             mContext.add(context)
@@ -143,6 +146,9 @@ enum class ShareMusicInfo {
         if (mHandler == null) {
             mHandler = object : Handler() {
                 override fun handleMessage(msg: Message) {
+                    if (msg.what == ActionConstant.ACTION_FINISH_REQ) {
+                        ActivityCollector.killApp()
+                    }
                     mContext.forEach {
                         if (!it.isFinishing) {
                             if (it is PlayActivity) {
@@ -168,52 +174,34 @@ enum class ShareMusicInfo {
 
         roundBar.setMaxProgress(maxProgress)
         roundBar.setProgress(duration.toFloat())
-        (view.findViewById(R.id.tv_play_control) as TextView).text =
-                if (PlayState.PAUSE == playState) "播" else "停"
+        (view.findViewById(R.id.playControlIv) as ImageView).setImageLevel(
+                if (PlayState.PAUSE == playState) YueTingConstant.PLAY_STATUS_PAUSE
+                else YueTingConstant.PLAY_STATUS_PLAY)
+
         (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
-        (view.findViewById(R.id.tv_music_info) as TextView).text =
-                StringChangeUtil.SPANNABLE.clear()
-                        .foregroundColorChange("#1c4243", musicInfo.title)
-                        .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
-                        .complete()
+        (view.findViewById(R.id.musicInfoTv) as TextView).text = musicInfo.title
+        (view.findViewById(R.id.musicInfoDetailTv) as TextView).text = "${musicInfo.artist} - ${musicInfo.album}"
     }
 
-    fun isStartService() = isStartService
     fun isStartService(isStart: Boolean) {
         isStartService = isStart
     }
 
-    private fun refreshPlayView(mPlayView: ViewGroup, msg: Message) {
-
-        if (msg.what == YueTingConstant.CURRENT_DURATION) {
-            (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
-            duration = msg.arg1
-        }
-        if (msg.what == YueTingConstant.PLAY_STATE) {
-            changePlayState(msg.arg1, mPlayView, msg)
-        }
-        if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
-            val tv = mPlayView.findViewById(R.id.tv_play_type)
-            if (tv != null) {
-                changePlayType(msg.arg1, tv as TextView)
-            }
-        }
-    }
-
-    fun changePlayType(type: Int, tv: TextView) {
+    fun changePlayType(type: Int, iv: ImageView) {
         when (type) {
             ActionConstant.ACTION_SINGLE_REQ -> {
-                tv.text = "单"
-                playType = "单"
+
+                iv.setImageLevel(YueTingConstant.PLAY_TYPE_REPEAT_ONE)
+                playType = YueTingConstant.PLAY_TYPE_REPEAT_ONE
             }
             ActionConstant.ACTION_LIST_REQ -> {
-                tv.text = "表"
-                playType = "表"
+                iv.setImageLevel(YueTingConstant.PLAY_TYPE_REPEAT)
+                playType = YueTingConstant.PLAY_TYPE_REPEAT
 
             }
             ActionConstant.ACTION_RANDOM_REQ -> {
-                tv.text = "变"
-                playType = "变"
+                iv.setImageLevel(YueTingConstant.PLAY_TYPE_RANDOM)
+                playType = YueTingConstant.PLAY_TYPE_RANDOM
             }
         }
     }
@@ -221,11 +209,11 @@ enum class ShareMusicInfo {
     fun changePlayState(state: Int = 0, mPlayView: ViewGroup, msg: Message = Message()) {
         when (state) {
             0 -> {//PAUSE
-                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "播"
+                (mPlayView.findViewById(R.id.playControlIv) as ImageView).setImageLevel(YueTingConstant.PLAY_STATUS_PAUSE)
                 playState = PlayState.PAUSE
             }
             1 -> {//PLAY
-                (mPlayView.findViewById(R.id.tv_play_control) as TextView).text = "停"
+                (mPlayView.findViewById(R.id.playControlIv) as ImageView).setImageLevel(YueTingConstant.PLAY_STATUS_PLAY)
                 playState = PlayState.PLAY
             }
             2 -> {//COMPLETE
@@ -234,9 +222,8 @@ enum class ShareMusicInfo {
             3 -> {//PREPARE
                 val position = msg.arg2
                 val audioSessionId = msg.data[YueTingConstant.SERVICE_PLAY_AUDIO_SESSION] as Int
-                val tv = mPlayView.findViewById(R.id.tv_play_type)
-                if (tv != null) {
-                    (tv as TextView).text = getPlayType()
+                mPlayView.findViewById(R.id.playTypeIv)?.let {
+                    (it as ImageView).setImageLevel(getPlayType())
                 }
                 setPosition(position)
                 setAudioSessionId(audioSessionId)
@@ -254,10 +241,19 @@ enum class ShareMusicInfo {
         }
     }
 
+    private fun refreshPlayView(mPlayView: ViewGroup, msg: Message) {
 
-    companion object {
-        private var musicInfoList = ArrayList<MusicInfo>()
-        private var mContext = ArrayList<BaseActivity>()
+        if (msg.what == YueTingConstant.CURRENT_DURATION) {
+            (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
+            duration = msg.arg1
+        }
+        if (msg.what == YueTingConstant.PLAY_STATE) {
+            changePlayState(msg.arg1, mPlayView, msg)
+        }
+        if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
+            mPlayView.findViewById(R.id.playTypeIv)?.let {
+                changePlayType(msg.arg1, it as ImageView)
+            }
+        }
     }
-
 }

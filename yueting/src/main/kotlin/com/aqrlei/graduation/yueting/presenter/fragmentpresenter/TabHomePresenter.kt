@@ -105,15 +105,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-
-
-                            }
-
-                            override fun onError(e: Throwable) {
-
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Boolean) {
                                 if (t) {
                                     mMvpView.unbindMusicService()
@@ -121,7 +114,6 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             }
                         })
         )
-
     }
 
     fun getMusicInfoFromDB() {
@@ -133,12 +125,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Cursor) {
                                 while (t.moveToNext()) {
                                     val musicInfo = MusicInfo()
@@ -154,15 +142,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                                             ?: name
                                     musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                                            ?: "未知"
+                                            ?: YueTingConstant.INFO_UNKNOWN
                                     musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                                            ?: "未知"
-                                    musicInfo.duration = mmr.extractMetadata(
-                                            MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+                                            ?: YueTingConstant.INFO_UNKNOWN
+                                    musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+
                                     musicInfo.picture = mmr.embeddedPicture
-
-
-
                                     musicInfoList.add(musicInfo)
                                     mmr.release()
                                 }
@@ -182,12 +167,8 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Cursor) {
                                 while (t.moveToNext()) {
                                     val bookInfo = BookInfo()

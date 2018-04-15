@@ -33,7 +33,6 @@ data class MusicInfo(
             parcel.readInt(),
             parcel.readString() ?: " ")
 
-
     override fun writeToParcel(out: Parcel?, flags: Int) {
         out?.writeInt(id)
         out?.writeString(albumUrl)
@@ -46,9 +45,7 @@ data class MusicInfo(
         out?.writeString(createTime)
     }
 
-
     override fun describeContents(): Int = 0
-
 
     override fun compareTo(other: MusicInfo): Int {
         val thisArtist = this.artist.toLowerCase()
@@ -90,11 +87,7 @@ data class MusicInfo(
     }
 
     companion object CREATOR : Parcelable.Creator<MusicInfo> {
-        override fun createFromParcel(parcel: Parcel): MusicInfo =
-                MusicInfo(parcel)
-
-        override fun newArray(size: Int): Array<MusicInfo?> =
-                arrayOfNulls(size)
-
+        override fun createFromParcel(parcel: Parcel): MusicInfo = MusicInfo(parcel)
+        override fun newArray(size: Int): Array<MusicInfo?> = arrayOfNulls(size)
     }
 }

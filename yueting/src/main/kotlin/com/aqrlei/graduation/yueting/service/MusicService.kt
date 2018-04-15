@@ -16,7 +16,6 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.ImageUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
@@ -265,14 +264,14 @@ class MusicService : BaseService(),
          * 设置自定义的Notification布局时，通过setContentIntent设置跳转到Activity会出错
          * 黑屏 且结束后为锁屏界面,
          * */
-        remoteViews.setOnClickPendingIntent(R.id.tv_music_info, pi)
-        remoteViews.setOnClickPendingIntent(R.id.tv_play_control, playIntent)
-        remoteViews.setOnClickPendingIntent(R.id.tv_next, nextIntent)
-        remoteViews.setOnClickPendingIntent(R.id.tv_finish, finishIntent)
+        remoteViews.setOnClickPendingIntent(R.id.musicInfoLl, pi)
+        remoteViews.setOnClickPendingIntent(R.id.playControlIv, playIntent)
+        remoteViews.setOnClickPendingIntent(R.id.nextIv, nextIntent)
+        remoteViews.setOnClickPendingIntent(R.id.closeIv, finishIntent)
         notification = NotificationCompat.Builder(this.applicationContext)
                 .setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher_round)//必须设置，不然无法显示自定义的View
+                .setSmallIcon(R.mipmap.ic_music_note_black)//必须设置，不然无法显示自定义的View
                 .build()
 
         startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
@@ -280,18 +279,18 @@ class MusicService : BaseService(),
 
     private fun refreshNotification() {
         val musicInfo = mMusicInfoShare.getInfo(cPosition)
-        val musicString = StringChangeUtil.SPANNABLE.clear()
-                .foregroundColorChange("#1c4243", musicInfo.title)
-                .relativeSizeChange(2 / 3F, "\n${musicInfo.artist} - ${musicInfo.album}")
-                .complete()
-        remoteViews.setTextViewText(R.id.tv_music_info, musicString)
+        remoteViews.setTextViewText(R.id.musicInfoTv, musicInfo.title)
+        remoteViews.setTextViewText(R.id.musicInfoDetailTv, "\n${musicInfo.artist} - ${musicInfo.album}")
         val bitmap = ImageUtil.byteArrayToBitmap(musicInfo.picture)
         remoteViews.setImageViewBitmap(R.id.iv_album_picture, bitmap)
         startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
-    private fun refreshPlayView(playState: String) {
-        remoteViews.setTextViewText(R.id.tv_play_control, playState)
+    private fun refreshPlayView(playState: Int) {
+
+        remoteViews.setImageViewResource(R.id.playControlIv,
+                if (playState == YueTingConstant.PLAY_STATUS_PAUSE) R.drawable.music_selector_pause
+                else R.drawable.music_selector_play)
         startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
@@ -339,11 +338,11 @@ class MusicService : BaseService(),
         when (playState) {
             PlayState.PAUSE -> {
                 message.arg1 = 0
-                refreshPlayView("播")
+                refreshPlayView(YueTingConstant.PLAY_STATUS_PAUSE)
             }
             PlayState.PLAY -> {
                 message.arg1 = 1
-                refreshPlayView("停")
+                refreshPlayView(YueTingConstant.PLAY_STATUS_PLAY)
             }
             PlayState.COMPLETE -> {
                 message.arg1 = 2
@@ -489,11 +488,6 @@ class MusicService : BaseService(),
             ActionConstant.ACTION_PREVIOUS -> {
                 previous()
             }
-
-            ActionConstant.ACTION_FINISH -> {
-                ActivityCollector.killApp()
-                stopSelf()
-            }
             AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
                 pause()
             }
@@ -503,6 +497,13 @@ class MusicService : BaseService(),
     inner class PlayerReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
+            if (action == ActionConstant.ACTION_FINISH) {
+                val msg = Message()
+                msg.what = ActionConstant.ACTION_FINISH_REQ
+                sendMessenger.send(msg)
+                ActivityCollector.killApp()
+                stopSelf()
+            }
             changePlayType(action)
             changePlayState(action, intent)
             sendPlayType()

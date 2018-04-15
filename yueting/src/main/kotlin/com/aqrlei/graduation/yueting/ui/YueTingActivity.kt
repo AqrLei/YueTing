@@ -22,7 +22,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
 import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
-import kotlinx.android.synthetic.main.music_include_yueting_play.*
+import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 
 
 /**
@@ -36,14 +36,12 @@ import kotlinx.android.synthetic.main.music_include_yueting_play.*
 * */
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
-
     companion object {
         fun jumpToYueTingActivity(context: Context) {
             val intent = Intent(context, YueTingActivity::class.java)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
-
 
     override val mPresenter: YueTingActivityPresenter
         get() = YueTingActivityPresenter(this)
@@ -57,25 +55,31 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         sendPlayBroadcast(position, this)
-
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.tv_play_control -> {
+            R.id.playControlIv -> {
                 sendMusicBroadcast(SendType.PLAY, this)
             }
-            R.id.tv_next -> {
+            R.id.nextIv -> {
                 sendMusicBroadcast(SendType.NEXT, this)
             }
-            R.id.tv_previous -> {
+            R.id.previousIv -> {
                 sendMusicBroadcast(SendType.PREVIOUS, this)
             }
-            R.id.tv_music_info -> {
+            R.id.musicInfoLl -> {
                 PlayActivity.jumpToPlayActivity(this@YueTingActivity)
             }
-            R.id.popUpWinTv -> {
-                playListLv.visibility = if (playListLv.visibility == View.GONE) View.VISIBLE else View.GONE
+            R.id.expandListIv -> {
+                playListLv.visibility =
+                        if (playListLv.visibility == View.GONE) {
+                            expandListIv.setImageLevel(YueTingConstant.PLAY_EXPAND_CLOSE)
+                            View.VISIBLE
+                        } else {
+                            expandListIv.setImageLevel(YueTingConstant.PLAY_EXPAND)
+                            View.GONE
+                        }
             }
         }
     }
@@ -89,7 +93,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
             if (requestCode == YueTingConstant.YUE_TING_FILE_REQ) {
                 if (data?.extras?.getBoolean(YueTingConstant.FILE_BOOK_CHANGE) == true) {
@@ -100,20 +103,20 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        popUpWinTv.setOnClickListener(this)
         mHandler = mMusicShareInfo.getHandler(this)
         mPlayView = this.window.decorView
                 .findViewById(R.id.ll_play_control) as ViewGroup
         initFragments(savedInstanceState)
+        initListener()
         if (mMusicShareInfo.getSize() > 0) {
             if (mMusicShareInfo.isStartService()) {
                 mPlayView.visibility = View.VISIBLE
             }
-
             initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         }
     }
@@ -121,6 +124,21 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     override fun onDestroy() {
         super.onDestroy()
         DBManager.releaseCursor()
+    }
+
+    fun initPlayListView(adapter: YueTingListAdapter) {
+        playListLv.adapter = adapter
+        playListLv.onItemClickListener = this
+    }
+
+    fun getMPlayView() = mPlayView
+
+    private fun initListener() {
+        nextIv.setOnClickListener(this)
+        previousIv.setOnClickListener(this)
+        playControlIv.setOnClickListener(this)
+        musicInfoLl.setOnClickListener(this)
+        expandListIv.setOnClickListener(this)
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
@@ -145,10 +163,5 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    fun initPlayListView(adapter: YueTingListAdapter) {
-        playListLv.adapter = adapter
-        playListLv.onItemClickListener = this
-    }
 
-    fun getMPlayView() = mPlayView
 }

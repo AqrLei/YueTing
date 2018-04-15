@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/common_ripple_item"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_catalog_name"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/dimenButtonH"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lines="3"
-        android:paddingLeft="10dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        tools:text="第100章\n你好娘爱好爱你好娘" />
+        android:paddingLeft="@dimen/dimenLongPadding"
+        android:textSize="@dimen/dimenMiddleTextSize"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#33666666" />
+        android:layout_height="@dimen/dimenDividerLine"
+        android:background="@color/colorDividerLine" />
 
 </LinearLayout>

@@ -27,10 +27,9 @@ import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
-import kotlinx.android.synthetic.main.main_include_home_top.*
+import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
-import kotlinx.android.synthetic.main.main_include_yueting_top.*
-import kotlinx.android.synthetic.main.music_include_yueting_play.view.*
+import kotlinx.android.synthetic.main.music_include_yue_ting_play.view.*
 import java.io.File
 
 /**
@@ -53,6 +52,26 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
+    private var removePosition: Int = 0
+    private var isServiceStart = false
+    private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
+    private var mBookInfoShared = ShareBookInfo.BookInfoTool
+    private lateinit var mBookAdapter: YueTingListAdapter
+    private lateinit var mMusicAdapter: YueTingListAdapter
+    private val mListView: AlphaListView by lazy { mView.lv_fragment_home as AlphaListView }
+    private val serviceConn = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            sendMusicInfoS(service)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+        }
+    }
+    override val mPresenter: TabHomePresenter
+        get() = TabHomePresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.main_fragment_home
+
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         removePosition = position
         when (view?.id) {
@@ -68,26 +87,23 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_right_listen -> {
-                tv_right_listen.visibility = View.INVISIBLE
-                mListView.adapter = mMusicAdapter
-                tv_left_read.visibility = View.VISIBLE
-                tv_title_name.text = "欣听"
-                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.GONE
-                val playV = mContainerActivity.getMPlayView().playListLv
-                if (playV.visibility == View.VISIBLE) playV.visibility = View.GONE
+            R.id.titleNameTv -> {
+                val flag = titleNameTv.compoundDrawables[2].level == YueTingConstant.TITLE_TYPE_MUSIC
+                if (flag) {
+                    titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_BOOK
+                } else {
+                    titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
+                }
+                mListView.adapter = if (!flag) mMusicAdapter else mBookAdapter
+                titleNameTv.text = if (!flag) "欣听" else "悦读"
+                headerTopCl.background.level = titleNameTv.compoundDrawables[2].level
+                mContainerActivity.getMPlayView().expandListIv.visibility = if (!flag) {
+                    val playV = mContainerActivity.getMPlayView().playListLv
+                    if (playV.visibility == View.VISIBLE) playV.visibility = View.GONE
+                    View.GONE
+                } else View.VISIBLE
             }
-            R.id.tv_left_read -> {
-                tv_left_read.visibility = View.INVISIBLE
-                mListView.adapter = mBookAdapter
-                tv_right_listen.visibility = View.VISIBLE
-                tv_title_name.text = "悦读"
-                mContainerActivity.getMPlayView().popUpWinTv.visibility = View.VISIBLE
-            }
-            R.id.tv_setting -> {
-                AppToast.toastShow(mContainerActivity, " TODO Setting", 1000)
-            }
-            R.id.tv_file_local -> {
+            R.id.addFileIv -> {
                 FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ)
             }
         }
@@ -129,31 +145,40 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    private var removePosition: Int = 0
-    private var isServiceStart = false
-    private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
-    private var mBookInfoShared = ShareBookInfo.BookInfoTool
-    private lateinit var mBookAdapter: YueTingListAdapter
-    private lateinit var mMusicAdapter: YueTingListAdapter
-    private val mListView: AlphaListView by lazy { mView.lv_fragment_home as AlphaListView }
-
-    private val serviceConn = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            sendMusicInfoS(service)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
-    }
-    override val mPresenter: TabHomePresenter
-        get() = TabHomePresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.main_fragment_home
-
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
         initData()
+        initListener()
         initView()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        changeBookAdapter()
+    }
+
+    fun unbindMusicService() {
+        mContainerActivity.unbindService(serviceConn)
+    }
+
+    fun setMusicInfo(data: ArrayList<MusicInfo>) {
+        mMusicInfoShared.setInfoS(data)
+        mMusicAdapter.notifyDataSetChanged()
+    }
+
+    fun setBookInfo(data: ArrayList<BookInfo>) {
+        mBookInfoShared.setInfoS(data)
+        mBookAdapter.notifyDataSetChanged()
+
+    }
+
+    fun changeMusicAdapter() {
+        mMusicAdapter.notifyDataSetInvalidated()
+    }
+
+    fun changeBookAdapter() {
+        mBookAdapter.notifyDataSetInvalidated()
     }
 
     private fun initData() {
@@ -164,25 +189,20 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun initView() {
         mBookAdapter = YueTingListAdapter(
                 mBookInfoShared.getInfoS(), mContainerActivity,
-                R.layout.read_module_list_item, YueTingConstant.ADAPTER_TYPE_BOOK)
+                R.layout.read_list_item, YueTingConstant.ADAPTER_TYPE_BOOK)
         mMusicAdapter = YueTingListAdapter(
                 mMusicInfoShared.getInfoS(), mContainerActivity,
                 R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
         mContainerActivity.initPlayListView(mMusicAdapter)
         mListView.adapter = mBookAdapter
-        mListView.onItemClickListener = this
-        mListView.onItemLongClickListener = this
-        tv_left_read.visibility = View.INVISIBLE
-        tv_title_name.text = "悦读"
-        tv_left_read.setOnClickListener(this)
-        tv_right_listen.setOnClickListener(this)
-        tv_setting.setOnClickListener(this)
-        tv_file_local.setOnClickListener(this)
+        titleNameTv.text = "悦读"
     }
 
-    override fun onResume() {
-        super.onResume()
-        changeBookAdapter()
+    private fun initListener() {
+        mListView.onItemClickListener = this
+        mListView.onItemLongClickListener = this
+        addFileIv.setOnClickListener(this)
+        titleNameTv.setOnClickListener(this)
     }
 
     private fun getMusicInfoFromDB() {
@@ -229,28 +249,5 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         if (binder != null) {
             mPresenter.sendMusicInfo(binder)
         }
-    }
-
-    fun unbindMusicService() {
-        mContainerActivity.unbindService(serviceConn)
-    }
-
-    fun setMusicInfo(data: ArrayList<MusicInfo>) {
-        mMusicInfoShared.setInfoS(data)
-        mMusicAdapter.notifyDataSetChanged()
-    }
-
-    fun setBookInfo(data: ArrayList<BookInfo>) {
-        mBookInfoShared.setInfoS(data)
-        mBookAdapter.notifyDataSetChanged()
-
-    }
-
-    fun changeMusicAdapter() {
-        mMusicAdapter.notifyDataSetInvalidated()
-    }
-
-    fun changeBookAdapter() {
-        mBookAdapter.notifyDataSetInvalidated()
     }
 }

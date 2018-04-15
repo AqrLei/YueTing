@@ -34,18 +34,13 @@ class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {
-                            }
-
-                            override fun onError(e: Throwable) {
-                            }
-
+                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {}
                             override fun onNext(t: Boolean) {
                                 mMvpActivity.loadCatalogDone(t)
                             }
                         }
                         )
-
         )
 
     }

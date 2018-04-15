@@ -17,7 +17,6 @@ class ChapterInfo(
         Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is ChapterInfo) {
-
             return other.chapterName == this.chapterName && other.path == this.path
         }
         return super.equals(other)
@@ -29,6 +28,5 @@ class ChapterInfo(
         result = result * 31 + bPosition
         result = result * 31 + flag.hashCode()
         return (result * 31 + super.hashCode())
-
     }
 }

@@ -24,6 +24,10 @@ import kotlinx.android.synthetic.main.welcome_activity_main.*
 
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         View.OnClickListener {
+    override val layoutRes: Int
+        get() = R.layout.welcome_activity_main
+    override val mPresenter: MainActivityPresenter
+        get() = MainActivityPresenter(this)
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -38,11 +42,6 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             }
         }
     }
-
-    override val layoutRes: Int
-        get() = R.layout.welcome_activity_main
-    override val mPresenter: MainActivityPresenter
-        get() = MainActivityPresenter(this)
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -71,7 +70,6 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
                 AppToast.toastShow(this, "Permission Denied!", 1000)
             }
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -86,11 +84,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         if (tempPermission[0] == "") {
             return true
         }
-
         ActivityCompat.requestPermissions(this, tempPermission, YueTingConstant.RQ_PERMISSION_CODE)
         return false
-
     }
-
-
 }

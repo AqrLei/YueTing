@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="#ff3a454d"
+    android:background="@color/colorTitleBarGrey"
     android:orientation="vertical"
-    android:paddingBottom="20dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
+    android:paddingBottom="@dimen/dimenReadPaddingB"
+    android:paddingLeft="@dimen/dimenLongPadding"
+    android:paddingRight="@dimen/dimenLongPadding"
+    android:paddingTop="@dimen/dimenLongPadding"
     android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
@@ -20,15 +20,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="@dimen/dimenButtonH"
+        android:layout_marginBottom="@dimen/dimenReadMargin"
+        android:layout_marginTop="@dimen/dimenReadMargin"
         android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/sb_light_degree"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/dimenReadH"
             android:layout_weight="1"
             android:max="255" />
 
@@ -45,10 +45,10 @@
     <LinearLayout
         android:id="@+id/ll_bottom_font"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dimenExtraView"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="5dp">
+        android:paddingBottom="@dimen/dimenPadding"
+        android:paddingTop="@dimen/dimenPadding">
 
         <TextView
             android:id="@+id/tv_textSize_small"
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:onClick="onClick"
             android:text="小"
-            android:textSize="15sp" />
+            android:textSize="@dimen/dimenMiddleTextSize" />
 
         <TextView
             android:id="@+id/tv_textSize_middle"
@@ -68,7 +68,7 @@
             android:gravity="center"
             android:onClick="onClick"
             android:text="中"
-            android:textSize="22sp" />
+            android:textSize="@dimen/dimenReadTextSizeM" />
 
         <TextView
             android:id="@+id/tv_textSize_big"
@@ -78,7 +78,7 @@
             android:gravity="center"
             android:onClick="onClick"
             android:text="大"
-            android:textSize="30sp" />
+            android:textSize="@dimen/dimenReadTextSizeB" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/sp_textStyle_select"
@@ -91,7 +91,7 @@
     <RadioGroup
         android:id="@+id/rg_read_bg"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
@@ -103,12 +103,12 @@
             android:layout_weight="1"
             android:background="@color/colorPageGreen"
             android:button="@null"
-            android:drawablePadding="4dp"
+            android:drawablePadding="@dimen/dimenPadding"
             android:gravity="center"
-            android:paddingTop="5dp"
+            android:paddingTop="@dimen/dimenPadding"
             android:text="护眼绿"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="15dp" />
+            android:textSize="@dimen/dimenMiddleTextSize" />
 
         <RadioButton
             android:id="@+id/rb_bg_yellow"
@@ -119,12 +119,12 @@
             android:background="@color/colorPageYellow"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="4dp"
+            android:drawablePadding="@dimen/dimenPadding"
             android:gravity="center"
-            android:paddingTop="5dp"
+            android:paddingTop="@dimen/dimenPadding"
             android:text="书页黄"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="15dp" />
+            android:textSize="@dimen/dimenMiddleTextSize" />
 
         <RadioButton
             android:id="@+id/rb_bg_white"
@@ -134,12 +134,12 @@
             android:background="@color/colorPageWhite"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="4dp"
+            android:drawablePadding="@dimen/dimenPadding"
             android:gravity="center"
-            android:paddingTop="5dp"
+            android:paddingTop="@dimen/dimenPadding"
             android:text="象牙白"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="15dp" />
+            android:textSize="@dimen/dimenMiddleTextSize" />
 
         <RadioButton
             android:id="@+id/rb_bg_grey"
@@ -149,12 +149,12 @@
             android:background="@color/colorPageGrey"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="4dp"
+            android:drawablePadding="@dimen/dimenPadding"
             android:gravity="center"
-            android:paddingTop="5dp"
+            android:paddingTop="@dimen/dimenPadding"
             android:text="自然灰"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="15dp" />
+            android:textSize="@dimen/dimenMiddleTextSize" />
     </RadioGroup>
 
 
