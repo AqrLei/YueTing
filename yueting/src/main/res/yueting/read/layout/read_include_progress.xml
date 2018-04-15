@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_bottom_read_seekBar"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/dimenButtonH"
     android:layout_gravity="bottom"
-    android:background="#ff3a454d"
+    android:background="@color/colorTitleBarGrey"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:visibility="gone"
@@ -26,11 +26,11 @@
     <TextView
         android:id="@+id/tv_done_percent"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/dimenButtonH"
         android:gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dimenPadding"
         android:text="00.0%"
-        android:textColor="#a6cc10"
-        android:textSize="20dp" />
+        android:textColor="@color/colorReadProgress"
+        android:textSize="@dimen/dimenBigTextSize" />
 
 </LinearLayout>

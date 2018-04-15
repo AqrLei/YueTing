@@ -89,6 +89,10 @@ object YueTingConstant {
     const val FILE_TYPE_MUSIC = 2
     const val FILE_TYPE_BOOK = 0
     const val INFO_UNKNOWN = "未知"
+    const val READ_BACKGROUND_COLOR_DEFAULT = "#C7EECE"
+    const val READ_BIG_FONT = 30F
+    const val READ_SMALL_FONT = 15F
+    const val READ_MIDDLE_FONT = 22F
 
 
 }

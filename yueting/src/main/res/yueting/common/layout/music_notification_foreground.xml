@@ -6,10 +6,10 @@
     <!--作为notification的布局文件，不能在组件中设置onClick事件，否则在通知栏上会无法显示-->
     <ImageView
         android:id="@+id/iv_album_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="@dimen/dimenExtraView"
+        android:layout_height="@dimen/dimenExtraView"
+        android:layout_marginRight="@dimen/dimenMargin"
+        android:layout_marginTop="@dimen/dimenMargin"
         android:scaleType="centerCrop"
         android:background="@drawable/music_selector_note" />
     <LinearLayout
@@ -17,8 +17,8 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="@dimen/dimenMargin"
+        android:layout_marginTop="@dimen/dimenMargin"
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/musicInfoTv"
@@ -27,9 +27,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="这是歌的名字"
-            android:textColor="#1c4243"
-            android:textSize="18dp" />
+            android:textColor="@color/colorMusicName"
+            android:textSize="@dimen/dimenNameTextSize" />
         <TextView
             android:id="@+id/musicInfoDetailTv"
             android:layout_width="match_parent"
@@ -37,8 +36,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="这是歌的名字"
-            android:textSize="12dp" />
+            android:textSize="@dimen/dimenSmallNameTextSize" />
 
     </LinearLayout>
 
@@ -46,10 +44,10 @@
 
     <ImageView
         android:id="@+id/playControlIv"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/dimenButtonW"
+        android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dimenPadding"
         android:src="@drawable/music_selector_pause" />
 
     <ImageView
@@ -57,14 +55,14 @@
         android:layout_width="30dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dimenPadding"
         android:src="@drawable/music_selector_next" />
 
     <ImageView
         android:id="@+id/closeIv"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/dimenButtonW"
+        android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dimenPadding"
         android:src="@drawable/common_selector_close" />
 </LinearLayout>

@@ -231,14 +231,14 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 hideView()
             }
             R.id.tv_textSize_small -> {
-                pageFactory.changeFontSize(15f)
+                pageFactory.changeFontSize(YueTingConstant.READ_SMALL_FONT)
 
             }
             R.id.tv_textSize_middle -> {
-                pageFactory.changeFontSize(22f)
+                pageFactory.changeFontSize(YueTingConstant.READ_MIDDLE_FONT)
             }
             R.id.tv_textSize_big -> {
-                pageFactory.changeFontSize(30f)
+                pageFactory.changeFontSize(YueTingConstant.READ_BIG_FONT)
             }
         }
     }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_read_item"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="@dimen/dimenReadListItemH"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,22 +14,21 @@
         <TextView
             android:id="@+id/tv_book_name"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/dimenExtraView"
             android:layout_weight="1"
             android:drawableLeft="@drawable/common_level_list_file"
-            android:drawablePadding="15dp"
+            android:drawablePadding="@dimen/dimenReadListItemPadding"
             android:ellipsize="end"
             android:gravity="center_vertical|left"
             android:maxLines="1"
-            android:text="这是一个书的名字"
-            android:textSize="20dp" />
+            android:textSize="@dimen/dimenNameTextSize" />
 
         <TextView
             android:id="@+id/tv_book_progress"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/dimenExtraView"
             android:gravity="bottom|right"
-            android:textSize="12dp" />
+            android:textSize="@dimen/dimenSmallNameTextSize" />
     </LinearLayout>
 
     <View style="@style/DividerStyle" />

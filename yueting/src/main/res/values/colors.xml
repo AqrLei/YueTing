@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f76b5</color>
-    <color name="colorPrimaryDark">#00303f9f</color>
-    <color name="colorAccent">#aa4053ff</color>
-    <color name="colorTabBackground">#e727e90e</color>
-    <color name="colorPageGreen">#ffc7eece</color>
-    <color name="colorPageYellow">#ffd6b28c</color>
-    <color name="colorPageWhite">#FFF3F3F3</color>
-    <color name="colorPdfWhite">#FFF3F3F3</color>
-    <color name="colorPageGrey">#FF666666</color>
+    <color name="colorPrimary">#3F76B5</color>
+    <color name="colorPrimaryDark">#00303F9F</color>
+    <color name="colorAccent">#AA4053FF</color>
+    <color name="colorTabBackground">#E727E90E</color>
+    <color name="colorPageGreen">#C7EECE</color>
+    <color name="colorPageYellow">#D6B28C</color>
+    <color name="colorPageWhite">#F3F3F3</color>
+    <color name="colorPdfWhite">#F3F3F3</color>
+    <color name="colorPageGrey">#666666</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorFileParentWhite">#FFFFEE</color>
+    <color name="colorVisualizerView">#76A1D4</color>
+    <color name="colorPlayView">#9EEC8484</color>
+    <color name="colorMusicName">#1C4243</color>
+    <color name="colorTitleBarGrey">#3A454D</color>
+    <color name="colorReadProgress">#A6CC10</color>
+    <color name="colorDividerLine">#33666666</color>
+    <color name="colorTitle">#333333</color>
 </resources>

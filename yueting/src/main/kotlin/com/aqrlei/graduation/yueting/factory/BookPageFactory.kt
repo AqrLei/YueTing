@@ -6,7 +6,6 @@ import android.graphics.*
 import android.util.DisplayMetrics
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.constant.CacheConstant
@@ -52,7 +51,7 @@ enum class BookPageFactory {
     private var mappedFile: MappedByteBuffer? = null
     private var randomFile: RandomAccessFile? = null
     private var refreshPage: Boolean = true
-    private var bgColor: Int = Color.parseColor("#c7eece")
+    private var bgColor: Int = Color.parseColor(YueTingConstant.READ_BACKGROUND_COLOR_DEFAULT)
     private var bPosition: Int = 0
     private lateinit var mBookInfo: BookInfo
     private var isNext = true
@@ -134,6 +133,7 @@ enum class BookPageFactory {
         refreshPage = false
         nextPage()
     }
+
     fun getCurrentBegin() = begin
     fun getCurrentEnd() = end
     fun getBookByteArray(position: Int) = readParagraphForward(position)

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -15,6 +16,33 @@
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
     </style>
 
+    <style name="BottomDialog" parent="@android:style/Theme.Dialog">
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 浮于Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- Dialog以外的区域模糊效果 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- Dialog进入及退出动画 -->
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+
+    <style name="DialogAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_out</item>
+    </style>
+
+    <style name="PopupWindowAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_out</item>
+    </style>
+
+
     <style name="ActivityAnimation">
         <!--新的Activity进入-->
         <item name="android:activityOpenEnterAnimation">@anim/activity_new_in</item>
@@ -26,45 +54,31 @@
         <item name="android:activityCloseExitAnimation">@anim/activity_new_out</item>
     </style>
 
-    <style name="TabTextAppearance">
-        <item name="android:textSize">14dp</item>
-    </style>
-
-    <style name="TestDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
 
     <style name="TitleBarTextViewStyle">
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">@dimen/dimenLongPadding</item>
+        <item name="android:paddingRight">@dimen/dimenLongPadding</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">18dp</item>
-        <item name="android:textColor">#ff333333</item>
+        <item name="android:textSize">@dimen/dimenNameTextSize</item>
+        <item name="android:textColor">@color/colorTitle</item>
     </style>
 
     <style name="TitleBarImageViewStyle">
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">@dimen/dimenLongPadding</item>
+        <item name="android:paddingLeft">@dimen/dimenLongPadding</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:src">@drawable/common_selector_back</item>
     </style>
 
     <style name="DividerStyle">
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">@dimen/dimenDividerLine</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">#b9666666</item>
+        <item name="android:background">@color/colorDividerLine</item>
     </style>
-
 </resources>

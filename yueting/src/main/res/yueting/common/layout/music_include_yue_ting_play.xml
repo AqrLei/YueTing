@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="#9eec8484"
+    android:background="@color/colorPlayView"
     android:orientation="vertical"
     android:visibility="gone"
     tools:visibility="visible">
@@ -22,8 +22,8 @@
     <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
         android:id="@+id/playListLv"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#ffffff"
+        android:layout_height="@dimen/dimenBigViewHeight"
+        android:background="@color/colorWhite"
         android:overScrollMode="never"
         android:scrollbars="none"
         android:visibility="gone"
@@ -39,11 +39,10 @@
 
         <ImageView
             android:id="@+id/iv_album_picture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/dimenExtraView"
+            android:layout_height="@dimen/dimenExtraView"
+            android:layout_marginLeft="@dimen/dimenSmallMargin"
+            android:layout_marginTop="@dimen/dimenSmallMargin"
             android:background="@drawable/music_selector_note"
             android:scaleType="fitCenter" />
 
@@ -51,9 +50,9 @@
             android:id="@+id/musicInfoLl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/dimenMargin"
+            android:layout_marginLeft="@dimen/dimenMargin"
+            android:layout_marginTop="@dimen/dimenMargin"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -65,9 +64,8 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="这是歌的名字"
-                android:textColor="#1c4243"
-                android:textSize="18dp" />
+                android:textColor="@color/colorMusicName"
+                android:textSize="@dimen/dimenNameTextSize" />
 
             <TextView
                 android:id="@+id/musicInfoDetailTv"
@@ -77,30 +75,29 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="这是歌的名字"
-                android:textSize="12dp" />
+                android:textSize="@dimen/dimenSmallNameTextSize" />
         </LinearLayout>
 
 
         <ImageView
             android:id="@+id/playTypeIv"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimenButtonW"
+            android:layout_height="@dimen/dimenButtonH"
             android:layout_gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="@dimen/dimenPadding"
+            android:paddingRight="@dimen/dimenPadding"
             android:src="@drawable/music_level_list_type"
             android:visibility="gone"
             tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/previousIv"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimenButtonW"
+            android:layout_height="@dimen/dimenButtonH"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="@dimen/dimenPadding"
+            android:paddingRight="@dimen/dimenPadding"
             android:src="@drawable/music_selector_previous" />
 
         <FrameLayout
@@ -110,33 +107,33 @@
 
             <com.aqrairsigns.aqrleilib.ui.view.RoundBar
                 android:id="@+id/rb_progress_play"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/dimenButtonH"
+                android:layout_height="@dimen/dimenButtonH"
                 yueting:progress="0"
-                yueting:radius="12dp"
+                yueting:radius="@dimen/dimenPlayRoundBarR"
                 yueting:rotateDegree="180"
-                yueting:roundWidth="3dp"
+                yueting:roundWidth="@dimen/dimenPlayRoundBarRW"
                 yueting:useGradientGolor="true" />
 
             <ImageView
                 android:id="@+id/playControlIv"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/dimenButtonW"
+                android:layout_height="@dimen/dimenButtonW"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="@dimen/dimenPadding"
+                android:paddingRight="@dimen/dimenPadding"
                 android:src="@drawable/music_level_list_play" />
         </FrameLayout>
 
         <ImageView
             android:id="@+id/nextIv"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimenButtonW"
+            android:layout_height="@dimen/dimenButtonH"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="@dimen/dimenPadding"
+            android:paddingRight="@dimen/dimenPadding"
             android:src="@drawable/music_selector_next" />
 
     </LinearLayout>
