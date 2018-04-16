@@ -39,7 +39,7 @@ dependencies {
     api 'com.android.support.constraint:constraint-layout:1.0.2'
     api 'com.android.support:recyclerview-v7:25.3.1'
     api 'com.android.support:multidex:1.0.0'
-    api 'com.android.support:percent:23.1.0'
+    api 'com.android.support:percent:25.3.1'
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     api 'com.facebook.fresco:fresco:0.10.0'
     api 'com.facebook.fresco:imagepipeline-okhttp:0.10.0'
