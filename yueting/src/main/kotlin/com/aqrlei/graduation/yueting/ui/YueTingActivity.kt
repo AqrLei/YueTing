@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.v7.app.AlertDialog
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +87,16 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            ActivityCollector.killApp()
+            //TODO modify dialog layout
+            AlertDialog.Builder(this).apply {
+                setTitle("提示")
+                setMessage("确定退出应用吗？")
+                setPositiveButton("是", { _, _ ->
+                    ActivityCollector.killApp()
+                })
+                setNegativeButton("否", null)
+                show()
+            }
             return true
         }
         return super.onKeyDown(keyCode, event)
