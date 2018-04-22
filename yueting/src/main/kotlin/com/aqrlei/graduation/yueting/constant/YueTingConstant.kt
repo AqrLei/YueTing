@@ -77,6 +77,7 @@ object YueTingConstant {
     const val PLAY_EXPAND_CLOSE = 1
     const val PLAY_SUFFIX_MP3 = "mp3"
     const val PLAY_SUFFIX_APE = "ape"
+    const val PLAY_SUFFIX_FLAC = "flac"
     /**
      * other
      */

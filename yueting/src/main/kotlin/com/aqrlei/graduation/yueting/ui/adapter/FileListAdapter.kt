@@ -24,6 +24,7 @@ class FileListAdapter(mData: List<FileInfo>, mContext: Context, mResId: Int) :
             val suffix = FileUtil.getFileSuffix(data)
             val flag = suffix == YueTingConstant.PLAY_SUFFIX_MP3
                     || suffix == YueTingConstant.PLAY_SUFFIX_APE
+                    || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
             mNameTv.compoundDrawables[0].level =
                     if (flag) YueTingConstant.FILE_TYPE_MUSIC
                     else YueTingConstant.FILE_TYPE_BOOK
