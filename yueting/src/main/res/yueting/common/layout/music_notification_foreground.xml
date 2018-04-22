@@ -28,7 +28,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/colorMusicName"
-            android:textSize="@dimen/dimenNameTextSize" />
+            android:textSize="@dimen/sizeText18dp" />
         <TextView
             android:id="@+id/musicInfoDetailTv"
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:textSize="@dimen/dimenSmallNameTextSize" />
+            android:textSize="@dimen/sizeText12dp" />
 
     </LinearLayout>
 
@@ -47,7 +47,7 @@
         android:layout_width="@dimen/dimenButtonW"
         android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center"
-        android:padding="@dimen/dimenPadding"
+        android:padding="@dimen/dimenPadding5dp"
         android:src="@drawable/music_selector_pause" />
 
     <ImageView
@@ -55,7 +55,7 @@
         android:layout_width="30dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:padding="@dimen/dimenPadding"
+        android:padding="@dimen/dimenPadding5dp"
         android:src="@drawable/music_selector_next" />
 
     <ImageView
@@ -63,6 +63,6 @@
         android:layout_width="@dimen/dimenButtonW"
         android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center"
-        android:padding="@dimen/dimenPadding"
+        android:padding="@dimen/dimenPadding5dp"
         android:src="@drawable/common_selector_close" />
 </LinearLayout>

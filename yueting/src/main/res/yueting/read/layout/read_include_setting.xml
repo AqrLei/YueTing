@@ -9,9 +9,9 @@
     android:background="@color/colorTitleBarGrey"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimenReadPaddingB"
-    android:paddingLeft="@dimen/dimenLongPadding"
-    android:paddingRight="@dimen/dimenLongPadding"
-    android:paddingTop="@dimen/dimenLongPadding"
+    android:paddingLeft="@dimen/dimenPadding10dp"
+    android:paddingRight="@dimen/dimenPadding10dp"
+    android:paddingTop="@dimen/dimenPadding10dp"
     android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
@@ -47,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenExtraView"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dimenPadding"
-        android:paddingTop="@dimen/dimenPadding">
+        android:paddingBottom="@dimen/dimenPadding5dp"
+        android:paddingTop="@dimen/dimenPadding5dp">
 
         <TextView
             android:id="@+id/tv_textSize_small"
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:onClick="onClick"
             android:text="小"
-            android:textSize="@dimen/dimenMiddleTextSize" />
+            android:textSize="@dimen/sizeText15dp" />
 
         <TextView
             android:id="@+id/tv_textSize_middle"
@@ -103,12 +103,12 @@
             android:layout_weight="1"
             android:background="@color/colorPageGreen"
             android:button="@null"
-            android:drawablePadding="@dimen/dimenPadding"
+            android:drawablePadding="@dimen/dimenPadding5dp"
             android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
+            android:paddingTop="@dimen/dimenPadding5dp"
             android:text="护眼绿"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenMiddleTextSize" />
+            android:textSize="@dimen/sizeText15dp" />
 
         <RadioButton
             android:id="@+id/rb_bg_yellow"
@@ -119,12 +119,12 @@
             android:background="@color/colorPageYellow"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="@dimen/dimenPadding"
+            android:drawablePadding="@dimen/dimenPadding5dp"
             android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
+            android:paddingTop="@dimen/dimenPadding5dp"
             android:text="书页黄"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenMiddleTextSize" />
+            android:textSize="@dimen/sizeText15dp" />
 
         <RadioButton
             android:id="@+id/rb_bg_white"
@@ -134,12 +134,12 @@
             android:background="@color/colorPageWhite"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="@dimen/dimenPadding"
+            android:drawablePadding="@dimen/dimenPadding5dp"
             android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
+            android:paddingTop="@dimen/dimenPadding5dp"
             android:text="象牙白"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenMiddleTextSize" />
+            android:textSize="@dimen/sizeText15dp" />
 
         <RadioButton
             android:id="@+id/rb_bg_grey"
@@ -149,12 +149,12 @@
             android:background="@color/colorPageGrey"
             android:button="@null"
             android:checked="false"
-            android:drawablePadding="@dimen/dimenPadding"
+            android:drawablePadding="@dimen/dimenPadding5dp"
             android:gravity="center"
-            android:paddingTop="@dimen/dimenPadding"
+            android:paddingTop="@dimen/dimenPadding5dp"
             android:text="自然灰"
             android:textColor="@color/main_selector_tab_text"
-            android:textSize="@dimen/dimenMiddleTextSize" />
+            android:textSize="@dimen/sizeText15dp" />
     </RadioGroup>
 
 
