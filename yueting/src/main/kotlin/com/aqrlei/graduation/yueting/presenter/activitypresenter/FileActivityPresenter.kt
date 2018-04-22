@@ -39,6 +39,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     it.isDir
                             || suffix == YueTingConstant.PLAY_SUFFIX_MP3
                             || suffix == YueTingConstant.PLAY_SUFFIX_APE
+                            || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
                             || suffix == YueTingConstant.READ_SUFFIX_TXT
                             || suffix == YueTingConstant.READ_SUFFIX_PDF
                 }.forEach {
@@ -54,6 +55,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     val suffix = FileUtil.getFileSuffix(data[i])
                     if (suffix != YueTingConstant.PLAY_SUFFIX_MP3
                             && suffix != YueTingConstant.PLAY_SUFFIX_APE
+                            && suffix != YueTingConstant.PLAY_SUFFIX_FLAC
                             && suffix != YueTingConstant.READ_SUFFIX_TXT
                             && suffix != YueTingConstant.READ_SUFFIX_PDF) continue
                     val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
@@ -61,7 +63,9 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
                     //(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
                     val name = tempData.name.substring(0, tempData.name.lastIndexOf("."))
-                    if (suffix == "mp3" || suffix == "ape") {
+                    if (suffix == YueTingConstant.PLAY_SUFFIX_APE
+                            || suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                            || suffix == YueTingConstant.PLAY_SUFFIX_FLAC) {
                         val musicInfo = MusicInfo()
                         val mmr = MediaMetadataRetriever()
                         mmr.setDataSource(tempData.path)
