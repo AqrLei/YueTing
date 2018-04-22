@@ -28,9 +28,9 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimenButtonH"
         android:gravity="center"
-        android:padding="@dimen/dimenPadding"
+        android:padding="@dimen/dimenPadding5dp"
         android:text="00.0%"
         android:textColor="@color/colorReadProgress"
-        android:textSize="@dimen/dimenBigTextSize" />
+        android:textSize="@dimen/sizeText20dp" />
 
 </LinearLayout>

@@ -60,17 +60,17 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">@dimen/dimenLongPadding</item>
-        <item name="android:paddingRight">@dimen/dimenLongPadding</item>
+        <item name="android:paddingLeft">@dimen/dimenPadding10dp</item>
+        <item name="android:paddingRight">@dimen/dimenPadding10dp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">@dimen/dimenNameTextSize</item>
+        <item name="android:textSize">@dimen/sizeText18dp</item>
         <item name="android:textColor">@color/colorTitle</item>
     </style>
 
     <style name="TitleBarImageViewStyle">
-        <item name="android:paddingRight">@dimen/dimenLongPadding</item>
-        <item name="android:paddingLeft">@dimen/dimenLongPadding</item>
+        <item name="android:paddingRight">@dimen/dimenPadding10dp</item>
+        <item name="android:paddingLeft">@dimen/dimenPadding10dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:src">@drawable/common_selector_back</item>
@@ -80,5 +80,12 @@
         <item name="android:layout_height">@dimen/dimenDividerLine</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/colorDividerLine</item>
+    </style>
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/sizeText18dp</item>
+        <item name="android:paddingLeft">@dimen/dimenPadding10dp</item>
+        <item name="android:paddingRight">@dimen/dimenPadding10dp</item>
+        <item name="android:paddingTop">@dimen/dimenPadding5dp</item>
+        <item name="android:paddingBottom">@dimen/dimenPadding5dp</item>
     </style>
 </resources>

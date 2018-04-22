@@ -22,7 +22,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="目录"
-        android:textSize="@dimen/dimenBigTextSize"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="进度"
-        android:textSize="@dimen/dimenBigTextSize"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="设置"
-        android:textSize="@dimen/dimenBigTextSize"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
 </LinearLayout>

@@ -22,14 +22,14 @@
             android:ellipsize="end"
             android:gravity="center_vertical|left"
             android:maxLines="1"
-            android:textSize="@dimen/dimenNameTextSize" />
+            android:textSize="@dimen/sizeText18dp" />
 
         <TextView
             android:id="@+id/tv_book_progress"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimenExtraView"
             android:gravity="bottom|right"
-            android:textSize="@dimen/dimenSmallNameTextSize" />
+            android:textSize="@dimen/sizeText12dp" />
     </LinearLayout>
 
     <View style="@style/DividerStyle" />

@@ -3,14 +3,14 @@
 
     <dimen name="dimenExtraView">50dp</dimen>
     <dimen name="dimenMargin">10dp</dimen>
-    <dimen name="dimenBigTextSize">20dp</dimen>
-    <dimen name="dimenNameTextSize">18dp</dimen>
-    <dimen name="dimenMiddleTextSize">15dp</dimen>
-    <dimen name="dimenSmallNameTextSize">12dp</dimen>
+    <dimen name="sizeText20dp">20dp</dimen>
+    <dimen name="sizeText18dp">18dp</dimen>
+    <dimen name="sizeText15dp">15dp</dimen>
+    <dimen name="sizeText12dp">12dp</dimen>
     <dimen name="dimenButtonH">40dp</dimen>
     <dimen name="dimenButtonW">30dp</dimen>
-    <dimen name="dimenPadding">5dp</dimen>
-    <dimen name="dimenLongPadding">10dp</dimen>
+    <dimen name="dimenPadding5dp">5dp</dimen>
+    <dimen name="dimenPadding10dp">10dp</dimen>
     <dimen name="dimenSmallMargin">5dp</dimen>
     <dimen name="dimenViewHeight">60px</dimen>
     <dimen name="dimenBigViewHeight">200dp</dimen>

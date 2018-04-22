@@ -45,7 +45,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textSize="@dimen/dimenSmallNameTextSize"
+        android:textSize="@dimen/sizeText12dp"
         tools:text="/dev" />
 
     <View style="@style/DividerStyle" />
