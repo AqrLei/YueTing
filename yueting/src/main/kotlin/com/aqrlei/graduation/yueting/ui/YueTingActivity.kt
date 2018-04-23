@@ -4,13 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AlertDialog
-import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
@@ -38,8 +35,14 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
     companion object {
-        fun jumpToYueTingActivity(context: Context) {
+        fun jumpToYueTingActivity(context: Context, type: String, name: String) {
+            val bundle = Bundle()
+            bundle.apply {
+                putString(YueTingConstant.FRAGMENT_TITLE_TYPE, type)
+                putString(YueTingConstant.FRAGMENT_TITLE_VALUE, name)
+            }
             val intent = Intent(context, YueTingActivity::class.java)
+            intent.putExtras(bundle)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
@@ -85,22 +88,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //TODO modify dialog layout
-            AlertDialog.Builder(this).apply {
-                setTitle("提示")
-                setMessage("确定退出应用吗？")
-                setPositiveButton("是", { _, _ ->
-                    ActivityCollector.killApp()
-                })
-                setNegativeButton("否", null)
-                show()
-            }
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
@@ -152,13 +139,15 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
+        val type = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+        val name = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(
                             YueTingConstant.TAB_FRAGMENT_HOME)
-                    ?: TabHomeFragment.newInstance()) as TabHomeFragment
+                    ?: TabHomeFragment.newInstance(type, name)) as TabHomeFragment
         } else {
-            TabHomeFragment.newInstance()
+            TabHomeFragment.newInstance(type, name)
         }
 
         if (!mTabHomeFragment.isAdded &&

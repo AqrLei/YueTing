@@ -22,6 +22,8 @@ object YueTingConstant {
      */
     const val ADAPTER_TYPE_BOOK = 0
     const val ADAPTER_TYPE_MUSIC = 1
+    const val ADAPTER_TYPE_TITLE_BOOK = 2
+    const val ADAPTER_TYPE_TITLE_MUSIC = 3
     /**
      * permission code
      */
@@ -79,6 +81,13 @@ object YueTingConstant {
     const val PLAY_SUFFIX_APE = "ape"
     const val PLAY_SUFFIX_FLAC = "flac"
     /**
+     * Title
+     */
+    const val FRAGMENT_TITLE_TYPE = "type"
+    const val FRAGMENT_TITLE_VALUE = "value"
+    const val FRAGMENT_TITLE_TYPE_MUSIC = "music"
+    const val FRAGMENT_TITLE_TYPE_BOOK= "book"
+    /**
      * other
      */
     const val ENCODING = "UTF-16LE"
@@ -94,4 +103,6 @@ object YueTingConstant {
     const val READ_BIG_FONT = 30F
     const val READ_SMALL_FONT = 15F
     const val READ_MIDDLE_FONT = 22F
+
+
 }

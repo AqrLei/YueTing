@@ -44,8 +44,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         View.OnClickListener {
 
     companion object {
-        fun newInstance(): TabHomeFragment {
-            val args = Bundle()
+        fun newInstance(type: String, name: String): TabHomeFragment {
+            val args = Bundle().apply {
+                putString(YueTingConstant.FRAGMENT_TITLE_TYPE,type)
+                putString(YueTingConstant.FRAGMENT_TITLE_VALUE,name)
+            }
             val fragment = TabHomeFragment()
             fragment.arguments = args
             return fragment
@@ -182,8 +185,13 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initData() {
-        getMusicInfoFromDB()
-        getBookInfoFromDB()
+        val type = arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+        val name = arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+        if(type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
+            getMusicInfoFromDB(name)
+        } else {
+            getBookInfoFromDB(name)
+        }
     }
 
     private fun initView() {
@@ -205,12 +213,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         titleNameTv.setOnClickListener(this)
     }
 
-    private fun getMusicInfoFromDB() {
-        mPresenter.getMusicInfoFromDB()
+    private fun getMusicInfoFromDB(name:String) {
+        mPresenter.getMusicInfoFromDB(name)
     }
 
-    private fun getBookInfoFromDB() {
-        mPresenter.getBookInfoFromDB()
+    private fun getBookInfoFromDB(name:String) {
+        mPresenter.getBookInfoFromDB(name)
     }
 
     private fun removeInfo(flag: Boolean) {
