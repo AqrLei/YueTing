@@ -54,6 +54,16 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
                         ImageUtil.byteArrayToDrawable(data.picture)
                         ?: mContext.getDrawable(R.drawable.music_selector_note)
             }
+            YueTingConstant.ADAPTER_TYPE_TITLE_BOOK -> {
+                (holderList.get(R.id.titleNameTv) as TextView).text = data as String
+            }
+            YueTingConstant.ADAPTER_TYPE_TITLE_MUSIC -> {
+                (holderList.get(R.id.titleNameTv) as TextView).apply {
+                    text = data as String
+                    compoundDrawables[0].level = 1
+                }
+
+            }
         }
     }
 

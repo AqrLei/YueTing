@@ -34,10 +34,10 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
             R.id.bt_enjoy -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (permissionCheck(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
-                        YueTingActivity.jumpToYueTingActivity(this)
+                        YueTingListActivity.jumpToYueTingListActivity(this)
                     }
                 } else {
-                    YueTingActivity.jumpToYueTingActivity(this)
+                    YueTingListActivity.jumpToYueTingListActivity(this)
                 }
             }
         }
@@ -65,7 +65,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == YueTingConstant.RQ_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                YueTingActivity.jumpToYueTingActivity(this)
+                YueTingListActivity.jumpToYueTingListActivity(this)
             } else {
                 AppToast.toastShow(this, "Permission Denied!", 1000)
             }
