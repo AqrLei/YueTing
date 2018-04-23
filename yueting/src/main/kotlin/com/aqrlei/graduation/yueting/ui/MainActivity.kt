@@ -45,7 +45,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
+        if (hasFocus) {
             val decorView = window.decorView
             decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
