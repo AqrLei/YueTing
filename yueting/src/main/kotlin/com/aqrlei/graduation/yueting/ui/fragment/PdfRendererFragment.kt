@@ -20,7 +20,6 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.github.barteksc.pdfviewer.listener.*
-import com.github.barteksc.pdfviewer.util.FitPolicy
 import kotlinx.android.synthetic.main.read_fragment_pdf.*
 import kotlinx.android.synthetic.main.read_include_bottom.*
 import kotlinx.android.synthetic.main.read_include_progress.*
@@ -298,7 +297,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
                 .enableAntialiasing(true) // improve rendering a little bit on low-res screens
                 // spacing between pages in dp. To define spacing color, set view background
                 .spacing(0)
-                .pageFitPolicy(FitPolicy.BOTH)
+               // .pageFitPolicy(FitPolicy.BOTH)
                 .onLoad(this)
                 .load()
 

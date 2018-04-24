@@ -29,8 +29,12 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         AdapterView.OnItemClickListener,
         View.OnClickListener {
     companion object {
-        fun jumpToFileActivity(context: Activity, reqCode: Int) {
-            val intent = Intent(context, FileActivity::class.java)
+        fun jumpToFileActivity(context: Activity, reqCode: Int, type: String) {
+            val intent = Intent(context, FileActivity::class.java).apply {
+                val bundle = Bundle()
+                bundle.putString(YueTingConstant.FRAGMENT_TITLE_TYPE, type)
+                putExtras(bundle)
+            }
             if (IntentUtil.queryActivities(context, intent)) {
                 context.startActivityForResult(intent, reqCode)
             }
@@ -135,7 +139,8 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     }
 
     private fun getFileInfo(path: String) {
-        mPresenter.getFileInfo(path)
+        val type = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+        mPresenter.getFileInfo(path,type)
     }
 
     private fun addToDatabase() {
