@@ -36,8 +36,13 @@ object FileUtil {
                 fileInfoList.add(fileInfo)
             }
         }
-        Collections.sort(fileInfoList)
+        fileInfoList.sort()
         return fileInfoList
+    }
+
+    fun getFileSuffix(data: FileInfo): String {
+        val name = File(data.path).name
+        return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
     }
 
     fun deleteFolder(path: String) {
@@ -61,10 +66,7 @@ object FileUtil {
         context.startActivity(intent)
     }
 
-    fun getFileSuffix(data: FileInfo): String {
-        val name = File(data.path).name
-        return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
-    }
+
 
     private fun getMIMEType(file: File): String {
         var type = ""

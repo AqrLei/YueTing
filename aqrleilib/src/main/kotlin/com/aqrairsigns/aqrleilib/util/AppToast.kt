@@ -17,6 +17,4 @@ object AppToast {
         toast.setGravity(gravity, 0, 0)
         toast.show()
     }
-
-
 }
