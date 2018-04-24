@@ -22,6 +22,8 @@ object YueTingConstant {
      */
     const val ADAPTER_TYPE_BOOK = 0
     const val ADAPTER_TYPE_MUSIC = 1
+    const val ADAPTER_TYPE_TITLE_BOOK = 2
+    const val ADAPTER_TYPE_TITLE_MUSIC = 3
     /**
      * permission code
      */
@@ -68,9 +70,39 @@ object YueTingConstant {
     const val PLAY_SINGLE = 0
     const val PLAY_LIST = 1
     const val PLAY_RANDOM = 2
+    const val PLAY_STATUS_PAUSE = 0
+    const val PLAY_STATUS_PLAY = 1
+    const val PLAY_TYPE_REPEAT = 0
+    const val PLAY_TYPE_RANDOM = 1
+    const val PLAY_TYPE_REPEAT_ONE = 2
+    const val PLAY_EXPAND = 0
+    const val PLAY_EXPAND_CLOSE = 1
+    const val PLAY_SUFFIX_MP3 = "mp3"
+    const val PLAY_SUFFIX_APE = "ape"
+    const val PLAY_SUFFIX_FLAC = "flac"
+    /**
+     * Title
+     */
+    const val FRAGMENT_TITLE_TYPE = "type"
+    const val FRAGMENT_TITLE_VALUE = "value"
+    const val FRAGMENT_TITLE_TYPE_MUSIC = "music"
+    const val FRAGMENT_TITLE_TYPE_BOOK= "book"
     /**
      * other
      */
     const val ENCODING = "UTF-16LE"
+    const val TITLE_TYPE_MUSIC = 1
+    const val TITLE_TYPE_BOOK = 0
+    const val READ_SUFFIX_TXT = "txt"
+    const val READ_SUFFIX_PDF = "pdf"
+    const val FILE_TYPE_FOLDER = 1
+    const val FILE_TYPE_MUSIC = 2
+    const val FILE_TYPE_BOOK = 0
+    const val INFO_UNKNOWN = "未知"
+    const val READ_BACKGROUND_COLOR_DEFAULT = "#C7EECE"
+    const val READ_BIG_FONT = 30F
+    const val READ_SMALL_FONT = 15F
+    const val READ_MIDDLE_FONT = 22F
+
 
 }

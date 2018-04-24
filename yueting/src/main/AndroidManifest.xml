@@ -25,8 +25,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
-
         </activity>
+        <activity android:name=".ui.YueTingListActivity" />
         <activity
             android:name=".ui.PlayActivity"
             android:parentActivityName=".ui.YueTingActivity">

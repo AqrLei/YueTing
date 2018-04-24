@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId "com.aqrlei.graduation.yueting"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -38,12 +38,12 @@ android {
 }
 
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    api project(':aqrleilib')
-    api project(':android-pdf-viewer')
-    api 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation project(':aqrleilib')
+    implementation project(':android-pdf-viewer')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
 }

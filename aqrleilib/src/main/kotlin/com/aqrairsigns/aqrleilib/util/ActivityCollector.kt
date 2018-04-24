@@ -1,6 +1,6 @@
 package com.aqrairsigns.aqrleilib.util
 
-import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
+import android.app.Activity
 
 
 /**
@@ -10,23 +10,22 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
  *@Date: 2017/8/22
  */
 object ActivityCollector {
-    private var activities = ArrayList<BaseActivity?>()
+    private var activities = ArrayList<Activity>()
 
-    fun add(activity: BaseActivity?) {
-        if (activity == null) return
+    fun add(activity: Activity) {
+
         activities.add(activity)
     }
 
-    fun remove(activity: BaseActivity?) {
-        /*if(activity == null) return*/
+    fun remove(activity: Activity) {
+
         activities.remove(activity)
     }
 
-    fun removeAll() {
-        activities
-                .filterNotNull()
-                .filterNot { it.isFinishing }
-                .forEach { it.finish() }
-        activities.clear()
+    fun killApp() {
+        activities.filter { !it.isFinishing }
+                .forEach {
+                    it.finish()
+                }
     }
 }

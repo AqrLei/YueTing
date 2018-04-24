@@ -42,10 +42,18 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
+    override val mPresenter: CatalogActivityPresenter
+        get() = CatalogActivityPresenter(this)
+    override val layoutRes: Int
+        get() = R.layout.read_activity_catalog
+    private val mDataInfoS = ArrayList<ChapterInfo>()
+    private lateinit var mAdapter: YueTingCatalogListAdapter
+    private lateinit var mProgressDialog: ProgressDialog
+    private var markPosition: Int = 0
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_remove_items -> {
-
+            R.id.backIv -> {
+                this.finish()
             }
         }
     }
@@ -67,7 +75,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
-
                 dataChange(ChapterFactory.CHAPTER.getChapters())
             }
             R.id.rb_bookMark_title -> {
@@ -76,14 +83,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
-    override val mPresenter: CatalogActivityPresenter
-        get() = CatalogActivityPresenter(this)
-    override val layoutRes: Int
-        get() = R.layout.read_activity_catalog
-    private val mDataInfoS = ArrayList<ChapterInfo>()
-    private lateinit var mAdapter: YueTingCatalogListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
-    private var markPosition: Int = 0
+
     override fun onStop() {
         super.onStop()
         /**
@@ -97,6 +97,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         setProgressDialog()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
+        backIv.setOnClickListener(this)
     }
 
     fun loadCatalogDone(t: Boolean) {

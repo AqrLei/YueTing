@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_bottom_read"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/dimenButtonH"
     android:layout_gravity="bottom"
-    android:background="#ff3a454d"
+    android:background="@color/colorTitleBarGrey"
     android:orientation="horizontal"
     android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="目录"
-        android:textSize="20sp"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="进度"
-        android:textSize="20sp"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:gravity="center"
         android:onClick="onClick"
         android:text="设置"
-        android:textSize="20sp"
+        android:textSize="@dimen/sizeText20dp"
         android:textStyle="bold" />
 
 </LinearLayout>

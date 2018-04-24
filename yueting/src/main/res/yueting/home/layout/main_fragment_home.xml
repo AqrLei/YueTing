@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/main_include_home_top" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/headerTopCl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenBigViewHeight"
+        android:background="@drawable/common_level_list_header"
+        android:paddingTop="@dimen/dimenViewHeight">
+
+        <ImageView
+            android:id="@+id/addFileIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/dimenReadMargin"
+            android:background="@drawable/common_selector_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/titleNameTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenButtonH"
+        android:background="@drawable/common_ripple_title"
+        android:drawableRight="@drawable/common_level_list_title"
+        android:padding="@dimen/dimenPadding5dp"
+        android:text="悦读"
+        android:textSize="@dimen/sizeText20dp" />
 
     <include layout="@layout/main_include_lv_content" />
 

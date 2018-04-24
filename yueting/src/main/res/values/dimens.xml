@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimenExtraView">50dp</dimen>
+    <dimen name="dimenViewHeight150dp">150dp</dimen>
+    <dimen name="dimenMargin">10dp</dimen>
+    <dimen name="sizeText20dp">20dp</dimen>
+    <dimen name="sizeText18dp">18dp</dimen>
+    <dimen name="sizeText15dp">15dp</dimen>
+    <dimen name="sizeText12dp">12dp</dimen>
+    <dimen name="dimenButtonH">40dp</dimen>
+    <dimen name="dimenButtonW">30dp</dimen>
+    <dimen name="dimenPadding5dp">5dp</dimen>
+    <dimen name="dimenPadding10dp">10dp</dimen>
+    <dimen name="dimenSmallMargin">5dp</dimen>
+    <dimen name="dimenViewHeight">60px</dimen>
+    <dimen name="dimenBigViewHeight">200dp</dimen>
+    <dimen name="dimenDividerLine">1dp</dimen>
+
+
+
+    <dimen name="dimenFileParent">30dp</dimen>
+    <dimen name="dimenTitleHeight">40dp</dimen>
+    <dimen name="dimenIvYueTingTopPadding">12dp</dimen>
+    <dimen name="dimenDialogBottomTextSize">20dp</dimen>
+    <dimen name="dimenVisualizerViewRadius">100dp</dimen>
+    <dimen name="dimenPlayRoundBarR">12dp</dimen>
+    <dimen name="dimenPlayRoundBarRW">3dp</dimen>
+    <dimen name="dimenListItem">90dp</dimen>
+    <dimen name="dimenListItemFL">64dp</dimen>
+    <dimen name="dimenListItemFLM">12dp</dimen>
+    <dimen name="dimenListItemMR">15dp</dimen>
+    <dimen name="dimenListItemMT">25dp</dimen>
+    <dimen name="dimenReadListItemPadding">15dp</dimen>
+    <dimen name="dimenReadListItemH">70dp</dimen>
+    <dimen name="dimenTopW">40dp</dimen>
+    <dimen name="dimenTopH">60dp</dimen>
+    <dimen name="dimenReadTextSizeM">22dp</dimen>
+    <dimen name="dimenReadTextSizeB">30dp</dimen>
+    <dimen name="dimenReadPaddingB">20dp</dimen>
+    <dimen name="dimenReadMargin">15dp</dimen>
+    <dimen name="dimenReadH">30dp</dimen>
+
+
+</resources>

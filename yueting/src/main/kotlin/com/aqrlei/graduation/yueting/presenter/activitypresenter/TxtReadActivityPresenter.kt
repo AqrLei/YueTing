@@ -90,12 +90,8 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                    }
-
+                    override fun onComplete() {}
+                    override fun onError(e: Throwable) {}
                     override fun onNext(t: Boolean) {
                         AppToast.toastShow(mMvpActivity, if (t) "书签添加完毕" else "书签添加失败", 1000)
                     }

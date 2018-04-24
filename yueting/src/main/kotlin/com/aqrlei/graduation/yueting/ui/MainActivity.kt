@@ -24,29 +24,28 @@ import kotlinx.android.synthetic.main.welcome_activity_main.*
 
 class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         View.OnClickListener {
+    override val layoutRes: Int
+        get() = R.layout.welcome_activity_main
+    override val mPresenter: MainActivityPresenter
+        get() = MainActivityPresenter(this)
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.bt_enjoy -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (permissionCheck(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
-                        YueTingActivity.jumpToYueTingActivity(this)
+                        YueTingListActivity.jumpToYueTingListActivity(this)
                     }
                 } else {
-                    YueTingActivity.jumpToYueTingActivity(this)
+                    YueTingListActivity.jumpToYueTingListActivity(this)
                 }
             }
         }
     }
 
-    override val layoutRes: Int
-        get() = R.layout.welcome_activity_main
-    override val mPresenter: MainActivityPresenter
-        get() = MainActivityPresenter(this)
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
+        if (hasFocus) {
             val decorView = window.decorView
             decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -66,12 +65,11 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == YueTingConstant.RQ_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                YueTingActivity.jumpToYueTingActivity(this)
+                YueTingListActivity.jumpToYueTingListActivity(this)
             } else {
                 AppToast.toastShow(this, "Permission Denied!", 1000)
             }
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -86,11 +84,7 @@ class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
         if (tempPermission[0] == "") {
             return true
         }
-
         ActivityCompat.requestPermissions(this, tempPermission, YueTingConstant.RQ_PERMISSION_CODE)
         return false
-
     }
-
-
 }

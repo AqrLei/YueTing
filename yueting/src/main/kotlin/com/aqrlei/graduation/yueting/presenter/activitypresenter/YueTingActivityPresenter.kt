@@ -14,5 +14,4 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 * @param mMvpActivity 访问对应的Activity
 * */
 class YueTingActivityPresenter(mMvpActivity: YueTingActivity) :
-        MvpContract.ActivityPresenter<YueTingActivity>(mMvpActivity) {
-}
+        MvpContract.ActivityPresenter<YueTingActivity>(mMvpActivity)

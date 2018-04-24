@@ -13,18 +13,22 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 * 书籍信息共享单例
 * */
 enum class ShareBookInfo {
-
     BookInfoTool;
 
+    companion object {
+        private var bookInfoList = ArrayList<BookInfo>()
+    }
 
+    private var position: Int = 0
+
+    fun getInfo(position: Int) = bookInfoList[position]
+    fun getSize() = bookInfoList.size
+    fun getInfoS() = bookInfoList
     fun setInfoS(infoS: ArrayList<BookInfo>) {
         clearBookInfo()
         bookInfoList.addAll(infoS)
     }
 
-    fun getInfo(position: Int) = bookInfoList[position]
-
-    fun getInfoS() = bookInfoList
     fun addInfo(bookInfo: BookInfo) {
         bookInfoList.add(bookInfo)
     }
@@ -40,9 +44,6 @@ enum class ShareBookInfo {
             bookInfoList.removeAt(position)
         }
     }
-
-
-    fun getSize() = bookInfoList.size
 
     fun clearBookInfo() {
         bookInfoList.clear()
@@ -89,14 +90,7 @@ enum class ShareBookInfo {
         }
     }
 
-    private var position: Int = 0
     fun setPosition(p: Int) {
         position = p
     }
-
-
-    companion object {
-        private var bookInfoList = ArrayList<BookInfo>()
-    }
-
 }

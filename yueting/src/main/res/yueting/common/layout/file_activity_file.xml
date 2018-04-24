@@ -3,21 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context="com.aqrlei.graduation.yueting.ui.FileActivity">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="60px"
-        android:background="#ffffffff" />
+        android:layout_height="@dimen/dimenViewHeight"
+        android:background="@color/colorWhite" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#ffffffff">
+        android:layout_height="@dimen/dimenTitleHeight"
+        android:background="@color/colorTitleBarGrey">
 
         <ImageView
-            android:id="@+id/iv_back"
+            android:id="@+id/backIv"
             style="@style/TitleBarImageViewStyle"
             android:onClick="onClick" />
 
@@ -25,18 +26,13 @@
             style="@style/TitleBarTextViewStyle"
             android:text="我的文件" />
 
-        <TextView
-            android:id="@+id/tv_add_file"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/addFileIv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
-            android:gravity="center"
             android:onClick="onClick"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="+"
-            android:textSize="30dp"
-            android:textStyle="normal" />
+            android:src="@drawable/common_selector_add" />
     </FrameLayout>
 
     <View style="@style/DividerStyle" />
@@ -44,13 +40,12 @@
     <TextView
         android:id="@+id/tv_file_parent"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#ffffffee"
+        android:layout_height="@dimen/dimenFileParent"
+        android:background="@color/colorFileParentWhite"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:onClick="onClick"
-        android:textSize="12dp"
+        android:textSize="@dimen/sizeText12dp"
         tools:text="/dev" />
 
     <View style="@style/DividerStyle" />
@@ -60,8 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:scrollbars="none"
-        />
+        android:scrollbars="none" />
 
 
 </LinearLayout>

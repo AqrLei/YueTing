@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/read_include_top"
-
-        />
+    <include layout="@layout/read_include_top" />
 
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pv_pdf_read"

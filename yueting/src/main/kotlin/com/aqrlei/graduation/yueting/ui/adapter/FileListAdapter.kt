@@ -5,7 +5,9 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.constant.YueTingConstant
 
 /**
  * @Author: AqrLei
@@ -19,17 +21,17 @@ class FileListAdapter(mData: List<FileInfo>, mContext: Context, mResId: Int) :
         val mNameTv = holderList.get(R.id.tv_book_name) as TextView
         mNameTv.text = data.name
         if (!data.isDir) {
-            val drawable = mContext.getDrawable(R.mipmap.ic_launcher_round)
-            drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-            mNameTv.setCompoundDrawables(drawable, null, null, null)
+            val suffix = FileUtil.getFileSuffix(data)
+            val flag = suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                    || suffix == YueTingConstant.PLAY_SUFFIX_APE
+                    || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
+            mNameTv.compoundDrawables[0].level =
+                    if (flag) YueTingConstant.FILE_TYPE_MUSIC
+                    else YueTingConstant.FILE_TYPE_BOOK
         } else {
-            val drawable = mContext.getDrawable(R.mipmap.ic_launcher)
-            drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-            mNameTv.setCompoundDrawables(drawable, null, null, null)
+            mNameTv.compoundDrawables[0].level = YueTingConstant.FILE_TYPE_FOLDER
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-
-    }
+    override fun setInternalClick(holder: CommonListViewHolder) {}
 }

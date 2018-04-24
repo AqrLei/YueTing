@@ -6,56 +6,63 @@
     <!--作为notification的布局文件，不能在组件中设置onClick事件，否则在通知栏上会无法显示-->
     <ImageView
         android:id="@+id/iv_album_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher_round" />
-
-    <TextView
-        android:id="@+id/tv_music_info"
+        android:layout_width="@dimen/dimenExtraView"
+        android:layout_height="@dimen/dimenExtraView"
+        android:layout_marginRight="@dimen/dimenMargin"
+        android:layout_marginTop="@dimen/dimenMargin"
+        android:scaleType="centerCrop"
+        android:background="@drawable/music_selector_note" />
+    <LinearLayout
+        android:id="@+id/musicInfoLl"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:lineSpacingExtra="2dp"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="2"
-        android:scrollHorizontally="true"
-        android:text="这是歌的名字"
-        android:textSize="18dp" />
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/dimenMargin"
+        android:layout_marginTop="@dimen/dimenMargin"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/musicInfoTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/colorMusicName"
+            android:textSize="@dimen/sizeText18dp" />
+        <TextView
+            android:id="@+id/musicInfoDetailTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textSize="@dimen/sizeText12dp" />
 
-    <TextView
-        android:id="@+id/tv_play_control"
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/playControlIv"
+        android:layout_width="@dimen/dimenButtonW"
+        android:layout_height="@dimen/dimenButtonH"
+        android:layout_gravity="center"
+        android:padding="@dimen/dimenPadding5dp"
+        android:src="@drawable/music_selector_pause" />
+
+    <ImageView
+        android:id="@+id/nextIv"
         android:layout_width="30dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="播" />
+        android:padding="@dimen/dimenPadding5dp"
+        android:src="@drawable/music_selector_next" />
 
-    <TextView
-        android:id="@+id/tv_next"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/closeIv"
+        android:layout_width="@dimen/dimenButtonW"
+        android:layout_height="@dimen/dimenButtonH"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="下" />
-
-    <TextView
-        android:id="@+id/tv_finish"
-        android:layout_width="30dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="结" />
+        android:padding="@dimen/dimenPadding5dp"
+        android:src="@drawable/common_selector_close" />
 </LinearLayout>

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">yueting</string>
+    <string name="read">悦读</string>
+    <string name="music">欣听</string>
     <string-array name="read_textStyle_SP">
         <item>正常</item>
         <item>斜体</item>
