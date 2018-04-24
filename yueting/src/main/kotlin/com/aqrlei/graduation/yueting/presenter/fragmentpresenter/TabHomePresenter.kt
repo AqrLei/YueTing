@@ -60,7 +60,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                         DBManager.SqlFormat.selectSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
                                 "",
-                                DataConstant.BOOK_TABLE_C1_TYPE_NAME,
+                                DataConstant.BOOK_TABLE_C5_TYPE_NAME,
                                 "="
                         ),
                         null, arrayOf(typeName), DBManager.SqlType.SELECT)
@@ -188,7 +188,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val path = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
                                     bookInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
                                     bookInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
-                                    bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE_NAME))
+                                    bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()

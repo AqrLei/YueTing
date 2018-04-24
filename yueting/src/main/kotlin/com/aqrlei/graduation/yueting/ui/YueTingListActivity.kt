@@ -51,7 +51,6 @@ class YueTingListActivity : MvpContract.MvpActivity<YueTingListPresenter>() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //TODO modify dialog layout
             AlertDialog.Builder(this).apply {
                 setTitle("提示")
                 setMessage("确定退出应用吗？")

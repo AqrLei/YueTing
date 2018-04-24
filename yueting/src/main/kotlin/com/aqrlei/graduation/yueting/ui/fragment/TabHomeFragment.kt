@@ -29,7 +29,6 @@ import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
-import kotlinx.android.synthetic.main.music_include_yue_ting_play.view.*
 import java.io.File
 
 /**
@@ -46,8 +45,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     companion object {
         fun newInstance(type: String, name: String): TabHomeFragment {
             val args = Bundle().apply {
-                putString(YueTingConstant.FRAGMENT_TITLE_TYPE,type)
-                putString(YueTingConstant.FRAGMENT_TITLE_VALUE,name)
+                putString(YueTingConstant.FRAGMENT_TITLE_TYPE, type)
+                putString(YueTingConstant.FRAGMENT_TITLE_VALUE, name)
             }
             val fragment = TabHomeFragment()
             fragment.arguments = args
@@ -59,9 +58,32 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
-    private lateinit var mBookAdapter: YueTingListAdapter
-    private lateinit var mMusicAdapter: YueTingListAdapter
-    private val mListView: AlphaListView by lazy { mView.lv_fragment_home as AlphaListView }
+    private val mListView: AlphaListView
+            by lazy {
+                mView.lv_fragment_home as AlphaListView
+            }
+    private val mAdapter: YueTingListAdapter
+            by lazy {
+                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                    YueTingListAdapter(
+                            mBookInfoShared.getInfoS(), mContainerActivity,
+                            R.layout.read_list_item, YueTingConstant.ADAPTER_TYPE_BOOK)
+                } else {
+                    YueTingListAdapter(
+                            mMusicInfoShared.getInfoS(), mContainerActivity,
+                            R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
+                }
+            }
+    private val type: String
+            by lazy {
+                arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+            }
+
+    private val name: String
+            by lazy {
+                arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+            }
+
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             sendMusicInfoS(service)
@@ -90,24 +112,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.titleNameTv -> {
-                val flag = titleNameTv.compoundDrawables[2].level == YueTingConstant.TITLE_TYPE_MUSIC
-                if (flag) {
-                    titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_BOOK
-                } else {
-                    titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
-                }
-                mListView.adapter = if (!flag) mMusicAdapter else mBookAdapter
-                titleNameTv.text = if (!flag) "欣听" else "悦读"
-                headerTopCl.background.level = titleNameTv.compoundDrawables[2].level
-                mContainerActivity.getMPlayView().expandListIv.visibility = if (!flag) {
-                    val playV = mContainerActivity.getMPlayView().playListLv
-                    if (playV.visibility == View.VISIBLE) playV.visibility = View.GONE
-                    View.GONE
-                } else View.VISIBLE
-            }
             R.id.addFileIv -> {
-                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ)
+                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ, type)
             }
         }
     }
@@ -158,7 +164,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun onResume() {
         super.onResume()
-        changeBookAdapter()
+        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+            changeBookAdapter()
+        }
     }
 
     fun unbindMusicService() {
@@ -167,27 +175,25 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         mMusicInfoShared.setInfoS(data)
-        mMusicAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
         mBookInfoShared.setInfoS(data)
-        mBookAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
 
     }
 
     fun changeMusicAdapter() {
-        mMusicAdapter.notifyDataSetInvalidated()
+        mAdapter.notifyDataSetInvalidated()
     }
 
     fun changeBookAdapter() {
-        mBookAdapter.notifyDataSetInvalidated()
+        mAdapter.notifyDataSetInvalidated()
     }
 
     private fun initData() {
-        val type = arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
-        val name = arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
-        if(type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
+        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
             getMusicInfoFromDB(name)
         } else {
             getBookInfoFromDB(name)
@@ -195,15 +201,17 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initView() {
-        mBookAdapter = YueTingListAdapter(
-                mBookInfoShared.getInfoS(), mContainerActivity,
-                R.layout.read_list_item, YueTingConstant.ADAPTER_TYPE_BOOK)
-        mMusicAdapter = YueTingListAdapter(
-                mMusicInfoShared.getInfoS(), mContainerActivity,
-                R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
-        mContainerActivity.initPlayListView(mMusicAdapter)
-        mListView.adapter = mBookAdapter
-        titleNameTv.text = "悦读"
+        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
+            mContainerActivity.initPlayListView(mAdapter)
+            titleNameTv.text = "欣听"
+            titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
+        } else {
+            mContainerActivity.initPlayListView(YueTingListAdapter(
+                    mMusicInfoShared.getInfoS(), mContainerActivity,
+                    R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC))
+            titleNameTv.text = "悦读"
+        }
+        mListView.adapter = mAdapter
     }
 
     private fun initListener() {
@@ -213,11 +221,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         titleNameTv.setOnClickListener(this)
     }
 
-    private fun getMusicInfoFromDB(name:String) {
+    private fun getMusicInfoFromDB(name: String) {
         mPresenter.getMusicInfoFromDB(name)
     }
 
-    private fun getBookInfoFromDB(name:String) {
+    private fun getBookInfoFromDB(name: String) {
         mPresenter.getBookInfoFromDB(name)
     }
 
@@ -225,12 +233,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         if (flag) {
             val path = mBookInfoShared.getInfo(removePosition).path
             mBookInfoShared.removeInfo(removePosition)
-            mBookAdapter.notifyDataSetInvalidated()
+            mAdapter.notifyDataSetInvalidated()
             mPresenter.deleteBookItemFromDB(path)
         } else {
             val path = mMusicInfoShared.getInfo(removePosition).albumUrl
             mMusicInfoShared.removeInfo(removePosition)
-            mMusicAdapter.notifyDataSetInvalidated()
+            mAdapter.notifyDataSetInvalidated()
             mPresenter.deleteMusicItemFromDB(path)
         }
     }
