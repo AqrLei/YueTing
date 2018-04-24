@@ -39,21 +39,31 @@ import java.io.File
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
     companion object {
-        fun selectMusicObservable(): Observable<Cursor?> {
+        fun selectMusicObservable(typeName: String): Observable<Cursor?> {
             return Observable.defer {
-                val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
-                        DataConstant.MUSIC_TABLE_NAME),
-                        null, null, DBManager.SqlType.SELECT)
+                val c = DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.MUSIC_TABLE_NAME,
+                                "",
+                                DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
+                                "="
+                        ),
+                        null, arrayOf(typeName), DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
             }
         }
 
-        fun selectBookObservable(): Observable<Cursor?> {
+        fun selectBookObservable(typeName: String): Observable<Cursor?> {
             return Observable.defer {
-                val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(
-                        DataConstant.BOOK_TABLE_NAME),
-                        null, null, DBManager.SqlType.SELECT)
+                val c = DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.BOOK_TABLE_NAME,
+                                "",
+                                DataConstant.BOOK_TABLE_C1_TYPE_NAME,
+                                "="
+                        ),
+                        null, arrayOf(typeName), DBManager.SqlType.SELECT)
                         .getCursor()
                 Observable.just(c)
             }
@@ -116,12 +126,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
-    fun getMusicInfoFromDB() {
+    fun getMusicInfoFromDB(typeName: String) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         val musicInfoList = ArrayList<MusicInfo>()
         disposables.add(
-                selectMusicObservable()
+                selectMusicObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
@@ -158,12 +168,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         )
     }
 
-    fun getBookInfoFromDB() {
+    fun getBookInfoFromDB(typeName: String) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
         val bookInfoList = ArrayList<BookInfo>()
         disposables.add(
-                selectBookObservable()
+                selectBookObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableObserver<Cursor>() {
@@ -178,7 +188,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                     val path = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
                                     bookInfo.id = t.getInt(t.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
                                     bookInfo.createTime = t.getString(t.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
-                                    bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
+                                    bookInfo.type = t.getString(t.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE_NAME))
                                     bookInfo.name = name
                                     bookInfo.path = path ?: ""
                                     bookInfo.fileLength = File(path).length().toInt()

@@ -40,7 +40,7 @@ class YueTingApplication : BaseApplication() {
                     .addTable(DataConstant.MUSIC_TABLE_NAME,
                             arrayOf(
                                     DataConstant.COMMON_COLUMN_PATH,
-                                    DataConstant.MUSIC_TABLE_C1_TYPE,
+                                    DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
                                     DataConstant.MUSIC_TABLE_C2_FILE_INFO
                             ),
                             arrayOf(
@@ -52,7 +52,7 @@ class YueTingApplication : BaseApplication() {
                     .addTable(DataConstant.BOOK_TABLE_NAME,
                             arrayOf(
                                     DataConstant.COMMON_COLUMN_PATH,
-                                    DataConstant.BOOK_TABLE_C1_TYPE,
+                                    DataConstant.BOOK_TABLE_C1_TYPE_NAME,
                                     DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
                                     DataConstant.BOOK_TABLE_C3_INDEX_END,
                                     DataConstant.BOOK_TABLE_C4_FILE_INFO
@@ -85,6 +85,16 @@ class YueTingApplication : BaseApplication() {
                             arrayOf(
                                     DataConstant.MARK_TABLE_C0_DEF,
                                     DataConstant.MARK_TABLE_C1_DEF
+                            )
+                    )
+                    .addTable(DataConstant.TYPE_TABLE_NAME,
+                            arrayOf(
+                                    DataConstant.TYPE_TABLE_C0_NAME,
+                                    DataConstant.TYPE_TABLE_C1_TYPE
+                            ),
+                            arrayOf(
+                                    DataConstant.TYPE_TABLE_C0_DEF,
+                                    DataConstant.TYPE_TABLE_C1_DEF
                             )
                     )
                     .createDB()

@@ -106,7 +106,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                         DataConstant.BOOK_TABLE_NAME,
                                         arrayOf(
                                                 DataConstant.COMMON_COLUMN_PATH,
-                                                DataConstant.BOOK_TABLE_C1_TYPE,
+                                                DataConstant.BOOK_TABLE_C1_TYPE_NAME,
                                                 DataConstant.BOOK_TABLE_C4_FILE_INFO,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
                                 arrayOf(tempData.path, suffix, byteData, dateTime),

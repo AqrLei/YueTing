@@ -4,17 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/topV"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenViewHeight"
+        app:layout_constraintBottom_toTopOf="@+id/headerTopCl"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/titleTl"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/dimenTitleHeight"
+        android:layout_marginLeft="@dimen/dimenMargin"
+        android:layout_marginRight="@dimen/dimenMargin"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dimenPadding10dp"
-        android:paddingRight="@dimen/dimenPadding10dp"
-        app:layout_constraintBottom_toTopOf="@+id/contentVp"
+        app:layout_constraintBottom_toTopOf="@+id/bgIv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topV"
         app:tabTextAppearance="@style/TabTextAppearance">
 
         <android.support.design.widget.TabItem
@@ -29,12 +36,19 @@
 
     </android.support.design.widget.TabLayout>
 
+    <ImageView
+        android:id="@+id/bgIv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenViewHeight150dp"
+        app:layout_constraintBottom_toTopOf="@+id/contentVp"
+        app:layout_constraintTop_toBottomOf="@+id/titleTl" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/contentVp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTl"
+        app:layout_constraintTop_toBottomOf="@+id/bgIv"
         app:layout_constraintVertical_weight="1" />
 
 </android.support.constraint.ConstraintLayout>
