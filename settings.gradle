@@ -1,1 +1,1 @@
-include ':yueting', ':aqrleilib', ':android-pdf-viewer'
+include ':yueting', ':aqrleilib'

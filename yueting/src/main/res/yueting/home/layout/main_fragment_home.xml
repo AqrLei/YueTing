@@ -5,34 +5,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/headerTopCl"
+    <View
+        android:id="@+id/topV"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenBigViewHeight"
-        android:background="@drawable/common_level_list_header"
-        android:paddingTop="@dimen/dimenViewHeight">
+        android:layout_height="@dimen/dimenViewHeight" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/titleNameTv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimenButtonH"
+            android:layout_marginRight="@dimen/dimenMargin"
+            android:background="@drawable/common_ripple_title"
+            android:drawableRight="@drawable/common_level_list_title"
+            android:padding="@dimen/dimenPadding5dp"
+            android:text="悦读"
+            android:textSize="@dimen/sizeText20dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/addFileIv" />
 
         <ImageView
             android:id="@+id/addFileIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimenButtonH"
+            android:layout_height="@dimen/dimenButtonH"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/dimenReadMargin"
-            android:background="@drawable/common_selector_add"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/common_selector_add_op"
+            app:layout_constraintLeft_toRightOf="@+id/titleNameTv"
             app:layout_constraintRight_toRightOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/titleNameTv"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenButtonH"
-        android:background="@drawable/common_ripple_title"
-        android:drawableRight="@drawable/common_level_list_title"
-        android:padding="@dimen/dimenPadding5dp"
-        android:text="悦读"
-        android:textSize="@dimen/sizeText20dp" />
 
     <include layout="@layout/main_include_lv_content" />
 

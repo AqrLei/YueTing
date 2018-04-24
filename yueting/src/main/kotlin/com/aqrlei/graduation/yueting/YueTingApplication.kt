@@ -52,17 +52,19 @@ class YueTingApplication : BaseApplication() {
                     .addTable(DataConstant.BOOK_TABLE_NAME,
                             arrayOf(
                                     DataConstant.COMMON_COLUMN_PATH,
-                                    DataConstant.BOOK_TABLE_C1_TYPE_NAME,
+                                    DataConstant.BOOK_TABLE_C1_TYPE,
                                     DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
                                     DataConstant.BOOK_TABLE_C3_INDEX_END,
-                                    DataConstant.BOOK_TABLE_C4_FILE_INFO
+                                    DataConstant.BOOK_TABLE_C4_FILE_INFO,
+                                    DataConstant.BOOK_TABLE_C5_TYPE_NAME
                             ),
                             arrayOf(
                                     DataConstant.BOOK_TABLE_C0_DEF,
                                     DataConstant.BOOK_TABLE_C1_DEF,
                                     DataConstant.BOOK_TABLE_C2_DEF,
                                     DataConstant.BOOK_TABLE_C3_DEF,
-                                    DataConstant.BOOK_TABLE_C4_DEF
+                                    DataConstant.BOOK_TABLE_C4_DEF,
+                                    DataConstant.BOOK_TABLE_C5_DEF
                             )
                     )
                     .addTable(DataConstant.CATALOG_TABLE_NAME,

@@ -64,7 +64,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
         YueTingActivity.jumpToYueTingActivity(mContainerActivity, type, titleList[position])
-        // AppToast.toastShow(mContainerActivity, titleList[position], 1000)
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
@@ -88,5 +87,11 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
         typeLv.adapter = mAdapter
         typeLv.onItemClickListener = this
         typeLv.onItemLongClickListener = this
+
+        bgIv.background.level =
+                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC)
+                    YueTingConstant.TITLE_TYPE_MUSIC
+                else
+                    YueTingConstant.TITLE_TYPE_BOOK
     }
 }

@@ -30,18 +30,23 @@ import java.io.File
 class FileActivityPresenter(mMvpActivity: FileActivity) :
         MvpContract.ActivityPresenter<FileActivity>(mMvpActivity) {
     companion object {
-        fun createFileInfo(path: String): Observable<ArrayList<FileInfo>> {
+        fun createFileInfo(path: String, type: String): Observable<ArrayList<FileInfo>> {
             return Observable.defer {
                 val fileInfoList = FileUtil.createFileInfoS(path)
                 val data = ArrayList<FileInfo>()
                 fileInfoList.filter {
                     val suffix = FileUtil.getFileSuffix(it)
-                    it.isDir
-                            || suffix == YueTingConstant.PLAY_SUFFIX_MP3
-                            || suffix == YueTingConstant.PLAY_SUFFIX_APE
-                            || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
-                            || suffix == YueTingConstant.READ_SUFFIX_TXT
-                            || suffix == YueTingConstant.READ_SUFFIX_PDF
+                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
+                        it.isDir
+                                || suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                                || suffix == YueTingConstant.PLAY_SUFFIX_APE
+                                || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
+                    } else {
+                        it.isDir
+                                || suffix == YueTingConstant.READ_SUFFIX_TXT
+                                || suffix == YueTingConstant.READ_SUFFIX_PDF
+                    }
+
                 }.forEach {
                     data.add(it)
                 }
@@ -106,7 +111,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                         DataConstant.BOOK_TABLE_NAME,
                                         arrayOf(
                                                 DataConstant.COMMON_COLUMN_PATH,
-                                                DataConstant.BOOK_TABLE_C1_TYPE_NAME,
+                                                DataConstant.BOOK_TABLE_C1_TYPE,
                                                 DataConstant.BOOK_TABLE_C4_FILE_INFO,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
                                 arrayOf(tempData.path, suffix, byteData, dateTime),
@@ -125,10 +130,10 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
 
     }
 
-    fun getFileInfo(path: String) {
+    fun getFileInfo(path: String, type: String) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
-        disposables.add(createFileInfo(path)
+        disposables.add(createFileInfo(path,type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<ArrayList<FileInfo>>() {
@@ -153,8 +158,8 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     override fun onError(e: Throwable) {}
                     override fun onNext(t: Boolean) {
                         mMvpActivity.finishActivity(t,
-                                musicSize != ShareMusicInfo.MusicInfoTool.getSize(),
-                                bookSize != ShareBookInfo.BookInfoTool.getSize())
+                                bookSize != ShareBookInfo.BookInfoTool.getSize(),
+                                musicSize != ShareMusicInfo.MusicInfoTool.getSize())
                     }
                 }))
     }
