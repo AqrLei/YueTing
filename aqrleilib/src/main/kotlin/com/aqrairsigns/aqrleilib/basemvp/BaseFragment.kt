@@ -28,6 +28,7 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is BaseActivity) {
+            @Suppress("UNCHECKED_CAST")
             mContainerActivity = context as T
             AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onAttach----" +
                     mContainerActivity.javaClass.simpleName)
