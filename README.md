@@ -5,18 +5,5 @@
 [*Kotlin-Android*](http://kotlinlang.org/docs/reference/android-overview.html) 
 
 
->*aqrleilib will refactor and move to Learning*<br>
+>*aqrleilib will move to Learning*<br>
 [*Learning](https://github.com/AqrLei/Learning)
-
-
-
-
-
-
-
-
-
-
-
-
-
