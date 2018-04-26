@@ -130,6 +130,9 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     fun getMPlayView() = mPlayView
 
+    fun setMusicTitle(musicName:String){
+        mTabHomeFragment.setMusicTitle(musicName)
+    }
     private fun initListener() {
         nextIv.setOnClickListener(this)
         previousIv.setOnClickListener(this)
@@ -139,8 +142,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
-        val type = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
-        val name = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+        val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)?:YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
+        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)?:"默认列表"
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(

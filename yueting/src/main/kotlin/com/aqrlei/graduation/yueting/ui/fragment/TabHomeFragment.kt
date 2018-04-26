@@ -53,7 +53,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             return fragment
         }
     }
-
     private var removePosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
@@ -106,6 +105,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             R.id.ll_music_item -> {
                 showDialog(false)
             }
+
         }
         return true
     }
@@ -114,6 +114,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         when (v?.id) {
             R.id.addFileIv -> {
                 FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ, type)
+            }
+            R.id.backIv -> {
+                mContainerActivity.finish()
             }
         }
     }
@@ -169,6 +172,14 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
+    fun setMusicTitle(musicName: String) {
+
+        titleNameTv.text = musicName
+        if(type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK){
+            titleNameTv.text = "悦读"
+        }
+    }
+
     fun unbindMusicService() {
         mContainerActivity.unbindService(serviceConn)
     }
@@ -203,22 +214,21 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private fun initView() {
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
             mContainerActivity.initPlayListView(mAdapter)
-            titleNameTv.text = "欣听"
             titleNameTv.compoundDrawables[2].level = YueTingConstant.TITLE_TYPE_MUSIC
         } else {
             mContainerActivity.initPlayListView(YueTingListAdapter(
                     mMusicInfoShared.getInfoS(), mContainerActivity,
                     R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC))
-            titleNameTv.text = "悦读"
         }
         mListView.adapter = mAdapter
+        titleNameTv.text = name
     }
 
     private fun initListener() {
         mListView.onItemClickListener = this
         mListView.onItemLongClickListener = this
         addFileIv.setOnClickListener(this)
-        titleNameTv.setOnClickListener(this)
+        backIv.setOnClickListener(this)
     }
 
     private fun getMusicInfoFromDB(name: String) {
@@ -252,7 +262,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         })
         dialog.window.setGravity(Gravity.BOTTOM)
         dialog.window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
-                DensityUtil.dipToPx(mContainerActivity, 50f))
+                ConstraintLayout.LayoutParams.WRAP_CONTENT)
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
     }
