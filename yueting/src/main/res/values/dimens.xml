@@ -2,6 +2,8 @@
 <resources>
 
     <dimen name="dimenExtraView">50dp</dimen>
+    <dimen name="dimenView50dp">50dp</dimen>
+    <dimen name="dimenView40dp">40dp</dimen>
     <dimen name="dimenViewHeight150dp">150dp</dimen>
     <dimen name="dimenMargin">10dp</dimen>
     <dimen name="sizeText20dp">20dp</dimen>

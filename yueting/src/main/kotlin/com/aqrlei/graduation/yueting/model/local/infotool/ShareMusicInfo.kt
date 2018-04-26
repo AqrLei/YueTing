@@ -1,5 +1,6 @@
 package com.aqrlei.graduation.yueting.model.local.infotool
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -31,6 +32,7 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 /*
 * 音乐信息共享单例
 * */
+@Suppress("unused")
 enum class ShareMusicInfo {
 
     MusicInfoTool;
@@ -47,6 +49,7 @@ enum class ShareMusicInfo {
     private var playState: PlayState = PlayState.PAUSE
     private var mHandler: Handler? = null
     private var isStartService: Boolean = false
+    private var musicName: String = ""
 
     fun getInfo(position: Int) = musicInfoList[position]
     fun getInfoS() = musicInfoList
@@ -144,18 +147,20 @@ enum class ShareMusicInfo {
             mContext.add(context)
         }
         if (mHandler == null) {
-            mHandler = object : Handler() {
+            mHandler = @SuppressLint("HandlerLeak")
+            object : Handler() {
                 override fun handleMessage(msg: Message) {
                     if (msg.what == ActionConstant.ACTION_FINISH_REQ) {
                         ActivityCollector.killApp()
                     }
                     mContext.forEach {
                         if (!it.isFinishing) {
-                            if (it is PlayActivity) {
-                                refreshPlayView(it.getMPlayView(), msg)
-                            }
-                            if (it is YueTingActivity) {
-                                refreshPlayView(it.getMPlayView(), msg)
+                            when (it) {
+                                is PlayActivity -> refreshPlayView(it.getMPlayView(), msg)
+                                is YueTingActivity -> {
+                                    refreshPlayView(it.getMPlayView(), msg)
+                                    it.setMusicTitle(musicName)
+                                }
                             }
                         }
                     }
@@ -180,7 +185,8 @@ enum class ShareMusicInfo {
 
         (view.findViewById(R.id.iv_album_picture) as ImageView).setImageBitmap(bitmap)
         (view.findViewById(R.id.musicInfoTv) as TextView).text = musicInfo.title
-        (view.findViewById(R.id.musicInfoDetailTv) as TextView).text = "${musicInfo.artist} - ${musicInfo.album}"
+        (view.findViewById(R.id.musicInfoDetailTv) as TextView).text = " ${musicInfo.artist} - ${musicInfo.album} "
+        musicName = musicInfo.title
     }
 
     fun isStartService(isStart: Boolean) {

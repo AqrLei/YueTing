@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,14 +10,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenViewHeight150dp"
         android:background="@drawable/common_level_list_header"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/listTitleTv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
+        android:id="@+id/listTitleTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenView40dp"
+        android:background="@drawable/common_ripple_title"
+        android:drawableRight="@drawable/common_selector_setting"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dimenPadding10dp"
+        android:textSize="@dimen/sizeText18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/typeLv"
+        app:layout_constraintTop_toBottomOf="@+id/bgIv"
+        tools:text="创建的歌单" />
 
     <ListView
         android:id="@+id/typeLv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@+id/bgIv" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintTop_toBottomOf="@+id/listTitleTv"
+        app:layout_constraintVertical_weight="1" />
 
 </android.support.constraint.ConstraintLayout>

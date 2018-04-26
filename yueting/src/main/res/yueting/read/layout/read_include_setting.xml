@@ -45,7 +45,7 @@
     <LinearLayout
         android:id="@+id/ll_bottom_font"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenExtraView"
+        android:layout_height="@dimen/dimenView50dp"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dimenPadding5dp"
         android:paddingTop="@dimen/dimenPadding5dp">
