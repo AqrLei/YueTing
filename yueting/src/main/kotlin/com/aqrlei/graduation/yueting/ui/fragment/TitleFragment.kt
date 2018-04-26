@@ -18,7 +18,8 @@ import kotlinx.android.synthetic.main.main_title_fragment_list.*
  */
 class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivity>(),
         AdapterView.OnItemClickListener,
-        AdapterView.OnItemLongClickListener {
+        AdapterView.OnItemLongClickListener,
+View.OnClickListener{
     companion object {
         fun newInstance(type: String): TitleFragment {
             return TitleFragment().apply {
@@ -61,6 +62,11 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 }
             }
 
+    override fun onClick(v: View) {
+        if(v.id == R.id.listTitleTv ){
+            //TODO create list or manage list
+        }
+    }
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
         YueTingActivity.jumpToYueTingActivity(mContainerActivity, type, titleList[position])
@@ -88,10 +94,15 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
         typeLv.onItemClickListener = this
         typeLv.onItemLongClickListener = this
 
+        listTitleTv.setOnClickListener(this)
         bgIv.background.level =
-                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC)
-                    YueTingConstant.TITLE_TYPE_MUSIC
-                else
+                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
+                    listTitleTv.text = "创建的歌单"
+                            YueTingConstant.TITLE_TYPE_MUSIC
+                }
+                else {
+                    listTitleTv.text = "创建的书单"
                     YueTingConstant.TITLE_TYPE_BOOK
+                }
     }
 }
