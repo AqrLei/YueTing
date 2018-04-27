@@ -4,8 +4,12 @@
     <dimen name="dimenExtraView">50dp</dimen>
     <dimen name="dimenView50dp">50dp</dimen>
     <dimen name="dimenView40dp">40dp</dimen>
+    <dimen name="dimenView30dp">30dp</dimen>
     <dimen name="dimenViewHeight150dp">150dp</dimen>
+    <dimen name="dimenViewHeight200dp">200dp</dimen>
+    <dimen name="dimenView100dp">100dp</dimen>
     <dimen name="dimenMargin">10dp</dimen>
+    <dimen name="dimenMargin20dp">20dp</dimen>
     <dimen name="sizeText20dp">20dp</dimen>
     <dimen name="sizeText18dp">18dp</dimen>
     <dimen name="sizeText15dp">15dp</dimen>
