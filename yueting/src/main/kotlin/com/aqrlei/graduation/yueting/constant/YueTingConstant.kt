@@ -103,6 +103,9 @@ object YueTingConstant {
     const val READ_BIG_FONT = 30F
     const val READ_SMALL_FONT = 15F
     const val READ_MIDDLE_FONT = 22F
+    const val WHICH_JUMP_TO_FILE = "jump_key"
+    const val YUE_TING_LIST_FILE = 0
+    const val YUE_TING_FILE = 1
 
 
 }

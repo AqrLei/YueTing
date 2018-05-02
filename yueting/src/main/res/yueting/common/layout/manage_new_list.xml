@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/dimenViewHeight200dp"
+    android:layout_height="@dimen/dimenView100dp"
+    android:layout_gravity="center"
+    android:background="@color/colorTitleBarGrey">
+
+
+    <EditText
+        android:id="@+id/listNameEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimenMargin20dp"
+        android:layout_marginRight="@dimen/dimenMargin20dp"
+        android:layout_marginTop="@dimen/dimenMargin"
+        android:background="@drawable/common_shape_pop_view"
+        android:hint="请输入名称"
+        android:maxLength="10"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/dimenPadding5dp"
+        android:paddingLeft="@dimen/dimenPadding10dp"
+        android:paddingRight="@dimen/dimenPadding10dp"
+        android:paddingTop="@dimen/dimenPadding5dp"
+        app:layout_constraintBottom_toTopOf="@+id/sureTv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/cancelTv"
+        android:layout_width="@dimen/dimenView40dp"
+        android:layout_height="@dimen/dimenView30dp"
+        android:layout_marginTop="@dimen/dimenMargin"
+        android:background="@drawable/common_ripple_go"
+        android:gravity="center"
+        android:text="取消"
+        android:textSize="@dimen/sizeText15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/sureTv"
+        app:layout_constraintTop_toBottomOf="@+id/listNameEt" />
+    <TextView
+        android:id="@+id/sureTv"
+        android:layout_width="@dimen/dimenView40dp"
+        android:layout_height="@dimen/dimenView30dp"
+        android:layout_marginTop="@dimen/dimenMargin"
+        android:background="@drawable/common_ripple_go"
+        android:gravity="center"
+        android:text="确定"
+        android:textSize="@dimen/sizeText15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/cancelTv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listNameEt" />
+
+
+</android.support.constraint.ConstraintLayout>

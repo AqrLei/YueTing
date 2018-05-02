@@ -21,8 +21,8 @@ object DataConstant {
     const val TYPE_TABLE_NAME = "typeInfo"
     const val TYPE_TABLE_C0_NAME = "typeName"
     const val TYPE_TABLE_C1_TYPE = "type"
-    const val TYPE_TABLE_C0_DEF = "varchar"
-    const val TYPE_TABLE_C1_DEF = "varchar unique not null"
+    const val TYPE_TABLE_C0_DEF = "varchar unique"
+    const val TYPE_TABLE_C1_DEF = "varchar"
     /**
      * music's table
      */

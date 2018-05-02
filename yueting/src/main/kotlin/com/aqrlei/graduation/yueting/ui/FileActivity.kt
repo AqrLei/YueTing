@@ -29,10 +29,17 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
         AdapterView.OnItemClickListener,
         View.OnClickListener {
     companion object {
-        fun jumpToFileActivity(context: Activity, reqCode: Int, type: String) {
+        fun jumpToFileActivity(context: Activity,
+                               reqCode: Int,
+                               type: String,
+                               typeName: String,
+                               which: Int) {
             val intent = Intent(context, FileActivity::class.java).apply {
-                val bundle = Bundle()
-                bundle.putString(YueTingConstant.FRAGMENT_TITLE_TYPE, type)
+                val bundle = Bundle().apply {
+                    putString(YueTingConstant.FRAGMENT_TITLE_TYPE, type)
+                    putString(YueTingConstant.FRAGMENT_TITLE_VALUE, typeName)
+                    putInt(YueTingConstant.WHICH_JUMP_TO_FILE, which)
+                }
                 putExtras(bundle)
             }
             if (IntentUtil.queryActivities(context, intent)) {
@@ -107,10 +114,13 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
         mProgressDialog.dismiss()
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
-        val intent = Intent()
-                .putExtra(YueTingConstant.FILE_BOOK_CHANGE, bookChange)
-                .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
-        setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
+        if (intent.extras.getInt(YueTingConstant.WHICH_JUMP_TO_FILE)
+                == YueTingConstant.YUE_TING_FILE) {
+            val intent = Intent()
+                    .putExtra(YueTingConstant.FILE_BOOK_CHANGE, bookChange)
+                    .putExtra(YueTingConstant.FILE_MUSIC_CHANGE, musicChange)
+            setResult(YueTingConstant.YUE_TING_FILE_RES, intent)
+        }
         this@FileActivity.finish()
     }
 
@@ -140,10 +150,10 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
 
     private fun getFileInfo(path: String) {
         val type = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
-        mPresenter.getFileInfo(path,type)
+        mPresenter.getFileInfo(path, type)
     }
 
     private fun addToDatabase() {
-        mPresenter.addToDataBase(mData)
+        mPresenter.addToDataBase(mData, intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_VALUE))
     }
 }
