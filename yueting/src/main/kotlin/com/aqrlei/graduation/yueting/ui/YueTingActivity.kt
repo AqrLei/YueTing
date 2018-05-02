@@ -14,7 +14,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.YueTingPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 /*
 * @param mPresenter 访问对应的Presenter
 * */
-class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
+class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
     companion object {
         fun jumpToYueTingActivity(context: Context, type: String, name: String) {
@@ -47,8 +47,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    override val mPresenter: YueTingActivityPresenter
-        get() = YueTingActivityPresenter(this)
+    override val mPresenter: YueTingPresenter
+        get() = YueTingPresenter(this)
     override val layoutRes: Int
         get() = R.layout.main_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool

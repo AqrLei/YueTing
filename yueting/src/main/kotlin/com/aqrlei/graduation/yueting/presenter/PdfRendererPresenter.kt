@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.presenter.fragmentpresenter
+package com.aqrlei.graduation.yueting.presenter
 
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract

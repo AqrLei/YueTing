@@ -11,23 +11,21 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.MainActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.MainPresenter
 import kotlinx.android.synthetic.main.welcome_activity_main.*
 
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/22
  */
 
-class MainActivity : MvpContract.MvpActivity<MainActivityPresenter>(),
+class MainActivity : MvpContract.MvpActivity<MainPresenter>(),
         View.OnClickListener {
     override val layoutRes: Int
         get() = R.layout.welcome_activity_main
-    override val mPresenter: MainActivityPresenter
-        get() = MainActivityPresenter(this)
+    override val mPresenter: MainPresenter
+        get() = MainPresenter(this)
 
     override fun onClick(v: View?) {
         when (v?.id) {

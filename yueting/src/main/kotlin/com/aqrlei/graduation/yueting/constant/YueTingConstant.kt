@@ -51,6 +51,7 @@ object YueTingConstant {
     const val TXT_CATALOG_REQ = 10
     const val YUE_TING_FILE_REQ = 11
     const val PDF_CATALOG_REQ = 12
+    const val MANAGE_REQ = 13
     /**
      * activity result code
      * */
@@ -86,7 +87,7 @@ object YueTingConstant {
     const val FRAGMENT_TITLE_TYPE = "type"
     const val FRAGMENT_TITLE_VALUE = "value"
     const val FRAGMENT_TITLE_TYPE_MUSIC = "music"
-    const val FRAGMENT_TITLE_TYPE_BOOK= "book"
+    const val FRAGMENT_TITLE_TYPE_BOOK = "book"
     /**
      * other
      */
@@ -106,6 +107,9 @@ object YueTingConstant {
     const val WHICH_JUMP_TO_FILE = "jump_key"
     const val YUE_TING_LIST_FILE = 0
     const val YUE_TING_FILE = 1
+    const val MANAGE_TYPE_KEY = "key"
+    const val MANAGE_TYPE_LIST = "list"
+    const val MANAGE_TYPE_ITEM = "item"
 
 
 }

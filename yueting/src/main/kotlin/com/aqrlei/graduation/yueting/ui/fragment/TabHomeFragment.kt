@@ -19,11 +19,8 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
-import com.aqrlei.graduation.yueting.ui.FileActivity
-import com.aqrlei.graduation.yueting.ui.PdfReadActivity
-import com.aqrlei.graduation.yueting.ui.TxtReadActivity
-import com.aqrlei.graduation.yueting.ui.YueTingActivity
+import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.*
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
@@ -79,18 +76,16 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                                 else mMusicInfoShared.getInfo(removePosition).title
                         (findViewById(R.id.ownerTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                   ""
+                                    ""
                                 else mMusicInfoShared.getInfo(removePosition).artist
                         (findViewById(R.id.localPathTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
                                     mBookInfoShared.getInfo(removePosition).path
                                 else mMusicInfoShared.getInfo(removePosition).albumUrl
                         (findViewById(R.id.itemNameTv) as TextView).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                {
-                                    "${mBookInfoShared.getInfo(removePosition).fileLength/(1024.0F*1024.0F)} M"
-                                }
-                                else {
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                                    "${mBookInfoShared.getInfo(removePosition).fileLength / (1024.0F * 1024.0F)} M"
+                                } else {
                                     DateFormatUtil.simpleTimeFormat(
                                             mMusicInfoShared.getInfo(removePosition).duration.toLong())
 
@@ -161,7 +156,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 dialog.dismiss()
             }
             R.id.batchDeleteTv -> {
-                // manageItems
+                ManageListActivity.jumpToManageListActivity(
+                        mContainerActivity,
+                        YueTingConstant.MANAGE_TYPE_ITEM,
+                        YueTingConstant.MANAGE_REQ)
             }
             R.id.lookDetailsTv -> {
                 dialog.dismiss()

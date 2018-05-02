@@ -16,7 +16,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.PlayActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.PlayPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
 import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
  * Date : 2017/9/24.
  */
 class PlayActivity :
-        MvpContract.MvpActivity<PlayActivityPresenter>(),
+        MvpContract.MvpActivity<PlayPresenter>(),
         View.OnClickListener,
         AdapterView.OnItemClickListener,
         Visualizer.OnDataCaptureListener {
@@ -44,8 +44,8 @@ class PlayActivity :
         }
     }
 
-    override val mPresenter: PlayActivityPresenter
-        get() = PlayActivityPresenter(this)
+    override val mPresenter: PlayPresenter
+        get() = PlayPresenter(this)
     override val layoutRes: Int
         get() = R.layout.music_activity_play
     private lateinit var mHandler: Handler

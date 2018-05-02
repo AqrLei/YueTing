@@ -19,7 +19,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.ChapterInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.read_activity_catalog.*
  * Description :
  * Date : 2017/11/17.
  */
-class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
+class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener,
@@ -42,8 +42,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
-    override val mPresenter: CatalogActivityPresenter
-        get() = CatalogActivityPresenter(this)
+    override val mPresenter: CatalogPresenter
+        get() = CatalogPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()

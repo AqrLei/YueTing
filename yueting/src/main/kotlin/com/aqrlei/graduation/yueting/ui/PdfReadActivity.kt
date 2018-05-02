@@ -11,7 +11,7 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.PdfReadActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.PdfReadPresenter
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 
 /**
@@ -20,7 +20,7 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
  * Description :
  * Date : 2018/2/18.
  */
-class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
+class PdfReadActivity : MvpContract.MvpActivity<PdfReadPresenter>() {
 
     companion object {
         fun jumpToPdfReadActivity(context: Context, data0: BookInfo) {
@@ -35,8 +35,8 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadActivityPresenter>() {
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
         get() = R.layout.read_activity_pdf
-    override val mPresenter: PdfReadActivityPresenter
-        get() = PdfReadActivityPresenter(this)
+    override val mPresenter: PdfReadPresenter
+        get() = PdfReadPresenter(this)
 
     override fun onBackPressed() {
         if (!fragment.onBackPressed()) {

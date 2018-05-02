@@ -15,7 +15,7 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.FileActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.FilePresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
 import kotlinx.android.synthetic.main.file_activity_file.*
 
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.file_activity_file.*
  * @Description:
  * @CreateTime: Date: 2017/9/11 Time: 13:40
  */
-class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
+class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         AdapterView.OnItemClickListener,
         View.OnClickListener {
     companion object {
@@ -53,8 +53,8 @@ class FileActivity : MvpContract.MvpActivity<FileActivityPresenter>(),
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mProgressDialog: ProgressDialog
 
-    override val mPresenter: FileActivityPresenter
-        get() = FileActivityPresenter(this)
+    override val mPresenter: FilePresenter
+        get() = FilePresenter(this)
     override val layoutRes: Int
         get() = R.layout.file_activity_file
 

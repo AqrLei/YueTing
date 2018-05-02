@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.presenter.activitypresenter
+package com.aqrlei.graduation.yueting.presenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
@@ -10,7 +10,7 @@ import com.aqrlei.graduation.yueting.ui.CatalogActivity
  * Description :
  * Date : 2017/11/17.
  */
-class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
+class CatalogPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
     fun getData() {
         val disposables =

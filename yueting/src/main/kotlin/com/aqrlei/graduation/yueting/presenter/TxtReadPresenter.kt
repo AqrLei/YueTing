@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.presenter.activitypresenter
+package com.aqrlei.graduation.yueting.presenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
@@ -9,7 +9,7 @@ import com.aqrlei.graduation.yueting.ui.TxtReadActivity
  * Author : AqrLei
  * Date : 2017/11/17.
  */
-class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
+class TxtReadPresenter(mMvpActivity: TxtReadActivity) :
         MvpContract.ActivityPresenter<TxtReadActivity>(mMvpActivity) {
 
     fun addIndexToDB(path: String, begin: Int, end: Int) {

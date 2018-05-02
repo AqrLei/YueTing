@@ -17,7 +17,7 @@ import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
-import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.PdfRendererPresenter
+import com.aqrlei.graduation.yueting.presenter.PdfRendererPresenter
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.github.barteksc.pdfviewer.listener.*
 import kotlinx.android.synthetic.main.read_fragment_pdf.*

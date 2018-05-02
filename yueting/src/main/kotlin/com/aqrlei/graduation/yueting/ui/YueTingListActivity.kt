@@ -12,7 +12,7 @@ import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingListPresenter
+import com.aqrlei.graduation.yueting.presenter.YueTingListPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.TitlePagerAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TitleFragment
 import kotlinx.android.synthetic.main.main_activity_yueting_list.*

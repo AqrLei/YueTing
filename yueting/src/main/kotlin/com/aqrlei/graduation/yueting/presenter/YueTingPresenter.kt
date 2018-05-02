@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.presenter.activitypresenter
+package com.aqrlei.graduation.yueting.presenter
 
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
@@ -11,5 +11,5 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 /*
 * @param mMvpActivity 访问对应的Activity
 * */
-class YueTingActivityPresenter(mMvpActivity: YueTingActivity) :
+class YueTingPresenter(mMvpActivity: YueTingActivity) :
         MvpContract.ActivityPresenter<YueTingActivity>(mMvpActivity)

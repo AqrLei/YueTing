@@ -23,7 +23,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
+import com.aqrlei.graduation.yueting.presenter.TxtReadPresenter
 import kotlinx.android.synthetic.main.read_include_bottom.*
 import kotlinx.android.synthetic.main.read_include_progress.*
 import kotlinx.android.synthetic.main.read_include_setting.*
@@ -37,7 +37,7 @@ import java.text.DecimalFormat
  * Description :
  * Date : 2017/11/17.
  */
-class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
+class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
         BookPageView.OnPageTouchListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
@@ -52,8 +52,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
-    override val mPresenter: TxtReadActivityPresenter
-        get() = TxtReadActivityPresenter(this)
+    override val mPresenter: TxtReadPresenter
+        get() = TxtReadPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_txt
     private val pageFactory = BookPageFactory.BOOKPAGEFACTORY

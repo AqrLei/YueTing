@@ -8,13 +8,13 @@ import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TitlePresenter
+import com.aqrlei.graduation.yueting.presenter.TitlePresenter
 import com.aqrlei.graduation.yueting.ui.FileActivity
+import com.aqrlei.graduation.yueting.ui.ManageListActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.YueTingListActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
@@ -58,7 +58,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                                     (it as TextView).text =
                                             if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "管理歌单"
                                             else "管理书单"
-                                   it. setOnClickListener(this@TitleFragment)
+                                    it.setOnClickListener(this@TitleFragment)
                                 }
                         findViewById(R.id.addItems)?.also {
                             (it as TextView).text =
@@ -113,7 +113,10 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 bottomDialog.show()
             }
             R.id.manageListsTv -> {
-                AppLog.logDebug("AqrLei", "manageList")
+                ManageListActivity.jumpToManageListActivity(
+                        mContainerActivity,
+                        YueTingConstant.MANAGE_TYPE_LIST,
+                        YueTingConstant.MANAGE_REQ)
                 bottomDialog.dismiss()
             }
             R.id.addItems -> {

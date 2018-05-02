@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.presenter.activitypresenter
+package com.aqrlei.graduation.yueting.presenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
@@ -11,7 +11,7 @@ import com.aqrlei.graduation.yueting.ui.FileActivity
  * Author: AqrLei
  * CreateTime: Date: 2017/9/11 Time: 13:41
  */
-class FileActivityPresenter(mMvpActivity: FileActivity) :
+class FilePresenter(mMvpActivity: FileActivity) :
         MvpContract.ActivityPresenter<FileActivity>(mMvpActivity) {
 
     fun getFileInfo(path: String, type: String) {
