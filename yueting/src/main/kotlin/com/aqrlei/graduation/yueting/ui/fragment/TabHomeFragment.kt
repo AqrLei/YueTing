@@ -113,7 +113,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
             }
-
     private val name: String
             by lazy {
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
@@ -159,6 +158,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_ITEM,
+                        mPresenter.generateListString(type),
                         YueTingConstant.MANAGE_REQ)
             }
             R.id.lookDetailsTv -> {

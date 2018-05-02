@@ -14,10 +14,11 @@ import com.aqrlei.graduation.yueting.presenter.ManageListPresenter
  */
 class ManageListActivity : MvpContract.MvpActivity<ManageListPresenter>() {
     companion object {
-        fun jumpToManageListActivity(context: Activity, type: String, reqCode: Int) {
+        fun jumpToManageListActivity(context: Activity, type: String, data: ArrayList<String>, reqCode: Int) {
             val intent = Intent(context, ManageListActivity::class.java).apply {
                 val bundle = Bundle()
                 bundle.putString(YueTingConstant.MANAGE_TYPE_KEY, type)
+                bundle.putStringArrayList(YueTingConstant.MANAGE_DATA, data)
                 putExtras(bundle)
             }
             if (IntentUtil.queryActivities(context, intent)) {

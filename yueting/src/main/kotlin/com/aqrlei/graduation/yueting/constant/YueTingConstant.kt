@@ -107,9 +107,11 @@ object YueTingConstant {
     const val WHICH_JUMP_TO_FILE = "jump_key"
     const val YUE_TING_LIST_FILE = 0
     const val YUE_TING_FILE = 1
+
     const val MANAGE_TYPE_KEY = "key"
     const val MANAGE_TYPE_LIST = "list"
     const val MANAGE_TYPE_ITEM = "item"
+    const val MANAGE_DATA = "data"
 
 
 }
