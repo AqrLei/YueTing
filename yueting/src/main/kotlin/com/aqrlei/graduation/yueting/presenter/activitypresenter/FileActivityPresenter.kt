@@ -54,7 +54,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
             }
         }
 
-        fun addDataToDB(data: ArrayList<FileInfo>): Observable<Boolean> {
+        fun addDataToDB(data: ArrayList<FileInfo>,listTitle: String): Observable<Boolean> {
             return Observable.defer {
                 for (i in 0 until data.size) {
                     val suffix = FileUtil.getFileSuffix(data[i])
@@ -94,9 +94,10 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                 DBManager.SqlFormat.insertSqlFormat(
                                         DataConstant.MUSIC_TABLE_NAME,
                                         arrayOf(DataConstant.COMMON_COLUMN_PATH,
+                                                DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
                                                 DataConstant.MUSIC_TABLE_C2_FILE_INFO,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                arrayOf(tempData.path, byteData, dateTime),
+                                arrayOf(tempData.path, listTitle,byteData, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )
@@ -113,8 +114,9 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                                 DataConstant.COMMON_COLUMN_PATH,
                                                 DataConstant.BOOK_TABLE_C1_TYPE,
                                                 DataConstant.BOOK_TABLE_C4_FILE_INFO,
+                                                DataConstant.BOOK_TABLE_C5_TYPE_NAME,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                arrayOf(tempData.path, suffix, byteData, dateTime),
+                                arrayOf(tempData.path, suffix, byteData, listTitle,dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )
@@ -145,12 +147,12 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 }))
     }
 
-    fun addToDataBase(data: ArrayList<FileInfo>) {// True: music/ False: book
+    fun addToDataBase(data: ArrayList<FileInfo>,listTitle:String) {// True: music/ False: book
         val musicSize = ShareMusicInfo.MusicInfoTool.getSize()
         val bookSize = ShareBookInfo.BookInfoTool.getSize()
         val disposables = CompositeDisposable()
         addDisposables(disposables)
-        disposables.add(addDataToDB(data)
+        disposables.add(addDataToDB(data,listTitle)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Boolean>() {

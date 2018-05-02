@@ -216,7 +216,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
             R.id.tv_rate -> {
                 val percent = DecimalFormat("#00.00").format(pageFactory.getCurrentBegin() * 100.00f / bookInfo.fileLength * 1.00f)
                 tv_done_percent.text = "$percent %"
-                seekBar.progress = pageFactory.getCurrentBegin() / bookInfo.fileLength * 100
+                seekBar.progress = (pageFactory.getCurrentBegin() / bookInfo.fileLength * 100).toInt()
                 lLSeekBar.visibility = View.VISIBLE
                 lLSeekBar.bringToFront()
                 dProgress = true

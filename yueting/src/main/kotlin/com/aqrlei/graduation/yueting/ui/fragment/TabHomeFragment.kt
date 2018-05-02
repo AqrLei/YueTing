@@ -6,14 +6,13 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
-import android.support.constraint.ConstraintLayout
-import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.util.DensityUtil
+import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -26,6 +25,7 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
+import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
@@ -53,10 +53,51 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             return fragment
         }
     }
+
     private var removePosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
+    private val dialog: Dialog
+            by lazy {
+                createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
+                    window.decorView?.apply {
+                        findViewById(R.id.tv_remove_items).setOnClickListener(this@TabHomeFragment)
+                        findViewById(R.id.lookDetailsTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById(R.id.batchDeleteTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
+                    }
+                }
+            }
+    private val detailDialog: Dialog
+            by lazy {
+                createPopView(mContainerActivity, R.layout.common_item_detail).apply {
+                    window.decorView?.apply {
+                        (findViewById(R.id.itemNameTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                                    mBookInfoShared.getInfo(removePosition).name
+                                else mMusicInfoShared.getInfo(removePosition).title
+                        (findViewById(R.id.ownerTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                                   ""
+                                else mMusicInfoShared.getInfo(removePosition).artist
+                        (findViewById(R.id.localPathTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                                    mBookInfoShared.getInfo(removePosition).path
+                                else mMusicInfoShared.getInfo(removePosition).albumUrl
+                        (findViewById(R.id.itemNameTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                                {
+                                    "${mBookInfoShared.getInfo(removePosition).fileLength/(1024.0F*1024.0F)} M"
+                                }
+                                else {
+                                    DateFormatUtil.simpleTimeFormat(
+                                            mMusicInfoShared.getInfo(removePosition).duration.toLong())
+
+                                }
+                    }
+                }
+            }
     private val mListView: AlphaListView
             by lazy {
                 mView.lv_fragment_home as AlphaListView
@@ -98,25 +139,36 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         removePosition = position
-        when (view?.id) {
-            R.id.ll_read_item -> {
-                showDialog(true)
-            }
-            R.id.ll_music_item -> {
-                showDialog(false)
-            }
-
-        }
+        dialog.show()
         return true
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.addFileIv -> {
-                FileActivity.jumpToFileActivity(mContainerActivity, YueTingConstant.YUE_TING_FILE_REQ, type)
+                FileActivity.jumpToFileActivity(
+                        mContainerActivity,
+                        YueTingConstant.YUE_TING_FILE_REQ,
+                        type,
+                        name,
+                        YueTingConstant.YUE_TING_FILE)
             }
             R.id.backIv -> {
                 mContainerActivity.finish()
+            }
+            R.id.tv_remove_items -> {
+                removeInfo()
+                dialog.dismiss()
+            }
+            R.id.batchDeleteTv -> {
+                // manageItems
+            }
+            R.id.lookDetailsTv -> {
+                dialog.dismiss()
+                detailDialog.show()
+            }
+            R.id.moveItemsTv -> {
+                //TODO move items to other name List
             }
         }
     }
@@ -135,7 +187,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     }
                 } else {
                     AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
-                    removeInfo(false)
+                    removeInfo()
                 }
             }
             R.id.ll_read_item -> {
@@ -151,7 +203,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     }
                 } else {
                     AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
-                    removeInfo(true)
+                    removeInfo()
                 }
             }
         }
@@ -175,7 +227,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     fun setMusicTitle(musicName: String) {
 
         titleNameTv.text = musicName
-        if(type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK){
+        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
             titleNameTv.text = "悦读"
         }
     }
@@ -239,8 +291,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         mPresenter.getBookInfoFromDB(name)
     }
 
-    private fun removeInfo(flag: Boolean) {
-        if (flag) {
+    private fun removeInfo() {
+        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
             val path = mBookInfoShared.getInfo(removePosition).path
             mBookInfoShared.removeInfo(removePosition)
             mAdapter.notifyDataSetInvalidated()
@@ -253,19 +305,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    private fun showDialog(isBook: Boolean) {
-        val dialog = Dialog(mContainerActivity, R.style.BottomDialog)
-        dialog.setContentView(R.layout.manage_dialog_bottom)
-        dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
-            removeInfo(isBook)
-            dialog.dismiss()
-        })
-        dialog.window.setGravity(Gravity.BOTTOM)
-        dialog.window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
-    }
 
     private fun startMusicService(position: Int) {
         mPresenter.startMusicService(mContainerActivity, position, Messenger(mMusicInfoShared.getHandler(mContainerActivity)), serviceConn)

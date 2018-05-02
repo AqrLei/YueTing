@@ -137,7 +137,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     private fun showDialog() {
         val dialog = Dialog(this, R.style.BottomDialog)
-        dialog.setContentView(R.layout.manage_dialog_bottom)
+        dialog.setContentView(R.layout.manage_pop_view_item)
         dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
             ChapterFactory.CHAPTER.removeBookMark(markPosition)
             dataChange(ChapterFactory.CHAPTER.getBookMarks())
