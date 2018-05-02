@@ -7,9 +7,8 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -21,8 +20,8 @@ import io.reactivex.schedulers.Schedulers
 class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
         MvpContract.ActivityPresenter<TxtReadActivity>(mMvpActivity) {
     companion object {
-        fun markObservable(path: String, currentBegin: Int): Observable<Boolean> {
-            return Observable.defer {
+        fun markObservable(path: String, currentBegin: Int): Single<Boolean> {
+            return Single.defer {
                 val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
@@ -34,12 +33,12 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                         null,
                         DBManager.SqlType.INSERT
                 )
-                Observable.just(DBManager.finish())
+                Single.just(DBManager.finish())
             }
         }
 
-        fun indexObservable(path: String, begin: Int, end: Int): Observable<Boolean> {
-            return Observable.defer {
+        fun indexObservable(path: String, begin: Int, end: Int): Single<Boolean> {
+            return Single.defer {
                 if (ShareBookInfo.BookInfoTool.same(path)) {
                     ShareBookInfo.BookInfoTool.setBookInfoIndex(path, begin, end)
                 }
@@ -61,31 +60,29 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                         null,
                         DBManager.SqlType.UPDATE
                 )
-                Observable.just(DBManager.finish())
+                Single.just(DBManager.finish())
             }
         }
     }
 
     fun addIndexToDB(path: String, begin: Int, end: Int) {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
+        val disposables =
                 indexObservable(path, begin, end)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe()
-        )
+        addDisposables(disposables)
 
     }
 
     fun addMarkToDB(path: String, currentBegin: Int) {
-        val disposables = CompositeDisposable()
+        val disposables =
+                markObservable(path, currentBegin)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            AppToast.toastShow(mMvpActivity, if (it) "书签添加完毕" else "书签添加失败", 1000)
+                        }, {})
         addDisposables(disposables)
-        disposables.add(markObservable(path, currentBegin)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    AppToast.toastShow(mMvpActivity, if (it) "书签添加完毕" else "书签添加失败", 1000)
-                }))
     }
 }

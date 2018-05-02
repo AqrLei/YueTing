@@ -1,6 +1,6 @@
 package com.aqrairsigns.aqrleilib.basemvp
 
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 
 /**
@@ -10,16 +10,15 @@ import io.reactivex.disposables.CompositeDisposable
  *@Date: 2017/8/22
  */
 abstract class BasePresenter {
-    private var disposablesList = ArrayList<CompositeDisposable>()
-    fun addDisposables(disposable: CompositeDisposable) {
+    private var disposablesList = ArrayList<Disposable>()
+    fun addDisposables(disposable: Disposable) {
         disposablesList.add(disposable)
     }
 
     fun finish() {
         disposablesList.forEach {
-            it.dispose()
-            if (it.isDisposed) {
-                it.clear()
+            if (!it.isDisposed) {
+                it.dispose()
             }
         }
     }

@@ -3,9 +3,8 @@ package com.aqrlei.graduation.yueting.presenter.activitypresenter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.ui.CatalogActivity
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -17,26 +16,23 @@ import io.reactivex.schedulers.Schedulers
 class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
     companion object {
-        fun catalogsObservable(): Observable<Boolean> {
-            return Observable.defer {
+        fun catalogsObservable(): Single<Boolean> {
+            return Single.defer {
                 ChapterFactory.CHAPTER.getBookMarkFromDB()
-                Observable.just(ChapterFactory.CHAPTER.getChapter())
+                Single.just(ChapterFactory.CHAPTER.getChapter())
             }
         }
     }
 
     fun getData() {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
+        val disposables =
                 catalogsObservable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             mMvpActivity.loadCatalogDone(it)
-                        })
-        )
-
+                        }, {})
+        addDisposables(disposables)
     }
 
 }

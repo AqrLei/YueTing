@@ -19,9 +19,8 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 
@@ -38,8 +37,8 @@ import java.io.File
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
     companion object {
-        fun selectMusicObservable(typeName: String): Observable<ArrayList<MusicInfo>> {
-            return Observable.defer {
+        fun selectMusicObservable(typeName: String): Single<ArrayList<MusicInfo>> {
+            return Single.defer {
                 val musicInfoList = ArrayList<MusicInfo>()
                 DBManager.sqlData(
                         DBManager.SqlFormat.selectSqlFormat(
@@ -74,14 +73,12 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                 mmr.release()
                             }
                         }
-
-
-                Observable.just(musicInfoList)
+                Single.just(musicInfoList)
             }
         }
 
-        fun selectBookObservable(typeName: String): Observable<ArrayList<BookInfo>> {
-            return Observable.defer {
+        fun selectBookObservable(typeName: String): Single<ArrayList<BookInfo>> {
+            return Single.defer {
                 val bookInfoList = ArrayList<BookInfo>()
                 DBManager.sqlData(
                         DBManager.SqlFormat.selectSqlFormat(
@@ -109,8 +106,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                                 bookInfoList.add(bookInfo)
                             }
                         }
-
-                Observable.just(bookInfoList)
+                Single.just(bookInfoList)
             }
         }
 
@@ -153,9 +149,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
     }
 
     fun sendMusicInfo(service: IBinder) {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
+        val disposables =
                 sendMusicInfoObservable(service)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -163,32 +157,31 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                             if (it) {
                                 mMvpView.unbindMusicService()
                             }
-                        }))
+                        })
+        addDisposables(disposables)
     }
 
     fun getMusicInfoFromDB(typeName: String) {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-
-        disposables.add(
+        val disposables =
                 selectMusicObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             mMvpView.setMusicInfo(it)
-                        }))
+                        }, {})
+        addDisposables(disposables)
     }
 
     fun getBookInfoFromDB(typeName: String) {
-        val disposables = CompositeDisposable()
-        addDisposables(disposables)
-        disposables.add(
+        val disposables =
                 selectBookObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             mMvpView.setBookInfo(it)
-                        }))
+                        }, {})
+
+        addDisposables(disposables)
     }
 
     fun deleteMusicItemFromDB(path: String) {

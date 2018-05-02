@@ -5,9 +5,8 @@ import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.ui.fragment.TitleFragment
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -16,8 +15,8 @@ import io.reactivex.schedulers.Schedulers
 class TitlePresenter(mMvpView: TitleFragment) :
         MvpContract.FragmentPresenter<TitleFragment>(mMvpView) {
     companion object {
-        fun selectTypeObservable(type: String): Observable<ArrayList<String>> {
-            return Observable.defer {
+        fun selectTypeObservable(type: String): Single<ArrayList<String>> {
+            return Single.defer {
                 val typeList = ArrayList<String>()
                 DBManager.sqlData(
                         DBManager.SqlFormat.selectSqlFormat(
@@ -32,12 +31,12 @@ class TitlePresenter(mMvpView: TitleFragment) :
                                 typeList.add(temp)
                             }
                         }
-                Observable.just(typeList)
+                Single.just(typeList)
             }
         }
 
-        fun addDataToDB(type: String, name: String): Observable<Boolean> {
-            return Observable.defer {
+        fun addDataToDB(type: String, name: String): Single<Boolean> {
+            return Single.defer {
                 val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                 DBManager.sqlData(
                         DBManager.SqlFormat.insertSqlFormat(
@@ -48,7 +47,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
                         arrayOf(name, type, dateTime),
                         null,
                         DBManager.SqlType.INSERT)
-                Observable.just(DBManager.finish())
+                Single.just(DBManager.finish())
 
             }
         }
@@ -56,27 +55,25 @@ class TitlePresenter(mMvpView: TitleFragment) :
     }
 
     fun addData(type: String, name: String) {
-        val disposable = CompositeDisposable().apply {
-            add(addDataToDB(type, name)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        mMvpView.addFinish(it)
-                    }))
-        }
+        addDataToDB(type, name)
+        val disposable =
+                addDataToDB(type, name)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            mMvpView.addFinish(it)
+                        }, {})
         addDisposables(disposable)
     }
 
     fun getTypeInfoFromDB(type: String) {
-        val disposables = CompositeDisposable().apply {
-            add(selectTypeObservable(type)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        mMvpView.setTitleList(it)
-                    })
-            )
-        }
+        val disposables =
+                selectTypeObservable(type)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            mMvpView.setTitleList(it)
+                        }, {})
         addDisposables(disposables)
     }
 }

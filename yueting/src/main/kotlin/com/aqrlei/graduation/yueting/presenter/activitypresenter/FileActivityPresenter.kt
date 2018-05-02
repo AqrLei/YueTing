@@ -14,10 +14,8 @@ import com.aqrlei.graduation.yueting.model.local.BookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.FileActivity
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 
@@ -30,8 +28,8 @@ import java.io.File
 class FileActivityPresenter(mMvpActivity: FileActivity) :
         MvpContract.ActivityPresenter<FileActivity>(mMvpActivity) {
     companion object {
-        fun createFileInfo(path: String, type: String): Observable<ArrayList<FileInfo>> {
-            return Observable.defer {
+        fun createFileInfo(path: String, type: String): Single<ArrayList<FileInfo>> {
+            return Single.defer {
                 val fileInfoList = FileUtil.createFileInfoS(path)
                 val data = ArrayList<FileInfo>()
                 fileInfoList.filter {
@@ -50,12 +48,12 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                 }.forEach {
                     data.add(it)
                 }
-                Observable.just(data)
+                Single.just(data)
             }
         }
 
-        fun addDataToDB(data: ArrayList<FileInfo>,listTitle: String): Observable<Boolean> {
-            return Observable.defer {
+        fun addDataToDB(data: ArrayList<FileInfo>, listTitle: String): Single<Boolean> {
+            return Single.defer {
                 for (i in 0 until data.size) {
                     val suffix = FileUtil.getFileSuffix(data[i])
                     if (suffix != YueTingConstant.PLAY_SUFFIX_MP3
@@ -97,7 +95,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                                 DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
                                                 DataConstant.MUSIC_TABLE_C2_FILE_INFO,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                arrayOf(tempData.path, listTitle,byteData, dateTime),
+                                arrayOf(tempData.path, listTitle, byteData, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )
@@ -116,7 +114,7 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                                                 DataConstant.BOOK_TABLE_C4_FILE_INFO,
                                                 DataConstant.BOOK_TABLE_C5_TYPE_NAME,
                                                 DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                arrayOf(tempData.path, suffix, byteData, listTitle,dateTime),
+                                arrayOf(tempData.path, suffix, byteData, listTitle, dateTime),
                                 null,
                                 DBManager.SqlType.INSERT
                         )
@@ -126,40 +124,34 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
                     }
                 }
                 val result = DBManager.finish()
-                Observable.just(result)
+                Single.just(result)
             }
         }
-
     }
 
     fun getFileInfo(path: String, type: String) {
-        val disposables = CompositeDisposable()
+        val disposables =
+                createFileInfo(path, type)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            mMvpActivity.changeFileInfo(it)
+                        }, {})
         addDisposables(disposables)
-        disposables.add(createFileInfo(path,type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<ArrayList<FileInfo>>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(t: ArrayList<FileInfo>) {
-                        mMvpActivity.changeFileInfo(t)
-                    }
-                }))
     }
 
-    fun addToDataBase(data: ArrayList<FileInfo>,listTitle:String) {// True: music/ False: book
+    fun addToDataBase(data: ArrayList<FileInfo>, listTitle: String) {// True: music/ False: book
         val musicSize = ShareMusicInfo.MusicInfoTool.getSize()
         val bookSize = ShareBookInfo.BookInfoTool.getSize()
-        val disposables = CompositeDisposable()
+        val disposables =
+                addDataToDB(data, listTitle)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            mMvpActivity.finishActivity(it,
+                                    bookSize != ShareBookInfo.BookInfoTool.getSize(),
+                                    musicSize != ShareMusicInfo.MusicInfoTool.getSize())
+                        }, {})
         addDisposables(disposables)
-        disposables.add(addDataToDB(data,listTitle)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    mMvpActivity.finishActivity(it,
-                            bookSize != ShareBookInfo.BookInfoTool.getSize(),
-                            musicSize != ShareMusicInfo.MusicInfoTool.getSize())
-                }))
     }
-
 }
