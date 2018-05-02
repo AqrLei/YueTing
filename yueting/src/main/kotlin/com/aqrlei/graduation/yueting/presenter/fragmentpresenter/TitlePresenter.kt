@@ -8,7 +8,6 @@ import com.aqrlei.graduation.yueting.ui.fragment.TitleFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -20,8 +19,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
         fun selectTypeObservable(type: String): Observable<ArrayList<String>> {
             return Observable.defer {
                 val typeList = ArrayList<String>()
-
-                val c = DBManager.sqlData(
+                DBManager.sqlData(
                         DBManager.SqlFormat.selectSqlFormat(
                                 DataConstant.TYPE_TABLE_NAME,
                                 DataConstant.TYPE_TABLE_C0_NAME,
@@ -49,9 +47,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
                                         DataConstant.COMMON_COLUMN_CREATE_TIME)),
                         arrayOf(name, type, dateTime),
                         null,
-                        DBManager.SqlType.INSERT
-                )
-
+                        DBManager.SqlType.INSERT)
                 Observable.just(DBManager.finish())
 
             }
@@ -64,15 +60,9 @@ class TitlePresenter(mMvpView: TitleFragment) :
             add(addDataToDB(type, name)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(object : DisposableObserver<Boolean>() {
-                        override fun onComplete() {}
-                        override fun onError(e: Throwable) {}
-                        override fun onNext(boolean: Boolean) {
-                            mMvpView.addFinish(boolean)
-                        }
-                    })
-            )
-
+                    .subscribe({
+                        mMvpView.addFinish(it)
+                    }))
         }
         addDisposables(disposable)
     }
@@ -84,7 +74,6 @@ class TitlePresenter(mMvpView: TitleFragment) :
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         mMvpView.setTitleList(it)
-
                     })
             )
         }
