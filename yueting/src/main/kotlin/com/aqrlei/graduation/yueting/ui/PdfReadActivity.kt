@@ -10,7 +10,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.PdfReadActivityPresenter
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 

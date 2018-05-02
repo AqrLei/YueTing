@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.model.local
+package com.aqrlei.graduation.yueting.model
 
 import java.io.Serializable
 

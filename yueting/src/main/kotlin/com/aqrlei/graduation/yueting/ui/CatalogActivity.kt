@@ -18,7 +18,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
 import kotlinx.android.synthetic.main.read_activity_catalog.*

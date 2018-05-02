@@ -5,10 +5,8 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
 /**
- * @Author: AqrLei
- * @Name MyLearning
- * @Description:
- * @Date: 2017/8/23
+ * Author: AqrLei
+ * Date: 2017/8/23
  */
 /*
 * @param mMvpActivity 访问对应的Activity

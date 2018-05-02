@@ -22,7 +22,7 @@ import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import java.io.IOException
 import java.util.*

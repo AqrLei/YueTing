@@ -1,11 +1,8 @@
 package com.aqrlei.graduation.yueting.presenter.activitypresenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
+import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import com.aqrlei.graduation.yueting.ui.CatalogActivity
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Author : AqrLei
@@ -15,20 +12,9 @@ import io.reactivex.schedulers.Schedulers
  */
 class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
-    companion object {
-        fun catalogsObservable(): Single<Boolean> {
-            return Single.defer {
-                ChapterFactory.CHAPTER.getBookMarkFromDB()
-                Single.just(ChapterFactory.CHAPTER.getChapter())
-            }
-        }
-    }
-
     fun getData() {
         val disposables =
-                catalogsObservable()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                BookSingle.selectChapters()
                         .subscribe({
                             mMvpActivity.loadCatalogDone(it)
                         }, {})

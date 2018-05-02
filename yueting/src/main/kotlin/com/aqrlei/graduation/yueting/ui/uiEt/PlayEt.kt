@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 
 /**
  * created by AqrLei on 2018/4/6

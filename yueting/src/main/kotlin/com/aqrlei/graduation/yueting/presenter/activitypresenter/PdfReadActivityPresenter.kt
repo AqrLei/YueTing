@@ -5,8 +5,6 @@ import com.aqrlei.graduation.yueting.ui.PdfReadActivity
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
 class PdfReadActivityPresenter(mMvpActivity: PdfReadActivity) :

@@ -6,7 +6,7 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.model.ChapterInfo
 
 /**
  * @Author: AqrLei

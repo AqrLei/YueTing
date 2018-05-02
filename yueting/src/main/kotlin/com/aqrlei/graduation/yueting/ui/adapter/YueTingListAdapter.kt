@@ -10,7 +10,7 @@ import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 import com.facebook.drawee.view.SimpleDraweeView
 import java.text.DecimalFormat
 

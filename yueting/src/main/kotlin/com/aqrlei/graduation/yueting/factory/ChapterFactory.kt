@@ -3,8 +3,8 @@ package com.aqrlei.graduation.yueting.factory
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.ChapterInfo
 import java.nio.charset.Charset
 import java.util.regex.Pattern
 

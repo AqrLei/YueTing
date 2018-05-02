@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.model.local.infotool
+package com.aqrlei.graduation.yueting.model.infotool
 
 import android.annotation.SuppressLint
 import android.content.Context

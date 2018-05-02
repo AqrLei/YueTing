@@ -8,8 +8,8 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
 import com.facebook.drawee.backends.pipeline.Fresco
 

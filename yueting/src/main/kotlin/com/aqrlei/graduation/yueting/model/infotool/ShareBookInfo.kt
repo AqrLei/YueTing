@@ -1,6 +1,6 @@
-package com.aqrlei.graduation.yueting.model.local.infotool
+package com.aqrlei.graduation.yueting.model.infotool
 
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 
 
 /**

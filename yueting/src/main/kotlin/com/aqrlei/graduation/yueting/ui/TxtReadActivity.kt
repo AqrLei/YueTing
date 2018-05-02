@@ -22,7 +22,7 @@ import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
 import kotlinx.android.synthetic.main.read_include_bottom.*
 import kotlinx.android.synthetic.main.read_include_progress.*

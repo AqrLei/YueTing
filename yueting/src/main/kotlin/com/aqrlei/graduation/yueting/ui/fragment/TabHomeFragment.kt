@@ -16,9 +16,9 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.FileActivity
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
