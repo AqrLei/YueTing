@@ -159,16 +159,11 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 sendMusicInfoObservable(service)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(t: Boolean) {
-                                if (t) {
-                                    mMvpView.unbindMusicService()
-                                }
+                        .subscribe({
+                            if (it) {
+                                mMvpView.unbindMusicService()
                             }
-                        })
-        )
+                        }))
     }
 
     fun getMusicInfoFromDB(typeName: String) {
@@ -179,35 +174,21 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
                 selectMusicObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<ArrayList<MusicInfo>>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(data: ArrayList<MusicInfo>) {
-                                //  DBManager.releaseCursor()
-                                mMvpView.setMusicInfo(data)
-                            }
-                        })
-        )
+                        .subscribe({
+                            mMvpView.setMusicInfo(it)
+                        }))
     }
 
     fun getBookInfoFromDB(typeName: String) {
         val disposables = CompositeDisposable()
         addDisposables(disposables)
-
         disposables.add(
                 selectBookObservable(typeName)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<ArrayList<BookInfo>>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(data: ArrayList<BookInfo>) {
-                                //  DBManager.releaseCursor()
-                                mMvpView.setBookInfo(data)
-                            }
-
-                        })
-        )
+                        .subscribe({
+                            mMvpView.setBookInfo(it)
+                        }))
     }
 
     fun deleteMusicItemFromDB(path: String) {

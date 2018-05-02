@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 class TitlePresenter(mMvpView: TitleFragment) :
         MvpContract.FragmentPresenter<TitleFragment>(mMvpView) {
     companion object {
-        fun selectTypeObservable(type: String): Observable<Cursor?> {
+        fun selectTypeObservable(type: String): Observable<ArrayList<String>> {
             return Observable.defer {
                 val c = DBManager.sqlData(
                         DBManager.SqlFormat.selectSqlFormat(
@@ -29,7 +29,15 @@ class TitlePresenter(mMvpView: TitleFragment) :
                         null, arrayOf(type), DBManager.SqlType.SELECT
                 )
                         .getCursor()
-                Observable.just(c)
+                val typeList = ArrayList<String>()
+                c?.let {
+                    while (it.moveToNext()) {
+                        val temp = it.getString(it.getColumnIndex(DataConstant.TYPE_TABLE_C0_NAME))
+                        typeList.add(temp)
+                    }
+                }
+
+                Observable.just(typeList)
             }
         }
 
@@ -40,17 +48,8 @@ class TitlePresenter(mMvpView: TitleFragment) :
             add(selectTypeObservable(type)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(object : DisposableObserver<Cursor>() {
-                        override fun onComplete() {}
-                        override fun onError(e: Throwable) {}
-                        override fun onNext(t: Cursor) {
-                            val typeList = ArrayList<String>()
-                            while (t.moveToNext()) {
-                                val temp = t.getString(t.getColumnIndex(DataConstant.TYPE_TABLE_C0_NAME))
-                                typeList.add(temp)
-                            }
-                            mMvpView.setTitleList(typeList)
-                        }
+                    .subscribe({
+                        mMvpView.setTitleList(it)
                     })
             )
         }

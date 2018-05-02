@@ -10,7 +10,6 @@ import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -74,12 +73,8 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
                 indexObservable(path, begin, end)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(t: Boolean) {}
-                        }
-                        ))
+                        .subscribe()
+        )
 
     }
 
@@ -89,12 +84,8 @@ class TxtReadActivityPresenter(mMvpActivity: TxtReadActivity) :
         disposables.add(markObservable(path, currentBegin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(t: Boolean) {
-                        AppToast.toastShow(mMvpActivity, if (t) "书签添加完毕" else "书签添加失败", 1000)
-                    }
+                .subscribe({
+                    AppToast.toastShow(mMvpActivity, if (it) "书签添加完毕" else "书签添加失败", 1000)
                 }))
     }
 }

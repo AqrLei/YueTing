@@ -6,7 +6,6 @@ import com.aqrlei.graduation.yueting.ui.CatalogActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -33,14 +32,9 @@ class CatalogActivityPresenter(mMvpActivity: CatalogActivity) :
                 catalogsObservable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(t: Boolean) {
-                                mMvpActivity.loadCatalogDone(t)
-                            }
-                        }
-                        )
+                        .subscribe({
+                            mMvpActivity.loadCatalogDone(it)
+                        })
         )
 
     }

@@ -153,14 +153,10 @@ class FileActivityPresenter(mMvpActivity: FileActivity) :
         disposables.add(addDataToDB(data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(t: Boolean) {
-                        mMvpActivity.finishActivity(t,
-                                bookSize != ShareBookInfo.BookInfoTool.getSize(),
-                                musicSize != ShareMusicInfo.MusicInfoTool.getSize())
-                    }
+                .subscribe({
+                    mMvpActivity.finishActivity(it,
+                            bookSize != ShareBookInfo.BookInfoTool.getSize(),
+                            musicSize != ShareMusicInfo.MusicInfoTool.getSize())
                 }))
     }
 

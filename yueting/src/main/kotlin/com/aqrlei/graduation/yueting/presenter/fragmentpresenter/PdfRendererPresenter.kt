@@ -11,7 +11,6 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -93,12 +92,7 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
                 indexObservable(path, begin, end)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableObserver<Boolean>() {
-                            override fun onComplete() {}
-                            override fun onError(e: Throwable) {}
-                            override fun onNext(t: Boolean) {}
-                        }
-                        ))
+                        .subscribe())
     }
 
     fun addMarkToDB(path: String, currentBegin: Int) {
@@ -107,12 +101,8 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
         disposables.add(markObservable(path, currentBegin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<Boolean>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(t: Boolean) {
-                        AppToast.toastShow(mMvpView.activity, if (t) "书签添加完毕" else "书签添加失败", 1000)
-                    }
+                .subscribe({
+                    AppToast.toastShow(mMvpView.activity, if (it) "书签添加完毕" else "书签添加失败", 1000)
                 }))
     }
 }
