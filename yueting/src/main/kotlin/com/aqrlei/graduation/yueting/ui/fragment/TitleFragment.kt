@@ -12,6 +12,7 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.presenter.TitlePresenter
 import com.aqrlei.graduation.yueting.ui.FileActivity
 import com.aqrlei.graduation.yueting.ui.ManageListActivity
@@ -113,11 +114,15 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 bottomDialog.show()
             }
             R.id.manageListsTv -> {
+                val selectInfoList = ArrayList<SelectInfo>()
+                titleList.forEach {
+                    selectInfoList.add(SelectInfo(name = it))
+                }
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_LIST,
                         type,
-                        titleList,
+                        selectInfoList,
                         YueTingConstant.MANAGE_REQ)
                 bottomDialog.dismiss()
             }

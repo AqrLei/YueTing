@@ -28,6 +28,7 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     protected var mContext: Context = context
     protected var mResId: Int = resId
     protected var mListener: OnInternalClick? = listener
+    protected lateinit var holder:CommonListViewHolder
 
     override fun getCount() = mData.size
     override fun getItemId(position: Int) = position.toLong()
@@ -35,7 +36,7 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     override fun getItem(position: Int) = mData[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
+         holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
                 convertView, parent)
         bindData(holder, mData[position])
         if (mListener != null) {
@@ -51,11 +52,11 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     protected abstract fun setInternalClick(holder: CommonListViewHolder)
 
     override fun onClick(v: View) {
-        mListener?.onInternalClick(v)
+        mListener?.onInternalClick(v,holder.position)
     }
 
     /*回调接口，用于子项控件点击事件*/
     interface OnInternalClick {
-        fun onInternalClick(v: View)
+        fun onInternalClick(v: View,position: Int)
     }
 }

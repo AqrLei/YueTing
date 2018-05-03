@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.presenter.ManageListPresenter
+import com.aqrlei.graduation.yueting.ui.adapter.SelectAdapter
 import kotlinx.android.synthetic.main.common_activity_manage.*
 
 /**
@@ -16,19 +20,20 @@ import kotlinx.android.synthetic.main.common_activity_manage.*
  */
 class ManageListActivity :
         MvpContract.MvpActivity<ManageListPresenter>(),
-        View.OnClickListener {
+        View.OnClickListener,
+        CommonListAdapter.OnInternalClick {
     companion object {
         fun jumpToManageListActivity(
                 context: Activity,
                 type: String,
-                typeItem:String,
-                data: ArrayList<String>,
+                typeItem: String,
+                data: ArrayList<SelectInfo>,
                 reqCode: Int) {
             val intent = Intent(context, ManageListActivity::class.java).apply {
                 val bundle = Bundle()
                 bundle.putString(YueTingConstant.MANAGE_TYPE_KEY, type)
-                bundle.putString(YueTingConstant.FRAGMENT_TITLE_TYPE,typeItem)
-                bundle.putStringArrayList(YueTingConstant.MANAGE_DATA, data)
+                bundle.putString(YueTingConstant.FRAGMENT_TITLE_TYPE, typeItem)
+                bundle.putSerializable(YueTingConstant.MANAGE_DATA, data)
                 putExtras(bundle)
             }
             if (IntentUtil.queryActivities(context, intent)) {
@@ -37,6 +42,21 @@ class ManageListActivity :
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    private val selectInfoList: ArrayList<SelectInfo>
+            by lazy {
+                intent.extras.getSerializable(YueTingConstant.MANAGE_DATA) as ArrayList<SelectInfo>
+            }
+    private val mAdapter: SelectAdapter
+            by lazy {
+                SelectAdapter(selectInfoList, this, type)
+            }
+    private val type: String
+            by lazy { intent.extras.getString(YueTingConstant.MANAGE_TYPE_KEY) }
+    private val typeItem: String
+            by lazy {
+                intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+            }
     override val mPresenter: ManageListPresenter
         get() = ManageListPresenter(this)
     override val layoutRes: Int
@@ -47,17 +67,70 @@ class ManageListActivity :
             R.id.backIv -> {
                 this.finish()
             }
+            R.id.selectIv -> {
+                selectIv.background.level = if (selectIv.background.level == 0) {
+                    selectAll(true)
+                    1
+                } else {
+                    selectAll(false)
+                    0
+                }
+            }
+            R.id.deleteTv -> {
+                mPresenter.deleteItem(type, typeItem, selectInfoList)
+
+            }
+        }
+    }
+
+    override fun onInternalClick(v: View, position: Int) {
+
+        val iv = v as ImageView
+        iv.background.level = if (iv.background.level == 1) {
+            if (selectIv.background.level == 1) {
+                selectIv.background.level = 0
+            }
+            selectInfoList[position].status = SelectInfo.UNSELECTED
+            0
+        } else {
+            selectInfoList[position].status = SelectInfo.SELECTED
+            1
         }
     }
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         backIv.setOnClickListener(this)
-        manageNameTv.text =
-                if (intent.extras.getString(YueTingConstant.MANAGE_TYPE_KEY)
-        == YueTingConstant.MANAGE_TYPE_LIST) "管理列表" else "管理文件"
+        selectIv.setOnClickListener(this)
+        deleteTv.setOnClickListener(this)
+        selectLv.adapter = mAdapter
+        manageNameTv.text = initTitle()
     }
-    private  fun initData(){
-        val type = intent.extras.getString(YueTingConstant.MANAGE_TYPE_KEY)
+
+    private fun selectAll(isSelect: Boolean) {
+        selectInfoList.forEach {
+            if (isSelect) {
+                it.status = SelectInfo.SELECTED
+            } else {
+                it.status = SelectInfo.UNSELECTED
+            }
+        }
+        mAdapter.notifyDataSetChanged()
+    }
+
+    private fun initTitle(): String {
+        return if (type == YueTingConstant.MANAGE_TYPE_LIST) {
+            if (typeItem == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                "管理书单"
+            } else {
+                "管理歌单"
+            }
+        } else {
+            if (typeItem == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                "管理书籍"
+            } else {
+                "管理歌曲"
+            }
+        }
     }
 }

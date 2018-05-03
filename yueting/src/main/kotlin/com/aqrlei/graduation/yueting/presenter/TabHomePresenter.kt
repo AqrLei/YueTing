@@ -10,6 +10,7 @@ import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
@@ -89,15 +90,16 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
     }
 
-    fun generateListString(type: String): ArrayList<String> {
-        val tempList = ArrayList<String>()
+    fun generateListSelectInfo(type: String): ArrayList<SelectInfo> {
+        val tempList = ArrayList<SelectInfo>()
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
             ShareBookInfo.BookInfoTool.getInfoS().forEach {
-                tempList.add(it.path)
+
+                tempList.add(SelectInfo(name = it.path))
             }
         } else {
             ShareMusicInfo.MusicInfoTool.getInfoS().forEach {
-                tempList.add(it.albumUrl)
+                tempList.add(SelectInfo(name = it.albumUrl))
             }
         }
         return tempList

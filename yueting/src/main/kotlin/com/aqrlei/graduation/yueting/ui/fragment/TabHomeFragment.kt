@@ -165,7 +165,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_ITEM,
                         type,
-                        mPresenter.generateListString(type),
+                        mPresenter.generateListSelectInfo(type),
                         YueTingConstant.MANAGE_REQ)
             }
             R.id.lookDetailsTv -> {

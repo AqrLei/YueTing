@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
@@ -28,4 +29,19 @@
             android:layout_gravity="right" />
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <ListView
+        android:id="@+id/selectLv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dimenMargin"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <TextView
+        android:id="@+id/deleteTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenView40dp"
+        android:gravity="center"
+        android:text="删除选中" />
+</LinearLayout>
