@@ -76,11 +76,20 @@
         <item name="android:src">@drawable/common_selector_back</item>
     </style>
 
+    <style name="SelectViewStyle">
+        <item name="android:paddingRight">@dimen/dimenPadding10dp</item>
+        <item name="android:paddingLeft">@dimen/dimenPadding10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:src">@drawable/common_level_list_select</item>
+    </style>
+
     <style name="DividerStyle">
         <item name="android:layout_height">@dimen/dimenDividerLine</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/colorDividerLine</item>
     </style>
+
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">@dimen/sizeText18dp</item>
         <item name="android:paddingLeft">@dimen/dimenPadding10dp</item>

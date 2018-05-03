@@ -3,5 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenViewHeight"
+        android:background="@color/colorWhite" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenTitleHeight"
+        android:background="@color/colorTitleBarGrey">
+
+        <ImageView
+            android:id="@+id/backIv"
+            style="@style/TitleBarImageViewStyle" />
+
+        <TextView
+            android:id="@+id/manageNameTv"
+            style="@style/TitleBarTextViewStyle"
+            android:text="管理列表" />
+
+        <ImageView
+            android:id="@+id/selectIv"
+            style="@style/SelectViewStyle"
+            android:layout_gravity="right" />
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

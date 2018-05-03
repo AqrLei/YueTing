@@ -116,6 +116,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_LIST,
+                        type,
                         titleList,
                         YueTingConstant.MANAGE_REQ)
                 bottomDialog.dismiss()

@@ -61,7 +61,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     window.decorView?.apply {
                         findViewById(R.id.tv_remove_items).setOnClickListener(this@TabHomeFragment)
                         findViewById(R.id.lookDetailsTv).setOnClickListener(this@TabHomeFragment)
-                        findViewById(R.id.batchDeleteTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById(R.id.manageItemTv).apply {
+                            setOnClickListener(this@TabHomeFragment)
+                            (this as TextView).text =
+                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
+                                    else "管理歌曲"
+                        }
                         findViewById(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
                     }
                 }
@@ -151,13 +156,15 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mContainerActivity.finish()
             }
             R.id.tv_remove_items -> {
-                removeInfo()
+                // removeInfo()
+                AppToast.toastShow(mContainerActivity, "move to manage", 1000)
                 dialog.dismiss()
             }
-            R.id.batchDeleteTv -> {
+            R.id.manageItemTv -> {
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_ITEM,
+                        type,
                         mPresenter.generateListString(type),
                         YueTingConstant.MANAGE_REQ)
             }
