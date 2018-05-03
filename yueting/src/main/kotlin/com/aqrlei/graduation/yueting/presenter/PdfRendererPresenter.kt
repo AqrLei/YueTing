@@ -10,8 +10,6 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/23
  */
 /*

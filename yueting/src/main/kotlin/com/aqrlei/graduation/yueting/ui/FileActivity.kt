@@ -21,8 +21,6 @@ import kotlinx.android.synthetic.main.file_activity_file.*
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/11 Time: 13:40
  */
 class FileActivity : MvpContract.MvpActivity<FilePresenter>(),

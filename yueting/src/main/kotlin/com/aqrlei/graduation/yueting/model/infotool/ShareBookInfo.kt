@@ -5,8 +5,6 @@ import com.aqrlei.graduation.yueting.model.BookInfo
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/20 Time: 9:06
  */
 /*

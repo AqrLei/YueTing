@@ -2,8 +2,6 @@ package com.aqrlei.graduation.yueting.constant
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/25
  */
 object YueTingConstant {

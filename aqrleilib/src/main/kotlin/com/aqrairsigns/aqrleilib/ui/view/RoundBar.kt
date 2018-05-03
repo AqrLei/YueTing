@@ -13,8 +13,6 @@ import com.aqrairsigns.aqrleilib.R
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/30
  */
 

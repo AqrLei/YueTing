@@ -5,8 +5,6 @@ import java.io.Serializable
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/28
  */
 open class BookInfo(

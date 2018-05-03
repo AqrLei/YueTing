@@ -11,8 +11,6 @@ import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/8 Time: 14:30
  */
 object FileUtil {

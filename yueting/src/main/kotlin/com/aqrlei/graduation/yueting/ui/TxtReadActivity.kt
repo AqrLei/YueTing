@@ -33,8 +33,6 @@ import java.text.DecimalFormat
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
 class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),

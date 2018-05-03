@@ -25,8 +25,6 @@ import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
 class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),

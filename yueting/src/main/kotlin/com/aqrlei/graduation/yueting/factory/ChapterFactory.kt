@@ -10,8 +10,6 @@ import java.util.regex.Pattern
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2018/2/7.
  */
 enum class ChapterFactory {

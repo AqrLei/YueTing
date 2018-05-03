@@ -7,8 +7,6 @@ import com.aqrairsigns.aqrleilib.util.AppLog
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/19 Time: 13:39
  */
 open class BaseService : Service() {

@@ -4,8 +4,6 @@ import java.io.Serializable
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2018/2/7.
  */
 

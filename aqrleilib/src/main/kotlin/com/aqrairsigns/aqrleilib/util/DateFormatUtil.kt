@@ -5,8 +5,6 @@ import java.util.*
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/9/16.
  */
 object DateFormatUtil {

@@ -6,8 +6,6 @@ import com.aqrlei.graduation.yueting.ui.CatalogActivity
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
 class CatalogPresenter(mMvpActivity: CatalogActivity) :

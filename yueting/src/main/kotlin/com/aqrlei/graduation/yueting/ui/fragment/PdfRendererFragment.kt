@@ -30,8 +30,6 @@ import java.io.IOException
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2018/2/12.
  */
 

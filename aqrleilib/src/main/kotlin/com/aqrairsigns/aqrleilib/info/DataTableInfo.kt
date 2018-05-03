@@ -4,8 +4,6 @@ import java.util.*
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/12 Time: 14:53
  */
 data class DataTableInfo(

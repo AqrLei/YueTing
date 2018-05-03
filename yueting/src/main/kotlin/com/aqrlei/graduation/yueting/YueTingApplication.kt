@@ -15,8 +15,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/14 Time: 16:17
  */
 class YueTingApplication : BaseApplication() {

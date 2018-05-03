@@ -6,8 +6,6 @@ import java.util.*
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/14 Time: 14:42
  */
 data class MusicInfo(

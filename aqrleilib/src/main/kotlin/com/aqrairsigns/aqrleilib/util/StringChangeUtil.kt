@@ -9,8 +9,6 @@ import android.text.style.RelativeSizeSpan
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/9/21.
  */
 enum class StringChangeUtil {

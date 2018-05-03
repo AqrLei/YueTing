@@ -21,8 +21,6 @@ import java.nio.charset.Charset
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/9.
  */
 

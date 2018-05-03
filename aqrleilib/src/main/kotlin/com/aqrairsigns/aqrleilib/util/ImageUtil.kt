@@ -9,8 +9,6 @@ import android.graphics.drawable.Drawable
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/14 Time: 14:50
  */
 object ImageUtil {

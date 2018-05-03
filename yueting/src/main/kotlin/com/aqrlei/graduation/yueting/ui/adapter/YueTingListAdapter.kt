@@ -16,12 +16,7 @@ import java.text.DecimalFormat
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/29
- */
-/**
- * @param type 0 book, 1 music.
  */
 class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val type: Int) :
         CommonListAdapter<Any>(mData, mContext, mResId) {

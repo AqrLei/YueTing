@@ -25,8 +25,6 @@ import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/20 Time: 9:06
  */
 /*

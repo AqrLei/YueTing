@@ -11,8 +11,6 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/29
  */
 class FileListAdapter(mData: List<FileInfo>, mContext: Context, mResId: Int) :

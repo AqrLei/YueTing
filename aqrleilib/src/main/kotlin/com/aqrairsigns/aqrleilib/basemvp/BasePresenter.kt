@@ -4,9 +4,7 @@ import io.reactivex.disposables.Disposable
 
 
 /**
- * @Author: AqrLei
- *@Name MyLearning
- *@Description:
+ *@Author: AqrLei
  *@Date: 2017/8/22
  */
 abstract class BasePresenter {

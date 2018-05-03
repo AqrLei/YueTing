@@ -30,8 +30,6 @@ import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/19 Time: 13:28
  */
 class MusicService : BaseService(),

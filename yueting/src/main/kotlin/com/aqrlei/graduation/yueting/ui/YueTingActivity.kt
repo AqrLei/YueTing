@@ -25,8 +25,6 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/23
  */
 /*

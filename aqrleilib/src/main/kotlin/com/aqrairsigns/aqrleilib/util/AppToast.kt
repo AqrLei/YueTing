@@ -5,9 +5,7 @@ import android.view.Gravity
 import android.widget.Toast
 
 /**
- * @Author: AqrLei
- *@Name MyLearning
- *@Description:
+ *@Author: AqrLei
  *@Date: 2017/8/22
  */
 object AppToast {

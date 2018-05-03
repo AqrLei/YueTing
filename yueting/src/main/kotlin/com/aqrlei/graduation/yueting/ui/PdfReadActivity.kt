@@ -16,8 +16,6 @@ import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2018/2/18.
  */
 class PdfReadActivity : MvpContract.MvpActivity<PdfReadPresenter>() {

@@ -14,8 +14,6 @@ import com.aqrairsigns.aqrleilib.R;
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/25 Time: 15:16
  */
 
