@@ -7,6 +7,7 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
 import io.reactivex.Single
@@ -65,6 +66,20 @@ object BookSingle {
         }
     }
 
+    fun updateTypeName(path:String, typeName: String):Single<Boolean>{
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.updateSqlFormat(
+                            DataConstant.BOOK_TABLE_NAME,
+                            DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH, "="),
+                    arrayOf(typeName, path),
+                    null,
+                    DBManager.SqlType.UPDATE)
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
     fun selectBookInfo(typeName: String): Single<ArrayList<BookInfo>> {
         return Single.defer {
             val bookInfoList = ArrayList<BookInfo>()
@@ -94,6 +109,59 @@ object BookSingle {
                         }
                     }
             Single.just(bookInfoList).threadSwitch()
+        }
+    }
+
+    fun deleteBookInfo(pathList: List<SelectInfo>): Single<Boolean> {
+        return Single.defer {
+            pathList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.deleteSqlFormat(
+                                        DataConstant.BOOK_TABLE_NAME,
+                                        DataConstant.COMMON_COLUMN_PATH,
+                                        "="),
+                                null,
+                                arrayOf(it.name),
+                                DBManager.SqlType.DELETE)
+                    }
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
+    fun deleteBookInfo(path:String):Single<Boolean>{
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.deleteSqlFormat(DataConstant.BOOK_TABLE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH, "="),
+                    null, arrayOf(path), DBManager.SqlType.DELETE)
+            DBManager.sqlData(
+                    DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH, "="),
+                    null, arrayOf(path), DBManager.SqlType.DELETE)
+            DBManager.sqlData(
+                    DBManager.SqlFormat.deleteSqlFormat(DataConstant.CATALOG_TABLE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH, "="),
+                    null, arrayOf(path), DBManager.SqlType.DELETE)
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
+    fun deleteBookInfoByList(typeNameList: List<SelectInfo>): Single<Boolean> {
+        return Single.defer {
+            typeNameList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.deleteSqlFormat(
+                                        DataConstant.BOOK_TABLE_NAME,
+                                        DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                                        "="),
+                                null,
+                                arrayOf(it.name),
+                                DBManager.SqlType.DELETE)
+                    }
+
+            Single.just(DBManager.finish()).threadSwitch()
         }
     }
 }

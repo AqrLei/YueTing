@@ -57,7 +57,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
                     window.decorView?.apply {
-                        findViewById(R.id.tv_remove_items).setOnClickListener(this@TabHomeFragment)
                         findViewById(R.id.lookDetailsTv).setOnClickListener(this@TabHomeFragment)
                         findViewById(R.id.manageItemTv).apply {
                             setOnClickListener(this@TabHomeFragment)
@@ -153,11 +152,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             R.id.backIv -> {
                 mContainerActivity.finish()
             }
-            R.id.tv_remove_items -> {
-                // removeInfo()
-                AppToast.toastShow(mContainerActivity, "move to manage", 1000)
-                dialog.dismiss()
-            }
             R.id.manageItemTv -> {
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
@@ -171,7 +165,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 detailDialog.show()
             }
             R.id.moveItemsTv -> {
-                //TODO move items to other name List
+                //TODO move items to other name List,update type_name
             }
         }
     }
@@ -287,11 +281,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun getMusicInfoFromDB(name: String) {
-        mPresenter.getMusicInfoFromDB(name)
+        mPresenter.fetchMusicInfo(name)
     }
 
     private fun getBookInfoFromDB(name: String) {
-        mPresenter.getBookInfoFromDB(name)
+        mPresenter.fetchBookInfo(name)
     }
 
     private fun removeInfo() {
@@ -299,12 +293,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             val path = mBookInfoShared.getInfo(removePosition).path
             mBookInfoShared.removeInfo(removePosition)
             mAdapter.notifyDataSetInvalidated()
-            mPresenter.deleteBookItemFromDB(path)
+            mPresenter.deleteBookItem(path)
         } else {
             val path = mMusicInfoShared.getInfo(removePosition).albumUrl
             mMusicInfoShared.removeInfo(removePosition)
             mAdapter.notifyDataSetInvalidated()
-            mPresenter.deleteMusicItemFromDB(path)
+            mPresenter.deleteMusicItem(path)
         }
     }
 

@@ -9,6 +9,7 @@ import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
 import io.reactivex.Single
@@ -91,6 +92,69 @@ object MusicSingle {
                 false
             }
             Single.just(bool).threadSwitch()
+        }
+    }
+
+    fun updateTypeName(path: String, typeName: String): Single<Boolean> {
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.updateSqlFormat(
+                            DataConstant.MUSIC_TABLE_NAME,
+                            DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH, "="),
+                    arrayOf(typeName, path),
+                    null,
+                    DBManager.SqlType.UPDATE)
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
+    fun deleteMusicInfo(pathList: List<SelectInfo>): Single<Boolean> {
+        return Single.defer {
+            pathList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.deleteSqlFormat(
+                                        DataConstant.MUSIC_TABLE_NAME,
+                                        DataConstant.COMMON_COLUMN_PATH,
+                                        "="),
+                                null,
+                                arrayOf(it.name),
+                                DBManager.SqlType.DELETE)
+                    }
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
+    fun deleteMusicInfo(path: String): Single<Boolean> {
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.deleteSqlFormat(
+                            DataConstant.MUSIC_TABLE_NAME,
+                            DataConstant.COMMON_COLUMN_PATH,
+                            "="),
+                    null,
+                    arrayOf(path),
+                    DBManager.SqlType.DELETE)
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
+
+    fun deleteMusicInfoByList(typeNameList: List<SelectInfo>): Single<Boolean> {
+        return Single.defer {
+            typeNameList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.deleteSqlFormat(
+                                        DataConstant.MUSIC_TABLE_NAME,
+                                        DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
+                                        "="),
+                                null,
+                                arrayOf(it.name),
+                                DBManager.SqlType.DELETE)
+                    }
+
+            Single.just(true).threadSwitch()
         }
     }
 }

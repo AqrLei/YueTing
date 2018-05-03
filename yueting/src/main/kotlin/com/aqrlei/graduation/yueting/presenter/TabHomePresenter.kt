@@ -6,9 +6,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.Messenger
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.YueTingApplication
-import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
@@ -38,7 +36,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposables)
     }
 
-    fun getMusicInfoFromDB(typeName: String) {
+    fun fetchMusicInfo(typeName: String) {
         val disposables =
                 MusicSingle.selectMusicInfo(typeName)
                         .subscribe({
@@ -47,7 +45,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposables)
     }
 
-    fun getBookInfoFromDB(typeName: String) {
+    fun fetchBookInfo(typeName: String) {
         val disposables =
                 BookSingle.selectBookInfo(typeName)
                         .subscribe({
@@ -57,26 +55,32 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposables)
     }
 
-    fun deleteMusicItemFromDB(path: String) {
-        DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MUSIC_TABLE_NAME,
-                        DataConstant.COMMON_COLUMN_PATH, "="),
-                null, arrayOf(path), DBManager.SqlType.DELETE)
+    fun deleteMusicItem(path: String) {
+        val disposable =
+                MusicSingle.deleteMusicInfo(path)
+                        .subscribe()
+        addDisposables(disposable)
     }
 
-    fun deleteBookItemFromDB(path: String) {
-        DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(DataConstant.BOOK_TABLE_NAME,
-                        DataConstant.COMMON_COLUMN_PATH, "="),
-                null, arrayOf(path), DBManager.SqlType.DELETE)
-        DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(DataConstant.MARK_TABLE_NAME,
-                        DataConstant.COMMON_COLUMN_PATH, "="),
-                null, arrayOf(path), DBManager.SqlType.DELETE)
-        DBManager.sqlData(
-                DBManager.SqlFormat.deleteSqlFormat(DataConstant.CATALOG_TABLE_NAME,
-                        DataConstant.COMMON_COLUMN_PATH, "="),
-                null, arrayOf(path), DBManager.SqlType.DELETE)
+    fun deleteBookItem(path: String) {
+        val disposable =
+                BookSingle.deleteBookInfo(path)
+                        .subscribe()
+        addDisposables(disposable)
+    }
+
+    fun updateMusicTypeName(path: String, typeName: String) {
+        val disposable =
+                MusicSingle.updateTypeName(path, typeName)
+                        .subscribe({}, {})
+        addDisposables(disposable)
+    }
+
+    fun updateBookTypeName(path: String, typeName: String) {
+        val disposable =
+                BookSingle.updateTypeName(path, typeName)
+                        .subscribe({}, {})
+        addDisposables(disposable)
     }
 
     fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {

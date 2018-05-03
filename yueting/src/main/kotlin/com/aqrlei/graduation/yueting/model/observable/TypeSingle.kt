@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.model.observable
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
+import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
 import io.reactivex.Single
 
@@ -44,6 +45,20 @@ object TypeSingle {
                     DBManager.SqlType.INSERT)
             Single.just(DBManager.finish()).threadSwitch()
 
+        }
+    }
+
+    fun deleteType(nameList: List<SelectInfo>): Single<Boolean> {
+        return Single.defer {
+            nameList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.deleteSqlFormat(DataConstant.TYPE_TABLE_NAME,
+                                        DataConstant.TYPE_TABLE_C0_NAME, "="),
+                                null, arrayOf(it.name), DBManager.SqlType.DELETE)
+                    }
+
+            Single.just(DBManager.finish()).threadSwitch()
         }
     }
 }

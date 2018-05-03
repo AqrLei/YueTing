@@ -9,7 +9,7 @@ import android.widget.Toast
  *@Date: 2017/8/22
  */
 object AppToast {
-    fun toastShow(context: Context, content: String, time: Int, gravity: Int = Gravity.CENTER) {
+    fun toastShow(context: Context, content: String, time: Int=1000, gravity: Int = Gravity.CENTER) {
         val toast = Toast.makeText(context, content, time)
 
         toast.setGravity(gravity, 0, 0)

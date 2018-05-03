@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -105,6 +106,13 @@ class ManageListActivity :
         deleteTv.setOnClickListener(this)
         selectLv.adapter = mAdapter
         manageNameTv.text = initTitle()
+    }
+
+    fun deleteFinished(msg: String, isDelete: Boolean) {
+        AppToast.toastShow(this, msg)
+        if (isDelete) {
+            this.finish()
+        }
     }
 
     private fun selectAll(isSelect: Boolean) {
