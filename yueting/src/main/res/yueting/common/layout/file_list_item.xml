@@ -8,18 +8,17 @@
     <ImageView
         android:id="@+id/selectItemIv"
         style="@style/SelectViewStyle"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/itemNameTv" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:id="@+id/itemNameTv"
+        android:id="@+id/fileNameTv"
         android:layout_width="0dp"
-        android:gravity="center_vertical"
-        android:text="歌单"
-        android:textSize="@dimen/sizeText15dp"
         android:layout_height="match_parent"
         android:background="@drawable/common_ripple_item"
+        android:drawableLeft="@drawable/common_level_list_file"
+        android:gravity="center_vertical"
+        android:text="文件名"
+        android:textSize="@dimen/sizeText15dp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@+id/selectItemIv"
         app:layout_constraintRight_toRightOf="parent" />

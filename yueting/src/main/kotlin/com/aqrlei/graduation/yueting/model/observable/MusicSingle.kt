@@ -22,40 +22,48 @@ object MusicSingle {
     fun selectMusicInfo(typeName: String): Single<ArrayList<MusicInfo>> {
         return Single.defer {
             val musicInfoList = ArrayList<MusicInfo>()
-            DBManager.sqlData(
-                    DBManager.SqlFormat.selectSqlFormat(
-                            DataConstant.MUSIC_TABLE_NAME,
-                            "",
-                            DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
-                            "="),
-                    null, arrayOf(typeName), DBManager.SqlType.SELECT)
-                    .getCursor()?.let {
-                        while (it.moveToNext()) {
-                            val musicInfo = MusicInfo()
-                            val mmr = MediaMetadataRetriever()
-                            val fileInfo = DataSerializationUtil.byteArrayToSequence(it.getBlob(it.getColumnIndex("fileInfo")))
-                                    as FileInfo
-                            val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
-                            val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
-                            mmr.setDataSource(path)
-                            musicInfo.id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
-                            musicInfo.createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
-                            musicInfo.albumUrl = path ?: " "
-                            musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
-                                    ?: name
-                            musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                                    ?: YueTingConstant.INFO_UNKNOWN
-                            musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                                    ?: YueTingConstant.INFO_UNKNOWN
-                            musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
+            if (typeName == DataConstant.DEFAULT_TYPE_NAME) {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.MUSIC_TABLE_NAME),
+                        null, null, DBManager.SqlType.SELECT)
+                        .getCursor()
+            } else {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.MUSIC_TABLE_NAME,
+                                "",
+                                DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
+                                "="),
+                        null, arrayOf(typeName), DBManager.SqlType.SELECT)
+                        .getCursor()
+            }?.let {
+                while (it.moveToNext()) {
+                    val musicInfo = MusicInfo()
+                    val mmr = MediaMetadataRetriever()
+                    val fileInfo = DataSerializationUtil.byteArrayToSequence(it.getBlob(it.getColumnIndex("fileInfo")))
+                            as FileInfo
+                    val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))//(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
+                    val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
+                    mmr.setDataSource(path)
+                    musicInfo.id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                    musicInfo.createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
+                    musicInfo.albumUrl = path ?: " "
+                    musicInfo.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+                            ?: name
+                    musicInfo.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                            ?: YueTingConstant.INFO_UNKNOWN
+                    musicInfo.artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                            ?: YueTingConstant.INFO_UNKNOWN
+                    musicInfo.duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
 
-                            musicInfo.picture = mmr.embeddedPicture
-                            musicInfoList.add(musicInfo)
-                            mmr.release()
-                        }
-                    }
-            Single.just(musicInfoList).threadSwitch()
-        }
+                    musicInfo.picture = mmr.embeddedPicture
+                    musicInfoList.add(musicInfo)
+                    mmr.release()
+                }
+            }
+            Single.just(musicInfoList)
+        }.threadSwitch()
     }
 
     fun sendMusicInfo(service: IBinder): Single<Boolean> {
@@ -91,8 +99,8 @@ object MusicSingle {
                 e.printStackTrace()
                 false
             }
-            Single.just(bool).threadSwitch()
-        }
+            Single.just(bool)
+        }.threadSwitch()
     }
 
     fun updateTypeName(path: String, typeName: String): Single<Boolean> {
@@ -105,8 +113,8 @@ object MusicSingle {
                     arrayOf(typeName, path),
                     null,
                     DBManager.SqlType.UPDATE)
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 
     fun deleteMusicInfo(pathList: List<SelectInfo>): Single<Boolean> {
@@ -122,8 +130,8 @@ object MusicSingle {
                                 arrayOf(it.name),
                                 DBManager.SqlType.DELETE)
                     }
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 
     fun deleteMusicInfo(path: String): Single<Boolean> {
@@ -136,8 +144,8 @@ object MusicSingle {
                     null,
                     arrayOf(path),
                     DBManager.SqlType.DELETE)
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 
     fun deleteMusicInfoByList(typeNameList: List<SelectInfo>): Single<Boolean> {
@@ -153,7 +161,7 @@ object MusicSingle {
                                 arrayOf(it.name),
                                 DBManager.SqlType.DELETE)
                     }
-            Single.just(true).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 }

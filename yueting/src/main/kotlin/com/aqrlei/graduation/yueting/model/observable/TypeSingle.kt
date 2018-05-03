@@ -27,8 +27,8 @@ object TypeSingle {
                             typeList.add(temp)
                         }
                     }
-            Single.just(typeList).threadSwitch()
-        }
+            Single.just(typeList)
+        }.threadSwitch()
     }
 
     fun insertType(type: String, name: String): Single<Boolean> {
@@ -43,8 +43,8 @@ object TypeSingle {
                     arrayOf(name, type, dateTime),
                     null,
                     DBManager.SqlType.INSERT)
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 
     fun deleteType(nameList: List<SelectInfo>): Single<Boolean> {
@@ -56,8 +56,8 @@ object TypeSingle {
                                         DataConstant.TYPE_TABLE_C0_NAME, "="),
                                 null, arrayOf(it.name), DBManager.SqlType.DELETE)
                     }
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 
     fun updateType(oldTypeName: String, newTypeName: String): Single<Boolean> {
@@ -70,7 +70,7 @@ object TypeSingle {
                     arrayOf(newTypeName, oldTypeName),
                     null,
                     DBManager.SqlType.UPDATE)
-            Single.just(DBManager.finish()).threadSwitch()
-        }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
     }
 }

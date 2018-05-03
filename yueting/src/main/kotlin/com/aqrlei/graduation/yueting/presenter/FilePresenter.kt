@@ -2,6 +2,7 @@ package com.aqrlei.graduation.yueting.presenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrlei.graduation.yueting.model.FileSelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.model.observable.FileSingle
@@ -23,7 +24,7 @@ class FilePresenter(mMvpActivity: FileActivity) :
         addDisposables(disposables)
     }
 
-    fun addToDataBase(data: ArrayList<FileInfo>, listTitle: String) {// True: music/ False: book
+    fun addToDataBase(data: ArrayList<FileSelectInfo>, listTitle: String) {// True: music/ False: book
         val musicSize = ShareMusicInfo.MusicInfoTool.getSize()
         val bookSize = ShareBookInfo.BookInfoTool.getSize()
         val disposables =

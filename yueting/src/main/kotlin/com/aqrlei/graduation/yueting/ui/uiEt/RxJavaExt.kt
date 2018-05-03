@@ -9,6 +9,6 @@ import io.reactivex.schedulers.Schedulers
  */
 @Suppress("unused")
 fun <T> Single<T>.threadSwitch(): Single<T> {
-    return observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+    return this.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 }

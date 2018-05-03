@@ -10,6 +10,7 @@ import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.FileSelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
@@ -44,75 +45,48 @@ object FileSingle {
         }
     }
 
-    fun insertFileInfo(data: ArrayList<FileInfo>, listTitle: String): Single<Boolean> {
+    fun insertFileInfo(data: ArrayList<FileSelectInfo>, listTitle: String): Single<Boolean> {
         return Single.defer {
-            for (i in 0 until data.size) {
-                val suffix = FileUtil.getFileSuffix(data[i])
-                if (suffix != YueTingConstant.PLAY_SUFFIX_MP3
-                        && suffix != YueTingConstant.PLAY_SUFFIX_APE
-                        && suffix != YueTingConstant.PLAY_SUFFIX_FLAC
-                        && suffix != YueTingConstant.READ_SUFFIX_TXT
-                        && suffix != YueTingConstant.READ_SUFFIX_PDF) continue
-                val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
-                val tempData = data[i]
-                val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
-                //(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
-                val name = tempData.name.substring(0, tempData.name.lastIndexOf("."))
-                if (suffix == YueTingConstant.PLAY_SUFFIX_APE
-                        || suffix == YueTingConstant.PLAY_SUFFIX_MP3
-                        || suffix == YueTingConstant.PLAY_SUFFIX_FLAC) {
-                    val musicInfo = MusicInfo()
-                    val mmr = MediaMetadataRetriever()
-                    mmr.setDataSource(tempData.path)
-                    musicInfo.albumUrl = tempData.path
-                    musicInfo.title =
-                            mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
-                            ?: name
-                    musicInfo.album =
-                            mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-                            ?: YueTingConstant.INFO_UNKNOWN
-                    musicInfo.artist =
-                            mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                            ?: YueTingConstant.INFO_UNKNOWN
-                    musicInfo.duration =
-                            mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
-                    musicInfo.picture = mmr.embeddedPicture
-                    if (!ShareMusicInfo.MusicInfoTool.has(musicInfo)) {
-                        ShareMusicInfo.MusicInfoTool.addInfo(musicInfo)
+            data.filter { it.status == FileSelectInfo.SELECTED }
+                    .forEach {
+                        val suffix = FileUtil.getFileSuffix(it.fileInfo)
+                        if (suffix != YueTingConstant.PLAY_SUFFIX_MP3
+                                && suffix != YueTingConstant.PLAY_SUFFIX_APE
+                                && suffix != YueTingConstant.PLAY_SUFFIX_FLAC
+                                && suffix != YueTingConstant.READ_SUFFIX_TXT
+                                && suffix != YueTingConstant.READ_SUFFIX_PDF) return@forEach
+                        val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
+                        val tempData = it.fileInfo
+                        val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
+                        //(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
+                        if (suffix == YueTingConstant.PLAY_SUFFIX_APE
+                                || suffix == YueTingConstant.PLAY_SUFFIX_MP3
+                                || suffix == YueTingConstant.PLAY_SUFFIX_FLAC) {
+                            DBManager.sqlData(
+                                    DBManager.SqlFormat.insertSqlFormat(
+                                            DataConstant.MUSIC_TABLE_NAME,
+                                            arrayOf(DataConstant.COMMON_COLUMN_PATH,
+                                                    DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
+                                                    DataConstant.MUSIC_TABLE_C2_FILE_INFO,
+                                                    DataConstant.COMMON_COLUMN_CREATE_TIME)),
+                                    arrayOf(tempData.path, listTitle, byteData, dateTime),
+                                    null,
+                                    DBManager.SqlType.INSERT)
+                        } else {
+                            DBManager.sqlData(
+                                    DBManager.SqlFormat.insertSqlFormat(
+                                            DataConstant.BOOK_TABLE_NAME,
+                                            arrayOf(
+                                                    DataConstant.COMMON_COLUMN_PATH,
+                                                    DataConstant.BOOK_TABLE_C1_TYPE,
+                                                    DataConstant.BOOK_TABLE_C4_FILE_INFO,
+                                                    DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                                                    DataConstant.COMMON_COLUMN_CREATE_TIME)),
+                                    arrayOf(tempData.path, suffix, byteData, listTitle, dateTime),
+                                    null,
+                                    DBManager.SqlType.INSERT)
+                        }
                     }
-                    DBManager.sqlData(
-                            DBManager.SqlFormat.insertSqlFormat(
-                                    DataConstant.MUSIC_TABLE_NAME,
-                                    arrayOf(DataConstant.COMMON_COLUMN_PATH,
-                                            DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
-                                            DataConstant.MUSIC_TABLE_C2_FILE_INFO,
-                                            DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                            arrayOf(tempData.path, listTitle, byteData, dateTime),
-                            null,
-                            DBManager.SqlType.INSERT)
-                } else {
-                    val bookInfo = BookInfo()
-                    bookInfo.type = suffix
-                    bookInfo.name = name
-                    bookInfo.path = tempData.path
-                    bookInfo.fileLength = File(tempData.path).length().toInt()
-                    DBManager.sqlData(
-                            DBManager.SqlFormat.insertSqlFormat(
-                                    DataConstant.BOOK_TABLE_NAME,
-                                    arrayOf(
-                                            DataConstant.COMMON_COLUMN_PATH,
-                                            DataConstant.BOOK_TABLE_C1_TYPE,
-                                            DataConstant.BOOK_TABLE_C4_FILE_INFO,
-                                            DataConstant.BOOK_TABLE_C5_TYPE_NAME,
-                                            DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                            arrayOf(tempData.path, suffix, byteData, listTitle, dateTime),
-                            null,
-                            DBManager.SqlType.INSERT)
-                    if (!ShareBookInfo.BookInfoTool.has(bookInfo)) {
-                        ShareBookInfo.BookInfoTool.addInfo(bookInfo)
-                    }
-                }
-            }
             val result = DBManager.finish()
             Single.just(result).threadSwitch()
         }

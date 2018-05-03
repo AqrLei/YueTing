@@ -115,9 +115,10 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             }
             R.id.manageListsTv -> {
                 val selectInfoList = ArrayList<SelectInfo>()
-                titleList.forEach {
-                    selectInfoList.add(SelectInfo(name = it))
-                }
+                titleList.filter { it != DataConstant.DEFAULT_TYPE_NAME }
+                        .forEach {
+                            selectInfoList.add(SelectInfo(name = it))
+                        }
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_LIST,
@@ -165,14 +166,18 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
         initView()
-        mPresenter.getTypeInfoFromDB(type)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mPresenter.getTypeInfo(type)
     }
 
     fun addFinish(boolean: Boolean) {
         if (boolean) {
             AppToast.toastShow(mContainerActivity, "创建成功", 1000)
             newListDialog.dismiss()
-            mPresenter.getTypeInfoFromDB(type)
+            mPresenter.getTypeInfo(type)
         }
     }
 

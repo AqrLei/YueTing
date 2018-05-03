@@ -19,20 +19,16 @@
 
         <ImageView
             android:id="@+id/backIv"
-            style="@style/TitleBarImageViewStyle"
-            android:onClick="onClick" />
+            style="@style/TitleBarImageViewStyle" />
 
         <TextView
             style="@style/TitleBarTextViewStyle"
             android:text="我的文件" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/addFileIv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:onClick="onClick"
-            android:src="@drawable/common_selector_add" />
+            style="@style/SelectViewStyle"
+            android:layout_gravity="right" />
     </FrameLayout>
 
     <View style="@style/DividerStyle" />
@@ -53,9 +49,19 @@
     <ListView
         android:id="@+id/lv_file"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:overScrollMode="never"
         android:scrollbars="none" />
 
+    <TextView
+        android:id="@+id/sureTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenView40dp"
+        android:background="@drawable/common_ripple_item"
+        android:gravity="center"
+        android:text="确定"
+        android:textSize="@dimen/sizeText20dp"
+        android:textStyle="bold" />
 
 </LinearLayout>

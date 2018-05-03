@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ImageView
+import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.AppCache
@@ -15,8 +17,10 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.FileSelectInfo
 import com.aqrlei.graduation.yueting.presenter.FilePresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
+import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
 import kotlinx.android.synthetic.main.file_activity_file.*
 
 /**
@@ -25,7 +29,8 @@ import kotlinx.android.synthetic.main.file_activity_file.*
  */
 class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         AdapterView.OnItemClickListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        CommonListAdapter.OnInternalClick {
     companion object {
         fun jumpToFileActivity(context: Activity,
                                reqCode: Int,
@@ -47,9 +52,12 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     }
 
     private lateinit var fileInfoList: ArrayList<FileInfo>
-    private lateinit var mData: ArrayList<FileInfo>
+    private lateinit var mData: ArrayList<FileSelectInfo>
     private lateinit var mAdapter: FileListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
+    private val mProgressDialog: ProgressDialog
+            by lazy {
+                createProgressDialog(this, "提示", "正在添加中...")
+            }
 
     override val mPresenter: FilePresenter
         get() = FilePresenter(this)
@@ -65,7 +73,16 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
                 getFileInfo(fileInfoList[0].parentPath)
             }
             R.id.addFileIv -> {
-                setProgressDialog()
+                addFileIv.background.level = if (addFileIv.background.level == 0) {
+                    selectAll(true)
+                    1
+                } else {
+                    selectAll(false)
+                    0
+                }
+            }
+            R.id.sureTv -> {
+                mProgressDialog.show()
                 addToDatabase()
             }
         }
@@ -74,8 +91,22 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     override fun onItemClick(parent: AdapterView<*>?, convertView: View?,
                              position: Int, clickId: Long) {
-        if (mData[position].isDir) {
-            getFileInfo(mData[position].path)
+        if (mData[position].fileInfo.isDir) {
+            getFileInfo(mData[position].fileInfo.path)
+        }
+    }
+
+    override fun onInternalClick(v: View, position: Int) {
+        val iv = v as ImageView
+        iv.background.level = if (iv.background.level == 1) {
+            if (addFileIv.background.level == 1) {
+                addFileIv.background.level = 0
+            }
+            mData[position].status = FileSelectInfo.UNSELECTED
+            0
+        } else {
+            mData[position].status = FileSelectInfo.SELECTED
+            1
         }
     }
 
@@ -103,7 +134,9 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         mData.clear()
         fileInfoList = data
         if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
-            mData.addAll(fileInfoList.subList(1, fileInfoList.size))
+            fileInfoList.subList(1, fileInfoList.size).forEach {
+                mData.add(FileSelectInfo(fileInfo = it))
+            }
         }
         tv_file_parent.text = fileInfoList[0].path
         mAdapter.notifyDataSetChanged()
@@ -122,9 +155,23 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         this@FileActivity.finish()
     }
 
+    private fun selectAll(isSelect: Boolean) {
+        mData.forEach {
+            if (isSelect) {
+                it.status = FileSelectInfo.SELECTED
+            } else {
+                it.status = FileSelectInfo.UNSELECTED
+            }
+        }
+        mAdapter.notifyDataSetChanged()
+    }
+
     private fun init() {
         mData = ArrayList()
-        mAdapter = FileListAdapter(mData, this, R.layout.read_list_item)
+        mAdapter = FileListAdapter(
+                mData = mData,
+                mContext = this,
+                listener = this)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
@@ -134,16 +181,7 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         backIv.setOnClickListener(this)
         tv_file_parent.setOnClickListener(this)
         addFileIv.setOnClickListener(this)
-    }
-
-    private fun setProgressDialog() {
-        mProgressDialog = ProgressDialog(this)
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        mProgressDialog.setCanceledOnTouchOutside(false)
-        mProgressDialog.setCancelable(false)
-        mProgressDialog.setTitle("提示")
-        mProgressDialog.setMessage("正在添加中...")
-        mProgressDialog.show()
+        sureTv.setOnClickListener(this)
     }
 
     private fun getFileInfo(path: String) {

@@ -50,7 +50,11 @@ class ManageListActivity :
             }
     private val mAdapter: SelectAdapter
             by lazy {
-                SelectAdapter(selectInfoList, this, type)
+                SelectAdapter(
+                        data = selectInfoList,
+                        context = this,
+                        type = type,
+                        listener = this)
             }
     private val type: String
             by lazy { intent.extras.getString(YueTingConstant.MANAGE_TYPE_KEY) }
@@ -85,7 +89,6 @@ class ManageListActivity :
     }
 
     override fun onInternalClick(v: View, position: Int) {
-
         val iv = v as ImageView
         iv.background.level = if (iv.background.level == 1) {
             if (selectIv.background.level == 1) {
@@ -104,6 +107,7 @@ class ManageListActivity :
         backIv.setOnClickListener(this)
         selectIv.setOnClickListener(this)
         deleteTv.setOnClickListener(this)
+        mAdapter
         selectLv.adapter = mAdapter
         manageNameTv.text = initTitle()
     }

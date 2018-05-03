@@ -19,7 +19,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
         addDisposables(disposable)
     }
 
-    fun getTypeInfoFromDB(type: String) {
+    fun getTypeInfo(type: String) {
         val disposables =
                 TypeSingle.selectType(type)
                         .subscribe({

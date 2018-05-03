@@ -21,6 +21,7 @@ import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
+import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
@@ -46,7 +47,10 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         get() = R.layout.read_activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
+    private val mProgressDialog: ProgressDialog
+    by lazy {
+        createProgressDialog(this,"提示","正在加载中...")
+    }
     private var markPosition: Int = 0
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -92,7 +96,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        setProgressDialog()
+        mProgressDialog.show()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
         backIv.setOnClickListener(this)
@@ -102,17 +106,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         mProgressDialog.dismiss()
         initView()
     }
-
-    private fun setProgressDialog() {
-        mProgressDialog = ProgressDialog(this)
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        mProgressDialog.setCancelable(false)
-        mProgressDialog.setCanceledOnTouchOutside(false)
-        mProgressDialog.setTitle("提示")
-        mProgressDialog.setMessage("正在加载中~")
-        mProgressDialog.show()
-    }
-
     private fun getData() {
         mPresenter.getData()
     }

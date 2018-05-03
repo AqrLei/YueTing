@@ -41,7 +41,10 @@
     <TextView
         android:id="@+id/deleteTv"
         android:layout_width="match_parent"
+        android:background="@drawable/common_ripple_item"
         android:layout_height="@dimen/dimenView40dp"
         android:gravity="center"
+        android:textSize="@dimen/sizeText20dp"
+        android:textStyle="bold"
         android:text="删除选中" />
 </LinearLayout>

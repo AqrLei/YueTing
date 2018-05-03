@@ -17,15 +17,16 @@ class SelectAdapter constructor(
         data: List<SelectInfo>,
         context: Context,
         val type: String,
-        @LayoutRes resId: Int = R.layout.common_manage_list_item)
-    : CommonListAdapter<SelectInfo>(data, context, resId) {
+        @LayoutRes resId: Int = R.layout.common_manage_list_item,
+        listener:OnInternalClick)
+    : CommonListAdapter<SelectInfo>(data, context, resId,listener) {
     override fun bindData(holderList: CommonListViewHolder, t: SelectInfo) {
         (holderList.get(R.id.itemNameTv) as TextView).text =
                 if (type == YueTingConstant.MANAGE_TYPE_LIST) t.name
                 else {
                     t.name.substring(t.name.lastIndexOf("/") + 1, t.name.lastIndexOf("."))
                 }
-        (holderList.get(R.id.selectIv) as ImageView).background.level = t.status
+        (holderList.get(R.id.selectItemIv) as ImageView).background.level = t.status
     }
 
     override fun setInternalClick(holder: CommonListViewHolder) {

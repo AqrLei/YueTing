@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.Bundle
@@ -23,6 +24,7 @@ import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.*
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
+import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
@@ -119,6 +121,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
             }
+    private val progressDialog: ProgressDialog
+    by lazy {
+        createProgressDialog(mContainerActivity,"提示","正在加载中...")
+    }
 
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -208,7 +214,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
-        initData()
         initListener()
         initView()
 
@@ -216,13 +221,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     override fun onResume() {
         super.onResume()
-        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-            changeBookAdapter()
-        }
+        initData()
     }
 
     fun setMusicTitle(musicName: String) {
-
         titleNameTv.text = musicName
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
             titleNameTv.text = "悦读"
@@ -234,13 +236,15 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
+        progressDialog.dismiss()
         mMusicInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetInvalidated()
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
+        progressDialog.dismiss()
         mBookInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetInvalidated()
 
     }
 
@@ -253,10 +257,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     private fun initData() {
+        progressDialog.show()
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
-            getMusicInfoFromDB(name)
+            getMusicInfo(name)
         } else {
-            getBookInfoFromDB(name)
+            getBookInfo(name)
         }
     }
 
@@ -280,11 +285,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         backIv.setOnClickListener(this)
     }
 
-    private fun getMusicInfoFromDB(name: String) {
+    private fun getMusicInfo(name: String) {
         mPresenter.fetchMusicInfo(name)
     }
 
-    private fun getBookInfoFromDB(name: String) {
+    private fun getBookInfo(name: String) {
         mPresenter.fetchBookInfo(name)
     }
 
