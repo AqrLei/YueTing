@@ -160,7 +160,6 @@ object BookSingle {
                                 arrayOf(it.name),
                                 DBManager.SqlType.DELETE)
                     }
-
             Single.just(DBManager.finish()).threadSwitch()
         }
     }

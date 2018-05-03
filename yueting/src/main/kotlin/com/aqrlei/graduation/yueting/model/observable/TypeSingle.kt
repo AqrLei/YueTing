@@ -44,7 +44,6 @@ object TypeSingle {
                     null,
                     DBManager.SqlType.INSERT)
             Single.just(DBManager.finish()).threadSwitch()
-
         }
     }
 
@@ -57,7 +56,20 @@ object TypeSingle {
                                         DataConstant.TYPE_TABLE_C0_NAME, "="),
                                 null, arrayOf(it.name), DBManager.SqlType.DELETE)
                     }
+            Single.just(DBManager.finish()).threadSwitch()
+        }
+    }
 
+    fun updateType(oldTypeName: String, newTypeName: String): Single<Boolean> {
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.updateSqlFormat(
+                            DataConstant.TYPE_TABLE_NAME,
+                            DataConstant.TYPE_TABLE_C0_NAME,
+                            DataConstant.TYPE_TABLE_C0_NAME, "="),
+                    arrayOf(newTypeName, oldTypeName),
+                    null,
+                    DBManager.SqlType.UPDATE)
             Single.just(DBManager.finish()).threadSwitch()
         }
     }

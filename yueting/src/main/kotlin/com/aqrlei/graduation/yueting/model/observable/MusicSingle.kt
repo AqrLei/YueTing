@@ -153,7 +153,6 @@ object MusicSingle {
                                 arrayOf(it.name),
                                 DBManager.SqlType.DELETE)
                     }
-
             Single.just(true).threadSwitch()
         }
     }
