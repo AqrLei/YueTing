@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.*
@@ -211,11 +212,20 @@ class MusicService : BaseService(),
         if (mPlayer == null) {
             mPlayer = MediaPlayer()
         }
-        mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-        mPlayer?.setOnErrorListener(this)
-        mPlayer?.setOnPreparedListener(this)
-        mPlayer?.setOnCompletionListener(this)
-        val audioManager = (getSystemService(Context.AUDIO_SERVICE) as AudioManager)
+        val audioAttributes =
+                AudioAttributes.Builder().apply {
+                    setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                }.build()
+
+        mPlayer?.also {
+            it.setAudioAttributes(audioAttributes)
+            it.setOnErrorListener(this)
+            it.setOnPreparedListener(this)
+            it.setOnCompletionListener(this)
+        }
+        val audioManager =
+                (getSystemService(Context.AUDIO_SERVICE) as AudioManager)
+        @Suppress("DEPRECATION")
         audioManager.requestAudioFocus(
                 this,
                 AudioManager.STREAM_MUSIC,

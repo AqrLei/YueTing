@@ -1,9 +1,10 @@
 package com.aqrlei.graduation.yueting.ui
 
 import android.app.Activity
-import android.app.ProgressDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
@@ -20,7 +21,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.FileSelectInfo
 import com.aqrlei.graduation.yueting.presenter.FilePresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
-import com.aqrlei.graduation.yueting.util.createProgressDialog
+import com.aqrlei.graduation.yueting.util.createPopView
 import kotlinx.android.synthetic.main.file_activity_file.*
 
 /**
@@ -54,9 +55,10 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     private lateinit var fileInfoList: ArrayList<FileInfo>
     private lateinit var mData: ArrayList<FileSelectInfo>
     private lateinit var mAdapter: FileListAdapter
-    private val mProgressDialog: ProgressDialog
+    private val progressDialog: Dialog
             by lazy {
-                createProgressDialog(this, "提示", "正在添加中...")
+                createPopView(this,R.layout.common_progress_bar,Gravity.CENTER)
+                //createProgressDialog(this, "提示", "正在添加中...")
             }
 
     override val mPresenter: FilePresenter
@@ -82,7 +84,7 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
                 }
             }
             R.id.sureTv -> {
-                mProgressDialog.show()
+                progressDialog.show()
                 addToDatabase()
             }
         }
@@ -143,7 +145,7 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     }
 
     fun finishActivity(result: Boolean, bookChange: Boolean, musicChange: Boolean) {
-        mProgressDialog.dismiss()
+        progressDialog.dismiss()
         AppToast.toastShow(this@FileActivity, if (result) "添加完毕" else "添加失败", 1000)
         if (intent.extras.getInt(YueTingConstant.WHICH_JUMP_TO_FILE)
                 == YueTingConstant.YUE_TING_FILE) {

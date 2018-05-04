@@ -2,7 +2,6 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.app.Activity
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -21,7 +20,7 @@ import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
-import com.aqrlei.graduation.yueting.util.createProgressDialog
+import com.aqrlei.graduation.yueting.util.createPopView
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
@@ -47,10 +46,11 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         get() = R.layout.read_activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
-    private val mProgressDialog: ProgressDialog
-    by lazy {
-        createProgressDialog(this,"提示","正在加载中...")
-    }
+    private val progressDialog: Dialog
+            by lazy {
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
+                // createProgressDialog(this,"提示","正在加载中...")
+            }
     private var markPosition: Int = 0
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -96,16 +96,17 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        mProgressDialog.show()
+        progressDialog.show()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
         backIv.setOnClickListener(this)
     }
 
     fun loadCatalogDone(t: Boolean) {
-        mProgressDialog.dismiss()
+        progressDialog.dismiss()
         initView()
     }
+
     private fun getData() {
         mPresenter.getData()
     }

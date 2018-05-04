@@ -1,12 +1,12 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
@@ -26,7 +26,6 @@ import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.util.createListPopView
 import com.aqrlei.graduation.yueting.util.createPopView
-import com.aqrlei.graduation.yueting.util.createProgressDialog
 import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
@@ -60,15 +59,15 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private val manageDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
-                    window.decorView?.apply{
+                    window.decorView?.apply {
                         findViewById<View>(R.id.lookDetailsTv)?.setOnClickListener(this@TabHomeFragment)
-                           findViewById<TextView>(R.id.manageItemTv)?.apply {
-                                setOnClickListener(this@TabHomeFragment)
-                                (this as TextView).text =
-                                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
-                                        else "管理歌曲"
-                            }
-                          findViewById<View>(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById<TextView>(R.id.manageItemTv)?.apply {
+                            setOnClickListener(this@TabHomeFragment)
+                            (this as TextView).text =
+                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
+                                    else "管理歌曲"
+                        }
+                        findViewById<View>(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
                     }
 
 
@@ -146,9 +145,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
             }
-    private val progressDialog: ProgressDialog
+    private val progressDialog: Dialog
             by lazy {
-                createProgressDialog(mContainerActivity, "提示", "正在加载中...")
+                createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER)
+                //createProgressDialog(mContainerActivity, "提示", "正在加载中...")
             }
     private var musicInfoChanged: Boolean = false
 
