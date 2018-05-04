@@ -37,6 +37,41 @@ class MusicService : BaseService(),
         MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
+
+    companion object {
+        private val mMusicInfoShare = ShareMusicInfo.MusicInfoTool
+        private var mPlayer: MediaPlayer? = null
+    }
+
+    private var cPosition: Int = -1
+    private var pPosition: Int = -1
+    private var cDuration: Int = 0
+    private var playType: PlayType = PlayType.LIST
+    private var playerReceiver: PlayerReceiver? = null
+    private var isPause: Boolean = false
+    private var isSame: Boolean = false
+    private var isLossFocus: Boolean = false
+    private val handler = Handler()
+    private var pi: PendingIntent? = null
+    private var intent: Intent? = null
+    private var stackBuilder: TaskStackBuilder? = null
+    private lateinit var remoteViews: RemoteViews
+    private lateinit var notification: Notification
+    private lateinit var sendMessenger: Messenger
+    private val musicInfoS = ArrayList<MusicInfo>()
+    private val sendCDurationR = object : Runnable {
+        override fun run() {
+            cDuration = mPlayer?.currentPosition ?: 0
+            val message = Message()
+            message.what = YueTingConstant.CURRENT_DURATION
+            message.arg1 = cDuration
+            sendMessenger.send(message)
+            if (!isPause) {
+                handler.postDelayed(this, 100)
+            }
+        }
+    }
+
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
         pPosition = cPosition
@@ -106,40 +141,6 @@ class MusicService : BaseService(),
 
     }
 
-    companion object {
-        private val mMusicInfoShare = ShareMusicInfo.MusicInfoTool
-        private var mPlayer: MediaPlayer? = null
-    }
-
-    private var cPosition: Int = -1
-    private var pPosition: Int = -1
-    private var cDuration: Int = 0
-    private var playType: PlayType = PlayType.LIST
-    private var playerReceiver: PlayerReceiver? = null
-    private var isPause: Boolean = false
-    private var isSame: Boolean = false
-    private var isLossFocus: Boolean = false
-    private val handler = Handler()
-    private var pi: PendingIntent? = null
-    private var intent: Intent? = null
-    private var stackBuilder: TaskStackBuilder? = null
-    private lateinit var remoteViews: RemoteViews
-    private lateinit var notification: Notification
-    private lateinit var sendMessenger: Messenger
-    private val sendCDurationR = object : Runnable {
-        override fun run() {
-            cDuration = mPlayer?.currentPosition ?: 0
-            val message = Message()
-            message.what = YueTingConstant.CURRENT_DURATION
-            message.arg1 = cDuration
-            sendMessenger.send(message)
-            if (!isPause) {
-                handler.postDelayed(this, 100)
-            }
-        }
-    }
-
-
     override fun onBind(p0: Intent?): IBinder? {
         super.onBind(p0)
         p0?.let {
@@ -166,10 +167,6 @@ class MusicService : BaseService(),
         sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
         sendPlayState(PlayState.START)
         return START_REDELIVER_INTENT
-    }
-
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
     }
 
     override fun onDestroy() {
@@ -209,7 +206,6 @@ class MusicService : BaseService(),
         if (mPlayer == null) {
             mPlayer = MediaPlayer()
         }
-
         mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mPlayer?.setOnErrorListener(this)
         mPlayer?.setOnPreparedListener(this)
@@ -219,7 +215,6 @@ class MusicService : BaseService(),
                 this,
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN)
-
     }
 
     private fun refreshPi() {
@@ -253,7 +248,6 @@ class MusicService : BaseService(),
     }
 
     private fun buildNotification() {
-
         pi = makeTaskStack()
         remoteViews = RemoteViews(this.packageName, R.layout.music_notification_foreground)
         val playIntent = bindListener(ActionConstant.ACTION_PLAY, ActionConstant.ACTION_PLAY_REQ)
@@ -272,7 +266,6 @@ class MusicService : BaseService(),
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_music_note_black)//必须设置，不然无法显示自定义的View
                 .build()
-
         startForeground(YueTingConstant.SERVICE_NOTIFICATION_ID, notification)
     }
 
@@ -286,7 +279,6 @@ class MusicService : BaseService(),
     }
 
     private fun refreshPlayView(playState: Int) {
-
         remoteViews.setImageViewResource(R.id.playControlIv,
                 if (playState == YueTingConstant.PLAY_STATUS_PAUSE) R.drawable.music_selector_pause
                 else R.drawable.music_selector_play)
@@ -432,7 +424,6 @@ class MusicService : BaseService(),
                 }
             }
         }
-
     }
 
     private fun randomPosition() {
@@ -509,8 +500,6 @@ class MusicService : BaseService(),
         }
     }
 
-    private val musicInfoS = ArrayList<MusicInfo>()
-
     inner class MusicBinder : IMusicInfo.Stub() {
         override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
             if (infoS != null) {
@@ -527,5 +516,4 @@ class MusicService : BaseService(),
     private enum class PlayDirection {
         NEXT, PREVIOUS
     }
-
 }
