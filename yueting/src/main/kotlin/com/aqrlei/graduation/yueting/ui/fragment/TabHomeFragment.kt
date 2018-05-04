@@ -63,7 +63,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         findViewById<View>(R.id.lookDetailsTv)?.setOnClickListener(this@TabHomeFragment)
                         findViewById<TextView>(R.id.manageItemTv)?.apply {
                             setOnClickListener(this@TabHomeFragment)
-                            (this as TextView).text =
+                            this.text =
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
                                     else "管理歌曲"
                         }
@@ -77,27 +77,27 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 createPopView(mContainerActivity, R.layout.common_item_detail).apply {
                     window.decorView?.apply {
-                        (findViewById(R.id.itemNameTitleTv) as TextView).text =
+                        (findViewById<TextView>(R.id.itemNameTitleTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
                                 else "歌名:"
-                        (findViewById(R.id.itemNameTv) as TextView).text =
+                        (findViewById<TextView>(R.id.itemNameTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
                                     mBookInfoShared.getInfo(modifyPosition).name
                                 else mMusicInfoShared.getInfo(modifyPosition).title
-                        (findViewById(R.id.ownerTitleTv) as TextView).text =
+                        (findViewById<TextView>(R.id.ownerTitleTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
                                 else "歌手:"
-                        (findViewById(R.id.ownerTv) as TextView).text =
+                        (findViewById<TextView>(R.id.ownerTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
                                 else mMusicInfoShared.getInfo(modifyPosition).artist
-                        (findViewById(R.id.localPathTv) as TextView).text =
+                        (findViewById<TextView>(R.id.localPathTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
                                     mBookInfoShared.getInfo(modifyPosition).path
                                 else mMusicInfoShared.getInfo(modifyPosition).albumUrl
-                        (findViewById(R.id.sizeTitleTv) as TextView).text =
+                        (findViewById<TextView>(R.id.sizeTitleTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
                                 else "时长:"
-                        (findViewById(R.id.sizeTv) as TextView).text =
+                        (findViewById<TextView>(R.id.sizeTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
                                     "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
                                 } else {
