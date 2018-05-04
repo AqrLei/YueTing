@@ -18,6 +18,10 @@
             android:name=".service.MusicService"
             android:process=":musicPlayer" />
 
+        <provider
+            android:authorities="com.aqrlei.graduation.yueting.provider.MUSIC"
+            android:exported="true"
+            android:name=".provider.MusicProvider"/>
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"

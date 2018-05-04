@@ -10,9 +10,11 @@ import android.content.IntentFilter
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
+import android.util.Log
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
@@ -22,9 +24,11 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.aidl.IMusicInfo
 import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
+import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.provider.MusicProvider
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.util.createNotificationChannel
 import java.io.IOException
@@ -172,6 +176,11 @@ class MusicService : BaseService(),
         super.onStartCommand(intent, flags, startId)
         sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
         sendPlayState(PlayState.START)
+        val musicUri = MusicProvider.MUSIC_CONTENT_URI
+        val cursor =  contentResolver.query(musicUri,null, null,null,null)
+        while (cursor.moveToNext()){
+            Log.d("Provider",cursor.getString(cursor.getColumnIndex(DataConstant.COMMON_COLUMN_PATH)) )
+        }
         return START_REDELIVER_INTENT
     }
 
