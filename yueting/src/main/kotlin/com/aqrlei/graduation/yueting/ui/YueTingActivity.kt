@@ -86,21 +86,6 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
         }
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
-            if (requestCode == YueTingConstant.YUE_TING_FILE_REQ) {
-                if (data?.extras?.getBoolean(YueTingConstant.FILE_BOOK_CHANGE) == true) {
-                    mTabHomeFragment.changeBookAdapter()
-                }
-                if (data?.extras?.getBoolean(YueTingConstant.FILE_MUSIC_CHANGE) == true) {
-                    mTabHomeFragment.changeMusicAdapter()
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mHandler = mMusicShareInfo.getHandler(this)
@@ -128,9 +113,10 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
 
     fun getMPlayView() = mPlayView
 
-    fun setMusicTitle(musicName:String){
+    fun setMusicTitle(musicName: String) {
         mTabHomeFragment.setMusicTitle(musicName)
     }
+
     private fun initListener() {
         nextIv.setOnClickListener(this)
         previousIv.setOnClickListener(this)
@@ -140,8 +126,9 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
-        val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)?:YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
-        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)?:"默认列表"
+        val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+                ?: YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
+        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE) ?: "默认列表"
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(

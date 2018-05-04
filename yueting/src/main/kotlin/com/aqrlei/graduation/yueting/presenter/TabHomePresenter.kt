@@ -13,6 +13,7 @@ import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import com.aqrlei.graduation.yueting.model.observable.MusicSingle
+import com.aqrlei.graduation.yueting.model.observable.TypeSingle
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 
 
@@ -55,6 +56,15 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposables)
     }
 
+    fun fetchTypeInfo(type: String) {
+        val disposables =
+                TypeSingle.selectType(type)
+                        .subscribe({
+                            mMvpView.setTypeInfo(it)
+                        }, {})
+        addDisposables(disposables)
+    }
+
     fun deleteMusicItem(path: String) {
         val disposable =
                 MusicSingle.deleteMusicInfo(path)
@@ -72,14 +82,18 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
     fun updateMusicTypeName(path: String, typeName: String) {
         val disposable =
                 MusicSingle.updateTypeName(path, typeName)
-                        .subscribe({}, {})
+                        .subscribe({
+                            mMvpView.updateMusicFinish(it)
+                        }, {})
         addDisposables(disposable)
     }
 
     fun updateBookTypeName(path: String, typeName: String) {
         val disposable =
                 BookSingle.updateTypeName(path, typeName)
-                        .subscribe({}, {})
+                        .subscribe({
+                            mMvpView.updateBookFinish(it)
+                        }, {})
         addDisposables(disposable)
     }
 

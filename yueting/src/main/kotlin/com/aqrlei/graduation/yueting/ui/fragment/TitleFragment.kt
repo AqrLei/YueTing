@@ -178,14 +178,14 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
 
     override fun onResume() {
         super.onResume()
-        mPresenter.getTypeInfo(type)
+        mPresenter.fetchTypeInfo(type)
     }
 
     fun modifyFinish(boolean: Boolean,msg:String) {
         if (boolean) {
             AppToast.toastShow(mContainerActivity, msg, 1000)
             modifyListDialog.dismiss()
-            mPresenter.getTypeInfo(type)
+            mPresenter.fetchTypeInfo(type)
         }
     }
 

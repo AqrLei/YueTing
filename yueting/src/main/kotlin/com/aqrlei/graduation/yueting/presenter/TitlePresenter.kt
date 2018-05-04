@@ -25,7 +25,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
         addDisposables(disposable)
     }
 
-    fun getTypeInfo(type: String) {
+    fun fetchTypeInfo(type: String) {
         val disposables =
                 TypeSingle.selectType(type)
                         .subscribe({

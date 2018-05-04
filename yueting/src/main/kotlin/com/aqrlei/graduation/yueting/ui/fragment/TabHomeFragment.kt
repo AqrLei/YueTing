@@ -22,7 +22,9 @@ import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.*
+import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
+import com.aqrlei.graduation.yueting.ui.uiEt.createListPopView
 import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
 import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
 import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
@@ -51,11 +53,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    private var removePosition: Int = 0
+    private var modifyPosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
-    private val dialog: Dialog
+    private val manageDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
                     window.decorView?.apply {
@@ -79,31 +81,41 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                                 else "歌名:"
                         (findViewById(R.id.itemNameTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(removePosition).name
-                                else mMusicInfoShared.getInfo(removePosition).title
+                                    mBookInfoShared.getInfo(modifyPosition).name
+                                else mMusicInfoShared.getInfo(modifyPosition).title
                         (findViewById(R.id.ownerTitleTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
                                 else "歌手:"
                         (findViewById(R.id.ownerTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
-                                else mMusicInfoShared.getInfo(removePosition).artist
+                                else mMusicInfoShared.getInfo(modifyPosition).artist
                         (findViewById(R.id.localPathTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(removePosition).path
-                                else mMusicInfoShared.getInfo(removePosition).albumUrl
+                                    mBookInfoShared.getInfo(modifyPosition).path
+                                else mMusicInfoShared.getInfo(modifyPosition).albumUrl
                         (findViewById(R.id.sizeTitleTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
                                 else "时长:"
                         (findViewById(R.id.sizeTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-                                    "${mBookInfoShared.getInfo(removePosition).fileLength / (1024.0F * 1024.0F)} M"
+                                    "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
                                 } else {
                                     DateFormatUtil.simpleTimeFormat(
-                                            mMusicInfoShared.getInfo(removePosition).duration.toLong())
+                                            mMusicInfoShared.getInfo(modifyPosition).duration.toLong())
                                 }
                     }
                 }
             }
+    private val moveItemDialog: Dialog
+            by lazy {
+                createListPopView(
+                        context = mContainerActivity,
+                        adapter = popViewListAdapter,
+                        listener = this
+                )
+            }
+    private val typeList: ArrayList<String>
+            by lazy { ArrayList<String>() }
     private val mListView: AlphaListView
             by lazy {
                 mView.lv_fragment_home as AlphaListView
@@ -120,11 +132,15 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                             R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
                 }
             }
+    private val popViewListAdapter: PopViewListAdapter
+            by lazy {
+                PopViewListAdapter(typeList, mContainerActivity)
+            }
     private val type: String
             by lazy {
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
             }
-    private val name: String
+    private val typeName: String
             by lazy {
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
             }
@@ -147,8 +163,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         get() = R.layout.main_fragment_home
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
-        removePosition = position
-        dialog.show()
+        modifyPosition = position
+        manageDialog.show()
         return true
     }
 
@@ -159,7 +175,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         mContainerActivity,
                         YueTingConstant.YUE_TING_FILE_REQ,
                         type,
-                        name,
+                        typeName,
                         YueTingConstant.YUE_TING_FILE)
             }
             R.id.backIv -> {
@@ -174,11 +190,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         YueTingConstant.MANAGE_REQ)
             }
             R.id.lookDetailsTv -> {
-                dialog.dismiss()
+                manageDialog.dismiss()
                 detailDialog.show()
             }
             R.id.moveItemsTv -> {
-                //TODO move items to other name List,update type_name
+                manageDialog.dismiss()
+                getTypeInfo()
             }
         }
     }
@@ -214,6 +231,13 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 } else {
                     AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
                     removeInfo()
+                }
+            }
+            R.id.popViewCl -> {
+                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                    updateBookInfo(typeList[position])
+                } else {
+                    updateMusicInfo(typeList[position])
                 }
             }
         }
@@ -255,20 +279,26 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     }
 
-    fun changeMusicAdapter() {
-        mAdapter.notifyDataSetInvalidated()
+    fun setTypeInfo(data: ArrayList<String>) {
+        typeList.clear()
+        typeList.addAll(data)
+        popViewListAdapter.notifyDataSetInvalidated()
+        moveItemDialog.show()
     }
 
-    fun changeBookAdapter() {
-        mAdapter.notifyDataSetInvalidated()
+    fun updateBookFinish(success: Boolean) {
+        if (success) getBookInfo()
+    }
+
+    fun updateMusicFinish(success: Boolean) {
+        if (success) getMusicInfo()
     }
 
     private fun initData() {
-        progressDialog.show()
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
-            getMusicInfo(name)
+            getMusicInfo()
         } else {
-            getBookInfo(name)
+            getBookInfo()
         }
     }
 
@@ -282,7 +312,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC))
         }
         mListView.adapter = mAdapter
-        titleNameTv.text = name
+        titleNameTv.text = typeName
     }
 
     private fun initListener() {
@@ -292,28 +322,45 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         backIv.setOnClickListener(this)
     }
 
-    private fun getMusicInfo(name: String) {
-        mPresenter.fetchMusicInfo(name)
+    private fun getMusicInfo() {
+        progressDialog.show()
+        mPresenter.fetchMusicInfo(typeName)
     }
 
-    private fun getBookInfo(name: String) {
-        mPresenter.fetchBookInfo(name)
+    private fun updateMusicInfo(updateTypeName: String) {
+        mPresenter.updateMusicTypeName(
+                mMusicInfoShared.getInfo(modifyPosition).albumUrl,
+                updateTypeName)
+    }
+
+    private fun updateBookInfo(updateTypeName: String) {
+        mPresenter.updateBookTypeName(
+                mBookInfoShared.getInfo(modifyPosition).path,
+                updateTypeName)
+    }
+
+    private fun getBookInfo() {
+        progressDialog.show()
+        mPresenter.fetchBookInfo(typeName)
+    }
+
+    private fun getTypeInfo() {
+        mPresenter.fetchTypeInfo(type)
     }
 
     private fun removeInfo() {
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-            val path = mBookInfoShared.getInfo(removePosition).path
-            mBookInfoShared.removeInfo(removePosition)
+            val path = mBookInfoShared.getInfo(modifyPosition).path
+            mBookInfoShared.removeInfo(modifyPosition)
             mAdapter.notifyDataSetInvalidated()
             mPresenter.deleteBookItem(path)
         } else {
-            val path = mMusicInfoShared.getInfo(removePosition).albumUrl
-            mMusicInfoShared.removeInfo(removePosition)
+            val path = mMusicInfoShared.getInfo(modifyPosition).albumUrl
+            mMusicInfoShared.removeInfo(modifyPosition)
             mAdapter.notifyDataSetInvalidated()
             mPresenter.deleteMusicItem(path)
         }
     }
-
 
     private fun startMusicService(position: Int) {
         mPresenter.startMusicService(mContainerActivity, position, Messenger(mMusicInfoShared.getHandler(mContainerActivity)), serviceConn)
