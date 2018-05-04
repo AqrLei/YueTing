@@ -66,7 +66,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var pageCount: Int = 0
     private var pdfReadMode: Boolean = false
     private val bookInfo: BookInfo
-        get() = arguments.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
+        get() = arguments?.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
 

@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.service
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -24,6 +25,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.ui.PlayActivity
+import com.aqrlei.graduation.yueting.util.createNotificationChannel
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -53,7 +55,10 @@ class MusicService : BaseService(),
     private var isLossFocus: Boolean = false
     private val handler = Handler()
     private var pi: PendingIntent? = null
-    private var intent: Intent? = null
+    private val backIntent: Intent
+            by lazy {
+                Intent(this, PlayActivity::class.java)
+            }
     private var stackBuilder: TaskStackBuilder? = null
     private lateinit var remoteViews: RemoteViews
     private lateinit var notification: Notification
@@ -226,9 +231,9 @@ class MusicService : BaseService(),
          *add necessary data in order to jump to PlayActivity
          */
         bundle.putIntArray(YueTingConstant.SERVICE_PLAY_STATUS, initArray)
-        intent?.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
+        backIntent.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
         /*
-        * stackBuilder?.addNextIntent(intent)
+        * stackBuilder?.addNextIntent(backIntent)
         * after the first addition will always exist, do not repeat the add
         */
         pi = stackBuilder?.getPendingIntent(
@@ -238,10 +243,10 @@ class MusicService : BaseService(),
     }
 
     private fun makeTaskStack(): PendingIntent? {
-        intent = Intent(this, PlayActivity::class.java)
+
         stackBuilder = TaskStackBuilder.create(this)
         stackBuilder?.addParentStack(PlayActivity::class.java)
-        stackBuilder?.addNextIntent(intent)
+        stackBuilder?.addNextIntent(backIntent)
         return stackBuilder?.getPendingIntent(
                 YueTingConstant.SERVICE_PENDING_INTENT_ID,
                 PendingIntent.FLAG_UPDATE_CURRENT)
@@ -261,7 +266,15 @@ class MusicService : BaseService(),
         remoteViews.setOnClickPendingIntent(R.id.playControlIv, playIntent)
         remoteViews.setOnClickPendingIntent(R.id.nextIv, nextIntent)
         remoteViews.setOnClickPendingIntent(R.id.closeIv, finishIntent)
-        notification = NotificationCompat.Builder(this.applicationContext)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(
+                    applicationContext,
+                    YueTingConstant.NOTIFICATION_CHANNEL_ID,
+                    YueTingConstant.NOTIFICATION_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH)
+        }
+
+        notification = NotificationCompat.Builder(this.applicationContext, YueTingConstant.NOTIFICATION_CHANNEL_ID)
                 .setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_music_note_black)//必须设置，不然无法显示自定义的View

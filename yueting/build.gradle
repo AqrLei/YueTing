@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '27.0.3'
     sourceSets {
         main {
@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId "com.aqrlei.graduation.yueting"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 

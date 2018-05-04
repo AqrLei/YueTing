@@ -1,21 +1,15 @@
 package com.aqrlei.graduation.yueting.model.observable
 
-import android.media.MediaMetadataRetriever
 import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.FileUtil
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.FileSelectInfo
-import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
+import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
-import java.io.File
 
 /**
  * @author  aqrLei on 2018/5/2

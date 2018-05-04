@@ -18,9 +18,9 @@ import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.PlayPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
-import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
-import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.initPlayView
+import com.aqrlei.graduation.yueting.util.sendMusicBroadcast
+import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.music_activity_play.*
 import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 

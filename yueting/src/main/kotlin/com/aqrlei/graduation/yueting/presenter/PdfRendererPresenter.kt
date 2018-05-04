@@ -41,7 +41,10 @@ class PdfRendererPresenter(mMvpView: PdfRendererFragment) :
         val disposables =
                 BookSingle.insertMark(path, currentBegin)
                         .subscribe({
-                            AppToast.toastShow(mMvpView.activity, if (it) "书签添加完毕" else "书签添加失败", 1000)
+                            mMvpView.activity?.run {
+                                AppToast.toastShow(this, if (it) "书签添加完毕" else "书签添加失败", 1000)
+
+                            }
                         }, {})
         addDisposables(disposables)
     }

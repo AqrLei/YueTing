@@ -4,7 +4,7 @@ import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
-import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
+import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
 
 /**

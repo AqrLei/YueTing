@@ -72,7 +72,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        val bgColor = (findViewById(checkedId).background as ColorDrawable).color
+        val bgColor = (findViewById<View>(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
         pageFactory.setPageBackground(bgColor, position)

@@ -20,7 +20,7 @@ import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.FileSelectInfo
 import com.aqrlei.graduation.yueting.presenter.FilePresenter
 import com.aqrlei.graduation.yueting.ui.adapter.FileListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
+import com.aqrlei.graduation.yueting.util.createProgressDialog
 import kotlinx.android.synthetic.main.file_activity_file.*
 
 /**

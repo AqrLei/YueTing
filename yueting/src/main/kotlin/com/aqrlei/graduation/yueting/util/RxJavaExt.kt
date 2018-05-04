@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.ui.uiEt
+package com.aqrlei.graduation.yueting.util
 
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

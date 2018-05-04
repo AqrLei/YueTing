@@ -11,7 +11,7 @@ import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
+import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
 
 /**

@@ -9,7 +9,7 @@ import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.ui.uiEt.threadSwitch
+import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
 import java.io.File
 

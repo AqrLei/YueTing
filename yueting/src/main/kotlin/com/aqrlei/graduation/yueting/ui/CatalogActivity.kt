@@ -21,7 +21,7 @@ import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
+import com.aqrlei.graduation.yueting.util.createProgressDialog
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
@@ -129,7 +129,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     private fun showDialog() {
         val dialog = Dialog(this, R.style.BottomDialog)
         dialog.setContentView(R.layout.read_pop_view_item)
-        dialog.window.decorView.findViewById(R.id.deleteItemTv).setOnClickListener({
+        dialog.window.decorView.findViewById<View>(R.id.deleteItemTv).setOnClickListener({
             ChapterFactory.CHAPTER.removeBookMark(markPosition)
             dataChange(ChapterFactory.CHAPTER.getBookMarks())
             dialog.dismiss()

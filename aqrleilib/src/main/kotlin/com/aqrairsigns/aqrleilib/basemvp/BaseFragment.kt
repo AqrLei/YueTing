@@ -34,15 +34,16 @@ abstract class BaseFragment<T : BaseActivity> : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater!!.inflate(layoutRes, container, false)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mView = inflater.inflate(layoutRes, container, false)
         //initComponents()
         AppLog.logDebug(AppLog.LOG_TAG_FRAGMENT, this.javaClass.simpleName + "----onCreateView----" +
                 mContainerActivity.javaClass.simpleName)
         return mView
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initComponents(view, savedInstanceState)
     }

@@ -111,5 +111,8 @@ object YueTingConstant {
     const val MANAGE_TYPE_ITEM = "item"
     const val MANAGE_DATA = "data"
 
+    const val NOTIFICATION_CHANNEL_ID = "music"
+    const val NOTIFICATION_CHANNEL_NAME ="音乐播放"
+
 
 }

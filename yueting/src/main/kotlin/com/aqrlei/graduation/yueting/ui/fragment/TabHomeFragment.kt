@@ -24,10 +24,10 @@ import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.*
 import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.createListPopView
-import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
-import com.aqrlei.graduation.yueting.ui.uiEt.createProgressDialog
-import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.createListPopView
+import com.aqrlei.graduation.yueting.util.createPopView
+import com.aqrlei.graduation.yueting.util.createProgressDialog
+import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
 import java.io.File
@@ -60,16 +60,18 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private val manageDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
-                    window.decorView?.apply {
-                        findViewById(R.id.lookDetailsTv).setOnClickListener(this@TabHomeFragment)
-                        findViewById(R.id.manageItemTv).apply {
-                            setOnClickListener(this@TabHomeFragment)
-                            (this as TextView).text =
-                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
-                                    else "管理歌曲"
-                        }
-                        findViewById(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
+                    window.decorView?.apply{
+                        findViewById<View>(R.id.lookDetailsTv)?.setOnClickListener(this@TabHomeFragment)
+                           findViewById<TextView>(R.id.manageItemTv)?.apply {
+                                setOnClickListener(this@TabHomeFragment)
+                                (this as TextView).text =
+                                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
+                                        else "管理歌曲"
+                            }
+                          findViewById<View>(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
                     }
+
+
                 }
             }
     private val detailDialog: Dialog
@@ -138,11 +140,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             }
     private val type: String
             by lazy {
-                arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+                arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
             }
     private val typeName: String
             by lazy {
-                arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+                arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
             }
     private val progressDialog: ProgressDialog
             by lazy {

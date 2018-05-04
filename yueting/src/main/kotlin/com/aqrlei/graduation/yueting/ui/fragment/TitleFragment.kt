@@ -19,7 +19,7 @@ import com.aqrlei.graduation.yueting.ui.ManageListActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 import com.aqrlei.graduation.yueting.ui.YueTingListActivity
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
+import com.aqrlei.graduation.yueting.util.createPopView
 import kotlinx.android.synthetic.main.main_title_fragment_list.*
 
 /**
@@ -47,20 +47,20 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_list).apply {
                     window.decorView?.apply {
-                        findViewById(R.id.newListTv)?.also {
+                        findViewById<TextView>(R.id.newListTv)?.also {
                             (it as TextView).text =
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "新建歌单"
                                     else "新建书单"
                             it.setOnClickListener(this@TitleFragment)
                         }
-                        findViewById(R.id.manageListsTv)
+                        findViewById<TextView>(R.id.manageListsTv)
                                 ?.also {
                                     (it as TextView).text =
                                             if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "管理歌单"
                                             else "管理书单"
                                     it.setOnClickListener(this@TitleFragment)
                                 }
-                        findViewById(R.id.addItems)?.also {
+                        findViewById<TextView>(R.id.addItems)?.also {
                             (it as TextView).text =
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "添加歌曲"
                                     else "添加书籍"
@@ -73,14 +73,14 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_new_list, Gravity.CENTER).apply {
                     window.decorView?.apply {
-                        findViewById(R.id.sureTv).setOnClickListener(this@TitleFragment)
-                        findViewById(R.id.cancelTv).setOnClickListener(this@TitleFragment)
+                        findViewById<TextView>(R.id.sureTv).setOnClickListener(this@TitleFragment)
+                        findViewById<TextView>(R.id.cancelTv).setOnClickListener(this@TitleFragment)
                     }
 
                 }
             }
     private val type: String
-        get() = arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+        get() = arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
     private val titleList: ArrayList<String>
             by lazy {
                 ArrayList<String>().apply {
