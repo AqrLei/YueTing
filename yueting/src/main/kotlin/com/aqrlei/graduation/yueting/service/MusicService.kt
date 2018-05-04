@@ -142,8 +142,10 @@ class MusicService : BaseService(),
 
     override fun onBind(p0: Intent?): IBinder? {
         super.onBind(p0)
+        p0?.let {
+            cPosition = it.extras.get(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION) as Int
+        }
         return MusicBinder()
-
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -161,7 +163,6 @@ class MusicService : BaseService(),
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        cPosition = intent.extras.get(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION) as Int
         sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
         sendPlayState(PlayState.START)
         return START_REDELIVER_INTENT
@@ -513,6 +514,7 @@ class MusicService : BaseService(),
     inner class MusicBinder : IMusicInfo.Stub() {
         override fun setMusicInfo(infoS: MutableList<MusicInfo>?) {
             if (infoS != null) {
+                musicInfoS.clear()
                 musicInfoS.addAll(infoS)
             }
         }

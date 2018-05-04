@@ -18,7 +18,10 @@ import com.facebook.drawee.backends.pipeline.Fresco
  * @CreateTime: Date: 2017/9/14 Time: 16:17
  */
 class YueTingApplication : BaseApplication() {
-    private var musicIntent: Intent? = null
+    private val musicIntent: Intent
+            by lazy {
+                Intent(this, MusicService::class.java)
+            }
     private var isSameProcess = false
 
     override fun onCreate() {
@@ -113,12 +116,5 @@ class YueTingApplication : BaseApplication() {
         super.onTerminate()
     }
 
-    fun getServiceIntent(): Intent? {
-        if (musicIntent == null) {
-            musicIntent = Intent(this, MusicService::class.java)
-        }
-        return musicIntent
-    }
-
-
+    fun getServiceIntent() = musicIntent
 }

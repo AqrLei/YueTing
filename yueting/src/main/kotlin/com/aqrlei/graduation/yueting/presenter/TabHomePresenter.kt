@@ -97,13 +97,23 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposable)
     }
 
-    fun startMusicService(context: Context, position: Int, messenger: Messenger, conn: ServiceConnection) {
+    fun startMusicService(context: Context, messenger: Messenger, conn: ServiceConnection) {
         val mContext = context.applicationContext as YueTingApplication
+
         val musicIntent = mContext.getServiceIntent()
-        musicIntent?.putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
-        musicIntent?.putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
+        //musicIntent.putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
+        musicIntent.putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
         context.startService(musicIntent)
-        context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
+       // context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
+    }
+
+    fun bindService(context: Context,position: Int, conn: ServiceConnection) {
+        (context.applicationContext as YueTingApplication).let {
+            context.bindService(
+                    it.getServiceIntent().putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION,position),
+                    conn,
+                    Service.BIND_AUTO_CREATE)
+        }
     }
 
     fun generateListSelectInfo(type: String): ArrayList<SelectInfo> {
