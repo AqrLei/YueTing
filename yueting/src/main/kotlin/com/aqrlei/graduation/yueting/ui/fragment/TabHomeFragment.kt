@@ -74,25 +74,32 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             by lazy {
                 createPopView(mContainerActivity, R.layout.common_item_detail).apply {
                     window.decorView?.apply {
+                        (findViewById(R.id.itemNameTitleTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
+                                else "歌名:"
                         (findViewById(R.id.itemNameTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
                                     mBookInfoShared.getInfo(removePosition).name
                                 else mMusicInfoShared.getInfo(removePosition).title
+                        (findViewById(R.id.ownerTitleTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
+                                else "歌手:"
                         (findViewById(R.id.ownerTv) as TextView).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    ""
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
                                 else mMusicInfoShared.getInfo(removePosition).artist
                         (findViewById(R.id.localPathTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
                                     mBookInfoShared.getInfo(removePosition).path
                                 else mMusicInfoShared.getInfo(removePosition).albumUrl
-                        (findViewById(R.id.itemNameTv) as TextView).text =
+                        (findViewById(R.id.sizeTitleTv) as TextView).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
+                                else "时长:"
+                        (findViewById(R.id.sizeTv) as TextView).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
                                     "${mBookInfoShared.getInfo(removePosition).fileLength / (1024.0F * 1024.0F)} M"
                                 } else {
                                     DateFormatUtil.simpleTimeFormat(
                                             mMusicInfoShared.getInfo(removePosition).duration.toLong())
-
                                 }
                     }
                 }
@@ -122,9 +129,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
             }
     private val progressDialog: ProgressDialog
-    by lazy {
-        createProgressDialog(mContainerActivity,"提示","正在加载中...")
-    }
+            by lazy {
+                createProgressDialog(mContainerActivity, "提示", "正在加载中...")
+            }
 
     private val serviceConn = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

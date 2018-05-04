@@ -43,7 +43,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
         get() = TitlePresenter(this)
     override val layoutRes: Int
         get() = R.layout.main_title_fragment_list
-
     private val bottomDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_list).apply {
@@ -70,7 +69,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                     }
                 }
             }
-    private val newListDialog: Dialog
+    private val modifyListDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_new_list, Gravity.CENTER).apply {
                     window.decorView?.apply {
@@ -80,7 +79,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
 
                 }
             }
-
     private val type: String
         get() = arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
     private val titleList: ArrayList<String>
@@ -107,7 +105,9 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                     )
                 }
             }
+    private var isNewList: Boolean = true
 
+    private lateinit var oldName: String
     override fun onClick(v: View) {
         when (v.id) {
             R.id.listTitleTv -> {
@@ -138,16 +138,16 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             }
             R.id.newListTv -> {
                 bottomDialog.dismiss()
-                newListDialog.show()
+                modifyListDialog.show()
             }
             R.id.sureTv -> {
-                val name = (newListDialog.window.decorView
+                val name = (modifyListDialog.window.decorView
                         .findViewById(R.id.listNameEt) as EditText)
                         .text.toString()
                 verifyListTitle(name)
             }
             R.id.cancelTv -> {
-                newListDialog.dismiss()
+                modifyListDialog.dismiss()
             }
         }
 
@@ -155,11 +155,19 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
         YueTingActivity.jumpToYueTingActivity(mContainerActivity, type, titleList[position])
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        if (position == 0) {
+            return true
+        }
+        modifyListDialog.apply {
+            (window.decorView.findViewById(R.id.listNameEt) as EditText).hint = "请输入新名称"
+            show()
+        }
+        oldName = titleList[position]
+        isNewList = false
         return true
     }
 
@@ -173,10 +181,10 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
         mPresenter.getTypeInfo(type)
     }
 
-    fun addFinish(boolean: Boolean) {
+    fun modifyFinish(boolean: Boolean,msg:String) {
         if (boolean) {
-            AppToast.toastShow(mContainerActivity, "创建成功", 1000)
-            newListDialog.dismiss()
+            AppToast.toastShow(mContainerActivity, msg, 1000)
+            modifyListDialog.dismiss()
             mPresenter.getTypeInfo(type)
         }
     }
@@ -193,7 +201,19 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             AppToast.toastShow(mContainerActivity, "名字不可为空", 1000)
             return
         }
-        mPresenter.addData(type, name)
+        if (isNewList) {
+            mPresenter.modifyTypeName(
+                    isNew = isNewList,
+                    type = type,
+                    name = name)
+        } else {
+            mPresenter.modifyTypeName(
+                    isNew = isNewList,
+                    type = type,
+                    name = oldName,
+                    newName = name)
+        }
+
     }
 
 

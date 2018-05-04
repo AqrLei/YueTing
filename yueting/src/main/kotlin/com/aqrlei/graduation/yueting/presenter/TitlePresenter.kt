@@ -10,12 +10,18 @@ import com.aqrlei.graduation.yueting.ui.fragment.TitleFragment
 class TitlePresenter(mMvpView: TitleFragment) :
         MvpContract.FragmentPresenter<TitleFragment>(mMvpView) {
 
-    fun addData(type: String, name: String) {
-        val disposable =
-                TypeSingle.insertType(type, name)
-                        .subscribe({
-                            mMvpView.addFinish(it)
-                        }, {})
+    fun modifyTypeName(isNew: Boolean, type: String, name: String, newName: String = "") {
+        val disposable = if (isNew) {
+            TypeSingle.insertType(type, name)
+                    .subscribe({
+                        mMvpView.modifyFinish(it,"创建成功")
+                    }, {})
+        } else {
+            TypeSingle.updateType(oldTypeName = name, newTypeName = newName)
+                    .subscribe({
+                        mMvpView.modifyFinish(it,"修改成功")
+                    },{})
+        }
         addDisposables(disposable)
     }
 
