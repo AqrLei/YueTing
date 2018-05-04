@@ -45,7 +45,7 @@ enum class ChapterFactory {
         val markInfo = bookMarkList.removeAt(position)
         deleteFromDB(markInfo.bPosition)
         if (DBManager.finish()) {
-            getBookMarkFromDB()
+            getBookMark()
         }
     }
 
@@ -64,7 +64,7 @@ enum class ChapterFactory {
 
     }
 
-    fun getBookMarkFromDB(): Boolean {
+    fun getBookMark(): Boolean {
         var haveMark = false
         bookMarkList.clear()//书签数可能改变，故每次都要清空后重新从数据库获取，章节数固定不变故不必
         val c = DBManager.sqlData(

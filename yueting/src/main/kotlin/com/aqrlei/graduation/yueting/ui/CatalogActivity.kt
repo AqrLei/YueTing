@@ -108,7 +108,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     }
 
     private fun getData() {
-        mPresenter.getData()
+        mPresenter.getChapter()
     }
 
     private fun dataChange(data: ArrayList<ChapterInfo>) {
@@ -118,7 +118,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     }
 
     private fun initView() {
-        val mView = findViewById(R.id.lv_catalog) as AlphaListView
+        val mView = findViewById<AlphaListView>(R.id.lv_catalog)
         mDataInfoS.addAll(ChapterFactory.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
                 R.layout.read_list_item_catelog)

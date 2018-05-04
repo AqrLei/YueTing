@@ -22,10 +22,17 @@ class TxtReadPresenter(mMvpActivity: TxtReadActivity) :
 
     fun addMarkToDB(path: String, currentBegin: Int) {
         val disposables =
-               BookSingle.insertMark(path, currentBegin)
+                BookSingle.insertMark(path, currentBegin)
                         .subscribe({
                             AppToast.toastShow(mMvpActivity, if (it) "书签添加完毕" else "书签添加失败", 1000)
                         }, {})
+        addDisposables(disposables)
+    }
+
+    fun getChapter() {
+        val disposables =
+                BookSingle.selectChapters()
+                        .subscribe()
         addDisposables(disposables)
     }
 }

@@ -173,20 +173,20 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        bookPageView = findViewById(R.id.bpv_read) as BookPageView
-        seekBar = findViewById(R.id.sb_rate) as SeekBar
-        topRelativeLayout = findViewById(R.id.rl_top_read) as ConstraintLayout
-        bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
-        lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
-        lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
+        bookPageView = findViewById<BookPageView>(R.id.bpv_read)
+        seekBar = findViewById<SeekBar>(R.id.sb_rate)
+        topRelativeLayout = findViewById<ConstraintLayout>(R.id.rl_top_read)
+        bottomLinearLayout = findViewById<LinearLayout>(R.id.ll_bottom_read)
+        lLSeekBar = findViewById<LinearLayout>(R.id.ll_bottom_read_seekBar)
+        lLSetting = findViewById<LinearLayout>(R.id.ll_bottom_read_setting)
         initListener()
+        generateCatalog()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-
         setBookPageFactory(bookPageView)
         setCheckedId()
         bookTitleTv.text = bookInfo.name
@@ -237,6 +237,10 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
                 pageFactory.changeFontSize(YueTingConstant.READ_BIG_FONT)
             }
         }
+    }
+
+    private fun generateCatalog() {
+        mPresenter.getChapter()
     }
 
     private fun initListener() {

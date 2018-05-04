@@ -10,7 +10,7 @@ import com.aqrlei.graduation.yueting.ui.CatalogActivity
  */
 class CatalogPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
-    fun getData() {
+    fun getChapter() {
         val disposables =
                 BookSingle.selectChapters()
                         .subscribe({

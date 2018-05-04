@@ -20,7 +20,7 @@ object BookSingle {
 
     fun selectChapters(): Single<Boolean> {
         return Single.defer {
-            ChapterFactory.CHAPTER.getBookMarkFromDB()
+            ChapterFactory.CHAPTER.getBookMark()
             Single.just(ChapterFactory.CHAPTER.getChapter())
         }.threadSwitch()
     }
