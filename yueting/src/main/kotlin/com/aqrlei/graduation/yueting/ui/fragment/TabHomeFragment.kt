@@ -205,22 +205,26 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         when (convertView.id) {
             R.id.ll_music_item -> {
                 val file = File(mMusicInfoShared.getInfo(position).albumUrl)
-                when{
-                    file.exists() ->{
+                when {
+                    file.exists() -> {
                         isServiceStart = mMusicInfoShared.isStartService()
-                        if (!isServiceStart) {
-                            startMusicService()
-                            isServiceStart = true
-                            if (musicInfoChanged) {
+                        when {
+                            !isServiceStart -> {
+                                startMusicService()
+                                isServiceStart = true
+                                if (musicInfoChanged) {
+                                    bindMusicService(position)
+                                }
+                            }
+                            musicInfoChanged -> {
                                 bindMusicService(position)
                             }
-                        } else if (musicInfoChanged) {
-                            bindMusicService(position)
-                        } else {
-                            sendPlayBroadcast(position, mContainerActivity)
+                            else -> {
+                                sendPlayBroadcast(position, mContainerActivity)
+                            }
                         }
                     }
-                    else ->{
+                    else -> {
                         AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
                         removeInfo()
                     }
