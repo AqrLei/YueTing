@@ -21,10 +21,12 @@ class FileListAdapter(
         mResId: Int = R.layout.file_list_item,
         listener: OnInternalClick) :
         CommonListAdapter<FileSelectInfo>(mData, mContext, mResId, listener) {
+    private var dirCallBack: DirCallBack?=null
     override fun bindData(holderList: CommonListViewHolder, data: FileSelectInfo) {
         val mNameTv = holderList.get(R.id.fileNameTv) as TextView
         mNameTv.text = data.fileInfo.name
         if (!data.fileInfo.isDir) {
+            dirCallBack?.dirCallBack()
             holderList.get(R.id.selectItemIv).visibility = View.VISIBLE
             (holderList.get(R.id.selectItemIv) as ImageView).background.level = data.status
             val suffix = FileUtil.getFileSuffix(data.fileInfo)
@@ -42,5 +44,12 @@ class FileListAdapter(
 
     override fun setInternalClick(holder: CommonListViewHolder) {
         holder.get(R.id.selectItemIv).setOnClickListener(this)
+    }
+    fun setCallBack(callBack: DirCallBack){
+        dirCallBack = callBack
+    }
+
+    interface DirCallBack {
+        fun dirCallBack()
     }
 }

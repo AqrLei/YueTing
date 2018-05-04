@@ -31,7 +31,8 @@ import kotlinx.android.synthetic.main.file_activity_file.*
 class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         AdapterView.OnItemClickListener,
         View.OnClickListener,
-        CommonListAdapter.OnInternalClick {
+        CommonListAdapter.OnInternalClick,
+        FileListAdapter.DirCallBack {
     companion object {
         fun jumpToFileActivity(context: Activity,
                                reqCode: Int,
@@ -54,10 +55,18 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     private lateinit var fileInfoList: ArrayList<FileInfo>
     private lateinit var mData: ArrayList<FileSelectInfo>
-    private lateinit var mAdapter: FileListAdapter
+    private val mAdapter: FileListAdapter
+            by lazy {
+                FileListAdapter(
+                        mData = mData,
+                        mContext = this,
+                        listener = this).apply {
+                    setCallBack(this@FileActivity)
+                }
+            }
     private val progressDialog: Dialog
             by lazy {
-                createPopView(this,R.layout.common_progress_bar,Gravity.CENTER)
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
                 //createProgressDialog(this, "提示", "正在添加中...")
             }
 
@@ -112,6 +121,11 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         }
     }
 
+    override fun dirCallBack() {
+        addFileIv.visibility = View.VISIBLE
+        sureTv.visibility = View.VISIBLE
+    }
+
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         init()
@@ -141,6 +155,8 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
             }
         }
         tv_file_parent.text = fileInfoList[0].path
+        addFileIv.visibility = View.GONE
+        sureTv.visibility = View.GONE
         mAdapter.notifyDataSetChanged()
     }
 
@@ -170,10 +186,6 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     private fun init() {
         mData = ArrayList()
-        mAdapter = FileListAdapter(
-                mData = mData,
-                mContext = this,
-                listener = this)
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
