@@ -21,7 +21,6 @@ fun createPopView(context: Context, @LayoutRes layoutRes: Int, gravity: Int = Gr
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT)
         setCanceledOnTouchOutside(false)
-        setCancelable(false)
     }
 }
 
@@ -37,7 +36,6 @@ fun createListPopView(
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT)
         setCanceledOnTouchOutside(false)
-        setCancelable(false)
         window.decorView?.also {
             (it.findViewById(R.id.popViewLv) as ListView).apply {
                 this.adapter = adapter

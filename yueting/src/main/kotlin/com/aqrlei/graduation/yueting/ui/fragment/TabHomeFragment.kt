@@ -72,8 +72,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                                     else "移动到歌单"
                         }
                     }
-
-
                 }
             }
     private val detailDialog: Dialog
@@ -150,7 +148,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             }
     private val progressDialog: Dialog
             by lazy {
-                createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER)
+                createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
             }
 
     override val mPresenter: TabHomePresenter

@@ -48,7 +48,9 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     private lateinit var mAdapter: YueTingCatalogListAdapter
     private val progressDialog: Dialog
             by lazy {
-                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
             }
     private var markPosition: Int = 0
     override fun onClick(v: View?) {

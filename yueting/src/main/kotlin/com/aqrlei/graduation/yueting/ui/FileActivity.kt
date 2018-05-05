@@ -77,7 +77,9 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
             }
     private val progressDialog: Dialog
             by lazy {
-                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
             }
 
     override val mPresenter: FilePresenter

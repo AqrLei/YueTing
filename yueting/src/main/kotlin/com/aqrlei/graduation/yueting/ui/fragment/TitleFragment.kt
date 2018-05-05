@@ -79,6 +79,12 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
 
                 }
             }
+    private val progressDialog: Dialog
+            by lazy {
+                createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
+            }
     private val type: String
         get() = arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
     private val titleList: ArrayList<String>
@@ -147,7 +153,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 val name = (modifyListDialog.window.decorView
                         .findViewById(R.id.listNameEt) as EditText)
                         .text.toString()
-                verifyListTitle(name)
+                modifyTypeName(name)
             }
             R.id.cancelTv -> {
                 modifyListDialog.dismiss()
@@ -181,31 +187,39 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
 
     override fun onResume() {
         super.onResume()
-        mPresenter.fetchTypeInfo(type)
+        getTypeInfo()
     }
 
-    fun modifyFinish(boolean: Boolean,msg:String) {
+    fun modifyFinish(boolean: Boolean, msg: String) {
+        progressDialog.dismiss()
         isNewList = true
         AppToast.toastShow(mContainerActivity, msg, 1000)
         modifyListDialog.dismiss()
         modifyListDialog.window.decorView.findViewById<EditText>(R.id.listNameEt).setText("")
         if (boolean) {
-            mPresenter.fetchTypeInfo(type)
+            getTypeInfo()
         }
     }
 
     fun setTitleList(temp: ArrayList<String>) {
+        progressDialog.dismiss()
         titleList.clear()
         titleList.add(DataConstant.DEFAULT_TYPE_NAME)
         titleList.addAll(temp)
         mAdapter.notifyDataSetChanged()
     }
 
-    private fun verifyListTitle(name: String) {
+    private fun getTypeInfo() {
+        progressDialog.show()
+        mPresenter.fetchTypeInfo(type)
+    }
+
+    private fun modifyTypeName(name: String) {
         if (name.isEmpty()) {
             AppToast.toastShow(mContainerActivity, "名字不可为空", 1000)
             return
         }
+        progressDialog.show()
         if (isNewList) {
             mPresenter.modifyTypeName(
                     isNew = isNewList,
@@ -220,7 +234,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
         }
 
     }
-
 
     private fun initView() {
         typeLv.adapter = mAdapter

@@ -13,6 +13,7 @@ import android.media.MediaPlayer
 import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
+import android.util.Log
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
@@ -46,6 +47,7 @@ class MusicService : BaseService(),
     }
 
     private lateinit var disposable: Disposable
+    private var typeName: String = ""
     private var cPosition: Int = -1
     private var pPosition: Int = -1
     private var cDuration: Int = 0
@@ -157,10 +159,14 @@ class MusicService : BaseService(),
         super.onCreate()
     }
 
+    override fun onBind(p0: Intent?): IBinder? {
+        Log.d("test","service bind")
+        return super.onBind(p0)
+    }
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
-        val typeName = intent.extras.getString(ActionConstant.ACTION_REFRESH_KEY)
+        typeName = intent.extras.getString(ActionConstant.ACTION_REFRESH_KEY)
                 ?: DataConstant.DEFAULT_TYPE_NAME
         val position = intent.extras.getInt(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION)
         getMusicInfo(typeName, position)
@@ -237,6 +243,7 @@ class MusicService : BaseService(),
          *add necessary data in order to jump to PlayActivity
          */
         bundle.putIntArray(YueTingConstant.SERVICE_PLAY_STATUS, initArray)
+        bundle.putString(YueTingConstant.FRAGMENT_TITLE_VALUE, typeName)
         backIntent.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
         pi = stackBuilder?.getPendingIntent(
                 YueTingConstant.SERVICE_PENDING_INTENT_ID,
@@ -501,7 +508,7 @@ class MusicService : BaseService(),
 
     private fun getNewMusicInfo(action: String?, intent: Intent?) {
         if (action == ActionConstant.ACTION_REFRESH) {
-            val typeName = intent?.extras?.getString(ActionConstant.ACTION_REFRESH_KEY)
+            typeName = intent?.extras?.getString(ActionConstant.ACTION_REFRESH_KEY)
                     ?: DataConstant.DEFAULT_TYPE_NAME
             val position = intent?.extras?.getInt(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION)
                     ?: 0

@@ -17,6 +17,7 @@ import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.YueTingPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
+import com.aqrlei.graduation.yueting.util.BackStackHolder
 import com.aqrlei.graduation.yueting.util.initPlayView
 import com.aqrlei.graduation.yueting.util.sendMusicBroadcast
 import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
@@ -143,7 +144,7 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
     private fun initFragments(savedInstanceState: Bundle?) {
         val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
                 ?: YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
-        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE) ?: "默认列表"
+        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE) ?: BackStackHolder.typeName
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(

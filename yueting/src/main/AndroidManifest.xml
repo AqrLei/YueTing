@@ -25,10 +25,10 @@
         <activity
             android:name=".ui.YueTingActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.YueTingListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+                android:value=".ui.YueTingListActivity" />
         </activity>
         <activity android:name=".ui.YueTingListActivity" />
         <activity android:name=".ui.ManageListActivity" />
