@@ -7,6 +7,7 @@ import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import com.aqrlei.graduation.yueting.model.observable.MusicSingle
 import com.aqrlei.graduation.yueting.model.observable.TypeSingle
 import com.aqrlei.graduation.yueting.ui.ManageListActivity
+import io.reactivex.Single
 
 /**
  * @author  aqrLei on 2018/5/2
@@ -54,11 +55,11 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
     private fun deleteBookList(typeNameList: List<SelectInfo>) {
         val disposable =
                 TypeSingle.deleteType(typeNameList)
-                        .flatMap { t: Boolean ->
-                            if (t) {
+                        .flatMap {
+                            if (it) {
                                 BookSingle.deleteBookInfoByList(typeNameList)
                             } else {
-                                throw Exception()
+                                Single.just(it)
                             }
                         }
                         .subscribe({

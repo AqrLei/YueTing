@@ -28,10 +28,8 @@ object DataConstant {
      */
     const val MUSIC_TABLE_NAME = "musicInfo"
     const val MUSIC_TABLE_C1_TYPE_NAME = "typeName"
-    const val MUSIC_TABLE_C2_FILE_INFO = "fileInfo"
     const val MUSIC_TABLE_C0_DEF = "varchar unique not null"
     const val MUSIC_TABLE_C1_DEF = "varchar default '默认列表'"
-    const val MUSIC_TABLE_C2_DEF = "text"
     /**
      * book's table
      */
@@ -39,14 +37,12 @@ object DataConstant {
     const val BOOK_TABLE_C1_TYPE = "type"
     const val BOOK_TABLE_C2_INDEX_BEGIN = "indexBegin"
     const val BOOK_TABLE_C3_INDEX_END = "indexEnd"
-    const val BOOK_TABLE_C4_FILE_INFO = "fileInfo"
-    const val BOOK_TABLE_C5_TYPE_NAME = "typeName"
+    const val BOOK_TABLE_C4_TYPE_NAME = "typeName"
     const val BOOK_TABLE_C0_DEF = "varchar unique not null"
     const val BOOK_TABLE_C1_DEF = "varchar"
     const val BOOK_TABLE_C2_DEF = "integer DEFault 0"
     const val BOOK_TABLE_C3_DEF = "integer DEFault 0"
-    const val BOOK_TABLE_C4_DEF = "text"
-    const val BOOK_TABLE_C5_DEF = "varchar default '默认列表'"
+    const val BOOK_TABLE_C4_DEF = "varchar default '默认列表'"
     /**
      * mark's table
      */

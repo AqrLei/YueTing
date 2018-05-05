@@ -51,7 +51,6 @@ object FileSingle {
                                 && suffix != YueTingConstant.READ_SUFFIX_PDF) return@forEach
                         val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
                         val tempData = it.fileInfo
-                        val byteData = DataSerializationUtil.sequenceToByteArray(tempData)
                         //(fileInfo.name.toLowerCase()).replace("\\.mp3$".toRegex(), "")
                         if (suffix == YueTingConstant.PLAY_SUFFIX_APE
                                 || suffix == YueTingConstant.PLAY_SUFFIX_MP3
@@ -61,9 +60,8 @@ object FileSingle {
                                             DataConstant.MUSIC_TABLE_NAME,
                                             arrayOf(DataConstant.COMMON_COLUMN_PATH,
                                                     DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
-                                                    DataConstant.MUSIC_TABLE_C2_FILE_INFO,
                                                     DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                    arrayOf(tempData.path, listTitle, byteData, dateTime),
+                                    arrayOf(tempData.path, listTitle, dateTime),
                                     null,
                                     DBManager.SqlType.INSERT)
                         } else {
@@ -73,10 +71,9 @@ object FileSingle {
                                             arrayOf(
                                                     DataConstant.COMMON_COLUMN_PATH,
                                                     DataConstant.BOOK_TABLE_C1_TYPE,
-                                                    DataConstant.BOOK_TABLE_C4_FILE_INFO,
-                                                    DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                                                    DataConstant.BOOK_TABLE_C4_TYPE_NAME,
                                                     DataConstant.COMMON_COLUMN_CREATE_TIME)),
-                                    arrayOf(tempData.path, suffix, byteData, listTitle, dateTime),
+                                    arrayOf(tempData.path, suffix, listTitle, dateTime),
                                     null,
                                     DBManager.SqlType.INSERT)
                         }

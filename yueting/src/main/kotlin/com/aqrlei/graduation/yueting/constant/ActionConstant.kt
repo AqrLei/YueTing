@@ -14,6 +14,7 @@ object ActionConstant {
     const val ACTION_SINGLE = "action_single"
     const val ACTION_LIST = "action_list"
     const val ACTION_RANDOM = "action_random"
+    const val ACTION_REFRESH ="action_refresh"
     /**
      * broadcast-receiver's action-req
      */
@@ -25,4 +26,5 @@ object ActionConstant {
     const val ACTION_LIST_REQ = 6
     const val ACTION_RANDOM_REQ = 7
 
+    const val ACTION_REFRESH_KEY = "refresh"
 }

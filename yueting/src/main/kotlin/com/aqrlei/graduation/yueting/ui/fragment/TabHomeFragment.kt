@@ -1,10 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.app.Dialog
-import android.content.ComponentName
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Messenger
 import android.view.Gravity
 import android.view.View
@@ -26,6 +23,7 @@ import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.util.createListPopView
 import com.aqrlei.graduation.yueting.util.createPopView
+import com.aqrlei.graduation.yueting.util.sendMusicRefresh
 import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
@@ -148,18 +146,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     private val progressDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER)
-                //createProgressDialog(mContainerActivity, "提示", "正在加载中...")
             }
-    private var musicInfoChanged: Boolean = false
 
-    private val serviceConn = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            sendMusicInfoS(service)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
-    }
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
@@ -210,20 +198,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 when {
                     file.exists() -> {
                         isServiceStart = mMusicInfoShared.isStartService()
-                        when {
-                            !isServiceStart -> {
-                                startMusicService()
-                                isServiceStart = true
-                                if (musicInfoChanged) {
-                                    bindMusicService(position)
-                                }
-                            }
-                            musicInfoChanged -> {
-                                bindMusicService(position)
-                            }
-                            else -> {
-                                sendPlayBroadcast(position, mContainerActivity)
-                            }
+                        if (!isServiceStart) {
+                            startMusicService(position)
+                            isServiceStart = true
+                        } else {
+                            sendPlayBroadcast(position, mContainerActivity)
                         }
                     }
                     else -> {
@@ -277,15 +256,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    fun unbindMusicService() {
-        mContainerActivity.unbindService(serviceConn)
-    }
-
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         progressDialog.dismiss()
         mMusicInfoShared.setInfoS(data)
+        sendMusicRefresh(0, typeName, mContainerActivity)
+        mMusicInfoShared.oldTypeName = typeName
         mAdapter.notifyDataSetInvalidated()
-        musicInfoChanged = true
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
@@ -312,10 +288,16 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
 
     private fun initData() {
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
-            getMusicInfo()
+            isServiceStart = mMusicInfoShared.isStartService()
+            if (isServiceStart && (mMusicInfoShared.oldTypeName != typeName
+                            || mMusicInfoShared.oldSize != mMusicInfoShared.getSize())) {
+                getMusicInfo()
+            }
+
         } else {
             getBookInfo()
         }
+
     }
 
     private fun initView() {
@@ -378,20 +360,10 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    private fun startMusicService() {
+    private fun startMusicService(position: Int) {
         mPresenter.startMusicService(
                 mContainerActivity,
                 Messenger(mMusicInfoShared.getHandler(mContainerActivity)),
-                serviceConn)
-    }
-
-    private fun bindMusicService(position: Int) {
-        mPresenter.bindService(mContainerActivity, position, serviceConn)
-    }
-
-    private fun sendMusicInfoS(binder: IBinder?) {
-        if (binder != null) {
-            mPresenter.sendMusicInfo(binder)
-        }
+                position, typeName)
     }
 }

@@ -182,9 +182,9 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     }
 
     fun modifyFinish(boolean: Boolean,msg:String) {
+        AppToast.toastShow(mContainerActivity, msg, 1000)
+        modifyListDialog.dismiss()
         if (boolean) {
-            AppToast.toastShow(mContainerActivity, msg, 1000)
-            modifyListDialog.dismiss()
             mPresenter.fetchTypeInfo(type)
         }
     }

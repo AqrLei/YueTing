@@ -47,6 +47,8 @@ enum class ShareMusicInfo {
     private var playState: PlayState = PlayState.PAUSE
     private var mHandler: Handler? = null
     private var isStartService: Boolean = false
+    var oldSize: Int = 0
+    var oldTypeName: String = ""
     private var musicName: String = ""
 
     fun getInfo(position: Int) = musicInfoList[position]
@@ -69,6 +71,7 @@ enum class ShareMusicInfo {
     }
 
     fun setInfoS(infoS: ArrayList<MusicInfo>) {
+        oldSize = musicInfoList.size
         clearMusicInfo()
         musicInfoList.addAll(infoS)
     }

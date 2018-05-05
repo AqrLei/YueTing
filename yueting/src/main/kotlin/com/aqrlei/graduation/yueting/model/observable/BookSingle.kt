@@ -1,17 +1,15 @@
 package com.aqrlei.graduation.yueting.model.observable
 
-import com.aqrairsigns.aqrleilib.info.FileInfo
 import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.util.generateBookInfo
 import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
-import java.io.File
 
 /**
  * @author  aqrLei on 2018/5/2
@@ -71,9 +69,22 @@ object BookSingle {
             DBManager.sqlData(
                     DBManager.SqlFormat.updateSqlFormat(
                             DataConstant.BOOK_TABLE_NAME,
-                            DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                            DataConstant.BOOK_TABLE_C4_TYPE_NAME,
                             DataConstant.COMMON_COLUMN_PATH, "="),
                     arrayOf(typeName, path),
+                    null,
+                    DBManager.SqlType.UPDATE)
+            Single.just(DBManager.finish())
+        }.threadSwitch()
+    }
+    fun updateTypeNameList(oldTypeName: String, newTypeName: String): Single<Boolean> {
+        return Single.defer {
+            DBManager.sqlData(
+                    DBManager.SqlFormat.updateSqlFormat(
+                            DataConstant.BOOK_TABLE_NAME,
+                            DataConstant.BOOK_TABLE_C4_TYPE_NAME,
+                            DataConstant.BOOK_TABLE_C4_TYPE_NAME, "="),
+                    arrayOf(newTypeName, oldTypeName),
                     null,
                     DBManager.SqlType.UPDATE)
             Single.just(DBManager.finish())
@@ -94,25 +105,19 @@ object BookSingle {
                         DBManager.SqlFormat.selectSqlFormat(
                                 DataConstant.BOOK_TABLE_NAME,
                                 "",
-                                DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                                DataConstant.BOOK_TABLE_C4_TYPE_NAME,
                                 "="),
                         null, arrayOf(typeName), DBManager.SqlType.SELECT)
                         .getCursor()
             }?.let {
                 while (it.moveToNext()) {
-                    val bookInfo = BookInfo()
-                    val fileInfo = DataSerializationUtil.byteArrayToSequence(it.getBlob(it.getColumnIndex(DataConstant.BOOK_TABLE_C4_FILE_INFO)))
-                            as FileInfo
-                    val name = fileInfo.name.substring(0, fileInfo.name.lastIndexOf("."))
                     val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
-                    bookInfo.id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
-                    bookInfo.createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
-                    bookInfo.type = it.getString(it.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
-                    bookInfo.name = name
-                    bookInfo.path = path ?: ""
-                    bookInfo.fileLength = File(path).length().toInt()
-                    bookInfo.indexBegin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
-                    bookInfo.indexEnd = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
+                    val id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                    val createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
+                    val type = it.getString(it.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
+                    val begin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+                    val end = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
+                    val bookInfo = generateBookInfo(path, id, createTime, type, begin, end)
                     bookInfoList.add(bookInfo)
                 }
             }
@@ -162,7 +167,7 @@ object BookSingle {
                         DBManager.sqlData(
                                 DBManager.SqlFormat.deleteSqlFormat(
                                         DataConstant.BOOK_TABLE_NAME,
-                                        DataConstant.BOOK_TABLE_C5_TYPE_NAME,
+                                        DataConstant.BOOK_TABLE_C4_TYPE_NAME,
                                         "="),
                                 null,
                                 arrayOf(it.name),

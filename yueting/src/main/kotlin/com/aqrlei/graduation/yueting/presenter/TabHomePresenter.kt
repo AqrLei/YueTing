@@ -1,12 +1,10 @@
 package com.aqrlei.graduation.yueting.presenter
 
-import android.app.Service
 import android.content.Context
-import android.content.ServiceConnection
-import android.os.IBinder
 import android.os.Messenger
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.YueTingApplication
+import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
@@ -26,16 +24,6 @@ import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
 * */
 class TabHomePresenter(mMvpView: TabHomeFragment) :
         MvpContract.FragmentPresenter<TabHomeFragment>(mMvpView) {
-    fun sendMusicInfo(service: IBinder) {
-        val disposables =
-                MusicSingle.sendMusicInfo(service)
-                        .subscribe({
-                            if (it) {
-                                mMvpView.unbindMusicService()
-                            }
-                        }, {})
-        addDisposables(disposables)
-    }
 
     fun fetchMusicInfo(typeName: String) {
         val disposables =
@@ -97,23 +85,15 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         addDisposables(disposable)
     }
 
-    fun startMusicService(context: Context, messenger: Messenger, conn: ServiceConnection) {
+    fun startMusicService(context: Context, messenger: Messenger, position: Int, typeName: String) {
         val mContext = context.applicationContext as YueTingApplication
-
         val musicIntent = mContext.getServiceIntent()
-        //musicIntent.putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
-        musicIntent.putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
-        context.startService(musicIntent)
-       // context.bindService(musicIntent, conn, Service.BIND_AUTO_CREATE)
-    }
-
-    fun bindService(context: Context,position: Int, conn: ServiceConnection) {
-        (context.applicationContext as YueTingApplication).let {
-            context.bindService(
-                    it.getServiceIntent().putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION,position),
-                    conn,
-                    Service.BIND_AUTO_CREATE)
+        musicIntent.apply {
+            putExtra(ActionConstant.ACTION_REFRESH_KEY, typeName)
+            putExtra(YueTingConstant.SERVICE_MUSIC_ITEM_POSITION, position)
+            putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
         }
+        context.startService(musicIntent)
     }
 
     fun generateListSelectInfo(type: String): ArrayList<SelectInfo> {
