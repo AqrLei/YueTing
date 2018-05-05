@@ -21,6 +21,7 @@ fun createPopView(context: Context, @LayoutRes layoutRes: Int, gravity: Int = Gr
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT)
         setCanceledOnTouchOutside(false)
+        setCancelable(false)
     }
 }
 
@@ -36,6 +37,7 @@ fun createListPopView(
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT)
         setCanceledOnTouchOutside(false)
+        setCancelable(false)
         window.decorView?.also {
             (it.findViewById(R.id.popViewLv) as ListView).apply {
                 this.adapter = adapter
@@ -44,15 +46,5 @@ fun createListPopView(
                 }
             }
         }
-    }
-}
-
-fun createProgressDialog(context: Context, title: String, msg: String): ProgressDialog {
-    return ProgressDialog(context).apply {
-        setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        setCanceledOnTouchOutside(false)
-        setCancelable(false)
-        setTitle(title)
-        setMessage(msg)
     }
 }

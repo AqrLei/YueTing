@@ -49,7 +49,6 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     private val progressDialog: Dialog
             by lazy {
                 createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
-                // createProgressDialog(this,"提示","正在加载中...")
             }
     private var markPosition: Int = 0
     override fun onClick(v: View?) {
