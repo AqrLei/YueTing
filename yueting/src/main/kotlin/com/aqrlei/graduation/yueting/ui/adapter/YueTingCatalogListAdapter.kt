@@ -31,5 +31,5 @@ class YueTingCatalogListAdapter(
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {}
+    override fun setInternalClick(holder: CommonListViewHolder,position:Int) {}
 }

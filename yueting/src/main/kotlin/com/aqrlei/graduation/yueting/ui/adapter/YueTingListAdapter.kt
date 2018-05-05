@@ -62,5 +62,5 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {}
+    override fun setInternalClick(holder: CommonListViewHolder, position: Int) {}
 }

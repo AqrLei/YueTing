@@ -18,8 +18,8 @@ class SelectAdapter constructor(
         context: Context,
         val type: String,
         @LayoutRes resId: Int = R.layout.common_manage_list_item,
-        listener:OnInternalClick)
-    : CommonListAdapter<SelectInfo>(data, context, resId,listener) {
+        listener: OnInternalClick)
+    : CommonListAdapter<SelectInfo>(data, context, resId, listener) {
     override fun bindData(holderList: CommonListViewHolder, t: SelectInfo) {
         (holderList.get(R.id.itemNameTv) as TextView).text =
                 if (type == YueTingConstant.MANAGE_TYPE_LIST) t.name
@@ -29,7 +29,11 @@ class SelectAdapter constructor(
         (holderList.get(R.id.selectItemIv) as ImageView).background.level = t.status
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-        holder.get(R.id.selectItemIv).setOnClickListener(this)
+    override fun setInternalClick(holder: CommonListViewHolder, position: Int) {
+
+        holder.get(R.id.selectItemIv).also {
+            it.tag = position
+            it.setOnClickListener(this)
+        }
     }
 }

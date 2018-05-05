@@ -18,9 +18,7 @@ class TitlePresenter(mMvpView: TitleFragment) :
         val disposable = if (isNew) {
             TypeSingle.insertType(type, name)
                     .subscribe({
-
                         mMvpView.modifyFinish(it, if (it) "创建成功" else "创建失败")
-
                     }, {})
         } else {
             TypeSingle.updateType(oldTypeName = name, newTypeName = newName)

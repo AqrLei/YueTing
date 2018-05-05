@@ -55,7 +55,7 @@ object BookSingle {
             DBManager.sqlData(
                     DBManager.SqlFormat.updateSqlFormat(
                             DataConstant.BOOK_TABLE_NAME,
-                            DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
+                            DataConstant.BOOK_TABLE_C3_INDEX_END,
                             DataConstant.COMMON_COLUMN_PATH, "="),
                     arrayOf(end, path),
                     null,

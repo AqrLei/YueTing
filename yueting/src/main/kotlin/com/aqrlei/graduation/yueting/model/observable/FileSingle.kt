@@ -35,8 +35,8 @@ object FileSingle {
             }.forEach {
                 data.add(it)
             }
-            Single.just(data).threadSwitch()
-        }
+            Single.just(data)
+        }.threadSwitch()
     }
 
     fun insertFileInfo(data: ArrayList<FileSelectInfo>, listTitle: String): Single<Boolean> {
@@ -79,7 +79,7 @@ object FileSingle {
                         }
                     }
             val result = DBManager.finish()
-            Single.just(result).threadSwitch()
-        }
+            Single.just(result)
+        }.threadSwitch()
     }
 }

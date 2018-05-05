@@ -65,7 +65,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
                                     else "管理歌曲"
                         }
-                        findViewById<View>(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById<TextView>(R.id.moveItemsTv)?.apply {
+                            setOnClickListener(this@TabHomeFragment)
+                            this.text =
+                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "移动到书单"
+                                    else "移动到歌单"
+                        }
                     }
 
 
@@ -173,6 +178,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 mContainerActivity.finish()
             }
             R.id.manageItemTv -> {
+                manageDialog.dismiss()
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_ITEM,
@@ -227,7 +233,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     removeInfo()
                 }
             }
-            R.id.popViewCl -> {
+            R.id.titleLl -> {
+                moveItemDialog.dismiss()
+                progressDialog.show()
                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
                     updateBookInfo(typeList[position])
                 } else {
@@ -279,11 +287,17 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun updateBookFinish(success: Boolean) {
-        if (success) getBookInfo()
+        progressDialog.dismiss()
+        if (success) {
+            getBookInfo()
+        }
     }
 
     fun updateMusicFinish(success: Boolean) {
-        if (success) getMusicInfo()
+        progressDialog.dismiss()
+        if (success) {
+            getMusicInfo()
+        }
     }
 
     private fun initData() {

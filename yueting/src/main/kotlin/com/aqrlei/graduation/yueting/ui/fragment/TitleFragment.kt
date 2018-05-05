@@ -119,22 +119,22 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                         .forEach {
                             selectInfoList.add(SelectInfo(name = it))
                         }
+                bottomDialog.dismiss()
                 ManageListActivity.jumpToManageListActivity(
                         mContainerActivity,
                         YueTingConstant.MANAGE_TYPE_LIST,
                         type,
                         selectInfoList,
                         YueTingConstant.MANAGE_REQ)
-                bottomDialog.dismiss()
             }
             R.id.addItems -> {
+                bottomDialog.dismiss()
                 FileActivity.jumpToFileActivity(
                         mContainerActivity,
                         0,
                         type,
                         titleList[0],
                         YueTingConstant.YUE_TING_LIST_FILE)
-                bottomDialog.dismiss()
             }
             R.id.newListTv -> {
                 bottomDialog.dismiss()
@@ -184,6 +184,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     fun modifyFinish(boolean: Boolean,msg:String) {
         AppToast.toastShow(mContainerActivity, msg, 1000)
         modifyListDialog.dismiss()
+        modifyListDialog.window.decorView.findViewById<EditText>(R.id.listNameEt).setText("")
         if (boolean) {
             mPresenter.fetchTypeInfo(type)
         }

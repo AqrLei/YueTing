@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -102,12 +103,14 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     override fun onItemClick(parent: AdapterView<*>?, convertView: View?,
                              position: Int, clickId: Long) {
+        Log.d("file","$position")
         if (mData[position].fileInfo.isDir) {
             getFileInfo(mData[position].fileInfo.path)
         }
     }
 
     override fun onInternalClick(v: View, position: Int) {
+        Log.d("file","$position")
         val iv = v as ImageView
         iv.background.level = if (iv.background.level == 1) {
             if (addFileIv.background.level == 1) {

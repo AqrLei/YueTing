@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.view.KeyEvent
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.YueTingListPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.TitlePagerAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TitleFragment
@@ -55,7 +57,11 @@ class YueTingListActivity : MvpContract.MvpActivity<YueTingListPresenter>() {
                 setTitle("提示")
                 setMessage("确定退出应用吗？")
                 setPositiveButton("是", { _, _ ->
-                    sendKillApp(this@YueTingListActivity)
+                    if(ShareMusicInfo.MusicInfoTool.isStartService()) {
+                        sendKillApp(this@YueTingListActivity)
+                    }else{
+                        ActivityCollector.killApp()
+                    }
                 })
                 setNegativeButton("否", null)
                 show()

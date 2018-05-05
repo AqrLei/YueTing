@@ -21,9 +21,10 @@ class FileListAdapter(
         mResId: Int = R.layout.file_list_item,
         listener: OnInternalClick) :
         CommonListAdapter<FileSelectInfo>(mData, mContext, mResId, listener) {
-    private var dirCallBack: DirCallBack?=null
+    private var dirCallBack: DirCallBack? = null
     override fun bindData(holderList: CommonListViewHolder, data: FileSelectInfo) {
         val mNameTv = holderList.get(R.id.fileNameTv) as TextView
+        holderList.get(R.id.selectItemIv).visibility = View.GONE
         mNameTv.text = data.fileInfo.name
         if (!data.fileInfo.isDir) {
             dirCallBack?.dirCallBack()
@@ -37,15 +38,18 @@ class FileListAdapter(
                     if (flag) YueTingConstant.FILE_TYPE_MUSIC
                     else YueTingConstant.FILE_TYPE_BOOK
         } else {
-            holderList.get(R.id.selectItemIv).visibility = View.GONE
             mNameTv.compoundDrawables[0].level = YueTingConstant.FILE_TYPE_FOLDER
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {
-        holder.get(R.id.selectItemIv).setOnClickListener(this)
+    override fun setInternalClick(holder: CommonListViewHolder, position: Int) {
+        holder.get(R.id.selectItemIv).also {
+            it.tag = position
+            it.setOnClickListener(this)
+        }
     }
-    fun setCallBack(callBack: DirCallBack){
+
+    fun setCallBack(callBack: DirCallBack) {
         dirCallBack = callBack
     }
 
