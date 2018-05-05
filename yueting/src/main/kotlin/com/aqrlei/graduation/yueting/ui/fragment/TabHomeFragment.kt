@@ -205,6 +205,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     file.exists() -> {
                         isServiceStart = mMusicInfoShared.isStartService()
                         if (!isServiceStart) {
+                            progressDialog.show()
                             startMusicService(position)
                             isServiceStart = true
                         } else {
@@ -257,6 +258,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         initData()
     }
 
+    fun dismissDialog() {
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
+    }
+
     fun setMusicTitle(musicName: String) {
         titleNameTv.text = musicName
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
@@ -267,7 +274,11 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
         progressDialog.dismiss()
         mMusicInfoShared.setInfoS(data)
-        sendMusicRefresh(0, typeName, mContainerActivity)
+        isServiceStart = mMusicInfoShared.isStartService()
+        if (isServiceStart && mMusicInfoShared.oldSize != mMusicInfoShared.getSize()) {
+            progressDialog.show()
+            sendMusicRefresh(0, typeName, mContainerActivity)
+        }
         mMusicInfoShared.oldTypeName = typeName
         mAdapter.notifyDataSetInvalidated()
     }
@@ -275,6 +286,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     fun setBookInfo(data: ArrayList<BookInfo>) {
         progressDialog.dismiss()
         mBookInfoShared.setInfoS(data)
+        mBookInfoShared.oldTypeName = typeName
         mAdapter.notifyDataSetInvalidated()
 
     }
@@ -287,29 +299,33 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun updateBookFinish(success: Boolean) {
-        progressDialog.dismiss()
+        dismissDialog()
         if (success) {
             getBookInfo()
         }
     }
 
     fun updateMusicFinish(success: Boolean) {
-        progressDialog.dismiss()
+        dismissDialog()
         if (success) {
             getMusicInfo()
         }
     }
 
     private fun initData() {
+
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
-            isServiceStart = mMusicInfoShared.isStartService()
-            if (isServiceStart && (mMusicInfoShared.oldTypeName != typeName
-                            || mMusicInfoShared.oldSize != mMusicInfoShared.getSize())) {
+            mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.GONE
+            if (mMusicInfoShared.oldTypeName != typeName) {
                 getMusicInfo()
             }
 
         } else {
-            getBookInfo()
+            if (mMusicInfoShared.isStartService()) {
+                mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.VISIBLE
+            }
+            if (mBookInfoShared.oldTypeName != typeName)
+                getBookInfo()
         }
 
     }

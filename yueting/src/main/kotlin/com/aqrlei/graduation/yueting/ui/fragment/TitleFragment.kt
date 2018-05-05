@@ -138,7 +138,10 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             }
             R.id.newListTv -> {
                 bottomDialog.dismiss()
-                modifyListDialog.show()
+                modifyListDialog.apply {
+                    (window.decorView.findViewById(R.id.listNameEt) as EditText).hint = "请输入名称"
+                    show()
+                }
             }
             R.id.sureTv -> {
                 val name = (modifyListDialog.window.decorView
@@ -182,6 +185,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     }
 
     fun modifyFinish(boolean: Boolean,msg:String) {
+        isNewList = true
         AppToast.toastShow(mContainerActivity, msg, 1000)
         modifyListDialog.dismiss()
         modifyListDialog.window.decorView.findViewById<EditText>(R.id.listNameEt).setText("")

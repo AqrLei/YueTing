@@ -18,11 +18,14 @@ enum class ShareBookInfo {
     }
 
     private var position: Int = 0
+    var oldBookSize: Int = 0
+    var oldTypeName: String = ""
 
     fun getInfo(position: Int) = bookInfoList[position]
     fun getSize() = bookInfoList.size
     fun getInfoS() = bookInfoList
     fun setInfoS(infoS: ArrayList<BookInfo>) {
+        oldBookSize = bookInfoList.size
         clearBookInfo()
         bookInfoList.addAll(infoS)
     }

@@ -54,8 +54,18 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
         }
     }
 
-    private lateinit var fileInfoList: ArrayList<FileInfo>
-    private lateinit var mData: ArrayList<FileSelectInfo>
+    private val fileInfoList: ArrayList<FileInfo>
+            by lazy {
+                ArrayList<FileInfo>()
+            }
+    private val mData: ArrayList<FileSelectInfo>
+            by lazy {
+                ArrayList<FileSelectInfo>()
+            }
+    private val type: String
+            by lazy {
+                intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+            }
     private val mAdapter: FileListAdapter
             by lazy {
                 FileListAdapter(
@@ -68,7 +78,6 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     private val progressDialog: Dialog
             by lazy {
                 createPopView(this, R.layout.common_progress_bar, Gravity.CENTER)
-                //createProgressDialog(this, "提示", "正在添加中...")
             }
 
     override val mPresenter: FilePresenter
@@ -103,14 +112,14 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     override fun onItemClick(parent: AdapterView<*>?, convertView: View?,
                              position: Int, clickId: Long) {
-        Log.d("file","$position")
+        Log.d("file", "$position")
         if (mData[position].fileInfo.isDir) {
             getFileInfo(mData[position].fileInfo.path)
         }
     }
 
     override fun onInternalClick(v: View, position: Int) {
-        Log.d("file","$position")
+        Log.d("file", "$position")
         val iv = v as ImageView
         iv.background.level = if (iv.background.level == 1) {
             if (addFileIv.background.level == 1) {
@@ -151,7 +160,8 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
 
     fun changeFileInfo(data: ArrayList<FileInfo>) {
         mData.clear()
-        fileInfoList = data
+        fileInfoList.clear()
+        fileInfoList.addAll(data)
         if (!fileInfoList.isEmpty() && fileInfoList.size > 1) {
             fileInfoList.subList(1, fileInfoList.size).forEach {
                 mData.add(FileSelectInfo(fileInfo = it))
@@ -188,7 +198,6 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     }
 
     private fun init() {
-        mData = ArrayList()
         lv_file.adapter = mAdapter
         lv_file.onItemClickListener = this
         getFileInfo(AppCache.APPCACHE.getString(CacheConstant.FILE_PATH_KEY, CacheConstant.FILE_PATH_DEFAULT))
@@ -202,11 +211,10 @@ class FileActivity : MvpContract.MvpActivity<FilePresenter>(),
     }
 
     private fun getFileInfo(path: String) {
-        val type = intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
         mPresenter.getFileInfo(path, type)
     }
 
     private fun addToDatabase() {
-        mPresenter.addToDataBase(mData, intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_VALUE))
+        mPresenter.addFileInfoToDB(type, mData, intent.extras.getString(YueTingConstant.FRAGMENT_TITLE_VALUE))
     }
 }

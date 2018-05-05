@@ -238,10 +238,6 @@ class MusicService : BaseService(),
          */
         bundle.putIntArray(YueTingConstant.SERVICE_PLAY_STATUS, initArray)
         backIntent.putExtra(YueTingConstant.SERVICE_PLAY_STATUS_B, bundle)
-        /*
-        * stackBuilder?.addNextIntent(backIntent)
-        * after the first addition will always exist, do not repeat the add
-        */
         pi = stackBuilder?.getPendingIntent(
                 YueTingConstant.SERVICE_PENDING_INTENT_ID,
                 PendingIntent.FLAG_UPDATE_CURRENT)

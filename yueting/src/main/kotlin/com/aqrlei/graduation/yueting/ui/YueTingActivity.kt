@@ -27,9 +27,6 @@ import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
  * @Author: AqrLei
  * @Date: 2017/8/23
  */
-/*
-* @param mPresenter 访问对应的Presenter
-* */
 class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
     companion object {
@@ -86,6 +83,20 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
+            if (requestCode == YueTingConstant.YUE_TING_FILE_REQ) {
+                if (data?.extras?.getBoolean(YueTingConstant.FILE_BOOK_CHANGE) == true) {
+                    mTabHomeFragment.updateBookFinish(true)
+                }
+                if (data?.extras?.getBoolean(YueTingConstant.FILE_MUSIC_CHANGE) == true) {
+                    mTabHomeFragment.updateMusicFinish(true)
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
         mHandler = mMusicShareInfo.getHandler(this)
@@ -116,6 +127,10 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
     fun setMusicTitle(musicName: String) {
         mTabHomeFragment.setMusicTitle(musicName)
     }
+    fun dismissDialog(){
+        mTabHomeFragment.dismissDialog()
+    }
+
 
     private fun initListener() {
         nextIv.setOnClickListener(this)

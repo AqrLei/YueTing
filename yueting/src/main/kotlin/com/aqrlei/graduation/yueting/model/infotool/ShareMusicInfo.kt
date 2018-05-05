@@ -161,6 +161,7 @@ enum class ShareMusicInfo {
                                 is YueTingActivity -> {
                                     refreshPlayView(it.getMPlayView(), msg)
                                     it.setMusicTitle(musicName)
+                                    it.dismissDialog()
                                 }
                             }
                         }
