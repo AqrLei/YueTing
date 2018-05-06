@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,34 +9,41 @@
     tools:context="com.aqrlei.graduation.yueting.ui.FileActivity">
 
     <View
+        android:id="@+id/topV"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenViewHeight"
-        android:background="@color/colorWhite" />
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/headerTopFl"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
+        android:id="@+id/headerTopFl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenTitleHeight"
-        android:background="@color/colorTitleBarGrey">
+        android:background="@color/colorTitleBarGrey"
+        app:layout_constraintBottom_toTopOf="@+id/dividerV1"
+        app:layout_constraintTop_toBottomOf="@+id/topV">
 
         <ImageView
             android:id="@+id/backIv"
-            style="@style/TitleBarImageViewStyle"
-            android:onClick="onClick" />
+            style="@style/TitleBarImageViewStyle" />
 
         <TextView
             style="@style/TitleBarTextViewStyle"
             android:text="我的文件" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/addFileIv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:onClick="onClick"
-            android:src="@drawable/common_selector_add" />
+            style="@style/SelectViewStyle"
+            android:layout_gravity="right"
+            android:visibility="gone" />
     </FrameLayout>
 
-    <View style="@style/DividerStyle" />
+    <View
+        android:id="@+id/dividerV1"
+        style="@style/DividerStyle"
+        app:layout_constraintBottom_toTopOf="@+id/tv_file_parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerTopFl" />
 
     <TextView
         android:id="@+id/tv_file_parent"
@@ -46,16 +54,36 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textSize="@dimen/sizeText12dp"
+        app:layout_constraintBottom_toTopOf="@+id/dividerV2"
+        app:layout_constraintTop_toBottomOf="@+id/dividerV1"
         tools:text="/dev" />
 
-    <View style="@style/DividerStyle" />
+    <View
+        android:id="@+id/dividerV2"
+        style="@style/DividerStyle"
+        app:layout_constraintBottom_toTopOf="@+id/lv_file"
+        app:layout_constraintTop_toBottomOf="@+id/tv_file_parent" />
 
     <ListView
         android:id="@+id/lv_file"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/sureTv"
+        app:layout_constraintTop_toBottomOf="@+id/dividerV2"
+        app:layout_constraintVertical_weight="1" />
 
+    <TextView
+        android:id="@+id/sureTv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenView40dp"
+        android:background="@drawable/common_ripple_item"
+        android:gravity="center"
+        android:text="添加选中"
+        android:textSize="@dimen/sizeText20dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

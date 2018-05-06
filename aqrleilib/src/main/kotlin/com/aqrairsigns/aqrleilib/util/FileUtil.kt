@@ -11,8 +11,6 @@ import kotlin.collections.ArrayList
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/8 Time: 14:30
  */
 object FileUtil {
@@ -43,6 +41,10 @@ object FileUtil {
     fun getFileSuffix(data: FileInfo): String {
         val name = File(data.path).name
         return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
+    }
+    fun getFileSuffix(filePath: String): String {
+        val name = File(filePath).name
+        return name.substring(name.lastIndexOf(".") + 1, name.length)
     }
 
     fun deleteFolder(path: String) {

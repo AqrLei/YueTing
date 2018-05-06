@@ -5,8 +5,6 @@ import android.widget.BaseAdapter
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/25
  */
 abstract class CommonListTypeAdapter<T>(protected var mContext: Context,

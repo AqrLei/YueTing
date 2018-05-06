@@ -2,8 +2,6 @@ package com.aqrairsigns.aqrleilib.constant
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/8 Time: 13:50
  */
 object AppConstant {

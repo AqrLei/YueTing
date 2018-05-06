@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/deleteItemTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_ripple_dialog"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dimenPadding5dp"
+        android:paddingTop="@dimen/dimenPadding5dp"
+        android:text="删除"
+        android:textSize="@dimen/sizeText15dp"
+        android:textStyle="bold" />
+
+
+
+</LinearLayout>

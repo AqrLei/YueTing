@@ -5,8 +5,6 @@ import android.content.SharedPreferences
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/12 Time: 14:54
  */
 enum class AppCache {

@@ -8,20 +8,15 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 import com.facebook.drawee.view.SimpleDraweeView
 import java.text.DecimalFormat
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/29
- */
-/**
- * @param type 0 book, 1 music.
  */
 class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val type: Int) :
         CommonListAdapter<Any>(mData, mContext, mResId) {
@@ -67,5 +62,5 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {}
+    override fun setInternalClick(holder: CommonListViewHolder, position: Int) {}
 }

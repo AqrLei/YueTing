@@ -8,19 +8,20 @@ import com.aqrairsigns.aqrleilib.util.AppCache
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
 import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/14 Time: 16:17
  */
 class YueTingApplication : BaseApplication() {
-    private var musicIntent: Intent? = null
+    private val musicIntent: Intent
+            by lazy {
+                Intent(this, MusicService::class.java)
+            }
     private var isSameProcess = false
 
     override fun onCreate() {
@@ -40,13 +41,11 @@ class YueTingApplication : BaseApplication() {
                     .addTable(DataConstant.MUSIC_TABLE_NAME,
                             arrayOf(
                                     DataConstant.COMMON_COLUMN_PATH,
-                                    DataConstant.MUSIC_TABLE_C1_TYPE_NAME,
-                                    DataConstant.MUSIC_TABLE_C2_FILE_INFO
+                                    DataConstant.MUSIC_TABLE_C1_TYPE_NAME
                             ),
                             arrayOf(
                                     DataConstant.MUSIC_TABLE_C0_DEF,
-                                    DataConstant.MUSIC_TABLE_C1_DEF,
-                                    DataConstant.MUSIC_TABLE_C2_DEF
+                                    DataConstant.MUSIC_TABLE_C1_DEF
                             )
                     )
                     .addTable(DataConstant.BOOK_TABLE_NAME,
@@ -55,16 +54,14 @@ class YueTingApplication : BaseApplication() {
                                     DataConstant.BOOK_TABLE_C1_TYPE,
                                     DataConstant.BOOK_TABLE_C2_INDEX_BEGIN,
                                     DataConstant.BOOK_TABLE_C3_INDEX_END,
-                                    DataConstant.BOOK_TABLE_C4_FILE_INFO,
-                                    DataConstant.BOOK_TABLE_C5_TYPE_NAME
+                                    DataConstant.BOOK_TABLE_C4_TYPE_NAME
                             ),
                             arrayOf(
                                     DataConstant.BOOK_TABLE_C0_DEF,
                                     DataConstant.BOOK_TABLE_C1_DEF,
                                     DataConstant.BOOK_TABLE_C2_DEF,
                                     DataConstant.BOOK_TABLE_C3_DEF,
-                                    DataConstant.BOOK_TABLE_C4_DEF,
-                                    DataConstant.BOOK_TABLE_C5_DEF
+                                    DataConstant.BOOK_TABLE_C4_DEF
                             )
                     )
                     .addTable(DataConstant.CATALOG_TABLE_NAME,
@@ -108,6 +105,7 @@ class YueTingApplication : BaseApplication() {
     override fun onTerminate() {
         if (isSameProcess) {
             DBManager.closeDB()
+            unbindService(ShareMusicInfo.MusicInfoTool.conn)
             ShareMusicInfo.MusicInfoTool.clear()
             ShareMusicInfo.MusicInfoTool.clearMusicInfo()
             ShareBookInfo.BookInfoTool.clearBookInfo()
@@ -115,12 +113,5 @@ class YueTingApplication : BaseApplication() {
         super.onTerminate()
     }
 
-    fun getServiceIntent(): Intent? {
-        if (musicIntent == null) {
-            musicIntent = Intent(this, MusicService::class.java)
-        }
-        return musicIntent
-    }
-
-
+    fun getServiceIntent() = musicIntent
 }

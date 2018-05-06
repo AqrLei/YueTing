@@ -4,32 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <TextView
-        android:id="@+id/tv_remove_items"
+        android:id="@+id/manageItemTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/common_ripple_dialog"
         android:gravity="center"
         android:paddingBottom="@dimen/dimenPadding5dp"
         android:paddingTop="@dimen/dimenPadding5dp"
-        android:text="删除"
-        android:textSize="@dimen/sizeText15dp"
-        android:textStyle="bold" />
-
-    <View style="@style/DividerStyle" />
-
-
-
-    <TextView
-        android:id="@+id/batchDeleteTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/common_ripple_dialog"
-        android:gravity="center"
-        android:paddingBottom="@dimen/dimenPadding5dp"
-        android:paddingTop="@dimen/dimenPadding5dp"
-        android:text="批量删除"
+        android:text="管理书籍"
         android:textSize="@dimen/sizeText15dp"
         android:textStyle="bold" />
 

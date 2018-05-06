@@ -3,15 +3,13 @@ package com.aqrlei.graduation.yueting.factory
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.ChapterInfo
 import java.nio.charset.Charset
 import java.util.regex.Pattern
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2018/2/7.
  */
 enum class ChapterFactory {
@@ -47,7 +45,7 @@ enum class ChapterFactory {
         val markInfo = bookMarkList.removeAt(position)
         deleteFromDB(markInfo.bPosition)
         if (DBManager.finish()) {
-            getBookMarkFromDB()
+            getBookMark()
         }
     }
 
@@ -66,7 +64,7 @@ enum class ChapterFactory {
 
     }
 
-    fun getBookMarkFromDB(): Boolean {
+    fun getBookMark(): Boolean {
         var haveMark = false
         bookMarkList.clear()//书签数可能改变，故每次都要清空后重新从数据库获取，章节数固定不变故不必
         val c = DBManager.sqlData(

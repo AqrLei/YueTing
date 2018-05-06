@@ -11,7 +11,7 @@ import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
+import com.aqrlei.graduation.yueting.model.BookInfo
 import java.io.File
 import java.io.RandomAccessFile
 import java.io.UnsupportedEncodingException
@@ -21,8 +21,6 @@ import java.nio.charset.Charset
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/9.
  */
 

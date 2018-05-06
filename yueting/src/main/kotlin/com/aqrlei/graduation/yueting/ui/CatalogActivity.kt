@@ -2,7 +2,6 @@ package com.aqrlei.graduation.yueting.ui
 
 import android.app.Activity
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -18,18 +17,17 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.CatalogActivityPresenter
+import com.aqrlei.graduation.yueting.model.ChapterInfo
+import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
+import com.aqrlei.graduation.yueting.util.createPopView
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
-class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
+class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         AdapterView.OnItemClickListener,
@@ -42,13 +40,18 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
         }
     }
 
-    override val mPresenter: CatalogActivityPresenter
-        get() = CatalogActivityPresenter(this)
+    override val mPresenter: CatalogPresenter
+        get() = CatalogPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_catalog
     private val mDataInfoS = ArrayList<ChapterInfo>()
     private lateinit var mAdapter: YueTingCatalogListAdapter
-    private lateinit var mProgressDialog: ProgressDialog
+    private val progressDialog: Dialog
+            by lazy {
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
+            }
     private var markPosition: Int = 0
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -94,29 +97,19 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        setProgressDialog()
+        progressDialog.show()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
         backIv.setOnClickListener(this)
     }
 
     fun loadCatalogDone(t: Boolean) {
-        mProgressDialog.dismiss()
+        progressDialog.dismiss()
         initView()
     }
 
-    private fun setProgressDialog() {
-        mProgressDialog = ProgressDialog(this)
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        mProgressDialog.setCancelable(false)
-        mProgressDialog.setCanceledOnTouchOutside(false)
-        mProgressDialog.setTitle("提示")
-        mProgressDialog.setMessage("正在加载中~")
-        mProgressDialog.show()
-    }
-
     private fun getData() {
-        mPresenter.getData()
+        mPresenter.getChapter()
     }
 
     private fun dataChange(data: ArrayList<ChapterInfo>) {
@@ -126,7 +119,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
     }
 
     private fun initView() {
-        val mView = findViewById(R.id.lv_catalog) as AlphaListView
+        val mView = findViewById<AlphaListView>(R.id.lv_catalog)
         mDataInfoS.addAll(ChapterFactory.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
                 R.layout.read_list_item_catelog)
@@ -137,8 +130,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogActivityPresenter>(),
 
     private fun showDialog() {
         val dialog = Dialog(this, R.style.BottomDialog)
-        dialog.setContentView(R.layout.manage_pop_view_item)
-        dialog.window.decorView.findViewById(R.id.tv_remove_items).setOnClickListener({
+        dialog.setContentView(R.layout.read_pop_view_item)
+        dialog.window.decorView.findViewById<View>(R.id.deleteItemTv).setOnClickListener({
             ChapterFactory.CHAPTER.removeBookMark(markPosition)
             dataChange(ChapterFactory.CHAPTER.getBookMarks())
             dialog.dismiss()

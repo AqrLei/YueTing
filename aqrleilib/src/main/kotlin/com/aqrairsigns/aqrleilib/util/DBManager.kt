@@ -13,8 +13,6 @@ import com.aqrairsigns.aqrleilib.info.DataTableInfo
 @SuppressLint("StaticFieldLeak")
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @CreateTime: Date: 2017/9/12 Time: 15:00
  */
 object DBManager {

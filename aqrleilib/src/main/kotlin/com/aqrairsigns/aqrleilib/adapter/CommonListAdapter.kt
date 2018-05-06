@@ -7,8 +7,6 @@ import android.widget.BaseAdapter
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/24
  */
 /*
@@ -28,6 +26,7 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     protected var mContext: Context = context
     protected var mResId: Int = resId
     protected var mListener: OnInternalClick? = listener
+    protected lateinit var holder: CommonListViewHolder
 
     override fun getCount() = mData.size
     override fun getItemId(position: Int) = position.toLong()
@@ -35,11 +34,11 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     override fun getItem(position: Int) = mData[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
+        holder = CommonListViewHolder.getCommonViewHolder(mContext, mResId, position,
                 convertView, parent)
         bindData(holder, mData[position])
         if (mListener != null) {
-            setInternalClick(holder)
+            setInternalClick(holder,position)
         }
         return holder.convertView
     }
@@ -48,14 +47,18 @@ abstract class CommonListAdapter<T> @JvmOverloads constructor(
     protected abstract fun bindData(holderList: CommonListViewHolder, t: T)
 
     /*监听事件绑定哪个子项的View由具体实现类确定*/
-    protected abstract fun setInternalClick(holder: CommonListViewHolder)
+    protected abstract fun setInternalClick(holder: CommonListViewHolder,position: Int)
 
     override fun onClick(v: View) {
-        mListener?.onInternalClick(v)
+        val position = v.tag as? Int
+        position?.let {
+            mListener?.onInternalClick(v, position)
+        }
+
     }
 
     /*回调接口，用于子项控件点击事件*/
     interface OnInternalClick {
-        fun onInternalClick(v: View)
+        fun onInternalClick(v: View, position: Int)
     }
 }

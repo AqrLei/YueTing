@@ -1,40 +1,38 @@
 package com.aqrlei.graduation.yueting.ui.fragment
 
 import android.app.Dialog
-import android.content.ComponentName
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Messenger
+import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
+import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.presenter.fragmentpresenter.TabHomePresenter
-import com.aqrlei.graduation.yueting.ui.FileActivity
-import com.aqrlei.graduation.yueting.ui.PdfReadActivity
-import com.aqrlei.graduation.yueting.ui.TxtReadActivity
-import com.aqrlei.graduation.yueting.ui.YueTingActivity
+import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
+import com.aqrlei.graduation.yueting.ui.*
+import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.ui.uiEt.createPopView
-import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.createListPopView
+import com.aqrlei.graduation.yueting.util.createPopView
+import com.aqrlei.graduation.yueting.util.sendMusicRefresh
+import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
 import java.io.File
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/23
  */
 class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivity>(),
@@ -54,50 +52,73 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         }
     }
 
-    private var removePosition: Int = 0
+    private var modifyPosition: Int = 0
     private var isServiceStart = false
     private var mMusicInfoShared = ShareMusicInfo.MusicInfoTool
     private var mBookInfoShared = ShareBookInfo.BookInfoTool
-    private val dialog: Dialog
+    private val manageDialog: Dialog
             by lazy {
                 createPopView(mContainerActivity, R.layout.manage_pop_view_item).apply {
                     window.decorView?.apply {
-                        findViewById(R.id.tv_remove_items).setOnClickListener(this@TabHomeFragment)
-                        findViewById(R.id.lookDetailsTv).setOnClickListener(this@TabHomeFragment)
-                        findViewById(R.id.batchDeleteTv).setOnClickListener(this@TabHomeFragment)
-                        findViewById(R.id.moveItemsTv).setOnClickListener(this@TabHomeFragment)
+                        findViewById<View>(R.id.lookDetailsTv)?.setOnClickListener(this@TabHomeFragment)
+                        findViewById<TextView>(R.id.manageItemTv)?.apply {
+                            setOnClickListener(this@TabHomeFragment)
+                            this.text =
+                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "管理书籍"
+                                    else "管理歌曲"
+                        }
+                        findViewById<TextView>(R.id.moveItemsTv)?.apply {
+                            setOnClickListener(this@TabHomeFragment)
+                            this.text =
+                                    if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "移动到书单"
+                                    else "移动到歌单"
+                        }
                     }
                 }
             }
     private val detailDialog: Dialog
-            by lazy {
-                createPopView(mContainerActivity, R.layout.common_item_detail).apply {
+           get() = createPopView(mContainerActivity, R.layout.common_item_detail).apply {
                     window.decorView?.apply {
-                        (findViewById(R.id.itemNameTv) as TextView).text =
+                        (findViewById<TextView>(R.id.itemNameTitleTv)).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
+                                else "歌名:"
+                        (findViewById<TextView>(R.id.itemNameTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(removePosition).name
-                                else mMusicInfoShared.getInfo(removePosition).title
-                        (findViewById(R.id.ownerTv) as TextView).text =
+                                    mBookInfoShared.getInfo(modifyPosition).name
+                                else mMusicInfoShared.getInfo(modifyPosition).title
+                        (findViewById<TextView>(R.id.ownerTitleTv)).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
+                                else "歌手:"
+                        (findViewById<TextView>(R.id.ownerTv)).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
+                                else mMusicInfoShared.getInfo(modifyPosition).artist
+                        (findViewById<TextView>(R.id.localPathTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                   ""
-                                else mMusicInfoShared.getInfo(removePosition).artist
-                        (findViewById(R.id.localPathTv) as TextView).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(removePosition).path
-                                else mMusicInfoShared.getInfo(removePosition).albumUrl
-                        (findViewById(R.id.itemNameTv) as TextView).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                {
-                                    "${mBookInfoShared.getInfo(removePosition).fileLength/(1024.0F*1024.0F)} M"
-                                }
-                                else {
+                                    mBookInfoShared.getInfo(modifyPosition).path
+                                else mMusicInfoShared.getInfo(modifyPosition).albumUrl
+                        (findViewById<TextView>(R.id.sizeTitleTv)).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
+                                else "时长:"
+                        (findViewById<TextView>(R.id.sizeTv)).text =
+                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                                    "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
+                                } else {
                                     DateFormatUtil.simpleTimeFormat(
-                                            mMusicInfoShared.getInfo(removePosition).duration.toLong())
-
+                                            mMusicInfoShared.getInfo(modifyPosition).duration.toLong())
                                 }
                     }
                 }
+
+    private val moveItemDialog: Dialog
+            by lazy {
+                createListPopView(
+                        context = mContainerActivity,
+                        adapter = popViewListAdapter,
+                        listener = this
+                )
             }
+    private val typeList: ArrayList<String>
+            by lazy { ArrayList<String>() }
     private val mListView: AlphaListView
             by lazy {
                 mView.lv_fragment_home as AlphaListView
@@ -114,32 +135,33 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                             R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC)
                 }
             }
+    private val popViewListAdapter: PopViewListAdapter
+            by lazy {
+                PopViewListAdapter(typeList, mContainerActivity)
+            }
     private val type: String
             by lazy {
-                arguments.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+                arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
             }
-
-    private val name: String
+    private val typeName: String
             by lazy {
-                arguments.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+                arguments!!.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)
+            }
+    private val progressDialog: Dialog
+            by lazy {
+                createPopView(mContainerActivity, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
             }
 
-    private val serviceConn = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            sendMusicInfoS(service)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
-    }
     override val mPresenter: TabHomePresenter
         get() = TabHomePresenter(this)
     override val layoutRes: Int
         get() = R.layout.main_fragment_home
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
-        removePosition = position
-        dialog.show()
+        modifyPosition = position
+        manageDialog.show()
         return true
     }
 
@@ -150,25 +172,28 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         mContainerActivity,
                         YueTingConstant.YUE_TING_FILE_REQ,
                         type,
-                        name,
+                        typeName,
                         YueTingConstant.YUE_TING_FILE)
             }
             R.id.backIv -> {
                 mContainerActivity.finish()
             }
-            R.id.tv_remove_items -> {
-                removeInfo()
-                dialog.dismiss()
-            }
-            R.id.batchDeleteTv -> {
-                // manageItems
+            R.id.manageItemTv -> {
+                manageDialog.dismiss()
+                ManageListActivity.jumpToManageListActivity(
+                        mContainerActivity,
+                        YueTingConstant.MANAGE_TYPE_ITEM,
+                        type,
+                        mPresenter.generateListSelectInfo(type),
+                        YueTingConstant.MANAGE_REQ)
             }
             R.id.lookDetailsTv -> {
-                dialog.dismiss()
+                manageDialog.dismiss()
                 detailDialog.show()
             }
             R.id.moveItemsTv -> {
-                //TODO move items to other name List
+                manageDialog.dismiss()
+                getTypeInfo()
             }
         }
     }
@@ -177,17 +202,21 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         when (convertView.id) {
             R.id.ll_music_item -> {
                 val file = File(mMusicInfoShared.getInfo(position).albumUrl)
-                if (file.exists()) {
-                    isServiceStart = mMusicInfoShared.isStartService()
-                    if (!isServiceStart) {
-                        startMusicService(position)
-                        isServiceStart = true
-                    } else {
-                        sendPlayBroadcast(position, mContainerActivity)
+                when {
+                    file.exists() -> {
+                        isServiceStart = mMusicInfoShared.isStartService()
+                        if (!isServiceStart) {
+                            progressDialog.show()
+                            startMusicService(position)
+                            isServiceStart = true
+                        } else {
+                            sendPlayBroadcast(position, mContainerActivity)
+                        }
                     }
-                } else {
-                    AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
-                    removeInfo()
+                    else -> {
+                        AppToast.toastShow(mContainerActivity, "文件不存在", 1000)
+                        removeInfo()
+                    }
                 }
             }
             R.id.ll_read_item -> {
@@ -206,61 +235,99 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     removeInfo()
                 }
             }
+            R.id.titleLl -> {
+                moveItemDialog.dismiss()
+                progressDialog.show()
+                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                    updateBookInfo(typeList[position])
+                } else {
+                    updateMusicInfo(typeList[position])
+                }
+            }
         }
     }
 
     override fun initComponents(view: View?, savedInstanceState: Bundle?) {
         super.initComponents(view, savedInstanceState)
-        initData()
         initListener()
         initView()
-
     }
 
     override fun onResume() {
         super.onResume()
-        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-            changeBookAdapter()
+        initData()
+    }
+
+    fun dismissDialog() {
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
         }
     }
 
     fun setMusicTitle(musicName: String) {
-
         titleNameTv.text = musicName
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
             titleNameTv.text = "悦读"
         }
     }
 
-    fun unbindMusicService() {
-        mContainerActivity.unbindService(serviceConn)
-    }
-
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
+        progressDialog.dismiss()
         mMusicInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        isServiceStart = mMusicInfoShared.isStartService()
+        if (isServiceStart && mMusicInfoShared.oldSize != mMusicInfoShared.getSize()) {
+            progressDialog.show()
+            sendMusicRefresh(0, typeName, mContainerActivity)
+        }
+        mMusicInfoShared.oldTypeName = typeName
+        mAdapter.notifyDataSetInvalidated()
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
+        progressDialog.dismiss()
         mBookInfoShared.setInfoS(data)
-        mAdapter.notifyDataSetChanged()
+        mBookInfoShared.oldTypeName = typeName
+        mAdapter.notifyDataSetInvalidated()
 
     }
 
-    fun changeMusicAdapter() {
-        mAdapter.notifyDataSetInvalidated()
+    fun setTypeInfo(data: ArrayList<String>) {
+        typeList.clear()
+        typeList.addAll(data)
+        popViewListAdapter.notifyDataSetInvalidated()
+        moveItemDialog.show()
     }
 
-    fun changeBookAdapter() {
-        mAdapter.notifyDataSetInvalidated()
+    fun updateBookFinish(success: Boolean) {
+        dismissDialog()
+        if (success) {
+            getBookInfo()
+        }
+    }
+
+    fun updateMusicFinish(success: Boolean) {
+        dismissDialog()
+        if (success) {
+            getMusicInfo()
+        }
     }
 
     private fun initData() {
+
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) {
-            getMusicInfoFromDB(name)
+            mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.GONE
+            if (mMusicInfoShared.oldTypeName != typeName) {
+                getMusicInfo()
+            }
+
         } else {
-            getBookInfoFromDB(name)
+            if (mMusicInfoShared.isStartService()) {
+                mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.VISIBLE
+            }
+            if (mBookInfoShared.oldTypeName != typeName)
+                getBookInfo()
         }
+
     }
 
     private fun initView() {
@@ -273,7 +340,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                     R.layout.music_list_item, YueTingConstant.ADAPTER_TYPE_MUSIC))
         }
         mListView.adapter = mAdapter
-        titleNameTv.text = name
+        titleNameTv.text = typeName
     }
 
     private fun initListener() {
@@ -283,36 +350,50 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         backIv.setOnClickListener(this)
     }
 
-    private fun getMusicInfoFromDB(name: String) {
-        mPresenter.getMusicInfoFromDB(name)
+    private fun getMusicInfo() {
+        progressDialog.show()
+        mPresenter.fetchMusicInfo(typeName)
     }
 
-    private fun getBookInfoFromDB(name: String) {
-        mPresenter.getBookInfoFromDB(name)
+    private fun updateMusicInfo(updateTypeName: String) {
+        mPresenter.updateMusicTypeName(
+                mMusicInfoShared.getInfo(modifyPosition).albumUrl,
+                updateTypeName)
+    }
+
+    private fun updateBookInfo(updateTypeName: String) {
+        mPresenter.updateBookTypeName(
+                mBookInfoShared.getInfo(modifyPosition).path,
+                updateTypeName)
+    }
+
+    private fun getBookInfo() {
+        progressDialog.show()
+        mPresenter.fetchBookInfo(typeName)
+    }
+
+    private fun getTypeInfo() {
+        mPresenter.fetchTypeInfo(type)
     }
 
     private fun removeInfo() {
         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-            val path = mBookInfoShared.getInfo(removePosition).path
-            mBookInfoShared.removeInfo(removePosition)
+            val path = mBookInfoShared.getInfo(modifyPosition).path
+            mBookInfoShared.removeInfo(modifyPosition)
             mAdapter.notifyDataSetInvalidated()
-            mPresenter.deleteBookItemFromDB(path)
+            mPresenter.deleteBookItem(path)
         } else {
-            val path = mMusicInfoShared.getInfo(removePosition).albumUrl
-            mMusicInfoShared.removeInfo(removePosition)
+            val path = mMusicInfoShared.getInfo(modifyPosition).albumUrl
+            mMusicInfoShared.removeInfo(modifyPosition)
             mAdapter.notifyDataSetInvalidated()
-            mPresenter.deleteMusicItemFromDB(path)
+            mPresenter.deleteMusicItem(path)
         }
     }
-
 
     private fun startMusicService(position: Int) {
-        mPresenter.startMusicService(mContainerActivity, position, Messenger(mMusicInfoShared.getHandler(mContainerActivity)), serviceConn)
-    }
-
-    private fun sendMusicInfoS(binder: IBinder?) {
-        if (binder != null) {
-            mPresenter.sendMusicInfo(binder)
-        }
+        mPresenter.startMusicService(
+                mContainerActivity,
+                Messenger(mMusicInfoShared.getHandler(mContainerActivity)),
+                position, typeName)
     }
 }

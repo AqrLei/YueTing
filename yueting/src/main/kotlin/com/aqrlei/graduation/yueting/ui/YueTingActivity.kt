@@ -13,26 +13,22 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
-import com.aqrlei.graduation.yueting.model.local.infotool.ShareMusicInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.YueTingActivityPresenter
+import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
+import com.aqrlei.graduation.yueting.presenter.YueTingPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
 import com.aqrlei.graduation.yueting.ui.fragment.TabHomeFragment
-import com.aqrlei.graduation.yueting.ui.uiEt.initPlayView
-import com.aqrlei.graduation.yueting.ui.uiEt.sendMusicBroadcast
-import com.aqrlei.graduation.yueting.ui.uiEt.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.BackStackHolder
+import com.aqrlei.graduation.yueting.util.initPlayView
+import com.aqrlei.graduation.yueting.util.sendMusicBroadcast
+import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
 import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/23
  */
-/*
-* @param mPresenter 访问对应的Presenter
-* */
-class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
+class YueTingActivity : MvpContract.MvpActivity<YueTingPresenter>()
         , View.OnClickListener, AdapterView.OnItemClickListener {
     companion object {
         fun jumpToYueTingActivity(context: Context, type: String, name: String) {
@@ -47,8 +43,8 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-    override val mPresenter: YueTingActivityPresenter
-        get() = YueTingActivityPresenter(this)
+    override val mPresenter: YueTingPresenter
+        get() = YueTingPresenter(this)
     override val layoutRes: Int
         get() = R.layout.main_activity_yueting
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
@@ -88,15 +84,14 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == YueTingConstant.YUE_TING_FILE_RES) {
             if (requestCode == YueTingConstant.YUE_TING_FILE_REQ) {
                 if (data?.extras?.getBoolean(YueTingConstant.FILE_BOOK_CHANGE) == true) {
-                    mTabHomeFragment.changeBookAdapter()
+                    mTabHomeFragment.updateBookFinish(true)
                 }
                 if (data?.extras?.getBoolean(YueTingConstant.FILE_MUSIC_CHANGE) == true) {
-                    mTabHomeFragment.changeMusicAdapter()
+                    mTabHomeFragment.updateMusicFinish(true)
                 }
             }
         }
@@ -130,9 +125,14 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
 
     fun getMPlayView() = mPlayView
 
-    fun setMusicTitle(musicName:String){
+    fun setMusicTitle(musicName: String) {
         mTabHomeFragment.setMusicTitle(musicName)
     }
+    fun dismissDialog(){
+        mTabHomeFragment.dismissDialog()
+    }
+
+
     private fun initListener() {
         nextIv.setOnClickListener(this)
         previousIv.setOnClickListener(this)
@@ -142,8 +142,9 @@ class YueTingActivity : MvpContract.MvpActivity<YueTingActivityPresenter>()
     }
 
     private fun initFragments(savedInstanceState: Bundle?) {
-        val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)?:YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
-        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE)?:"默认列表"
+        val type = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_TYPE)
+                ?: YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
+        val name = intent.extras?.getString(YueTingConstant.FRAGMENT_TITLE_VALUE) ?: BackStackHolder.typeName
         mTabHomeFragment = if (savedInstanceState != null) {
             (supportFragmentManager
                     .findFragmentByTag(

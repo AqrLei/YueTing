@@ -7,8 +7,6 @@ import java.io.ObjectOutputStream
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/9/16.
  */
 object DataSerializationUtil {

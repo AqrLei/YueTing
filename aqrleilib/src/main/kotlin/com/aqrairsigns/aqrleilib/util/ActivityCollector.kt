@@ -4,9 +4,7 @@ import android.app.Activity
 
 
 /**
- * @Author: AqrLei
- *@Name MyLearning
- *@Description:
+ *@Author: AqrLei
  *@Date: 2017/8/22
  */
 object ActivityCollector {

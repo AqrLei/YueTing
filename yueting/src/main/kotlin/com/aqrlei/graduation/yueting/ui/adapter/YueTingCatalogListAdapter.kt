@@ -6,12 +6,10 @@ import android.widget.TextView
 import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
 import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.local.ChapterInfo
+import com.aqrlei.graduation.yueting.model.ChapterInfo
 
 /**
  * @Author: AqrLei
- * @Name MyLearning
- * @Description:
  * @Date: 2017/8/29
  */
 class YueTingCatalogListAdapter(
@@ -33,5 +31,5 @@ class YueTingCatalogListAdapter(
         }
     }
 
-    override fun setInternalClick(holder: CommonListViewHolder) {}
+    override fun setInternalClick(holder: CommonListViewHolder,position:Int) {}
 }

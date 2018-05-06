@@ -27,18 +27,35 @@
             android:text="播放中" />
     </FrameLayout>
 
-    <com.aqrairsigns.aqrleilib.ui.view.VisualizerView
-        android:id="@+id/vv_play"
+    <FrameLayout
+        android:id="@+id/switchFl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@mipmap/ic_play_bg"
-        yueting:offSetX="64"
-        yueting:scaleStyle="center"
-        yueting:scaleTime="3"
-        yueting:useMultiColor="true"
+        android:background="@mipmap/ic_play_bg">
 
-        yueting:vRadius="@dimen/dimenVisualizerViewRadius" />
+        <com.aqrairsigns.aqrleilib.ui.view.VisualizerView
+            android:id="@+id/vv_play"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            yueting:offSetX="64"
+            yueting:scaleStyle="center"
+            yueting:scaleTime="3"
+            yueting:useMultiColor="true"
+            yueting:vRadius="@dimen/dimenVisualizerViewRadius" />
+
+        <com.aqrlei.graduation.yueting.ui.view.LrcView
+            android:id="@+id/lrcLv"
+            android:layout_marginTop="@dimen/dimenMargin20dp"
+            android:layout_marginBottom="@dimen/dimenMargin20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            yueting:currentColor="@color/colorLrcGreen"
+            yueting:currentTextSize="@dimen/sizeText20dp"
+            yueting:noCurrentTextSize="@dimen/sizeText15dp" />
+    </FrameLayout>
+
 
     <include layout="@layout/music_include_yue_ting_play" />
 

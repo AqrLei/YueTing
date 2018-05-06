@@ -22,8 +22,8 @@ import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.factory.BookPageFactory
 import com.aqrlei.graduation.yueting.factory.ChapterFactory
-import com.aqrlei.graduation.yueting.model.local.BookInfo
-import com.aqrlei.graduation.yueting.presenter.activitypresenter.TxtReadActivityPresenter
+import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.presenter.TxtReadPresenter
 import kotlinx.android.synthetic.main.read_include_bottom.*
 import kotlinx.android.synthetic.main.read_include_progress.*
 import kotlinx.android.synthetic.main.read_include_setting.*
@@ -33,11 +33,9 @@ import java.text.DecimalFormat
 
 /**
  * Author : AqrLei
- * Name : MyLearning
- * Description :
  * Date : 2017/11/17.
  */
-class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
+class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
         BookPageView.OnPageTouchListener,
         SeekBar.OnSeekBarChangeListener,
         RadioGroup.OnCheckedChangeListener,
@@ -52,8 +50,8 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
         }
     }
 
-    override val mPresenter: TxtReadActivityPresenter
-        get() = TxtReadActivityPresenter(this)
+    override val mPresenter: TxtReadPresenter
+        get() = TxtReadPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_txt
     private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
@@ -74,7 +72,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        val bgColor = (findViewById(checkedId).background as ColorDrawable).color
+        val bgColor = (findViewById<View>(checkedId).background as ColorDrawable).color
         val position: Int = (0 until 4).firstOrNull { group?.getChildAt(it)?.id == checkedId }
                 ?: 0
         pageFactory.setPageBackground(bgColor, position)
@@ -175,20 +173,20 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        bookPageView = findViewById(R.id.bpv_read) as BookPageView
-        seekBar = findViewById(R.id.sb_rate) as SeekBar
-        topRelativeLayout = findViewById(R.id.rl_top_read) as ConstraintLayout
-        bottomLinearLayout = findViewById(R.id.ll_bottom_read) as LinearLayout
-        lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar) as LinearLayout
-        lLSetting = findViewById(R.id.ll_bottom_read_setting) as LinearLayout
+        bookPageView = findViewById<BookPageView>(R.id.bpv_read)
+        seekBar = findViewById<SeekBar>(R.id.sb_rate)
+        topRelativeLayout = findViewById<ConstraintLayout>(R.id.rl_top_read)
+        bottomLinearLayout = findViewById<LinearLayout>(R.id.ll_bottom_read)
+        lLSeekBar = findViewById<LinearLayout>(R.id.ll_bottom_read_seekBar)
+        lLSetting = findViewById<LinearLayout>(R.id.ll_bottom_read_setting)
         initListener()
+        generateCatalog()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-
         setBookPageFactory(bookPageView)
         setCheckedId()
         bookTitleTv.text = bookInfo.name
@@ -239,6 +237,10 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadActivityPresenter>(),
                 pageFactory.changeFontSize(YueTingConstant.READ_BIG_FONT)
             }
         }
+    }
+
+    private fun generateCatalog() {
+        mPresenter.getChapter()
     }
 
     private fun initListener() {

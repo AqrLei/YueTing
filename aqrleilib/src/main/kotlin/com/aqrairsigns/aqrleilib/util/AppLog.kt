@@ -3,9 +3,7 @@ package com.aqrairsigns.aqrleilib.util
 import android.util.Log
 
 /**
- * @Author: AqrLei
- *@Name MyLearning
- *@Description:
+ *@Author: AqrLei
  *@Date: 2017/8/22
  */
 object AppLog {

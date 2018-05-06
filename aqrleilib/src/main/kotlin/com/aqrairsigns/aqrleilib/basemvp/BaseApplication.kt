@@ -12,9 +12,7 @@ import java.io.FileReader
 
 
 /**
- * @Author: AqrLei
- *@Name MyLearning
- *@Description:
+ *@Author: AqrLei
  *@Date: 2017/8/22
  */
 open class BaseApplication : Application(), Application.ActivityLifecycleCallbacks {
