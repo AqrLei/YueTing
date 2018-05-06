@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.presenter
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
+import com.aqrlei.graduation.yueting.model.observable.ChapterSingle
 import com.aqrlei.graduation.yueting.ui.TxtReadActivity
 
 /**
@@ -31,7 +32,7 @@ class TxtReadPresenter(mMvpActivity: TxtReadActivity) :
 
     fun getChapter() {
         val disposables =
-                BookSingle.selectChapters()
+                ChapterSingle.selectChapters()
                         .subscribe()
         addDisposables(disposables)
     }

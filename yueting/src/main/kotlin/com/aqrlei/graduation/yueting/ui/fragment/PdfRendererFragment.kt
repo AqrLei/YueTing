@@ -15,7 +15,7 @@ import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
+import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.presenter.PdfRendererPresenter
 import com.aqrlei.graduation.yueting.ui.PdfReadActivity
@@ -170,7 +170,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             e.printStackTrace()
         }
         bookTitleTv.text = bookInfo.name
-        ChapterFactory.init(bookInfo)
+        ChapterLoader.init(bookInfo)
         mPageIndex = bookInfo.indexBegin
         if (null != savedInstanceState) {
             mPageIndex = savedInstanceState.getInt(currentPageIndex, 0)

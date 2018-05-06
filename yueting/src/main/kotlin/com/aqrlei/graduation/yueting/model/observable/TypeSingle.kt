@@ -26,6 +26,7 @@ object TypeSingle {
                             val temp = getString(getColumnIndex(DataConstant.TYPE_TABLE_C0_NAME))
                             typeList.add(temp)
                         }
+                        close()
                     }
             Single.just(typeList)
         }.threadSwitch()

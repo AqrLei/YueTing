@@ -2,6 +2,7 @@ package com.aqrlei.graduation.yueting.presenter
 
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
+import com.aqrlei.graduation.yueting.model.observable.ChapterSingle
 import com.aqrlei.graduation.yueting.ui.CatalogActivity
 
 /**
@@ -12,7 +13,7 @@ class CatalogPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
     fun getChapter() {
         val disposables =
-                BookSingle.selectChapters()
+                ChapterSingle.selectChapters()
                         .subscribe({
                             mMvpActivity.loadCatalogDone(it)
                         }, {})

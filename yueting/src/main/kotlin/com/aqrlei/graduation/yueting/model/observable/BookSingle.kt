@@ -3,7 +3,6 @@ package com.aqrlei.graduation.yueting.model.observable
 import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
@@ -16,10 +15,59 @@ import io.reactivex.Single
  */
 object BookSingle {
 
-    fun selectChapters(): Single<Boolean> {
+    fun selectIndex(path: String): Single<IntArray> {
         return Single.defer {
-            ChapterFactory.CHAPTER.getBookMark()
-            Single.just(ChapterFactory.CHAPTER.getChapter())
+            val temp = IntArray(2)
+            DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
+                    "${DataConstant.BOOK_TABLE_C2_INDEX_BEGIN}, ${DataConstant.BOOK_TABLE_C3_INDEX_END}",
+                    DataConstant.COMMON_COLUMN_PATH,
+                    "="),
+                    null, arrayOf(path), DBManager.SqlType.SELECT)
+                    .getCursor()?.let {
+                        while (it.moveToNext()) {
+                            val begin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+                            val end = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
+                            temp[0] = begin
+                            temp[1] = end
+                        }
+                    }
+
+            Single.just(temp)
+        }.threadSwitch()
+    }
+
+    fun selectBookInfo(typeName: String): Single<ArrayList<BookInfo>> {
+        return Single.defer {
+            val bookInfoList = ArrayList<BookInfo>()
+            if (typeName == DataConstant.DEFAULT_TYPE_NAME) {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.BOOK_TABLE_NAME),
+                        null, null, DBManager.SqlType.SELECT)
+                        .getCursor()
+            } else {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.selectSqlFormat(
+                                DataConstant.BOOK_TABLE_NAME,
+                                "",
+                                DataConstant.BOOK_TABLE_C4_TYPE_NAME,
+                                "="),
+                        null, arrayOf(typeName), DBManager.SqlType.SELECT)
+                        .getCursor()
+            }?.let {
+                while (it.moveToNext()) {
+                    val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
+                    val id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                    val createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
+                    val type = it.getString(it.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
+                    val begin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+                    val end = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
+                    val bookInfo = generateBookInfo(path, id, createTime, type, begin, end)
+                    bookInfoList.add(bookInfo)
+                }
+                it.close()
+            }
+            Single.just(bookInfoList)
         }.threadSwitch()
     }
 
@@ -77,6 +125,7 @@ object BookSingle {
             Single.just(DBManager.finish())
         }.threadSwitch()
     }
+
     fun updateTypeNameList(oldTypeName: String, newTypeName: String): Single<Boolean> {
         return Single.defer {
             DBManager.sqlData(
@@ -88,40 +137,6 @@ object BookSingle {
                     null,
                     DBManager.SqlType.UPDATE)
             Single.just(DBManager.finish())
-        }.threadSwitch()
-    }
-
-    fun selectBookInfo(typeName: String): Single<ArrayList<BookInfo>> {
-        return Single.defer {
-            val bookInfoList = ArrayList<BookInfo>()
-            if (typeName == DataConstant.DEFAULT_TYPE_NAME) {
-                DBManager.sqlData(
-                        DBManager.SqlFormat.selectSqlFormat(
-                                DataConstant.BOOK_TABLE_NAME),
-                        null, null, DBManager.SqlType.SELECT)
-                        .getCursor()
-            } else {
-                DBManager.sqlData(
-                        DBManager.SqlFormat.selectSqlFormat(
-                                DataConstant.BOOK_TABLE_NAME,
-                                "",
-                                DataConstant.BOOK_TABLE_C4_TYPE_NAME,
-                                "="),
-                        null, arrayOf(typeName), DBManager.SqlType.SELECT)
-                        .getCursor()
-            }?.let {
-                while (it.moveToNext()) {
-                    val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
-                    val id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
-                    val createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
-                    val type = it.getString(it.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
-                    val begin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
-                    val end = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
-                    val bookInfo = generateBookInfo(path, id, createTime, type, begin, end)
-                    bookInfoList.add(bookInfo)
-                }
-            }
-            Single.just(bookInfoList)
         }.threadSwitch()
     }
 
@@ -176,4 +191,6 @@ object BookSingle {
             Single.just(DBManager.finish())
         }.threadSwitch()
     }
+
+
 }

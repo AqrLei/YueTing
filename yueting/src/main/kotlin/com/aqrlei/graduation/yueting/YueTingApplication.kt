@@ -11,6 +11,7 @@ import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
+import com.aqrlei.graduation.yueting.util.DisposableHolder
 import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
@@ -109,6 +110,7 @@ class YueTingApplication : BaseApplication() {
             ShareMusicInfo.MusicInfoTool.clear()
             ShareMusicInfo.MusicInfoTool.clearMusicInfo()
             ShareBookInfo.BookInfoTool.clearBookInfo()
+            DisposableHolder.dispose()
         }
         super.onTerminate()
     }
