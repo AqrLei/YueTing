@@ -74,6 +74,10 @@ class MusicService : BaseService(),
             by lazy {
                 ArrayList<MusicInfo>()
             }
+    private val lrcList: ArrayList<LrcInfo>
+            by lazy {
+                ArrayList<LrcInfo>()
+            }
     private val sendCDurationR = object : Runnable {
         override fun run() {
             cDuration = mPlayer?.currentPosition ?: 0
@@ -93,12 +97,6 @@ class MusicService : BaseService(),
         }
     }
     private var serviceAlive = AtomicBoolean(true)
-    private val lrcList: ArrayList<LrcInfo>
-            by lazy {
-                ArrayList<LrcInfo>().apply {
-                    addAll(LrcInfoProcess.readLRC(musicInfoS[cPosition].albumUrl))
-                }
-            }
     private val runnable: Runnable
             by lazy {
                 Runnable {
@@ -369,7 +367,6 @@ class MusicService : BaseService(),
     }
 
     private fun play() {
-        Thread(runnable).start()
         isSame = (cPosition == pPosition)
         if (mPlayer != null && musicInfoS.size > 0) {
             if (isSame) {
@@ -391,7 +388,14 @@ class MusicService : BaseService(),
                 }
             }
             sendCDuration()
+            sendLrcIndex()
         }
+    }
+
+    private fun sendLrcIndex() {
+        lrcList.clear()
+        lrcList.addAll(LrcInfoProcess.readLRC(musicInfoS[cPosition].albumUrl))
+        Thread(runnable).start()
     }
 
     private fun sendCDuration() {

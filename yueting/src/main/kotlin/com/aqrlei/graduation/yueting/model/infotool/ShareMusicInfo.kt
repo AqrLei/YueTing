@@ -8,7 +8,6 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -52,10 +51,10 @@ enum class ShareMusicInfo {
                 object : IOnLrcIndexListener.Stub() {
                     override fun onLrcIndexListener(index: Int) {
                         mContext.forEach {
-                                    if(it is PlayActivity&&!it.isFinishing){
-                                        it.refreshLrcView(index)
-                                    }
-                                }
+                            if (it is PlayActivity && !it.isFinishing) {
+                                it.refreshLrc(index)
+                            }
+                        }
                     }
                 }
             }
@@ -66,6 +65,7 @@ enum class ShareMusicInfo {
                         listenerManager = IListenerManager.Stub.asInterface(service)
                         listenerManager?.registerListener(lrcListener)
                     }
+
                     override fun onServiceDisconnected(name: ComponentName?) {
                         listenerManager = null
                     }
@@ -188,7 +188,9 @@ enum class ShareMusicInfo {
                     mContext.forEach {
                         if (!it.isFinishing) {
                             when (it) {
-                                is PlayActivity -> refreshPlayView(it.getMPlayView(), msg)
+                                is PlayActivity -> {
+                                    refreshPlayView(it.getMPlayView(), msg,it)
+                                }
                                 is YueTingActivity -> {
                                     refreshPlayView(it.getMPlayView(), msg)
                                     it.setMusicTitle(musicName)
@@ -245,7 +247,10 @@ enum class ShareMusicInfo {
         }
     }
 
-    fun changePlayState(state: Int = 0, mPlayView: ViewGroup, msg: Message = Message()) {
+    fun changePlayState(state: Int = 0,
+                        mPlayView: ViewGroup,
+                        msg: Message = Message(),
+                        context: PlayActivity?=null) {
         when (state) {
             0 -> {//PAUSE
                 (mPlayView.findViewById(R.id.playControlIv) as ImageView).setImageLevel(YueTingConstant.PLAY_STATUS_PAUSE)
@@ -267,6 +272,8 @@ enum class ShareMusicInfo {
                 setPosition(position)
                 setAudioSessionId(audioSessionId)
                 shareViewInit(mPlayView, position, duration)
+                context?.refresh()
+
             }
             4 -> {//FINISH
                 isStartService = false
@@ -280,14 +287,14 @@ enum class ShareMusicInfo {
         }
     }
 
-    private fun refreshPlayView(mPlayView: ViewGroup, msg: Message) {
+    private fun refreshPlayView(mPlayView: ViewGroup, msg: Message, context: PlayActivity? = null) {
 
         if (msg.what == YueTingConstant.CURRENT_DURATION) {
             (mPlayView.findViewById(R.id.rb_progress_play) as RoundBar).setProgress(msg.arg1.toFloat())
             duration = msg.arg1
         }
         if (msg.what == YueTingConstant.PLAY_STATE) {
-            changePlayState(msg.arg1, mPlayView, msg)
+            changePlayState(msg.arg1, mPlayView, msg,context)
         }
         if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
             mPlayView.findViewById<ImageView>(R.id.playTypeIv)?.let {
