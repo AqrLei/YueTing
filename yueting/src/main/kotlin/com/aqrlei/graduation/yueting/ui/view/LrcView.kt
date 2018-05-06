@@ -110,12 +110,13 @@ class LrcView @JvmOverloads constructor(
 
     fun setIndex(index: Int) {
         this.index = index
+        postInvalidate()
     }
 
     fun setLrcList(data: ArrayList<LrcInfo>) {
         lrcList.clear()
         lrcList.addAll(data)
-        invalidate()
+        postInvalidate()
     }
 
     private fun Paint.setLrcPaint() {

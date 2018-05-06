@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.audiofx.Visualizer
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -52,16 +51,10 @@ class PlayActivity :
         get() = R.layout.music_activity_play
     private val mBundle: Bundle
             by lazy { intent.getBundleExtra(YueTingConstant.SERVICE_PLAY_STATUS_B) }
-    private val lrcList: ArrayList<LrcInfo>
-            by lazy {
-                ArrayList<LrcInfo>().apply {
-                    val path = mMusicShareInfo.getInfo(mMusicShareInfo.getPosition()).albumUrl
-                    addAll(LrcInfoProcess.readLRC(path))
-                }
-            }
     private var mVisualizer: Visualizer? = null
     private lateinit var mPlayView: ViewGroup
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
+
     override fun onFftDataCapture(visualizer: Visualizer?, fft: ByteArray?, samplingRate: Int) {}
 
     override fun onWaveFormDataCapture(visualizer: Visualizer?, waveform: ByteArray?, samplingRate: Int) {
@@ -136,13 +129,16 @@ class PlayActivity :
 
     fun getMPlayView() = mPlayView
 
-    fun refreshLrcView(index: Int) {
+    fun refreshLrc(index: Int) {
         runOnUiThread {
             lrcLv.setIndex(index)
-            lrcLv.invalidate()
         }
     }
 
+    fun refresh() {
+        refreshVisualizer()
+        refreshLrcView()
+    }
 
     private fun init() {
         ll_play_control.visibility = View.VISIBLE
@@ -165,8 +161,9 @@ class PlayActivity :
         initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         initPopView()
         initListener()
-        initLrcView()
-        setVisualizer(mMusicShareInfo.getAudioSessionId())
+        lrcLv.animation = AnimationUtils.loadAnimation(this@PlayActivity, R.anim.lrc_show_alpha)
+        refreshLrcView()
+        refreshVisualizer(mMusicShareInfo.getAudioSessionId())
     }
 
     private fun initPopView() {
@@ -185,32 +182,35 @@ class PlayActivity :
         switchFl.setOnClickListener(this)
     }
 
-    private fun initLrcView() {
-        lrcLv?.apply {
-            setLrcList(lrcList)
-            animation = AnimationUtils.loadAnimation(this@PlayActivity, R.anim.lrc_show_alpha)
+    private fun refreshLrcView() {
+        val path = mMusicShareInfo.getInfo(mMusicShareInfo.getPosition()).albumUrl
+        val lrcList = ArrayList<LrcInfo>().apply {
+            addAll(LrcInfoProcess.readLRC(path))
         }
-
+        lrcLv?.setLrcList(lrcList)
     }
 
-    private fun setVisualizer(audioSessionId: Int) {
+    private fun refreshVisualizer(audioSessionId: Int = mMusicShareInfo.getAudioSessionId()) {
         mVisualizer = Visualizer(audioSessionId)
-        if (mVisualizer!!.enabled) {
-            mVisualizer?.enabled = false
+        mVisualizer?.let {
+            if (it.enabled) {
+                it.enabled = false
+            }
+            /**
+             * getCaptureSizeRange()
+             * [0] 128
+             * [1] 1024
+             * Size: 2
+             * */
+            it.captureSize = Visualizer.getCaptureSizeRange()[1]
+            /**
+             * getMaxCaptureRate()
+             * 20000
+             * */
+            mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
+            it.enabled = true
         }
-        /**
-         * getCaptureSizeRange()
-         * [0] 128
-         * [1] 1024
-         * Size: 2
-         * */
-        mVisualizer?.captureSize = Visualizer.getCaptureSizeRange()[1]
-        /**
-         * getMaxCaptureRate()
-         * 20000
-         * */
-        mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
-        mVisualizer?.enabled = true
+
     }
 
     private fun changePlayType(type: Int) {

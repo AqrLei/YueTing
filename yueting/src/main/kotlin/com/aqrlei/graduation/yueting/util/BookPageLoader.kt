@@ -1,4 +1,4 @@
-package com.aqrlei.graduation.yueting.factory
+package com.aqrlei.graduation.yueting.util
 
 import android.app.Activity
 import android.content.Context
@@ -6,12 +6,11 @@ import android.graphics.*
 import android.util.DisplayMetrics
 import com.aqrairsigns.aqrleilib.ui.view.BookPageView
 import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.constant.CacheConstant
-import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import java.io.File
 import java.io.RandomAccessFile
 import java.io.UnsupportedEncodingException
@@ -24,7 +23,7 @@ import java.nio.charset.Charset
  * Date : 2017/11/9.
  */
 
-enum class BookPageFactory {
+enum class BookPageLoader {
     BOOKPAGEFACTORY;
 
     private var screenHeight: Int = 0
@@ -389,18 +388,11 @@ enum class BookPageFactory {
     }
 
     private fun getIndexFromDB() {
-
-        val c = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.BOOK_TABLE_NAME,
-                "${DataConstant.BOOK_TABLE_C2_INDEX_BEGIN}, ${DataConstant.BOOK_TABLE_C3_INDEX_END}",
-                DataConstant.COMMON_COLUMN_PATH,
-                "="),
-                null, arrayOf(mBookInfo.path), DBManager.SqlType.SELECT)
-                .getCursor()
-        while (c?.moveToNext() == true) {
-            begin = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
-            end = c.getInt(c.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
-        }
-
+        val disposable = BookSingle.selectIndex(mBookInfo.path)
+                .subscribe({
+                    begin = it[0]
+                    end = it[1]
+                }, {})
+        DisposableHolder.addDisposable(disposable)
     }
-
 }

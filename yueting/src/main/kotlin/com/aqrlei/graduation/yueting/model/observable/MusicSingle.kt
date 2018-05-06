@@ -39,6 +39,7 @@ object MusicSingle {
                     val musicInfo = generateMusicInfo(path, id, createTime)
                     musicInfoList.add(musicInfo)
                 }
+                it.close()
             }
             Single.just(musicInfoList.toList())
         }.threadSwitch()
@@ -70,6 +71,7 @@ object MusicSingle {
                     val musicInfo = generateMusicInfo(path, id, createTime)
                     musicInfoList.add(musicInfo)
                 }
+                it.close()
             }
             Single.just(musicInfoList)
         }.threadSwitch()

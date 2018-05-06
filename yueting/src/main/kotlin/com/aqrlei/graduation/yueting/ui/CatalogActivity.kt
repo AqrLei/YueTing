@@ -16,7 +16,7 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
+import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
@@ -78,10 +78,10 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rb_catalog_title -> {
-                dataChange(ChapterFactory.CHAPTER.getChapters())
+                dataChange(ChapterLoader.CHAPTER.getChapters())
             }
             R.id.rb_bookMark_title -> {
-                dataChange(ChapterFactory.CHAPTER.getBookMarks())
+                dataChange(ChapterLoader.CHAPTER.getBookMarks())
             }
         }
     }
@@ -92,7 +92,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         /**
          * 退出目录,清除所有旧数据，避免与新数据混淆
          */
-        ChapterFactory.CHAPTER.clearAllDatas()
+        ChapterLoader.CHAPTER.clearAllDatas()
     }
 
     override fun initComponents(savedInstanceState: Bundle?) {
@@ -120,7 +120,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
 
     private fun initView() {
         val mView = findViewById<AlphaListView>(R.id.lv_catalog)
-        mDataInfoS.addAll(ChapterFactory.CHAPTER.getChapters())
+        mDataInfoS.addAll(ChapterLoader.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
                 R.layout.read_list_item_catelog)
         mView.adapter = mAdapter
@@ -132,8 +132,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         val dialog = Dialog(this, R.style.BottomDialog)
         dialog.setContentView(R.layout.read_pop_view_item)
         dialog.window.decorView.findViewById<View>(R.id.deleteItemTv).setOnClickListener({
-            ChapterFactory.CHAPTER.removeBookMark(markPosition)
-            dataChange(ChapterFactory.CHAPTER.getBookMarks())
+            ChapterLoader.CHAPTER.removeBookMark(markPosition)
+            dataChange(ChapterLoader.CHAPTER.getBookMarks())
             dialog.dismiss()
         })
         dialog.window.setGravity(Gravity.BOTTOM)

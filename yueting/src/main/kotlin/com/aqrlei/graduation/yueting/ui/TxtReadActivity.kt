@@ -20,8 +20,8 @@ import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
-import com.aqrlei.graduation.yueting.factory.BookPageFactory
-import com.aqrlei.graduation.yueting.factory.ChapterFactory
+import com.aqrlei.graduation.yueting.util.BookPageLoader
+import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.presenter.TxtReadPresenter
 import kotlinx.android.synthetic.main.read_include_bottom.*
@@ -54,7 +54,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
         get() = TxtReadPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_txt
-    private val pageFactory = BookPageFactory.BOOKPAGEFACTORY
+    private val pageFactory = BookPageLoader.BOOKPAGEFACTORY
     private lateinit var seekBar: SeekBar
     private lateinit var topRelativeLayout: ConstraintLayout
     private lateinit var bottomLinearLayout: LinearLayout
@@ -304,7 +304,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
 
     private fun setBookPageFactory(bookPageView: BookPageView) {
         bookInfo = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
-        ChapterFactory.init(bookInfo)
+        ChapterLoader.init(bookInfo)
         pageFactory.setBookInfo(bookPageView, bookInfo)
         pageFactory.nextPage()
         bookPageView.setOnPageTouchListener(this)

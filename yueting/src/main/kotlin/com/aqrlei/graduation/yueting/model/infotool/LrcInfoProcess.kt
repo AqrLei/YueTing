@@ -14,6 +14,7 @@ object LrcInfoProcess {
             by lazy { ArrayList<LrcInfo>() }
 
     fun readLRC(path: String): List<LrcInfo> {
+        lrcList.clear()
         val suffix = FileUtil.getFileSuffix(path)
         val f = File(path.replace(suffix, "lrc"))
         Log.d("lrc", path.replace(suffix, "lrc"))
