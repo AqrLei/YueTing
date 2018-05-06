@@ -42,6 +42,10 @@ object FileUtil {
         val name = File(data.path).name
         return name.substring(name.lastIndexOf(".") + 1, name.length).toLowerCase()
     }
+    fun getFileSuffix(filePath: String): String {
+        val name = File(filePath).name
+        return name.substring(name.lastIndexOf(".") + 1, name.length)
+    }
 
     fun deleteFolder(path: String) {
         val folder = File(path)

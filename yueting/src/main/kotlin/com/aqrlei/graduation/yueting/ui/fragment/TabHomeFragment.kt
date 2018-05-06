@@ -3,18 +3,20 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Messenger
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
+import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
@@ -75,8 +77,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
             }
     private val detailDialog: Dialog
-            by lazy {
-                createPopView(mContainerActivity, R.layout.common_item_detail).apply {
+           get() = createPopView(mContainerActivity, R.layout.common_item_detail).apply {
                     window.decorView?.apply {
                         (findViewById<TextView>(R.id.itemNameTitleTv)).text =
                                 if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
@@ -107,7 +108,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                                 }
                     }
                 }
-            }
+
     private val moveItemDialog: Dialog
             by lazy {
                 createListPopView(
@@ -250,7 +251,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
         super.initComponents(view, savedInstanceState)
         initListener()
         initView()
-
     }
 
     override fun onResume() {

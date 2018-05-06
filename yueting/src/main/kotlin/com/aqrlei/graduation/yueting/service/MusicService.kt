@@ -13,24 +13,29 @@ import android.media.MediaPlayer
 import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
-import android.util.Log
 import android.widget.RemoteViews
 import com.aqrairsigns.aqrleilib.basemvp.BaseService
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.AppLog
 import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrlei.graduation.yueting.IListenerManager
+import com.aqrlei.graduation.yueting.IOnLrcIndexListener
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
+import com.aqrlei.graduation.yueting.model.LrcInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
+import com.aqrlei.graduation.yueting.model.infotool.LrcInfoProcess
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.util.createNotificationChannel
 import io.reactivex.disposables.Disposable
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.ArrayList
+
 
 /**
  * @Author: AqrLei
@@ -41,7 +46,6 @@ class MusicService : BaseService(),
         MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
-
     companion object {
         private var mPlayer: MediaPlayer? = null
     }
@@ -82,6 +86,52 @@ class MusicService : BaseService(),
             }
         }
     }
+    private var lrcListener: IOnLrcIndexListener? = null
+    private val lrcListenerBinder = object : IListenerManager.Stub() {
+        override fun registerListener(listener: IOnLrcIndexListener?) {
+            lrcListener = listener
+        }
+    }
+    private var serviceAlive = AtomicBoolean(true)
+    private val lrcList: ArrayList<LrcInfo>
+            by lazy {
+                ArrayList<LrcInfo>().apply {
+                    addAll(LrcInfoProcess.readLRC(musicInfoS[cPosition].albumUrl))
+                }
+            }
+    private val runnable: Runnable
+            by lazy {
+                Runnable {
+                    while (serviceAlive.get()) {
+                        try {
+                            Thread.sleep(100L)
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+                        var index = 0
+                        for (i in 0 until lrcList.size) {
+                            if (i < lrcList.size - 1) {
+                                if (cDuration < lrcList[i].lrcTime && i == 0) {
+                                    index = i
+                                }
+                                if (cDuration > lrcList[i].lrcTime && cDuration < lrcList[i + 1].lrcTime) {
+                                    index = i
+                                }
+                            }
+                            if (i == lrcList.size - 1 && cDuration > lrcList[i].lrcTime) {
+                                index = i
+                            }
+                        }
+                        try {
+                            if (lrcList.isNotEmpty()) {
+                                lrcListener?.onLrcIndexListener(index)
+                            }
+                        } catch (e: RemoteException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
 
     override fun onPrepared(mp: MediaPlayer?) {
         refreshNotification()
@@ -160,9 +210,10 @@ class MusicService : BaseService(),
     }
 
     override fun onBind(p0: Intent?): IBinder? {
-        Log.d("test","service bind")
-        return super.onBind(p0)
+        super.onBind(p0)
+        return lrcListenerBinder
     }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         sendMessenger = intent.extras.get(YueTingConstant.SERVICE_MUSIC_MESSENGER) as Messenger
@@ -175,6 +226,8 @@ class MusicService : BaseService(),
 
     override fun onDestroy() {
         sendPlayState(PlayState.FINISH)
+        serviceAlive.set(false)
+        lrcListener = null
         if (mPlayer != null) {
             mPlayer?.release()
             mPlayer = null
@@ -316,6 +369,7 @@ class MusicService : BaseService(),
     }
 
     private fun play() {
+        Thread(runnable).start()
         isSame = (cPosition == pPosition)
         if (mPlayer != null && musicInfoS.size > 0) {
             if (isSame) {

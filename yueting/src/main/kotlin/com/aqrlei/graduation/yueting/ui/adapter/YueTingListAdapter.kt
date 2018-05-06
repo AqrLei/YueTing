@@ -8,7 +8,7 @@ import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.facebook.drawee.view.SimpleDraweeView

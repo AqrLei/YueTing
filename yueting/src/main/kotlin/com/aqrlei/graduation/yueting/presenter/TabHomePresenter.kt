@@ -1,5 +1,6 @@
 package com.aqrlei.graduation.yueting.presenter
 
+import android.app.Service
 import android.content.Context
 import android.os.Messenger
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
@@ -94,6 +95,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
             putExtra(YueTingConstant.SERVICE_MUSIC_MESSENGER, messenger)
         }
         context.startService(musicIntent)
+        context.bindService(musicIntent,ShareMusicInfo.MusicInfoTool.conn,Service.BIND_AUTO_CREATE)
     }
 
     fun generateListSelectInfo(type: String): ArrayList<SelectInfo> {

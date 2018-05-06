@@ -1,26 +1,23 @@
 package com.aqrlei.graduation.yueting.ui
 
-import android.app.Service
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.media.audiofx.Visualizer
 import android.os.Bundle
-import android.os.Handler
-import android.os.IBinder
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ImageView
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
+import com.aqrlei.graduation.yueting.model.LrcInfo
+import com.aqrlei.graduation.yueting.model.infotool.LrcInfoProcess
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.PlayPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
@@ -55,6 +52,13 @@ class PlayActivity :
         get() = R.layout.music_activity_play
     private val mBundle: Bundle
             by lazy { intent.getBundleExtra(YueTingConstant.SERVICE_PLAY_STATUS_B) }
+    private val lrcList: ArrayList<LrcInfo>
+            by lazy {
+                ArrayList<LrcInfo>().apply {
+                    val path = mMusicShareInfo.getInfo(mMusicShareInfo.getPosition()).albumUrl
+                    addAll(LrcInfoProcess.readLRC(path))
+                }
+            }
     private var mVisualizer: Visualizer? = null
     private lateinit var mPlayView: ViewGroup
     private val mMusicShareInfo = ShareMusicInfo.MusicInfoTool
@@ -102,6 +106,15 @@ class PlayActivity :
                             View.GONE
                         }
             }
+            R.id.switchFl -> {
+                lrcLv.visibility = if (lrcLv.visibility == View.VISIBLE) {
+                    vv_play.visibility = View.VISIBLE
+                    View.GONE
+                } else {
+                    vv_play.visibility = View.GONE
+                    View.VISIBLE
+                }
+            }
         }
     }
 
@@ -123,25 +136,13 @@ class PlayActivity :
 
     fun getMPlayView() = mPlayView
 
-    private fun setVisualizer(audioSessionId: Int) {
-        mVisualizer = Visualizer(audioSessionId)
-        if (mVisualizer!!.enabled) {
-            mVisualizer?.enabled = false
+    fun refreshLrcView(index: Int) {
+        runOnUiThread {
+            lrcLv.setIndex(index)
+            lrcLv.invalidate()
         }
-        /**
-         * getCaptureSizeRange()
-         * [0] 128
-         * [1] 1024
-         * Size: 2
-         * */
-        mVisualizer?.captureSize = Visualizer.getCaptureSizeRange()[1]
-        /**
-         * getMaxCaptureRate()
-         * 20000
-         * */
-        mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
-        mVisualizer?.enabled = true
     }
+
 
     private fun init() {
         ll_play_control.visibility = View.VISIBLE
@@ -164,6 +165,7 @@ class PlayActivity :
         initPlayView(mPlayView, mMusicShareInfo.getPosition(), mMusicShareInfo.getDuration())
         initPopView()
         initListener()
+        initLrcView()
         setVisualizer(mMusicShareInfo.getAudioSessionId())
     }
 
@@ -180,6 +182,35 @@ class PlayActivity :
         previousIv.setOnClickListener(this)
         playTypeIv.setOnClickListener(this)
         expandListIv.setOnClickListener(this)
+        switchFl.setOnClickListener(this)
+    }
+
+    private fun initLrcView() {
+        lrcLv?.apply {
+            setLrcList(lrcList)
+            animation = AnimationUtils.loadAnimation(this@PlayActivity, R.anim.lrc_show_alpha)
+        }
+
+    }
+
+    private fun setVisualizer(audioSessionId: Int) {
+        mVisualizer = Visualizer(audioSessionId)
+        if (mVisualizer!!.enabled) {
+            mVisualizer?.enabled = false
+        }
+        /**
+         * getCaptureSizeRange()
+         * [0] 128
+         * [1] 1024
+         * Size: 2
+         * */
+        mVisualizer?.captureSize = Visualizer.getCaptureSizeRange()[1]
+        /**
+         * getMaxCaptureRate()
+         * 20000
+         * */
+        mVisualizer?.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true)
+        mVisualizer?.enabled = true
     }
 
     private fun changePlayType(type: Int) {

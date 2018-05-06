@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.TextView
+import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrlei.graduation.yueting.R

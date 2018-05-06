@@ -1,5 +1,6 @@
 package com.aqrairsigns.aqrleilib.ui.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -23,7 +24,8 @@ import com.aqrairsigns.aqrleilib.R
 * @param defStyleRes 默认资源ID
 * @description: 画一个圆形或半圆的简单进度条
 * */
-
+@SuppressLint("NewApi")
+@Suppress("unused")
 class RoundBar @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -163,10 +165,7 @@ class RoundBar @JvmOverloads constructor(
         mChangeListener = changeListener
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         val width = measuredWidth

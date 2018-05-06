@@ -105,6 +105,7 @@ class YueTingApplication : BaseApplication() {
     override fun onTerminate() {
         if (isSameProcess) {
             DBManager.closeDB()
+            unbindService(ShareMusicInfo.MusicInfoTool.conn)
             ShareMusicInfo.MusicInfoTool.clear()
             ShareMusicInfo.MusicInfoTool.clearMusicInfo()
             ShareBookInfo.BookInfoTool.clearBookInfo()

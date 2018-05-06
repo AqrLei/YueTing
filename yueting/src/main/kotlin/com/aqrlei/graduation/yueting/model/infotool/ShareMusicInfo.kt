@@ -1,10 +1,14 @@
 package com.aqrlei.graduation.yueting.model.infotool
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Handler
+import android.os.IBinder
 import android.os.Message
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,12 +17,14 @@ import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
 import com.aqrairsigns.aqrleilib.ui.view.RoundBar
 import com.aqrairsigns.aqrleilib.util.ActivityCollector
 import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrlei.graduation.yueting.IListenerManager
+import com.aqrlei.graduation.yueting.IOnLrcIndexListener
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.aidl.MusicInfo
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.PlayState
 import com.aqrlei.graduation.yueting.enumtype.SendType
+import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.ui.PlayActivity
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
@@ -40,6 +46,31 @@ enum class ShareMusicInfo {
         private var mContext = ArrayList<BaseActivity>()
     }
 
+    private var listenerManager: IListenerManager? = null
+    val lrcListener: IOnLrcIndexListener
+            by lazy {
+                object : IOnLrcIndexListener.Stub() {
+                    override fun onLrcIndexListener(index: Int) {
+                        mContext.forEach {
+                                    if(it is PlayActivity&&!it.isFinishing){
+                                        it.refreshLrcView(index)
+                                    }
+                                }
+                    }
+                }
+            }
+    val conn: ServiceConnection
+            by lazy {
+                object : ServiceConnection {
+                    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                        listenerManager = IListenerManager.Stub.asInterface(service)
+                        listenerManager?.registerListener(lrcListener)
+                    }
+                    override fun onServiceDisconnected(name: ComponentName?) {
+                        listenerManager = null
+                    }
+                }
+            }
     private var duration: Int = 0
     private var position: Int = 0
     private var audioSessionId: Int = 0

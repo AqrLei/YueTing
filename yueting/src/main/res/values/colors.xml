@@ -21,4 +21,5 @@
     <color name="colorDividerLine">#33666666</color>
     <color name="colorTitle">#333333</color>
     <color name="colorItem">#EE999999</color>
+    <color name="colorLrcGreen">#ee25ed57</color>
 </resources>
