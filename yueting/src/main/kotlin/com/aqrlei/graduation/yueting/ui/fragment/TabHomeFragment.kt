@@ -324,7 +324,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             if (mMusicInfoShared.isStartService()) {
                 mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.VISIBLE
             }
-            if (mBookInfoShared.oldTypeName != typeName)
                 getBookInfo()
         }
 
