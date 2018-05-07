@@ -53,8 +53,4 @@ class MusicProvider : ContentProvider() {
     override fun getType(uri: Uri?): String? {
         return null
     }
-
-    private fun getTableName(uri: Uri): String {
-        return DataConstant.MUSIC_TABLE_NAME
-    }
 }

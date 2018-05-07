@@ -267,7 +267,7 @@ enum class ShareMusicInfo {
                 val position = msg.arg2
                 val audioSessionId = msg.data[YueTingConstant.SERVICE_PLAY_AUDIO_SESSION] as Int
                 mPlayView.findViewById<ImageView>(R.id.playTypeIv)?.let {
-                    (it as ImageView).setImageLevel(getPlayType())
+                    it.setImageLevel(getPlayType())
                 }
                 setPosition(position)
                 setAudioSessionId(audioSessionId)
@@ -298,7 +298,7 @@ enum class ShareMusicInfo {
         }
         if (msg.what == YueTingConstant.PLAY_TYPE) {//PlayActivity privately-owned
             mPlayView.findViewById<ImageView>(R.id.playTypeIv)?.let {
-                changePlayType(msg.arg1, it as ImageView)
+                changePlayType(msg.arg1, it)
             }
         }
     }

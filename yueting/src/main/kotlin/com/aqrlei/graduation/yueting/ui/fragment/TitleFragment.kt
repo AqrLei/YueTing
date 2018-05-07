@@ -49,20 +49,20 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                 createPopView(mContainerActivity, R.layout.manage_pop_view_list).apply {
                     window.decorView?.apply {
                         findViewById<TextView>(R.id.newListTv)?.also {
-                            (it as TextView).text =
+                            it.text =
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "新建歌单"
                                     else "新建书单"
                             it.setOnClickListener(this@TitleFragment)
                         }
                         findViewById<TextView>(R.id.manageListsTv)
                                 ?.also {
-                                    (it as TextView).text =
+                                    it.text =
                                             if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "管理歌单"
                                             else "管理书单"
                                     it.setOnClickListener(this@TitleFragment)
                                 }
                         findViewById<TextView>(R.id.addItems)?.also {
-                            (it as TextView).text =
+                            it.text =
                                     if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC) "添加歌曲"
                                     else "添加书籍"
                             it.setOnClickListener(this@TitleFragment)

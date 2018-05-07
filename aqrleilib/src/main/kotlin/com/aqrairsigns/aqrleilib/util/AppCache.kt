@@ -58,7 +58,7 @@ enum class AppCache {
         return this
     }
 
-    fun removeAll(key: String): AppCache {
+    fun removeAll(): AppCache {
         mEditor.clear()
         return this
     }

@@ -97,18 +97,6 @@ object ChapterSingle {
                         val chapterInfo = ChapterInfo()
                         chapterInfo.chapterName = strLine
                         chapterInfo.bPosition = position - bookByteArray.size
-                        DBManager.sqlData(
-                                DBManager.SqlFormat.insertSqlFormat(
-                                        DataConstant.CATALOG_TABLE_NAME,
-                                        arrayOf(
-                                                DataConstant.COMMON_COLUMN_PATH,
-                                                DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
-                                                DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION)),
-                                arrayOf(chapterBuffer.path, chapterInfo.chapterName, chapterInfo.bPosition),
-                                null,
-                                DBManager.SqlType.INSERT
-                        )
-                        isDone = DBManager.finish()
                         chapterList.add(chapterInfo)
                     }
                 } catch (e: Exception) {
@@ -116,6 +104,19 @@ object ChapterSingle {
                     e.printStackTrace()
                 }
             }
+            chapterList.forEach {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.insertSqlFormat(
+                                DataConstant.CATALOG_TABLE_NAME,
+                                arrayOf(
+                                        DataConstant.COMMON_COLUMN_PATH,
+                                        DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
+                                        DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION)),
+                        arrayOf(chapterBuffer.path, it.chapterName, it.bPosition),
+                        null,
+                        DBManager.SqlType.INSERT)
+            }
+            isDone = isDone && DBManager.finish()
             Single.just(isDone)
         }.threadSwitch()
     }

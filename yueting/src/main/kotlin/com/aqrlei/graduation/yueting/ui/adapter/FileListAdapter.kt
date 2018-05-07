@@ -22,15 +22,15 @@ class FileListAdapter(
         listener: OnInternalClick) :
         CommonListAdapter<FileSelectInfo>(mData, mContext, mResId, listener) {
     private var dirCallBack: DirCallBack? = null
-    override fun bindData(holderList: CommonListViewHolder, data: FileSelectInfo) {
+    override fun bindData(holderList: CommonListViewHolder,t: FileSelectInfo) {
         val mNameTv = holderList.get(R.id.fileNameTv) as TextView
         holderList.get(R.id.selectItemIv).visibility = View.GONE
-        mNameTv.text = data.fileInfo.name
-        if (!data.fileInfo.isDir) {
+        mNameTv.text = t.fileInfo.name
+        if (!t.fileInfo.isDir) {
             dirCallBack?.dirCallBack()
             holderList.get(R.id.selectItemIv).visibility = View.VISIBLE
-            (holderList.get(R.id.selectItemIv) as ImageView).background.level = data.status
-            val suffix = FileUtil.getFileSuffix(data.fileInfo)
+            (holderList.get(R.id.selectItemIv) as ImageView).background.level = t.status
+            val suffix = FileUtil.getFileSuffix(t.fileInfo)
             val flag = suffix == YueTingConstant.PLAY_SUFFIX_MP3
                     || suffix == YueTingConstant.PLAY_SUFFIX_APE
                     || suffix == YueTingConstant.PLAY_SUFFIX_FLAC
