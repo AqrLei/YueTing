@@ -1,7 +1,6 @@
 package com.aqrlei.graduation.yueting.util
 
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.view.Gravity

@@ -5,7 +5,6 @@ import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.util.BookPageLoader
-import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
 import java.nio.charset.Charset
@@ -16,34 +15,26 @@ import java.util.regex.Pattern
  */
 object ChapterSingle {
 
-    fun selectChapters(): Single<Boolean> {
-        return Single.defer {
-            ChapterLoader.CHAPTER.getBookMark()
-            Single.just(ChapterLoader.CHAPTER.getChapter())
-        }.threadSwitch()
-    }
-
     /**
      * in ChapterLoader getChapterFromDB
      */
-    fun selectChapter(chapterBuffer: ChapterInfo, chapterList: ArrayList<ChapterInfo>): Single<Boolean> {
+    fun selectChapter(path: String, chapterList: ArrayList<ChapterInfo>): Single<Boolean> {
         return Single.defer {
-            val isDone = DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.CATALOG_TABLE_NAME,
+            chapterList.clear()
+            DBManager.sqlData(DBManager.SqlFormat.selectSqlFormat(DataConstant.CATALOG_TABLE_NAME,
                     "", DataConstant.COMMON_COLUMN_PATH, "="),
-                    null, arrayOf(chapterBuffer.path), DBManager.SqlType.SELECT)
+                    null, arrayOf(path), DBManager.SqlType.SELECT)
                     .getCursor()?.let {
-                        var temp = false
                         while (it.moveToNext()) {
-                            temp = true
                             val chapterTemp = ChapterInfo()
                             chapterTemp.chapterName = it.getString(it.getColumnIndex(DataConstant.CATALOG_TABLE_C1_CATALOG_NAME))
                             chapterTemp.bPosition = it.getInt(it.getColumnIndex(DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION))
                             chapterList.add(chapterTemp)
                         }
                         it.close()
-                        temp
-                    } ?: false
-            Single.just(isDone)
+                    }
+
+            Single.just(chapterList.isNotEmpty())
         }.threadSwitch()
     }
 
@@ -83,40 +74,22 @@ object ChapterSingle {
     /**
      * getChapterFromBook and addDataToDB
      */
-    fun insertChapter(chapterBuffer: ChapterInfo, chapterList: ArrayList<ChapterInfo>): Single<Boolean> {
+
+    fun insertChapter(path: String, chapterList: ArrayList<ChapterInfo>): Single<Boolean> {
         return Single.defer {
-            var position = 0
-            var isDone = true
-            while (position < chapterBuffer.fileLength) {
-                val bookByteArray = BookPageLoader.BOOKPAGEFACTORY.getBookByteArray(position)
-                position += bookByteArray.size
-                try {
-                    val strLine = String(bookByteArray, Charset.forName(chapterBuffer.encoding))
-                    val p = Pattern.compile(YueTingConstant.CHAPTER_KEY_WORD)
-                    if (p.matcher(strLine).find()) {
-                        val chapterInfo = ChapterInfo()
-                        chapterInfo.chapterName = strLine
-                        chapterInfo.bPosition = position - bookByteArray.size
-                        DBManager.sqlData(
-                                DBManager.SqlFormat.insertSqlFormat(
-                                        DataConstant.CATALOG_TABLE_NAME,
-                                        arrayOf(
-                                                DataConstant.COMMON_COLUMN_PATH,
-                                                DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
-                                                DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION)),
-                                arrayOf(chapterBuffer.path, chapterInfo.chapterName, chapterInfo.bPosition),
-                                null,
-                                DBManager.SqlType.INSERT
-                        )
-                        isDone = DBManager.finish()
-                        chapterList.add(chapterInfo)
-                    }
-                } catch (e: Exception) {
-                    isDone = false
-                    e.printStackTrace()
-                }
+            chapterList.forEach {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.insertSqlFormat(
+                                DataConstant.CATALOG_TABLE_NAME,
+                                arrayOf(
+                                        DataConstant.COMMON_COLUMN_PATH,
+                                        DataConstant.CATALOG_TABLE_C1_CATALOG_NAME,
+                                        DataConstant.CATALOG_TABLE_C2_CATALOG_POSITION)),
+                        arrayOf(path, it.chapterName, it.bPosition),
+                        null,
+                        DBManager.SqlType.INSERT)
             }
-            Single.just(isDone)
+            Single.just(DBManager.finish())
         }.threadSwitch()
     }
 
@@ -133,4 +106,61 @@ object ChapterSingle {
             Single.just(DBManager.finish())
         }.threadSwitch()
     }
+
+    fun deleteMark(pathList: List<String>): Single<Boolean> {
+        return Single.defer {
+            pathList.forEach {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.deleteSqlFormat(
+                                DataConstant.MARK_TABLE_NAME,
+                                DataConstant.COMMON_COLUMN_PATH,
+                                "="),
+                        null,
+                        arrayOf(it),
+                        DBManager.SqlType.DELETE)
+            }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
+    }
+
+    fun deleteChapters(pathList: List<String>): Single<Boolean> {
+        return Single.defer {
+            pathList.forEach {
+                DBManager.sqlData(
+                        DBManager.SqlFormat.deleteSqlFormat(
+                                DataConstant.CATALOG_TABLE_NAME,
+                                DataConstant.COMMON_COLUMN_PATH,
+                                "="),
+                        null,
+                        arrayOf(it),
+                        DBManager.SqlType.DELETE)
+            }
+            Single.just(DBManager.finish())
+        }.threadSwitch()
+    }
+
+    fun generateChapter(fileLength: Int, encoding: String): Single<ArrayList<ChapterInfo>> {
+        return Single.defer {
+            val chapterList = ArrayList<ChapterInfo>()
+            var position = 0
+            while (position < fileLength) {
+                val bookByteArray = BookPageLoader.BOOKPAGEFACTORY.getBookByteArray(position)
+                position += bookByteArray.size
+                try {
+                    val strLine = String(bookByteArray, Charset.forName(encoding))
+                    val p = Pattern.compile(YueTingConstant.CHAPTER_KEY_WORD)
+                    if (p.matcher(strLine).find()) {
+                        val chapterInfo = ChapterInfo()
+                        chapterInfo.chapterName = strLine
+                        chapterInfo.bPosition = position - bookByteArray.size
+                        chapterList.add(chapterInfo)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            Single.just(chapterList)
+        }.threadSwitch()
+    }
+
 }

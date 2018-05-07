@@ -173,14 +173,13 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
 
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        bookPageView = findViewById<BookPageView>(R.id.bpv_read)
-        seekBar = findViewById<SeekBar>(R.id.sb_rate)
-        topRelativeLayout = findViewById<ConstraintLayout>(R.id.rl_top_read)
-        bottomLinearLayout = findViewById<LinearLayout>(R.id.ll_bottom_read)
-        lLSeekBar = findViewById<LinearLayout>(R.id.ll_bottom_read_seekBar)
-        lLSetting = findViewById<LinearLayout>(R.id.ll_bottom_read_setting)
+        bookPageView = findViewById(R.id.bpv_read)
+        seekBar = findViewById(R.id.sb_rate)
+        topRelativeLayout = findViewById(R.id.rl_top_read)
+        bottomLinearLayout = findViewById(R.id.ll_bottom_read)
+        lLSeekBar = findViewById(R.id.ll_bottom_read_seekBar)
+        lLSetting = findViewById(R.id.ll_bottom_read_setting)
         initListener()
-        generateCatalog()
         try {
             sb_light_degree.progress =
                     Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
@@ -237,10 +236,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
                 pageFactory.changeFontSize(YueTingConstant.READ_BIG_FONT)
             }
         }
-    }
-
-    private fun generateCatalog() {
-        mPresenter.getChapter()
     }
 
     private fun initListener() {

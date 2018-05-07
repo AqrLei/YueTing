@@ -17,17 +17,17 @@ class YueTingCatalogListAdapter(
         mContext: Context,
         mResId: Int)
     : CommonListAdapter<ChapterInfo>(mData, mContext, mResId) {
-    override fun bindData(holderList: CommonListViewHolder, data: ChapterInfo) {
+    override fun bindData(holderList: CommonListViewHolder, t: ChapterInfo) {
         val catalogView = holderList.get(R.id.tv_catalog_name) as TextView
-        if (data.flag) {
+        if (t.flag) {
             catalogView.setLines(1)
             catalogView.ellipsize = TextUtils.TruncateAt.END
             catalogView.textSize = 12F
-            catalogView.text = data.chapterName
+            catalogView.text = t.chapterName
         } else {
             catalogView.ellipsize = TextUtils.TruncateAt.END
             catalogView.textSize = 12f
-            catalogView.text = data.chapterName
+            catalogView.text = t.chapterName
         }
     }
 

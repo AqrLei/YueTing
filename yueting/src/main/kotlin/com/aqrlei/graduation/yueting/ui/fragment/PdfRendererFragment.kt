@@ -183,7 +183,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
             getCache()
             spPdfReadMode.setSelection(if (pdfReadMode) 1 else 0)
             getIndexFromDB()
-            loadPdfFile(mPageIndex, pdfReadMode)
         } catch (e: IOException) {
             e.printStackTrace()
             Toast.makeText(activity, "Error! " + e.message, Toast.LENGTH_SHORT).show()
@@ -213,6 +212,11 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
         } else {
             false
         }
+    }
+
+    fun loadBook(page:Int){
+        mPageIndex = page
+        loadPdfFile(mPageIndex,pdfReadMode)
     }
 
     fun setCurrentIndex(index: Int) {
@@ -313,6 +317,6 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     }
 
     private fun getIndexFromDB() {
-        mPageIndex = mPresenter.getIndexFromDB(bookInfo.path)
+         mPresenter.getIndexFromDB(bookInfo.path)
     }
 }

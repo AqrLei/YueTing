@@ -11,15 +11,16 @@ import android.widget.AdapterView
 import android.widget.RadioGroup
 import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+import com.aqrairsigns.aqrleilib.util.AppToast
 import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
-import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
+import com.aqrlei.graduation.yueting.util.ChapterLoader
 import com.aqrlei.graduation.yueting.util.createPopView
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
@@ -105,11 +106,13 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
 
     fun loadCatalogDone(t: Boolean) {
         progressDialog.dismiss()
+        AppToast.toastShow(this, "目录加载${if (t) "成功" else "失败"}")
         initView()
     }
 
     private fun getData() {
-        mPresenter.getChapter()
+        ChapterLoader.CHAPTER.getBookMark()
+        ChapterLoader.CHAPTER.getChapter(this)
     }
 
     private fun dataChange(data: ArrayList<ChapterInfo>) {
