@@ -71,6 +71,30 @@ object BookSingle {
         }.threadSwitch()
     }
 
+    fun selectBookPath(typeNameList: List<SelectInfo>): Single<List<String>> {
+        return Single.defer {
+            val temp = ArrayList<String>()
+            typeNameList.filter { it.status == SelectInfo.SELECTED }
+                    .forEach {
+                        DBManager.sqlData(
+                                DBManager.SqlFormat.selectSqlFormat(
+                                        DataConstant.BOOK_TABLE_NAME,
+                                        "",
+                                        DataConstant.BOOK_TABLE_C4_TYPE_NAME,
+                                        "="),
+                                null, arrayOf(it.name), DBManager.SqlType.SELECT)
+                                .getCursor()?.let {
+                                    while (it.moveToNext()) {
+                                        val path = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_PATH))
+                                        temp.add(path)
+                                    }
+                                    it.close()
+                                }
+                    }
+            Single.just(temp.toList())
+        }
+    }
+
     fun insertMark(path: String, currentBegin: Int): Single<Boolean> {
         return Single.defer {
             val dateTime = DateFormatUtil.simpleDateFormat(System.currentTimeMillis())
@@ -140,8 +164,9 @@ object BookSingle {
         }.threadSwitch()
     }
 
-    fun deleteBookInfo(pathList: List<SelectInfo>): Single<Boolean> {
+    fun deleteBookInfo(pathList: List<SelectInfo>): Single<List<String>> {
         return Single.defer {
+            val temp = ArrayList<String>()
             pathList.filter { it.status == SelectInfo.SELECTED }
                     .forEach {
                         DBManager.sqlData(
@@ -152,8 +177,11 @@ object BookSingle {
                                 null,
                                 arrayOf(it.name),
                                 DBManager.SqlType.DELETE)
+                        if (DBManager.finish()) {
+                            temp.add(it.name)
+                        }
                     }
-            Single.just(DBManager.finish())
+            Single.just(temp.toList())
         }.threadSwitch()
     }
 

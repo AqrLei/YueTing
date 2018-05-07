@@ -4,6 +4,7 @@ import com.aqrairsigns.aqrleilib.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
+import com.aqrlei.graduation.yueting.model.observable.ChapterSingle
 import com.aqrlei.graduation.yueting.model.observable.MusicSingle
 import com.aqrlei.graduation.yueting.model.observable.TypeSingle
 import com.aqrlei.graduation.yueting.ui.ManageListActivity
@@ -37,7 +38,7 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
                             if (t) {
                                 MusicSingle.deleteMusicInfoByList(typeNameList)
                             } else {
-                                throw Exception()
+                                Single.just(t)
                             }
                         }
                         .subscribe({
@@ -46,15 +47,36 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
                             } else {
                                 mMvpActivity.deleteFinished("歌单删除失败", it)
                             }
-                        }, {
-
-                        })
+                        }, {})
         addDisposables(disposable)
     }
 
     private fun deleteBookList(typeNameList: List<SelectInfo>) {
+        val pathTemp = ArrayList<String>()
         val disposable =
                 TypeSingle.deleteType(typeNameList)
+                        .flatMap {
+                            if(it){
+                                BookSingle.selectBookPath(typeNameList)
+                            }else{
+                                Single.just(emptyList())
+                            }
+                        }
+                        .flatMap {
+                            if (it.isNotEmpty()) {
+                                pathTemp.addAll(it)
+                                ChapterSingle.deleteMark(it)
+                            } else {
+                                Single.just(false)
+                            }
+                        }
+                        .flatMap {
+                            if (it) {
+                                ChapterSingle.deleteChapters(pathTemp)
+                            } else {
+                                Single.just(it)
+                            }
+                        }
                         .flatMap {
                             if (it) {
                                 BookSingle.deleteBookInfoByList(typeNameList)
@@ -85,14 +107,30 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
     }
 
     private fun deleteBook(bookList: List<SelectInfo>) {
+        val pathTemp = ArrayList<String>()
         val disposable =
-                BookSingle.deleteBookInfo(bookList).subscribe({
-                    if (it) {
-                        mMvpActivity.deleteFinished("书籍删除成功", it)
-                    } else {
-                        mMvpActivity.deleteFinished("书籍删除失败", it)
-                    }
-                }, {})
+                BookSingle.deleteBookInfo(bookList)
+                        .flatMap {
+                            if (it.isNotEmpty()) {
+                                pathTemp.addAll(it)
+                                ChapterSingle.deleteMark(it)
+                            } else {
+                                Single.just(false)
+                            }
+                        }
+                        .flatMap {
+                            if (it) {
+                                ChapterSingle.deleteChapters(pathTemp)
+                            } else {
+                                Single.just(it)
+                            }
+                        }.subscribe({
+                            if (it) {
+                                mMvpActivity.deleteFinished("书籍删除成功", it)
+                            } else {
+                                mMvpActivity.deleteFinished("书籍删除失败", it)
+                            }
+                        }, {})
         addDisposables(disposable)
     }
 }

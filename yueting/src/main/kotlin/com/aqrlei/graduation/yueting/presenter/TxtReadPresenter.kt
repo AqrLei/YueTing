@@ -29,11 +29,4 @@ class TxtReadPresenter(mMvpActivity: TxtReadActivity) :
                         }, {})
         addDisposables(disposables)
     }
-
-    fun getChapter() {
-        val disposables =
-                ChapterSingle.selectChapters()
-                        .subscribe()
-        addDisposables(disposables)
-    }
 }

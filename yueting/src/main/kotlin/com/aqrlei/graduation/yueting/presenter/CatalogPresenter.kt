@@ -11,13 +11,5 @@ import com.aqrlei.graduation.yueting.ui.CatalogActivity
  */
 class CatalogPresenter(mMvpActivity: CatalogActivity) :
         MvpContract.ActivityPresenter<CatalogActivity>(mMvpActivity) {
-    fun getChapter() {
-        val disposables =
-                ChapterSingle.selectChapters()
-                        .subscribe({
-                            mMvpActivity.loadCatalogDone(it)
-                        }, {})
-        addDisposables(disposables)
-    }
 
 }

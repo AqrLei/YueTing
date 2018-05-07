@@ -111,7 +111,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     }
 
     private fun getData() {
-        mPresenter.getChapter()
+        ChapterLoader.CHAPTER.getBookMark()
+        ChapterLoader.CHAPTER.getChapter(this)
     }
 
     private fun dataChange(data: ArrayList<ChapterInfo>) {
