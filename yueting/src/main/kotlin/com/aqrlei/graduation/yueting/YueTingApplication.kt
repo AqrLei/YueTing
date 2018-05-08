@@ -12,7 +12,6 @@ import com.aqrlei.graduation.yueting.service.MusicService
 import com.aqrlei.graduation.yueting.util.AppCache
 import com.aqrlei.graduation.yueting.util.DBManager
 import com.aqrlei.graduation.yueting.util.DisposableHolder
-import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @Author: AqrLei
@@ -98,7 +97,6 @@ class YueTingApplication : BaseApplication() {
                             )
                     )
                     .createDB()
-            Fresco.initialize(this)
         }
 
     }

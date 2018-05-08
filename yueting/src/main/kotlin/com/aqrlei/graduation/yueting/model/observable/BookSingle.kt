@@ -30,6 +30,7 @@ object BookSingle {
                             temp[0] = begin
                             temp[1] = end
                         }
+                        it.close()
                     }
 
             Single.just(temp)

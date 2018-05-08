@@ -1,6 +1,7 @@
 package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
+import android.widget.ImageView
 import android.widget.TextView
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.adapter.CommonListAdapter
@@ -10,7 +11,6 @@ import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.util.ImageUtil
-import com.facebook.drawee.view.SimpleDraweeView
 import java.text.DecimalFormat
 
 /**
@@ -43,7 +43,7 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
                 (holderList.get(R.id.tv_play_time) as TextView).text =
                         DateFormatUtil.simpleTimeFormat(t.duration.toLong())
 
-                (holderList.get(R.id.sdv_music_picture) as SimpleDraweeView).background =
+                (holderList.get(R.id.sdv_music_picture) as ImageView).background =
                         ImageUtil.byteArrayToDrawable(t.picture)
                         ?: mContext.getDrawable(R.drawable.music_selector_note)
             }
