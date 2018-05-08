@@ -146,7 +146,6 @@ object DBManager {
             mDeleteTableInfoList = ArrayList()
         }
 
-
         fun remove(name: String): Boolean {
             if (!mTableInfoList.isEmpty()) {
                 if (mTableInfoList.remove(DataTableInfo(name))) {
