@@ -216,6 +216,8 @@ enum class BookPageLoader {
             mappedFile = randomFile!!.channel.map(FileChannel.MapMode.READ_ONLY, 0, fileLength.toLong())
         } catch (e: Exception) {
             e.printStackTrace()
+        }finally {
+            randomFile?.close()
         }
     }
 

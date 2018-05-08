@@ -1,11 +1,11 @@
 package com.aqrlei.graduation.yueting.model.observable
 
-import com.aqrlei.graduation.yueting.util.DBManager
-import com.aqrlei.graduation.yueting.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
+import com.aqrlei.graduation.yueting.util.DBManager
+import com.aqrlei.graduation.yueting.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.util.generateBookInfo
 import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
@@ -36,7 +36,33 @@ object BookSingle {
         }.threadSwitch()
     }
 
-    fun selectBookInfo(typeName: String): Single<ArrayList<BookInfo>> {
+    fun selectBookInfoByPath(path: String): Single<BookInfo> {
+        return Single.defer {
+            var bookInfo = BookInfo()
+            DBManager.sqlData(
+                    DBManager.SqlFormat.selectSqlFormat(
+                            DataConstant.BOOK_TABLE_NAME,
+                            "",
+                            DataConstant.COMMON_COLUMN_PATH,
+                            "="),
+                    null, arrayOf(path), DBManager.SqlType.SELECT)
+                    .getCursor()
+                    ?.let {
+                        while (it.moveToNext()) {
+                            val id = it.getInt(it.getColumnIndex(DataConstant.COMMON_COLUMN_ID))
+                            val createTime = it.getString(it.getColumnIndex(DataConstant.COMMON_COLUMN_CREATE_TIME))
+                            val type = it.getString(it.getColumnIndex(DataConstant.BOOK_TABLE_C1_TYPE))
+                            val begin = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C2_INDEX_BEGIN))
+                            val end = it.getInt(it.getColumnIndex(DataConstant.BOOK_TABLE_C3_INDEX_END))
+                            bookInfo = generateBookInfo(path, id, createTime, type, begin, end)
+                        }
+                        it.close()
+                    }
+            Single.just(bookInfo)
+        }.threadSwitch()
+    }
+
+    fun selectBookInfoByTypeName(typeName: String): Single<ArrayList<BookInfo>> {
         return Single.defer {
             val bookInfoList = ArrayList<BookInfo>()
             if (typeName == DataConstant.DEFAULT_TYPE_NAME) {

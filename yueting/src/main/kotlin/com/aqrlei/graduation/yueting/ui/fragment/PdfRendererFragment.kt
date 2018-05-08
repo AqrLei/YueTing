@@ -46,7 +46,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     companion object {
         fun newInstance(bookInfo: BookInfo): PdfRendererFragment {
             val args = Bundle()
-            args.putSerializable(YueTingConstant.READ_BOOK_INFO, bookInfo)
+            args.putSerializable(YueTingConstant.READ_BOOK_INFO_PATH, bookInfo)
             val fragment = PdfRendererFragment()
             fragment.arguments = args
             return fragment
@@ -66,7 +66,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
     private var pageCount: Int = 0
     private var pdfReadMode: Boolean = false
     private val bookInfo: BookInfo
-        get() = arguments?.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
+        get() = arguments?.getSerializable(YueTingConstant.READ_BOOK_INFO_PATH) as BookInfo
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
 

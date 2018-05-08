@@ -23,13 +23,13 @@ class PdfReadActivity : MvpContract.MvpActivity<PdfReadPresenter>() {
     companion object {
         fun jumpToPdfReadActivity(context: Context, data0: BookInfo) {
             val intent = Intent(context, PdfReadActivity::class.java)
-            intent.putExtra(YueTingConstant.READ_BOOK_INFO, data0)
+            intent.putExtra(YueTingConstant.READ_BOOK_INFO_PATH, data0)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
 
     private val bookInfo: BookInfo
-        get() = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
+        get() = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO_PATH) as BookInfo
     private lateinit var fragment: PdfRendererFragment
     override val layoutRes: Int
         get() = R.layout.read_activity_pdf

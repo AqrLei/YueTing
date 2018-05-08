@@ -20,6 +20,15 @@ class TxtReadPresenter(mMvpActivity: TxtReadActivity) :
 
     }
 
+    fun getBookInfo(path: String) {
+        val disposable =
+                BookSingle.selectBookInfoByPath(path)
+                        .subscribe({
+                            mMvpActivity.setBookInfo(it)
+                        }, {})
+        addDisposables(disposable)
+    }
+
     fun addMarkToDB(path: String, currentBegin: Int) {
         val disposables =
                 BookSingle.insertMark(path, currentBegin)

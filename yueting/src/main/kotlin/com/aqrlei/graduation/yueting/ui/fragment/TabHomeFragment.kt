@@ -23,6 +23,7 @@ import com.aqrlei.graduation.yueting.util.*
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
 import java.io.File
+import java.text.DecimalFormat
 
 /**
  * @Author: AqrLei
@@ -94,7 +95,8 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                         else "时长:"
                 (findViewById<TextView>(R.id.sizeTv)).text =
                         if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-                            "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
+                            val decimalFormat = DecimalFormat("##0.00")
+                            "${decimalFormat.format(mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F))} M"
                         } else {
                             DateFormatUtil.simpleTimeFormat(
                                     mMusicInfoShared.getInfo(modifyPosition).duration.toLong())
@@ -217,7 +219,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 if (file.exists()) {
                     if (mBookInfoShared.getInfo(position).type == "txt") {
                         TxtReadActivity.jumpToTxtReadActivity(mContainerActivity,
-                                mBookInfoShared.getInfo(position))
+                                mBookInfoShared.getInfo(position).path)
                     }
                     if (mBookInfoShared.getInfo(position).type == "pdf") {
                         PdfReadActivity.jumpToPdfReadActivity(mContainerActivity,

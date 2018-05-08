@@ -60,7 +60,7 @@ object YueTingConstant {
      */
     const val FILE_BOOK_CHANGE = "book_change"
     const val FILE_MUSIC_CHANGE = "music_change"
-    const val READ_BOOK_INFO = "book_info"
+    const val READ_BOOK_INFO_PATH = "book_info_path"
     const val READ_BOOK_POSITION = "b_position"
 
     /**

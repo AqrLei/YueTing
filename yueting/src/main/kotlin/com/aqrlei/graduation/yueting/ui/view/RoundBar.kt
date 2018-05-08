@@ -71,12 +71,8 @@ class RoundBar @JvmOverloads constructor(
     private fun init(context: Context, attrs: AttributeSet?) {
         mContext = context
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        /*与对应的values文件夹中attrs.xml中相关内容关联*/
+        /**与对应的values文件夹中attrs.xml中相关内容关联*/
         val typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.RoundBar)
-        /*val typedArray = TintTypedArray.obtainStyledAttributes(
-                mContext,
-                attrs,
-                R.styleable.RoundBar)*/
         mBackgroundColor = typedArray.getColor(
                 R.styleable.RoundBar_backgroundColor,
                 Color.parseColor("#bbbbbb"))

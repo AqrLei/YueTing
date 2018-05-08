@@ -37,7 +37,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
 
     fun fetchBookInfo(typeName: String) {
         val disposables =
-                BookSingle.selectBookInfo(typeName)
+                BookSingle.selectBookInfoByTypeName(typeName)
                         .subscribe({
                             mMvpView.setBookInfo(it)
                         }, {})

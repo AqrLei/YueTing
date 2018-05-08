@@ -1,9 +1,9 @@
 package com.aqrlei.graduation.yueting.ui
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.constraint.ConstraintLayout
@@ -38,10 +38,9 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
         AdapterView.OnItemSelectedListener,
         View.OnClickListener {
     companion object {
-        fun jumpToTxtReadActivity(context: Context, data0: BookInfo, data1: Int = 0) {
+        fun jumpToTxtReadActivity(context: Context, path: String) {
             val intent = Intent(context, TxtReadActivity::class.java)
-            intent.putExtra(YueTingConstant.READ_BOOK_INFO, data0)
-            intent.putExtra(YueTingConstant.READ_BOOK_POSITION, data1)
+            intent.putExtra(YueTingConstant.READ_BOOK_INFO_PATH, path)
             if (IntentUtil.queryActivities(context, intent)) context.startActivity(intent)
         }
     }
@@ -61,6 +60,13 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
     private var dProgress: Boolean = false
     private var dSetting: Boolean = false
     private lateinit var bookInfo: BookInfo
+    private val progressDialog: Dialog
+            by lazy {
+                createPopView(this, R.layout.common_progress_bar, Gravity.CENTER).apply {
+                    setCancelable(false)
+                }
+            }
+
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -155,7 +161,7 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
+        if (hasFocus) {
             val decorView = window.decorView
             decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -182,9 +188,11 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
         } catch (e: Settings.SettingNotFoundException) {
             e.printStackTrace()
         }
-        setBookPageFactory(bookPageView)
-        setCheckedId()
-        bookTitleTv.text = bookInfo.name
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getBookInfo()
     }
 
     override fun onPause() {
@@ -232,6 +240,20 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
                 pageFactory.changeFontSize(YueTingConstant.READ_BIG_FONT)
             }
         }
+    }
+
+    fun setBookInfo(book: BookInfo) {
+        progressDialog.dismiss()
+        bookInfo = book
+        setBookPageFactory(bookPageView)
+        setCheckedId()
+        bookTitleTv.text = bookInfo.name
+    }
+
+    private fun getBookInfo() {
+        progressDialog.show()
+        val path = intent.extras.getString(YueTingConstant.READ_BOOK_INFO_PATH)
+        mPresenter.getBookInfo(path)
     }
 
     private fun initListener() {
@@ -294,7 +316,6 @@ class TxtReadActivity : MvpContract.MvpActivity<TxtReadPresenter>(),
     }
 
     private fun setBookPageFactory(bookPageView: BookPageView) {
-        bookInfo = intent.extras.getSerializable(YueTingConstant.READ_BOOK_INFO) as BookInfo
         ChapterLoader.init(bookInfo)
         pageFactory.setBookInfo(bookPageView, bookInfo)
         pageFactory.nextPage()
