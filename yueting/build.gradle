@@ -1,9 +1,26 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+static def buildTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "com.aqrlei.graduation.yueting"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+
+    }
     sourceSets {
         main {
             java.srcDirs += 'src/main/kotlin'
@@ -17,27 +34,53 @@ android {
             ]
 
         }
-
     }
 
-    defaultConfig {
-        applicationId "com.aqrlei.graduation.yueting"
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileName
+            if (variant.buildType.name == "release") {
+                fileName = "YueTing_${defaultConfig.versionName}_${buildTime()}.apk"
+            } else {
+                fileName = "YueTing_beta_${defaultConfig.versionName}_${buildTime()}.apk"
+            }
+            outputFileName = fileName
+        }
+    }
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
+    signingConfigs {
+        debug {
+            storeFile file("../YueTing.jks")
+            storePassword "YueTing"
+            keyAlias "yueting"
+            keyPassword "YueTing"
+        }
+        release {
+            storeFile file("../YueTing.jks")
+            storePassword "YueTing"
+            keyAlias "yueting"
+            keyPassword "YueTing"
+        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 }
@@ -54,13 +97,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.facebook.fresco:fresco:1.0.1'
-    implementation 'com.facebook.fresco:imagepipeline-okhttp:0.10.0'
-    implementation 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0'
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
-    implementation 'com.jakewharton:butterknife:8.7.0'
     testImplementation 'junit:junit:4.12'
 }
