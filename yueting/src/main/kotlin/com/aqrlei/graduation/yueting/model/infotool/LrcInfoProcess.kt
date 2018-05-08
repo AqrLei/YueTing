@@ -1,7 +1,7 @@
 package com.aqrlei.graduation.yueting.model.infotool
 
 import android.util.Log
-import com.aqrairsigns.aqrleilib.util.FileUtil
+import com.aqrlei.graduation.yueting.util.FileUtil
 import com.aqrlei.graduation.yueting.model.LrcInfo
 import java.io.*
 

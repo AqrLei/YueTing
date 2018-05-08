@@ -9,9 +9,9 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.SeekBar
 import android.widget.Toast
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.util.AppCache
+import com.aqrlei.graduation.yueting.util.AppToast
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant

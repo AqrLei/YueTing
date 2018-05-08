@@ -3,8 +3,8 @@ package com.aqrlei.graduation.yueting.ui.adapter
 import android.content.Context
 import android.text.TextUtils
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
-import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
+import com.aqrlei.graduation.yueting.adapter.CommonListAdapter
+import com.aqrlei.graduation.yueting.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 

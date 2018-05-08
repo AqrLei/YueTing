@@ -2,15 +2,14 @@ package com.aqrlei.graduation.yueting.ui.adapter
 
 import android.content.Context
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
-import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
-import com.aqrairsigns.aqrleilib.util.DateFormatUtil
-import com.aqrairsigns.aqrleilib.util.ImageUtil
-import com.aqrairsigns.aqrleilib.util.StringChangeUtil
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.model.MusicInfo
+import com.aqrlei.graduation.yueting.adapter.CommonListAdapter
+import com.aqrlei.graduation.yueting.adapter.CommonListViewHolder
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
+import com.aqrlei.graduation.yueting.util.DateFormatUtil
+import com.aqrlei.graduation.yueting.util.ImageUtil
 import com.facebook.drawee.view.SimpleDraweeView
 import java.text.DecimalFormat
 
@@ -23,7 +22,6 @@ class YueTingListAdapter(mData: List<Any>, mContext: Context, mResId: Int, val t
     override fun bindData(holderList: CommonListViewHolder, t: Any) {
         when (type) {
             YueTingConstant.ADAPTER_TYPE_BOOK -> {
-                StringChangeUtil.SPANNABLE.clear()
                 val bookInfo = t as BookInfo
                 val percent =
                         if (bookInfo.type == YueTingConstant.READ_SUFFIX_PDF) {

@@ -1,7 +1,7 @@
 package com.aqrlei.graduation.yueting.model.observable
 
-import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.DateFormatUtil
+import com.aqrlei.graduation.yueting.util.DBManager
+import com.aqrlei.graduation.yueting.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.SelectInfo

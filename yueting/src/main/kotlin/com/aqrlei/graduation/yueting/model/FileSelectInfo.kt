@@ -1,6 +1,5 @@
 package com.aqrlei.graduation.yueting.model
 
-import com.aqrairsigns.aqrleilib.info.FileInfo
 import java.io.Serializable
 
 /**

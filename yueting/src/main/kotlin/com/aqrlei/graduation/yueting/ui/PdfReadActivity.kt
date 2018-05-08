@@ -6,13 +6,13 @@ import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.presenter.PdfReadPresenter
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
+import com.aqrlei.graduation.yueting.util.IntentUtil
 
 /**
  * Author : AqrLei

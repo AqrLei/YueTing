@@ -5,15 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.adapter.CommonListAdapter
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo
 import com.aqrlei.graduation.yueting.presenter.ManageListPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.SelectAdapter
+import com.aqrlei.graduation.yueting.util.AppToast
+import com.aqrlei.graduation.yueting.util.IntentUtil
 import kotlinx.android.synthetic.main.common_activity_manage.*
 
 /**

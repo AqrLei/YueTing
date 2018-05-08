@@ -12,10 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.basemvp.BaseActivity
-import com.aqrairsigns.aqrleilib.ui.view.RoundBar
-import com.aqrairsigns.aqrleilib.util.ActivityCollector
-import com.aqrairsigns.aqrleilib.util.ImageUtil
+import com.aqrlei.graduation.yueting.basemvp.BaseActivity
+import com.aqrlei.graduation.yueting.ui.view.RoundBar
+import com.aqrlei.graduation.yueting.util.ActivityCollector
+import com.aqrlei.graduation.yueting.util.ImageUtil
 import com.aqrlei.graduation.yueting.IListenerManager
 import com.aqrlei.graduation.yueting.IOnLrcIndexListener
 import com.aqrlei.graduation.yueting.R

@@ -1,10 +1,10 @@
 package com.aqrlei.graduation.yueting.presenter
 
 
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.AppToast
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import com.aqrlei.graduation.yueting.ui.fragment.PdfRendererFragment
+import com.aqrlei.graduation.yueting.util.AppToast
 
 /**
  * @Author: AqrLei

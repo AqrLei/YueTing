@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.util.DisplayMetrics
-import com.aqrairsigns.aqrleilib.ui.view.BookPageView
-import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.DensityUtil
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
+import com.aqrlei.graduation.yueting.ui.view.BookPageView
+import com.aqrlei.graduation.yueting.util.AppCache
 import java.io.File
 import java.io.RandomAccessFile
 import java.io.UnsupportedEncodingException

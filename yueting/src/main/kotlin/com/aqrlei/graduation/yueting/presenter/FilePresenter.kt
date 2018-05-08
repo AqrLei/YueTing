@@ -1,11 +1,8 @@
 package com.aqrlei.graduation.yueting.presenter
 
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.info.FileInfo
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.FileSelectInfo
-import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
-import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.model.observable.FileSingle
 import com.aqrlei.graduation.yueting.ui.FileActivity
 
@@ -25,13 +22,13 @@ class FilePresenter(mMvpActivity: FileActivity) :
         addDisposables(disposables)
     }
 
-    fun addFileInfoToDB(type:String, data: ArrayList<FileSelectInfo>, listTitle: String) {
+    fun addFileInfoToDB(type: String, data: ArrayList<FileSelectInfo>, listTitle: String) {
         val flag = type == YueTingConstant.FRAGMENT_TITLE_TYPE_MUSIC
         val disposables =
                 FileSingle.insertFileInfo(data, listTitle)
                         .subscribe({
                             mMvpActivity.finishActivity(it,
-                                    !flag,flag)
+                                    !flag, flag)
                         }, {})
         addDisposables(disposables)
     }

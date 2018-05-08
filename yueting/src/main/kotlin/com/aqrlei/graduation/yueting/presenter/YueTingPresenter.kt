@@ -1,7 +1,7 @@
 package com.aqrlei.graduation.yueting.presenter
 
 
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.ui.YueTingActivity
 
 /**

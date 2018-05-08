@@ -1,13 +1,12 @@
 package com.aqrlei.graduation.yueting.model.observable
 
-import com.aqrairsigns.aqrleilib.info.FileInfo
-import com.aqrairsigns.aqrleilib.util.DBManager
-import com.aqrairsigns.aqrleilib.util.DataSerializationUtil
-import com.aqrairsigns.aqrleilib.util.DateFormatUtil
-import com.aqrairsigns.aqrleilib.util.FileUtil
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
+import com.aqrlei.graduation.yueting.model.FileInfo
 import com.aqrlei.graduation.yueting.model.FileSelectInfo
+import com.aqrlei.graduation.yueting.util.DBManager
+import com.aqrlei.graduation.yueting.util.DateFormatUtil
+import com.aqrlei.graduation.yueting.util.FileUtil
 import com.aqrlei.graduation.yueting.util.threadSwitch
 import io.reactivex.Single
 

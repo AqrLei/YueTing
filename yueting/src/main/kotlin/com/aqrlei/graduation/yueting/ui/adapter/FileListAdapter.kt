@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.adapter.CommonListAdapter
-import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
-import com.aqrairsigns.aqrleilib.util.FileUtil
+import com.aqrlei.graduation.yueting.adapter.CommonListAdapter
+import com.aqrlei.graduation.yueting.adapter.CommonListViewHolder
+import com.aqrlei.graduation.yueting.util.FileUtil
 import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.FileSelectInfo

@@ -10,9 +10,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ImageView
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.enumtype.SendType
 import com.aqrlei.graduation.yueting.model.LrcInfo
@@ -20,10 +19,7 @@ import com.aqrlei.graduation.yueting.model.infotool.LrcInfoProcess
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.presenter.PlayPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.util.BackStackHolder
-import com.aqrlei.graduation.yueting.util.initPlayView
-import com.aqrlei.graduation.yueting.util.sendMusicBroadcast
-import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.*
 import kotlinx.android.synthetic.main.music_activity_play.*
 import kotlinx.android.synthetic.main.music_include_yue_ting_play.*
 

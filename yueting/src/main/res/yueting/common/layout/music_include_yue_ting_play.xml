@@ -15,13 +15,13 @@
         android:id="@+id/expandListIv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
         android:background="@drawable/music_selector_expend_color"
+        android:scaleType="fitCenter"
         android:src="@drawable/music_level_list_expend"
         yueting:layout_constraintLeft_toLeftOf="parent"
         yueting:layout_constraintRight_toRightOf="parent" />
 
-    <com.aqrairsigns.aqrleilib.ui.view.AlphaListView
+    <ListView
         android:id="@+id/playListLv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenBigViewHeight"
@@ -30,8 +30,7 @@
         android:scrollbars="none"
         android:visibility="gone"
         tools:visibility="visible"
-        yueting:layout_constraintTop_toBottomOf="@+id/expandListIv"
-        yueting:listMinHeight="90" />
+        yueting:layout_constraintTop_toBottomOf="@+id/expandListIv" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -107,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <com.aqrairsigns.aqrleilib.ui.view.RoundBar
+            <com.aqrlei.graduation.yueting.ui.view.RoundBar
                 android:id="@+id/rb_progress_play"
                 android:layout_width="@dimen/dimenButtonH"
                 android:layout_height="@dimen/dimenButtonH"
@@ -115,7 +114,7 @@
                 yueting:radius="@dimen/dimenPlayRoundBarR"
                 yueting:rotateDegree="180"
                 yueting:roundWidth="@dimen/dimenPlayRoundBarRW"
-                yueting:useGradientGolor="true" />
+                yueting:useGradientColor="true" />
 
             <ImageView
                 android:id="@+id/playControlIv"

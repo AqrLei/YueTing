@@ -8,20 +8,16 @@ import android.support.constraint.ConstraintLayout
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ListView
 import android.widget.RadioGroup
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
-import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.util.DensityUtil
-import com.aqrairsigns.aqrleilib.util.IntentUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant.CATALOG_RES
 import com.aqrlei.graduation.yueting.model.ChapterInfo
 import com.aqrlei.graduation.yueting.presenter.CatalogPresenter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingCatalogListAdapter
-import com.aqrlei.graduation.yueting.util.ChapterLoader
-import com.aqrlei.graduation.yueting.util.createPopView
+import com.aqrlei.graduation.yueting.util.*
 import kotlinx.android.synthetic.main.read_activity_catalog.*
 
 /**
@@ -122,7 +118,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     }
 
     private fun initView() {
-        val mView = findViewById<AlphaListView>(R.id.lv_catalog)
+        val mView = findViewById<ListView>(R.id.lv_catalog)
         mDataInfoS.addAll(ChapterLoader.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
                 R.layout.read_list_item_catelog)

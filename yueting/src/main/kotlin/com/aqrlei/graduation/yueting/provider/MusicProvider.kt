@@ -5,8 +5,8 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
-import com.aqrairsigns.aqrleilib.util.DBManager
 import com.aqrlei.graduation.yueting.constant.DataConstant
+import com.aqrlei.graduation.yueting.util.DBManager
 
 /**
  * created by AqrLei at 21:46 on 星期五, 五月 04, 2018

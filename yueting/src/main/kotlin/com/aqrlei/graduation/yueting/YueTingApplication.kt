@@ -3,14 +3,14 @@ package com.aqrlei.graduation.yueting
 import android.content.Intent
 import android.os.StrictMode
 import android.text.TextUtils
-import com.aqrairsigns.aqrleilib.basemvp.BaseApplication
-import com.aqrairsigns.aqrleilib.util.AppCache
-import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrlei.graduation.yueting.basemvp.BaseApplication
 import com.aqrlei.graduation.yueting.constant.CacheConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.infotool.ShareBookInfo
 import com.aqrlei.graduation.yueting.model.infotool.ShareMusicInfo
 import com.aqrlei.graduation.yueting.service.MusicService
+import com.aqrlei.graduation.yueting.util.AppCache
+import com.aqrlei.graduation.yueting.util.DBManager
 import com.aqrlei.graduation.yueting.util.DisposableHolder
 import com.facebook.drawee.backends.pipeline.Fresco
 

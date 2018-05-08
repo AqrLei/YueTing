@@ -8,7 +8,7 @@
 
     <include layout="@layout/read_include_top" />
 
-    <com.aqrairsigns.aqrleilib.ui.view.BookPageView
+    <com.aqrlei.graduation.yueting.ui.view.BookPageView
         android:id="@+id/bpv_read"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

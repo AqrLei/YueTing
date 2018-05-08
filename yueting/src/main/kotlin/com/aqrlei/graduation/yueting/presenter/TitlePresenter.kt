@@ -1,6 +1,6 @@
 package com.aqrlei.graduation.yueting.presenter
 
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.observable.BookSingle
 import com.aqrlei.graduation.yueting.model.observable.MusicSingle

@@ -14,13 +14,10 @@ import android.os.*
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import android.widget.RemoteViews
-import com.aqrairsigns.aqrleilib.basemvp.BaseService
-import com.aqrairsigns.aqrleilib.util.ActivityCollector
-import com.aqrairsigns.aqrleilib.util.AppLog
-import com.aqrairsigns.aqrleilib.util.ImageUtil
 import com.aqrlei.graduation.yueting.IListenerManager
 import com.aqrlei.graduation.yueting.IOnLrcIndexListener
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.basemvp.BaseService
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -29,6 +26,9 @@ import com.aqrlei.graduation.yueting.model.LrcInfo
 import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.model.infotool.LrcInfoProcess
 import com.aqrlei.graduation.yueting.ui.PlayActivity
+import com.aqrlei.graduation.yueting.util.ActivityCollector
+import com.aqrlei.graduation.yueting.util.AppLog
+import com.aqrlei.graduation.yueting.util.ImageUtil
 import com.aqrlei.graduation.yueting.util.createNotificationChannel
 import io.reactivex.disposables.Disposable
 import java.io.IOException

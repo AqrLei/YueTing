@@ -34,7 +34,7 @@
         android:layout_weight="1"
         android:background="@mipmap/ic_play_bg">
 
-        <com.aqrairsigns.aqrleilib.ui.view.VisualizerView
+        <com.aqrlei.graduation.yueting.ui.view.VisualizerView
             android:id="@+id/vv_play"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

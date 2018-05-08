@@ -3,17 +3,13 @@ package com.aqrlei.graduation.yueting.ui.fragment
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Messenger
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ListView
 import android.widget.TextView
-import com.aqrairsigns.aqrleilib.adapter.CommonListViewHolder
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
-import com.aqrairsigns.aqrleilib.ui.view.AlphaListView
-import com.aqrairsigns.aqrleilib.util.AppToast
-import com.aqrairsigns.aqrleilib.util.DateFormatUtil
 import com.aqrlei.graduation.yueting.R
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
 import com.aqrlei.graduation.yueting.model.MusicInfo
@@ -23,10 +19,7 @@ import com.aqrlei.graduation.yueting.presenter.TabHomePresenter
 import com.aqrlei.graduation.yueting.ui.*
 import com.aqrlei.graduation.yueting.ui.adapter.PopViewListAdapter
 import com.aqrlei.graduation.yueting.ui.adapter.YueTingListAdapter
-import com.aqrlei.graduation.yueting.util.createListPopView
-import com.aqrlei.graduation.yueting.util.createPopView
-import com.aqrlei.graduation.yueting.util.sendMusicRefresh
-import com.aqrlei.graduation.yueting.util.sendPlayBroadcast
+import com.aqrlei.graduation.yueting.util.*
 import kotlinx.android.synthetic.main.main_fragment_home.*
 import kotlinx.android.synthetic.main.main_include_lv_content.view.*
 import java.io.File
@@ -77,37 +70,37 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
                 }
             }
     private val detailDialog: Dialog
-           get() = createPopView(mContainerActivity, R.layout.common_item_detail).apply {
-                    window.decorView?.apply {
-                        (findViewById<TextView>(R.id.itemNameTitleTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
-                                else "歌名:"
-                        (findViewById<TextView>(R.id.itemNameTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(modifyPosition).name
-                                else mMusicInfoShared.getInfo(modifyPosition).title
-                        (findViewById<TextView>(R.id.ownerTitleTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
-                                else "歌手:"
-                        (findViewById<TextView>(R.id.ownerTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
-                                else mMusicInfoShared.getInfo(modifyPosition).artist
-                        (findViewById<TextView>(R.id.localPathTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
-                                    mBookInfoShared.getInfo(modifyPosition).path
-                                else mMusicInfoShared.getInfo(modifyPosition).albumUrl
-                        (findViewById<TextView>(R.id.sizeTitleTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
-                                else "时长:"
-                        (findViewById<TextView>(R.id.sizeTv)).text =
-                                if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
-                                    "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
-                                } else {
-                                    DateFormatUtil.simpleTimeFormat(
-                                            mMusicInfoShared.getInfo(modifyPosition).duration.toLong())
-                                }
-                    }
-                }
+        get() = createPopView(mContainerActivity, R.layout.common_item_detail).apply {
+            window.decorView?.apply {
+                (findViewById<TextView>(R.id.itemNameTitleTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "书名:"
+                        else "歌名:"
+                (findViewById<TextView>(R.id.itemNameTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                            mBookInfoShared.getInfo(modifyPosition).name
+                        else mMusicInfoShared.getInfo(modifyPosition).title
+                (findViewById<TextView>(R.id.ownerTitleTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "作者:"
+                        else "歌手:"
+                (findViewById<TextView>(R.id.ownerTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) ""
+                        else mMusicInfoShared.getInfo(modifyPosition).artist
+                (findViewById<TextView>(R.id.localPathTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK)
+                            mBookInfoShared.getInfo(modifyPosition).path
+                        else mMusicInfoShared.getInfo(modifyPosition).albumUrl
+                (findViewById<TextView>(R.id.sizeTitleTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) "大小:"
+                        else "时长:"
+                (findViewById<TextView>(R.id.sizeTv)).text =
+                        if (type == YueTingConstant.FRAGMENT_TITLE_TYPE_BOOK) {
+                            "${mBookInfoShared.getInfo(modifyPosition).fileLength / (1024.0F * 1024.0F)} M"
+                        } else {
+                            DateFormatUtil.simpleTimeFormat(
+                                    mMusicInfoShared.getInfo(modifyPosition).duration.toLong())
+                        }
+            }
+        }
 
     private val moveItemDialog: Dialog
             by lazy {
@@ -119,9 +112,9 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             }
     private val typeList: ArrayList<String>
             by lazy { ArrayList<String>() }
-    private val mListView: AlphaListView
+    private val mListView: ListView
             by lazy {
-                mView.lv_fragment_home as AlphaListView
+                mView.lv_fragment_home as ListView
             }
     private val mAdapter: YueTingListAdapter
             by lazy {
@@ -324,7 +317,7 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
             if (mMusicInfoShared.isStartService()) {
                 mContainerActivity.getMPlayView().findViewById<View>(R.id.expandListIv).visibility = View.VISIBLE
             }
-                getBookInfo()
+            getBookInfo()
         }
 
     }

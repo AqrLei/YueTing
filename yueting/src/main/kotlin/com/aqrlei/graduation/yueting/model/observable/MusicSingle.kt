@@ -1,7 +1,7 @@
 package com.aqrlei.graduation.yueting.model.observable
 
 import android.content.ContentResolver
-import com.aqrairsigns.aqrleilib.util.DBManager
+import com.aqrlei.graduation.yueting.util.DBManager
 import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.model.SelectInfo

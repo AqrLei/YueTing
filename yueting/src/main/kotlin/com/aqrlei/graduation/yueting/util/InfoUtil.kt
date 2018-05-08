@@ -1,9 +1,9 @@
 package com.aqrlei.graduation.yueting.util
 
 import android.media.MediaMetadataRetriever
-import com.aqrlei.graduation.yueting.model.MusicInfo
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.model.BookInfo
+import com.aqrlei.graduation.yueting.model.MusicInfo
 import java.io.File
 
 /**

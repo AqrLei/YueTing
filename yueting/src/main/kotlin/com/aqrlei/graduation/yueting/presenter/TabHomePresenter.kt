@@ -3,7 +3,7 @@ package com.aqrlei.graduation.yueting.presenter
 import android.app.Service
 import android.content.Context
 import android.os.Messenger
-import com.aqrairsigns.aqrleilib.basemvp.MvpContract
+import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.YueTingApplication
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
