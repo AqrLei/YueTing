@@ -82,5 +82,10 @@
 }
 # android-pdf-viewer
 -keep class com.shockwave.**
+#Kotlin
+-dontwarn kotlin.**
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
+}
 
 
