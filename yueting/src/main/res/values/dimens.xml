@@ -18,6 +18,7 @@
     <dimen name="dimenButtonW">30dp</dimen>
     <dimen name="dimenPadding5dp">5dp</dimen>
     <dimen name="dimenPadding10dp">10dp</dimen>
+    <dimen name="dimenPadding46dp">46dp</dimen>
     <dimen name="dimenSmallMargin">5dp</dimen>
     <dimen name="dimenViewHeight">60px</dimen>
     <dimen name="dimenBigViewHeight">200dp</dimen>

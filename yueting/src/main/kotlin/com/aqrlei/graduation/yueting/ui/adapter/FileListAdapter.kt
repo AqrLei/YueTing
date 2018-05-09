@@ -24,7 +24,6 @@ class FileListAdapter(
     private var dirCallBack: DirCallBack? = null
     override fun bindData(holderList: CommonListViewHolder,t: FileSelectInfo) {
         val mNameTv = holderList.get(R.id.fileNameTv) as TextView
-        holderList.get(R.id.selectItemIv).visibility = View.GONE
         mNameTv.text = t.fileInfo.name
         if (!t.fileInfo.isDir) {
             dirCallBack?.dirCallBack()
@@ -38,6 +37,7 @@ class FileListAdapter(
                     if (flag) YueTingConstant.FILE_TYPE_MUSIC
                     else YueTingConstant.FILE_TYPE_BOOK
         } else {
+            holderList.get(R.id.selectItemIv).visibility = View.GONE
             mNameTv.compoundDrawables[0].level = YueTingConstant.FILE_TYPE_FOLDER
         }
     }
