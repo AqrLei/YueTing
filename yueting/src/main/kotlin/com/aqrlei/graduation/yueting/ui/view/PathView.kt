@@ -101,7 +101,7 @@ class PathView @JvmOverloads constructor(
     private var isDrawing: Boolean = false
     private val surfaceHolder: SurfaceHolder
     private val paint: Paint
-    private var mode: PathMode = PathMode.AIRPLANE
+    private var mode: PathMode = PathMode.TRAIN
     /**
      *Semaphore 控制线程并发的数量
      * 此处为单线程

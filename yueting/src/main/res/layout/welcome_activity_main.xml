@@ -1,25 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cl_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/play_shape_bg">
+
+    <TextView
+        android:id="@+id/goTv"
+        android:layout_width="@dimen/dimenView50dp"
+        android:layout_height="@dimen/dimenView40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/common_ripple_go"
+        android:gravity="center"
+        android:text="GO"
+        android:visibility="gone" />
 
     <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLT0Pv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLT1Pv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <Button
-        android:visibility="gone"
-        android:id="@+id/bt_enjoy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/common_ripple_go"
-        android:text="GO"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLT2Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLB0Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLB1Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadLB2Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRT0Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRT1Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRT2Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRB0Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRB1Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadRB2Pv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadCLPv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.aqrlei.graduation.yueting.ui.view.PathView
+        android:id="@+id/loadCRPv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

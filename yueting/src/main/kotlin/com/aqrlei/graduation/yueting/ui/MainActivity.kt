@@ -11,6 +11,7 @@ import com.aqrlei.graduation.yueting.R
 import com.aqrlei.graduation.yueting.basemvp.MvpContract
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
 import com.aqrlei.graduation.yueting.presenter.MainPresenter
+import com.aqrlei.graduation.yueting.ui.view.PathView
 import com.aqrlei.graduation.yueting.util.AppToast
 import kotlinx.android.synthetic.main.welcome_activity_main.*
 
@@ -21,25 +22,17 @@ import kotlinx.android.synthetic.main.welcome_activity_main.*
  */
 
 class MainActivity : MvpContract.MvpActivity<MainPresenter>(),
-        View.OnClickListener {
+        View.OnClickListener,
+        PathView.OnPathAnimationCallBack {
+
+    companion object {
+        const val DURATION = 2000L
+    }
+
     override val layoutRes: Int
         get() = R.layout.welcome_activity_main
     override val mPresenter: MainPresenter
         get() = MainPresenter(this)
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.bt_enjoy -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (permissionCheck(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
-                        YueTingListActivity.jumpToYueTingListActivity(this)
-                    }
-                } else {
-                    YueTingListActivity.jumpToYueTingListActivity(this)
-                }
-            }
-        }
-    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -55,9 +48,24 @@ class MainActivity : MvpContract.MvpActivity<MainPresenter>(),
         }
     }
 
+    override fun callBack(id: Int) {
+        goTv.visibility = View.VISIBLE
+        goTv.bringToFront()
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.goTv) jump()
+    }
+
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
-        bt_enjoy.setOnClickListener(this)
+        initView()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startAnimation()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -69,6 +77,118 @@ class MainActivity : MvpContract.MvpActivity<MainPresenter>(),
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun jump() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionCheck(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
+                YueTingListActivity.jumpToYueTingListActivity(this)
+            }
+        } else {
+            YueTingListActivity.jumpToYueTingListActivity(this)
+        }
+    }
+
+    private fun initView() {
+        goTv.setOnClickListener(this)
+        val w: Float = this.resources.displayMetrics.widthPixels.toFloat()
+        val h: Float = this.resources.displayMetrics.heightPixels.toFloat()
+        loadRT0Pv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.TOP_RIGHT, h, w),
+                    duration = DURATION)
+        }
+        loadRT1Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.TOP_RIGHT, h, w).apply {
+                offset(50f, -50f)
+            },
+                    duration = DURATION)
+        }
+        loadRT2Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.TOP_RIGHT, h, w).apply {
+                offset(100f, -100f)
+            },
+                    duration = DURATION)
+        }
+        loadRB0Pv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_RIGHT, h, w),
+                    duration = DURATION)
+        }
+        loadRB1Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_RIGHT, h, w).apply {
+                offset(50f, 50f)
+            },
+                    duration = DURATION)
+        }
+        loadRB2Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_RIGHT, h, w).apply {
+                offset(100f, 100f)
+            },
+                    duration = DURATION)
+        }
+        loadLT0Pv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.TOP_LEFT, h, w),
+                    duration = DURATION)
+        }
+        loadLT1Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.TOP_LEFT, h, w).apply {
+                offset(-50f, -50f)
+            },
+                    duration = DURATION)
+        }
+        loadLT2Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.TOP_LEFT, h, w).apply {
+                offset(-100f, -100f)
+            },
+                    duration = DURATION)
+        }
+        loadLB0Pv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_LEFT, h, w),
+                    duration = DURATION)
+        }
+        loadLB1Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_LEFT, h, w).apply {
+                offset(-50f, 50f)
+            },
+                    duration = DURATION)
+        }
+        loadLB2Pv.apply {
+            prepare(path = mPresenter.getPath(MainPresenter.PathType.BOTTOM_LEFT, h, w).apply {
+                offset(-100f, 100f)
+            },
+                    duration = DURATION)
+        }
+        loadCLPv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.CENTER_LEFT, h, w),
+                    duration = DURATION)
+        }
+        loadCRPv.apply {
+            prepare(
+                    path = mPresenter.getPath(MainPresenter.PathType.CENTER_RIGHT, h, w),
+                    duration = DURATION)
+            setCallBack(this@MainActivity)
+        }
+    }
+
+    private fun startAnimation() {
+        loadRT0Pv.startAnimation()
+        loadRT1Pv.startAnimation()
+        loadRT2Pv.startAnimation()
+        loadRB0Pv.startAnimation()
+        loadRB1Pv.startAnimation()
+        loadRB2Pv.startAnimation()
+        loadLT0Pv.startAnimation()
+        loadLT1Pv.startAnimation()
+        loadLT2Pv.startAnimation()
+        loadLB0Pv.startAnimation()
+        loadLB1Pv.startAnimation()
+        loadLB2Pv.startAnimation()
+        loadCLPv.startAnimation()
+        loadCRPv.startAnimation()
     }
 
     private fun permissionCheck(vararg permission: String): Boolean {
