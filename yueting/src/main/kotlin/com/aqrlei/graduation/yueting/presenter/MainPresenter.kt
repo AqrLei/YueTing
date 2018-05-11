@@ -11,6 +11,7 @@ import com.aqrlei.graduation.yueting.ui.MainActivity
  */
 class MainPresenter(mMvpActivity: MainActivity) :
         MvpContract.ActivityPresenter<MainActivity>(mMvpActivity) {
+
     enum class PathType {
         TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT, CENTER_LEFT, CENTER_RIGHT
     }

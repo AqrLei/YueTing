@@ -15,73 +15,10 @@
         android:text="GO"
         android:visibility="gone" />
 
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLT0Pv"
+    <ViewStub
+        android:id="@+id/pathViewVs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout="@layout/include_welcome_view" />
 
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLT1Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLT2Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLB0Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLB1Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadLB2Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRT0Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRT1Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRT2Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRB0Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRB1Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadRB2Pv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadCLPv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.aqrlei.graduation.yueting.ui.view.PathView
-        android:id="@+id/loadCRPv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </FrameLayout>
