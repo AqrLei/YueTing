@@ -3,8 +3,7 @@
 /local.properties
 .DS_Store
 /build
-/aqrleilib/build
-/android-pdf-viewer/build
 /captures
 .externalNativeBuild
 /.idea
+/apk
