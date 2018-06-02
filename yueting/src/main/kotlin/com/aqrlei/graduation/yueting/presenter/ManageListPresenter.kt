@@ -59,15 +59,15 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
                             if(it){
                                 BookSingle.selectBookPath(typeNameList)
                             }else{
-                                Single.just(emptyList())
+                                Single.just(listOf("null"))
                             }
                         }
                         .flatMap {
-                            if (it.isNotEmpty()) {
+                            if(it[0] == "null"){
+                                Single.just(false)
+                            } else {
                                 pathTemp.addAll(it)
                                 ChapterSingle.deleteMark(it)
-                            } else {
-                                Single.just(false)
                             }
                         }
                         .flatMap {
