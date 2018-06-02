@@ -63,15 +63,15 @@ class ManageListPresenter(mMvpActivity: ManageListActivity) :
                             }
                         }
                         .flatMap {
-                            if (it.isNotEmpty()) {
-                                pathTemp.addAll(it)
-                                ChapterSingle.deleteMark(it)
-                            } else {
-                                Single.just(false)
-                            }
+                                if(it.isEmpty()){
+                                    Single.just(true)
+                                }else {
+                                    pathTemp.addAll(it)
+                                    ChapterSingle.deleteMark(it)
+                                }
                         }
                         .flatMap {
-                            if (it) {
+                            if (it&&pathTemp.isNotEmpty()) {
                                 ChapterSingle.deleteChapters(pathTemp)
                             } else {
                                 Single.just(it)

@@ -144,6 +144,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
                         YueTingConstant.YUE_TING_LIST_FILE)
             }
             R.id.newListTv -> {
+                isNewList = true
                 bottomDialog.dismiss()
                 modifyListDialog.apply {
                     (window.decorView.findViewById(R.id.listNameEt) as EditText).hint = "请输入名称"
@@ -169,6 +170,7 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        isNewList = false
         if (position == 0) {
             return true
         }
@@ -177,7 +179,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
             show()
         }
         oldName = titleList[position]
-        isNewList = false
         return true
     }
 
@@ -193,7 +194,6 @@ class TitleFragment : MvpContract.MvpFragment<TitlePresenter, YueTingListActivit
 
     fun modifyFinish(boolean: Boolean, msg: String) {
         progressDialog.dismiss()
-        isNewList = true
         AppToast.toastShow(mContainerActivity, msg, 1000)
         modifyListDialog.dismiss()
         modifyListDialog.window.decorView.findViewById<EditText>(R.id.listNameEt).setText("")

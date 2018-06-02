@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cl_main"
-    android:background="@mipmap/ic_welcome_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/play_shape_bg">
 
-    <Button
-        android:id="@+id/bt_enjoy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/goTv"
+        android:layout_width="@dimen/dimenView50dp"
+        android:layout_height="@dimen/dimenView40dp"
+        android:layout_gravity="center"
         android:background="@drawable/common_ripple_go"
+        android:gravity="center"
         android:text="GO"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/pathViewVs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/include_welcome_view" />
+
+</FrameLayout>

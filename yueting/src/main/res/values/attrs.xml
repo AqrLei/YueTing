@@ -39,4 +39,10 @@
             <enum name="centerXRight" value="11"/>
         </attr>
     </declare-styleable>
+    <declare-styleable name="PathView">
+        <attr name="animationDuration" format="integer"/>
+        <attr name="lineWidth" format="dimension"/>
+        <attr name="lightLineColor" format="color"/>
+        <attr name="darkLineColor" format="color"/>
+    </declare-styleable>
 </resources>

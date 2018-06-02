@@ -3,6 +3,7 @@ package com.aqrlei.graduation.yueting.service
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,7 +18,6 @@ import android.widget.RemoteViews
 import com.aqrlei.graduation.yueting.IListenerManager
 import com.aqrlei.graduation.yueting.IOnLrcIndexListener
 import com.aqrlei.graduation.yueting.R
-import com.aqrlei.graduation.yueting.basemvp.BaseService
 import com.aqrlei.graduation.yueting.constant.ActionConstant
 import com.aqrlei.graduation.yueting.constant.DataConstant
 import com.aqrlei.graduation.yueting.constant.YueTingConstant
@@ -41,7 +41,7 @@ import kotlin.collections.ArrayList
  * @Author: AqrLei
  * @CreateTime: Date: 2017/9/19 Time: 13:28
  */
-class MusicService : BaseService(),
+class MusicService : Service(),
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener,
@@ -208,7 +208,6 @@ class MusicService : BaseService(),
     }
 
     override fun onBind(p0: Intent?): IBinder? {
-        super.onBind(p0)
         return lrcListenerBinder
     }
 
