@@ -33,7 +33,7 @@ enum class ChapterLoader {
     private var isDone: Boolean = true
     fun getChapters() = chapterList
     fun getBookMarks() = bookMarkList
-    fun clearAllDatas() {
+    fun clearAllData() {
         chapterList.clear()
         bookMarkList.clear()
     }
@@ -47,10 +47,12 @@ enum class ChapterLoader {
 
     fun getChapter(context: CatalogActivity) {
         if (chapterBuffer.type == "pdf") {
-            context.loadCatalogDone(isDone)
+            context.loadCatalogDone(isDone,"pdf")
+            return
         }
         if (chapterList.size > 0) {
             context.loadCatalogDone(isDone)
+            return
         }
         generateChapters(context)
 

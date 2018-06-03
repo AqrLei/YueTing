@@ -41,7 +41,8 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
         get() = CatalogPresenter(this)
     override val layoutRes: Int
         get() = R.layout.read_activity_catalog
-    private val mDataInfoS = ArrayList<ChapterInfo>()
+    private val mDataInfoS: ArrayList<ChapterInfo>
+            by lazy { ArrayList<ChapterInfo>() }
     private lateinit var mAdapter: YueTingCatalogListAdapter
     private val progressDialog: Dialog
             by lazy {
@@ -84,25 +85,23 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
     }
 
 
-    override fun onStop() {
-        super.onStop()
-        /**
-         * 退出目录,清除所有旧数据，避免与新数据混淆
-         */
-        ChapterLoader.CHAPTER.clearAllDatas()
-    }
-
     override fun initComponents(savedInstanceState: Bundle?) {
         super.initComponents(savedInstanceState)
+        /**
+         * 进入时,清除所有旧数据，避免与新数据混淆
+         */
+        ChapterLoader.CHAPTER.clearAllData()
         progressDialog.show()
         getData()
         rg_read_catalog.setOnCheckedChangeListener(this)
         backIv.setOnClickListener(this)
     }
 
-    fun loadCatalogDone(t: Boolean) {
+    fun loadCatalogDone(t: Boolean, type: String = "txt") {
         progressDialog.dismiss()
-        AppToast.toastShow(this, "目录加载${if (t) "成功" else "失败"}")
+        if(type == "txt") {
+            AppToast.toastShow(this, "目录加载${if (t) "成功" else "失败"}")
+        }
         initView()
     }
 
@@ -119,6 +118,7 @@ class CatalogActivity : MvpContract.MvpActivity<CatalogPresenter>(),
 
     private fun initView() {
         val mView = findViewById<ListView>(R.id.lv_catalog)
+        mDataInfoS.clear()
         mDataInfoS.addAll(ChapterLoader.CHAPTER.getChapters())
         mAdapter = YueTingCatalogListAdapter(mDataInfoS, this,
                 R.layout.read_list_item_catelog)

@@ -37,10 +37,9 @@ android {
     }
 
     android.applicationVariants.all { variant ->
+        //variant.packageApplication.outputDirectory = new File("./apk/${variant.buildType.name}")
         variant.outputs.all {
-            def dirFile = "./apk/${variant.buildType.name}"
             def fileName = "YueTing_${variant.buildType.name}_${defaultConfig.versionName}_${buildTime()}.apk"
-            variant.packageApplication.outputDirectory = new File(dirFile)
             outputFileName = fileName
         }
     }
