@@ -123,7 +123,7 @@ class PdfRendererFragment : MvpContract.MvpFragment<PdfRendererPresenter, PdfRea
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         if (seekBar?.id == R.id.sb_rate) {
-            loadPdfFile(if (seekBar.progress - 1 < 0) 0 else seekBar.progress - 1)
+            loadPdfFile(if (seekBar.progress - 1 < 0) 0 else seekBar.progress - 1,pdfReadMode)
         }
     }
 
