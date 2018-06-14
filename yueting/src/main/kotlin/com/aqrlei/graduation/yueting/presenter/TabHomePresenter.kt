@@ -30,6 +30,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         val disposables =
                 MusicSingle.selectMusicInfo(typeName)
                         .subscribe({
+                            mMvpView.dismissDialog()
                             mMvpView.setMusicInfo(it)
                         }, {})
         addDisposables(disposables)
@@ -39,6 +40,7 @@ class TabHomePresenter(mMvpView: TabHomeFragment) :
         val disposables =
                 BookSingle.selectBookInfoByTypeName(typeName)
                         .subscribe({
+                            mMvpView.dismissDialog()
                             mMvpView.setBookInfo(it)
                         }, {})
 

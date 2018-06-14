@@ -267,10 +267,12 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun setMusicInfo(data: ArrayList<MusicInfo>) {
-        progressDialog.dismiss()
         mMusicInfoShared.setInfoS(data)
         isServiceStart = mMusicInfoShared.isStartService()
-        if (isServiceStart && mMusicInfoShared.oldSize != mMusicInfoShared.getSize()) {
+        if (isServiceStart
+                && ((typeName != mMusicInfoShared.oldTypeName
+                        && mMusicInfoShared.oldTypeName.isNotEmpty())
+                        || mMusicInfoShared.oldSize != mMusicInfoShared.getSize())) {
             progressDialog.show()
             sendMusicRefresh(0, typeName, mContainerActivity)
         }
@@ -279,7 +281,6 @@ class TabHomeFragment : MvpContract.MvpFragment<TabHomePresenter, YueTingActivit
     }
 
     fun setBookInfo(data: ArrayList<BookInfo>) {
-        progressDialog.dismiss()
         mBookInfoShared.setInfoS(data)
         mBookInfoShared.oldTypeName = typeName
         mAdapter.notifyDataSetInvalidated()
